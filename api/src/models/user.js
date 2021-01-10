@@ -3,6 +3,7 @@ import Sequelize from 'sequelize';
 export const definition = [
   'users',
   {
+    id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
     email: { type: Sequelize.STRING, allowNull: false},
     name: Sequelize.TEXT,
     password: { type: Sequelize.STRING, allowNull: false},
@@ -11,6 +12,8 @@ export const definition = [
       type: Sequelize.ENUM,
       values: ['admin', 'user']
     },
+    created_at: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
+    updated_at: { type: Sequelize.DATE }
   }, {
     createdAt: 'created_at',
     timestamps:true,
