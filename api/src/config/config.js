@@ -14,7 +14,7 @@ export default {
   db: {
     params: {
       dialect: 'sqlite',
-      storage: 'wheimo.sqlite',
+      storage: './database.sqlite',
       define: {
         underscored: true
       },
