@@ -1,14 +1,8 @@
 import Sequelize from 'sequelize';
 import sequelizeLoader from '../src/loaders/sequelize.js';
+import { definition as userDefinition } from '../src/models/user.js';
 
 const sequelize = sequelizeLoader.newConnection();
 const queryInterface = sequelize.getQueryInterface();
 
-queryInterface.createTable('User', {
-  name: Sequelize.STRING,
-  isBetaMember: {
-    type: Sequelize.BOOLEAN,
-    defaultValue: false,
-    allowNull: false
-  }
-});
+queryInterface.createTable(...userDefinition);
