@@ -4,7 +4,7 @@ This is a monorepo. For frontend I'm using React, and on backend, Node express.j
 
 # Prerequisites
 - Node.js >= 13, I'm using 14.15.4
-
+- python to build sqlite3 package using node-pre-gyp (sudo apt install python)
 # Environment variables
 
 ```

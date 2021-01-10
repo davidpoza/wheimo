@@ -12,6 +12,9 @@ export default {
     level: process.env.LOG_LEVEL || 'silly',
   },
   db: {
+    dbname: 'wheimo',
+    username: 'user', // not used on sqlite
+    password: 'password',// not used on sqlite
     params: {
       dialect: 'sqlite',
       storage: './database.sqlite',

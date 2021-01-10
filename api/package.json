@@ -34,8 +34,8 @@
     "lodash.get": "^4.4.2",
     "morgan": "^1.10.0",
     "node-fetch": "^2.6.0",
+    "node-pre-gyp": "^0.17.0",
     "sequelize": "^6.3.5",
-    "sequelize-cli": "^6.2.0",
     "sqlite3": "^5.0.1",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^3.9.0"
