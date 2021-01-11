@@ -26,6 +26,9 @@ export default {
   },
   api: {
     prefix: '/',
-  }
+  },
+  language: 'es',
+  currency: 'eur',
+  bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS, 10),
 };
 

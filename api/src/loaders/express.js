@@ -1,5 +1,6 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import { errors } from 'celebrate';
 
 // own
 import routes from '../api/index.js';
@@ -11,4 +12,5 @@ export default ({ app }) => {
   app.use(cors());
   app.use(bodyParser.json());
   app.use(config.api.prefix, routes());
+  app.use(errors());
 };

@@ -1,5 +1,6 @@
 import { Container } from 'typedi';
 
-export default ({ sequelize }) => {
+export default ({ sequelize, logger }) => {
   Container.set('sequelizeInstance', sequelize);
+  Container.set('loggerInstance', logger);
 }

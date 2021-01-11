@@ -1,3 +1,6 @@
+import bcrypt from 'bcrypt';
+
+import config from '../src/config/config.js'
 import sequelizeLoader from '../src/loaders/sequelize.js';
 import { definition as userDefinition } from '../src/models/user.js';
 import { definition as accountDefinition } from '../src/models/account.js';
@@ -22,3 +25,7 @@ queryInterface.createTable(...transactionDefinition);
 queryInterface.createTable(...tagDefinition);
 queryInterface.createTable(...recurrentPaymentDefinition);
 queryInterface.createTable(...ruleDefinition);
+
+sequelize.models.users.create({
+  email: 'admin@gmail.com', name: 'admin', password: bcrypt.hashSync('admin', config.bcryptRounds), active: true, level: 'admin'
+})
