@@ -26,4 +26,22 @@ export default (app) => {
         return next(e);
       }
     });
+
+  route.post('/signin',
+    celebrate({
+      body: Joi.object({
+        email: Joi.string().required(),
+        password: Joi.string().required(),
+      }),
+    }),
+    async (req, res, next) => {
+      try {
+        const authService = Container.get('authService');
+        const user = await authService.signIn(req.body);
+        return res.status(200).json(user);
+      } catch (e) {
+        loggerInstance.error('🔥 error: %o', e);
+        return next(e);
+      }
+    });
 };

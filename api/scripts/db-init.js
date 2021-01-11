@@ -27,5 +27,5 @@ queryInterface.createTable(...recurrentPaymentDefinition);
 queryInterface.createTable(...ruleDefinition);
 
 sequelize.models.users.create({
-  email: 'admin@gmail.com', name: 'admin', password: bcrypt.hashSync('admin', config.bcryptRounds), active: true, level: 'admin'
+  email: 'admin@gmail.com', name: 'admin', password: bcrypt.hashSync('admin', config.bcryptRounds, config.bcryptSalt), active: true, level: 'admin'
 })
