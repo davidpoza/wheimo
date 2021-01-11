@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import { Container } from 'typedi';
 
+import middlewares from '../middlewares/index.js';
+
 const route = Router();
 
 export default (app) => {
   app.use('/user', route);
-  route.get('/', (req, res, next) => {
-    res.send('hello world');
+  route.get('/', middlewares.isAuth, (req, res, next) => {
+    res.send('protected endpoint');
   });
   route.post('/', async (req, res, next) => {
     const userService = Container.get('userService');

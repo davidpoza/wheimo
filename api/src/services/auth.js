@@ -42,7 +42,7 @@ export default class AuthService {
 
     this.logger.info('Jwt token generation');
     const payload = {
-      sub: user._id,
+      sub: user.id,
       exp: Math.round(Date.now()/1000) + parseInt(config.jwtLifetime),
       username: user.username
     };
