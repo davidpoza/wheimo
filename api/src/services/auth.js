@@ -1,5 +1,5 @@
-import { Container } from 'typedi';
 import bcrypt from 'bcrypt';
+import { Container } from 'typedi';
 
 import config from '../config/config.js';
 

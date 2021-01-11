@@ -1,8 +1,5 @@
 import { Router } from 'express';
-
-// own
-import AuthService from '../../services/auth.js';
-import UserService from '../../services/user.js';
+import { Container } from 'typedi';
 
 const route = Router();
 
@@ -12,7 +9,7 @@ export default (app) => {
     res.send('hello world');
   });
   route.post('/', async (req, res, next) => {
-    const userService = new UserService();
+    const userService = Container.get('userService');
     await userService.create(
       { email: 'pozasuarez@gmail.com', name: 'prueba', password: '1234', active: true, level: 'admin' }
     );
