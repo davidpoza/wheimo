@@ -24,12 +24,14 @@ export default class TransactionService {
     }
   }
 
-  async findAll(accountId) {
+  async findAll(accountId, limit, offset, sort) {
     let transactions;
     if (accountId) {
-      transactions = await this.transactionModel.findAll({ where: { accountId } });
+      transactions = await this.transactionModel.findAll(
+        { limit, offset, where: { accountId }, order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ] });
     } else {
-      transactions = await this.transactionModel.findAll();
+      transactions = await this.transactionModel.findAll(
+        { limit, offset, order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ] });
     }
     return transactions.map((t) => {
       return ({
