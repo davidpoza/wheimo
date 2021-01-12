@@ -39,7 +39,9 @@ export default (app) => {
       }
     });
 
-  route.get('/:id?', middlewares.isAuth, async (req, res, next) => {
+  route.get('/:id?',
+    middlewares.isAuth,
+    async (req, res, next) => {
     const { id } = req.params
     const userService = Container.get('userService');
     try {
@@ -58,4 +60,17 @@ export default (app) => {
     }
   });
 
+  route.delete('/:id',
+    middlewares.isAuth,
+    async (req, res, next) => {
+    const { id } = req.params
+    const userService = Container.get('userService');
+    try {
+      await userService.deleteById(id);
+      return res.sendStatus(204);
+    } catch (err) {
+      loggerInstance.error('🔥 error: %o', err);
+      return res.sendStatus(404);
+    }
+  });
 };

@@ -61,18 +61,9 @@ export default class UserService {
   }
 
   async deleteById(id) {
-    const user = await this.sequelize.models.users.destroy({ where: { id } });
-    if (!user) {
-      return null;
+    const number = await this.sequelize.models.users.destroy({ where: { id } });
+    if (number === 0) {
+      throw new Error('User does not exist');
     }
-    return ({
-      id: user.dataValues.id,
-      name: user.dataValues.name,
-      level: user.dataValues.level,
-      email: user.dataValues.email,
-      active: user.dataValues.active,
-      created_at: user.dataValues.created_at,
-      updated_at: user.dataValues.updated_at,
-    });
   }
 };
