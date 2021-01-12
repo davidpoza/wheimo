@@ -28,8 +28,12 @@ queryInterface.createTable(...ruleDefinition);
 
 sequelize.models.users.create({
   email: 'admin@gmail.com', name: 'admin', password: bcrypt.hashSync('admin', config.bcryptRounds, config.bcryptSalt), active: true, level: 'admin'
-})
+});
 
 sequelize.models.accounts.create({
-  name: 'cuenta de prueba', description: 'compras en internet', number: 'ES27 0073 0100 5504 7468 0000',
+  name: 'openbank nómina', description: 'cuenta principal', number: 'ES27 0073 0100 5504 7468 0000',
+});
+
+sequelize.models.accounts.create({
+  name: 'openbank compras', description: 'compras en internet', number: 'ES27 0073 0100 5504 7468 0011',
 })
