@@ -31,9 +31,9 @@ sequelize.models.users.create({
 });
 
 sequelize.models.accounts.create({
-  name: 'openbank nómina', description: 'cuenta principal', number: 'ES27 0073 0100 5504 7468 0000',
+  name: 'openbank nómina', description: 'cuenta principal', number: 'ES27 0073 0100 5504 7468 0000', userId: 1
 });
 
 sequelize.models.accounts.create({
-  name: 'openbank compras', description: 'compras en internet', number: 'ES27 0073 0100 5504 7468 0011',
+  name: 'openbank compras', description: 'compras en internet', number: 'ES27 0073 0100 5504 7468 0011', userId: 1
 })

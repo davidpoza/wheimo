@@ -20,7 +20,8 @@ export default (req, res, next) => {
         if (!user) {
           return res.sendStatus(403);
         }
-        req.user = user;
+        // injection of user into request
+        req.user = user.dataValues;
         return next();
       } catch (err) {
         throw new Error(err);

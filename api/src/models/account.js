@@ -9,7 +9,15 @@ export const definition = [
     description: Sequelize.TEXT,
     balance: { type: Sequelize.FLOAT, allowNull: false, defaultValue: 0.0 },
     createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
-    updatedAt: { type: Sequelize.DATE }
+    updatedAt: { type: Sequelize.DATE },
+    userId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
+    },
   }, {
     timestamps:true,
   }
