@@ -72,6 +72,7 @@ export default (app) => {
     //middlewares.isAuth,
     async (req, res, next) => {
     const { id } = req.params
+    const { accountId } = req.query;
     const transactionService = Container.get('transactionService');
     try {
       if (id) {
@@ -81,7 +82,7 @@ export default (app) => {
         }
         return res.status(200).json(transaction);
       }
-      const transactions = await transactionService.findAll();
+      const transactions = await transactionService.findAll(accountId);
       return res.status(200).json(transactions);
     } catch (err) {
       loggerInstance.error('🔥 error: %o', err);

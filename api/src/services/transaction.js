@@ -24,8 +24,13 @@ export default class TransactionService {
     }
   }
 
-  async findAll() {
-    const transactions = await this.transactionModel.findAll({  });
+  async findAll(accountId) {
+    let transactions;
+    if (accountId) {
+      transactions = await this.transactionModel.findAll({ where: { accountId } });
+    } else {
+      transactions = await this.transactionModel.findAll();
+    }
     return transactions.map((t) => {
       return ({
         id: t.id,
