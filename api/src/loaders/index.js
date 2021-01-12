@@ -4,6 +4,7 @@ import diLoader from './di.js';
 import logger from './logger.js';
 import AuthService from '../services/auth.js';
 import UserService from '../services/user.js';
+import AccountService from '../services/account.js';
 
 export default async ({ expressApp }) => {
   const sequelize = await sequelizeLoader.newConnection();
@@ -13,7 +14,8 @@ export default async ({ expressApp }) => {
     sequelize,
     logger,
     AuthService,
-    UserService
+    UserService,
+    AccountService
   });
   logger.info('> Dependency injection loaded');
 
