@@ -39,6 +39,34 @@ export default (app) => {
       }
     });
 
+  route.patch('/:id',
+    middlewares.isAuth,
+    celebrate({
+      body: Joi.object({
+        name: Joi.string(),
+        email: Joi.string().email(),
+        active: Joi.bool(),
+        level: Joi.string()
+      }),
+    }),
+    async (req, res, next) => {
+      const userService = Container.get('userService');
+      const { id } = req.params;
+      const { email, name, active, level } = req.body;
+      try {
+        const user = await userService.updateById(id,
+          { email, name, active, level }
+        );
+        if (!user) {
+          res.sendStatus(404);
+        }
+        res.status(200).json(user);
+      } catch (err) {
+        loggerInstance.error('🔥 error: %o', err);
+        return next(err);
+      }
+    });
+
   route.get('/:id?',
     middlewares.isAuth,
     async (req, res, next) => {

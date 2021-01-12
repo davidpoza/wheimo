@@ -60,9 +60,17 @@ export default class UserService {
     });
   }
 
+  async updateById(id, values) {
+    const affectedRows = await this.sequelize.models.users.update(values, { where: { id } });
+    if (affectedRows === 0) {
+      return null;
+    }
+    return this.findById(id);
+  }
+
   async deleteById(id) {
-    const number = await this.sequelize.models.users.destroy({ where: { id } });
-    if (number === 0) {
+    const affectedRows = await this.sequelize.models.users.destroy({ where: { id } });
+    if (affectedRows === 0) {
       throw new Error('User does not exist');
     }
   }
