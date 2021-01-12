@@ -6,7 +6,7 @@ import middlewares from '../middlewares/index.js';
 const route = Router();
 
 export default (app) => {
-  app.use('/user', route);
+  app.use('/users', route);
 
   route.post('/', async (req, res, next) => {
     const userService = Container.get('userService');
