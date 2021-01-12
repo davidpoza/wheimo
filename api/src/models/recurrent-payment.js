@@ -7,11 +7,10 @@ export const definition = [
     name: { type: Sequelize.STRING, allowNull: false, unique: true},
     amount: { type: Sequelize.FLOAT, allowNull: false, defaultValue: 0.0 }, // estimation
     emitter: { type: Sequelize.TEXT, allowNull: false},
+    createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
+    updatedAt: { type: Sequelize.DATE }
   }, {
-    createdAt: 'created_at',
     timestamps:true,
-    underscored: true,
-    updatedAt: 'updated_at'
   }
 ];
 

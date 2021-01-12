@@ -5,15 +5,21 @@ export const definition = [
   {
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
     emitter: { type: Sequelize.TEXT, allowNull: false},
+    emitterName: { type: Sequelize.TEXT, allowNull: true},
     description: Sequelize.TEXT,
     amount: { type: Sequelize.FLOAT, allowNull: false},
-    created_at: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
-    updated_at: { type: Sequelize.DATE }
+    createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
+    updatedAt: { type: Sequelize.DATE },
+    accountId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'accounts',
+        key: 'id'
+      }
+    },
   }, {
-    createdAt: 'created_at',
     timestamps:true,
-    underscored: true,
-    updatedAt: 'updated_at'
   }
 ];
 

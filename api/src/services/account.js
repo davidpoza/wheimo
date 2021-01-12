@@ -7,7 +7,7 @@ export default class AccountService {
   constructor() {
     this.sequelize = Container.get('sequelizeInstance');
     this.logger = Container.get('loggerInstance');
-    this.userModel = this.sequelize.models.users;
+    this.accountModel = this.sequelize.models.accounts;
   }
   async create({
     number,
@@ -15,7 +15,7 @@ export default class AccountService {
     description,
   }) {
     try {
-      const account = await this.sequelize.models.accounts.create(
+      const account = await this.accountModel.create(
         { number, name, description });
       return account;
     } catch (err) {
@@ -25,22 +25,22 @@ export default class AccountService {
   }
 
   async findAll() {
-    const accounts = await this.sequelize.models.accounts.findAll({  });
-    return accounts.map((u) => {
+    const accounts = await this.accountModel.findAll({  });
+    return accounts.map((a) => {
       return ({
-        id: u.id,
-        number: u.number,
-        name: u.name,
-        description: u.description,
-        balance: u.balance,
-        created_at: u.created_at,
-        updated_at: u.updated_at,
+        id: a.id,
+        number: a.number,
+        name: a.name,
+        description: a.description,
+        balance: a.balance,
+        createdAt: a.createdAt,
+        updatedAt: a.updatedAt,
       });
     });
   }
 
   async findById(id) {
-    const account = await this.sequelize.models.accounts.findOne({ where: { id } });
+    const account = await this.accountModel.findOne({ where: { id } });
     if (!account) {
       return null;
     }
@@ -50,13 +50,13 @@ export default class AccountService {
       name: account.dataValues.name,
       description: account.dataValues.description,
       balance: account.dataValues.balance,
-      created_at: account.dataValues.created_at,
-      updated_at: account.dataValues.updated_at,
+      createdAt: account.dataValues.createdAt,
+      updatedAt: account.dataValues.updatedAt,
     });
   }
 
   async updateById(id, values) {
-    const affectedRows = await this.sequelize.models.accounts.update(values, { where: { id } });
+    const affectedRows = await this.accountModel.update(values, { where: { id } });
     if (affectedRows === 0) {
       return null;
     }
@@ -64,7 +64,7 @@ export default class AccountService {
   }
 
   async deleteById(id) {
-    const affectedRows = await this.sequelize.models.accounts.destroy({ where: { id } });
+    const affectedRows = await this.accountModel.destroy({ where: { id } });
     if (affectedRows === 0) {
       throw new Error('Account does not exist');
     }

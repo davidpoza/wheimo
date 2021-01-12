@@ -38,8 +38,8 @@ export default class UserService {
         level: u.level,
         email: u.email,
         active: u.active,
-        created_at: u.created_at,
-        updated_at: u.updated_at,
+        createdAt: u.createdAt,
+        updatedAt: u.updatedAt,
       });
     });
   }
@@ -55,8 +55,8 @@ export default class UserService {
       level: user.dataValues.level,
       email: user.dataValues.email,
       active: user.dataValues.active,
-      created_at: user.dataValues.created_at,
-      updated_at: user.dataValues.updated_at,
+      createdAt: user.dataValues.createdAt,
+      updatedAt: user.dataValues.updatedAt,
     });
   }
 

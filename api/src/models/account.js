@@ -8,13 +8,10 @@ export const definition = [
     name: { type: Sequelize.TEXT, allowNull: false},
     description: Sequelize.TEXT,
     balance: { type: Sequelize.FLOAT, allowNull: false, defaultValue: 0.0 },
-    created_at: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
-    updated_at: { type: Sequelize.DATE }
+    createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
+    updatedAt: { type: Sequelize.DATE }
   }, {
-    createdAt: 'created_at',
     timestamps:true,
-    underscored: true,
-    updatedAt: 'updated_at'
   }
 ];
 
