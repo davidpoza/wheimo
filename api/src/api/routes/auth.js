@@ -12,7 +12,7 @@ export default (app) => {
     celebrate({
       body: Joi.object({
         name: Joi.string().required(),
-        email: Joi.string().required(),
+        email: Joi.string().email().required(),
         password: Joi.string().required(),
       }),
     }),
@@ -22,6 +22,9 @@ export default (app) => {
         const user = await authService.signUp(req.body);
         return res.status(201).json(user);
       } catch (e) {
+        if (e.name === 'SequelizeUniqueConstraintError') {
+          return res.sendStatus(400);
+        }
         loggerInstance.error('🔥 error: %o', e);
         return next(e);
       }

@@ -23,7 +23,6 @@ export default (req, res, next) => {
         req.user = user;
         return next();
       } catch (err) {
-        console.log("--->")
         throw new Error(err);
       }
     }

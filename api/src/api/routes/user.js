@@ -7,6 +7,8 @@ import middlewares from '../middlewares/index.js';
 const route = Router();
 
 export default (app) => {
+  const loggerInstance = Container.get('loggerInstance');
+
   app.use('/users', route);
 
   route.post('/',
@@ -14,7 +16,7 @@ export default (app) => {
     celebrate({
       body: Joi.object({
         name: Joi.string(),
-        email: Joi.string().required(),
+        email: Joi.string().email().required(),
         password: Joi.string().required(),
         active: Joi.bool(),
         level: Joi.string()
@@ -27,9 +29,12 @@ export default (app) => {
         const user = await userService.create(
           { email, name, password, active, level }
         );
-        console.log(user)
         res.status(201).json(user);
       } catch (err) {
+        loggerInstance.error('🔥 error: %o', err);
+        if (err.name === 'SequelizeUniqueConstraintError') {
+          return res.sendStatus(400);
+        }
         return next(err);
       }
     });
@@ -48,6 +53,7 @@ export default (app) => {
       const users = await userService.findAll();
       return res.status(200).json(users);
     } catch (err) {
+      loggerInstance.error('🔥 error: %o', err);
       return next(err);
     }
   });
