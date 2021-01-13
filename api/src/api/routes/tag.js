@@ -12,7 +12,7 @@ export default (app) => {
   app.use('/tags', route);
 
   route.post('/',
- //   middlewares.isAuth,
+    middlewares.isAuth,
     celebrate({
       body: Joi.object({
         name: Joi.string().required(),
@@ -35,18 +35,19 @@ export default (app) => {
     });
 
   route.patch('/:id',
-   // middlewares.isAuth,
+    middlewares.isAuth,
     celebrate({
       body: Joi.object({
         name: Joi.string(),
+        rules: Joi.array().items(Joi.number()),
       }),
     }),
     async (req, res, next) => {
       const tagService = Container.get('tagService');
       const { id } = req.params;
-      const { name } = req.body;
+      const { name, rules } = req.body;
       try {
-        const tag = await tagService.updateById(id, { name });
+        const tag = await tagService.updateById(id, { name, rules });
         if (!tag) {
           res.sendStatus(404);
         }
@@ -58,7 +59,7 @@ export default (app) => {
     });
 
   route.get('/:id?',
-    //middlewares.isAuth,
+    middlewares.isAuth,
     async (req, res, next) => {
     const { id } = req.params;
     const { limit, sort, offset } = req.query;

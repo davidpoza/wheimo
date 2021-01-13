@@ -14,6 +14,12 @@ export default class TagService {
       name: t.name,
       createdAt: t.createdAt,
       updatedAt: t.updatedAt,
+      rules: t.rules.map(rule => ({
+        id: rule.id,
+        name: rule.name,
+        type: rule.type,
+        value: rule.value,
+      }))
     });
   }
 
@@ -36,17 +42,29 @@ export default class TagService {
 
   async findAll(limit, offset, sort) {
     const tags = await this.tagModel.findAll(
-      { limit, offset, order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ] });;
+      {
+        include: { model: this.sequelize.models.rules, as: 'rules' } ,
+        limit,
+        offset,
+        order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ]
+      }
+    );
 
     return tags.map((t) => {
       return (this.getTemplate(t));
     });
   }
 
-  async findById(id) {
-    const tag = await this.tagModel.findOne({ where: { id } });
+  async findById(id, entity = false) {
+    const tag = await this.tagModel.findOne({
+      include: { model: this.sequelize.models.rules, as: 'rules' } ,
+      where: { id }
+    });
     if (!tag) {
       return null;
+    }
+    if (entity) {
+      return tag;
     }
     return (this.getTemplate(tag.dataValues));
   }
@@ -56,7 +74,14 @@ export default class TagService {
     if (affectedRows === 0) {
       return null;
     }
-    return this.findById(id);
+    let tag = await this.findById(id, true);
+
+    if (values.rules) {
+      await tag.setRules(values.rules);
+      tag = await this.findById(id, true);
+    }
+
+    return this.getTemplate(tag);
   }
 
   async deleteById(id) {

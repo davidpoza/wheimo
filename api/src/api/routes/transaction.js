@@ -12,7 +12,7 @@ export default (app) => {
   app.use('/transactions', route);
 
   route.post('/',
- //   middlewares.isAuth,
+    middlewares.isAuth,
     celebrate({
       body: Joi.object({
         emitter: Joi.string().required(),
@@ -41,7 +41,7 @@ export default (app) => {
     });
 
   route.patch('/:id',
-   // middlewares.isAuth,
+    middlewares.isAuth,
     celebrate({
       body: Joi.object({
         emitter: Joi.string(),
