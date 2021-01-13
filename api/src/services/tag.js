@@ -18,11 +18,16 @@ export default class TagService {
   }
 
   async create({
-    name
+    name, rules
   }) {
+    let assRules;
     try {
       const tag = await this.tagModel.create({ name });
-      return tag;
+      // associates rules
+      if (rules) {
+        assRules = await tag.setRules(rules);
+      }
+      return { ...tag.dataValues, rules: assRules };
     } catch (err) {
       this.logger.error(err);
       throw err;

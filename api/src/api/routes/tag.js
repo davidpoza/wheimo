@@ -16,13 +16,14 @@ export default (app) => {
     celebrate({
       body: Joi.object({
         name: Joi.string().required(),
+        rules: Joi.array().items(Joi.number()),
       }),
     }),
     async (req, res, next) => {
       const tagService = Container.get('tagService');
-      const { name } = req.body;
+      const { name, rules } = req.body;
       try {
-        const transaction = await tagService.create({ name });
+        const transaction = await tagService.create({ name, rules });
         res.status(201).json(transaction);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
