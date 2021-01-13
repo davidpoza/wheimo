@@ -9,6 +9,21 @@ export default class UserService {
     this.logger = Container.get('loggerInstance');
     this.userModel = this.sequelize.models.users;
   }
+
+  getTemplate(user) {
+    if (user) {
+      return ({
+        email: user.email,
+        name: user.name,
+        email: user.email,
+        active: user.active,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      });
+    }
+    return null;
+  }
+
   async create({
     email,
     name,
@@ -32,15 +47,7 @@ export default class UserService {
   async findAll() {
     const users = await this.sequelize.models.users.findAll({  });
     return users.map((u) => {
-      return ({
-        id: u.id,
-        name: u.name,
-        level: u.level,
-        email: u.email,
-        active: u.active,
-        createdAt: u.createdAt,
-        updatedAt: u.updatedAt,
-      });
+      return (this.getTemplate(u));
     });
   }
 
@@ -49,15 +56,7 @@ export default class UserService {
     if (!user) {
       return null;
     }
-    return ({
-      id: user.dataValues.id,
-      name: user.dataValues.name,
-      level: user.dataValues.level,
-      email: user.dataValues.email,
-      active: user.dataValues.active,
-      createdAt: user.dataValues.createdAt,
-      updatedAt: user.dataValues.updatedAt,
-    });
+    return (this.getTemplate(user));
   }
 
   async updateById(id, values) {

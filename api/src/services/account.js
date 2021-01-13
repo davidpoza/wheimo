@@ -9,6 +9,19 @@ export default class AccountService {
     this.logger = Container.get('loggerInstance');
     this.accountModel = this.sequelize.models.accounts;
   }
+
+  getTemplate(a) {
+    return ({
+      id: a.id,
+      number: a.number,
+      name: a.name,
+      description: a.description,
+      balance: a.balance,
+      createdAt: a.createdAt,
+      updatedAt: a.updatedAt,
+    });
+  }
+
   async create({
     number,
     name,
@@ -28,15 +41,7 @@ export default class AccountService {
   async findAll(userId) {
     const accounts = await this.accountModel.findAll({ where: { userId } });
     return accounts.map((a) => {
-      return ({
-        id: a.id,
-        number: a.number,
-        name: a.name,
-        description: a.description,
-        balance: a.balance,
-        createdAt: a.createdAt,
-        updatedAt: a.updatedAt,
-      });
+      return (this.getTemplate(a));
     });
   }
 
@@ -45,15 +50,7 @@ export default class AccountService {
     if (!account) {
       return null;
     }
-    return ({
-      id: account.dataValues.id,
-      number: account.dataValues.number,
-      name: account.dataValues.name,
-      description: account.dataValues.description,
-      balance: account.dataValues.balance,
-      createdAt: account.dataValues.createdAt,
-      updatedAt: account.dataValues.updatedAt,
-    });
+    return (this.getTemplate(account.dataValues));
   }
 
   async updateById(id, userId, values) {

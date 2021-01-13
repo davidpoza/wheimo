@@ -9,20 +9,23 @@ export default class TransactionService {
   }
 
   getTemplate(t) {
-    return ({
-      id: t.id,
-      emitter: t.emitter,
-      emitterName: t.emitterName,
-      description: t.description,
-      amount: t.amount,
-      accountId: t.accountId,
-      createdAt: t.createdAt,
-      updatedAt: t.updatedAt,
-      tags: t.tags.map(tag => ({
-        id: tag.id,
-        name: tag.name
-      }))
-    });
+    if (t) {
+      return ({
+        id: t.id,
+        emitter: t.emitter,
+        emitterName: t.emitterName,
+        description: t.description,
+        amount: t.amount,
+        accountId: t.accountId,
+        createdAt: t.createdAt,
+        updatedAt: t.updatedAt,
+        tags: t.tags.map(tag => ({
+          id: tag.id,
+          name: tag.name
+        }))
+      });
+    }
+    return null;
   }
 
   async create({

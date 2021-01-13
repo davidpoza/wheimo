@@ -7,6 +7,16 @@ export default class TagService {
     this.logger = Container.get('loggerInstance');
     this.tagModel = this.sequelize.models.tags;
   }
+
+  getTemplate(t) {
+    return ({
+      id: t.id,
+      name: t.name,
+      createdAt: t.createdAt,
+      updatedAt: t.updatedAt,
+    });
+  }
+
   async create({
     name
   }) {
@@ -24,12 +34,7 @@ export default class TagService {
       { limit, offset, order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ] });;
 
     return tags.map((t) => {
-      return ({
-        id: t.id,
-        name: t.name,
-        createdAt: t.createdAt,
-        updatedAt: t.updatedAt,
-      });
+      return (this.getTemplate(t));
     });
   }
 
@@ -38,12 +43,7 @@ export default class TagService {
     if (!tag) {
       return null;
     }
-    return ({
-      id: tag.dataValues.id,
-      name: tag.dataValues.name,
-      createdAt: tag.dataValues.createdAt,
-      updatedAt: tag.dataValues.updatedAt,
-    });
+    return (this.getTemplate(tag.dataValues));
   }
 
   async updateById(id, values) {
