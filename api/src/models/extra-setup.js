@@ -10,12 +10,14 @@ export default function applyExtraSetup(sequelize) {
   recurrentPayments.belongsTo(accounts);
 
   tags.belongsToMany(transactions, { through: 'tagged' });
-  tags.belongsToMany(rules, { through: 'rules_tags' });
+  tags.belongsToMany(rules, { through: 'appliedRules' });
 
   transactions.belongsTo(accounts);
   transactions.belongsToMany(tags, { through: 'tagged' });
 
   users.hasMany(accounts);
+  users.hasMany(rules);
 
-  rules.belongsToMany(tags, { through: 'rule_tag' });
+  rules.belongsToMany(tags, { through: 'appliedRules' });
+  rules.belongsTo(users);
 }

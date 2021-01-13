@@ -6,6 +6,7 @@ import user from './routes/user.js';
 import account from './routes/account.js';
 import transaction from './routes/transaction.js';
 import tag from './routes/tag.js';
+import rule from './routes/rule.js';
 
 export default () => {
   const app = Router();
@@ -14,5 +15,6 @@ export default () => {
   account(app);
   transaction(app);
   tag(app);
+  rule(app);
   return app
 }

@@ -9,21 +9,23 @@ const route = Router();
 export default (app) => {
   const loggerInstance = Container.get('loggerInstance');
 
-  app.use('/tags', route);
+  app.use('/rules', route);
 
   route.post('/',
- //   middlewares.isAuth,
+    middlewares.isAuth,
     celebrate({
       body: Joi.object({
         name: Joi.string().required(),
+        type: Joi.string().required(),
+        value: Joi.string().required()
       }),
     }),
     async (req, res, next) => {
-      const tagService = Container.get('tagService');
-      const { name } = req.body;
+      const ruleService = Container.get('ruleService');
+      const { name, type, value } = req.body;
       try {
-        const transaction = await tagService.create({ name });
-        res.status(201).json(transaction);
+        const rule = await ruleService.create({ name, type, value, userId: req.user.id });
+        res.status(201).json(rule);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
         if (err.name === 'SequelizeUniqueConstraintError') {
@@ -34,22 +36,24 @@ export default (app) => {
     });
 
   route.patch('/:id',
-   // middlewares.isAuth,
+    middlewares.isAuth,
     celebrate({
       body: Joi.object({
         name: Joi.string(),
+        type: Joi.string(),
+        value: Joi.string()
       }),
     }),
     async (req, res, next) => {
-      const tagService = Container.get('tagService');
+      const ruleService = Container.get('ruleService');
       const { id } = req.params;
-      const { name } = req.body;
+      const { name, type, value } = req.body;
       try {
-        const tag = await tagService.updateById(id, { name });
-        if (!tag) {
+        const rule = await ruleService.updateById(id, req.user.id, { name, type, value });
+        if (!rule) {
           res.sendStatus(404);
         }
-        res.status(200).json(tag);
+        res.status(200).json(rule);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
         return next(err);
@@ -57,21 +61,21 @@ export default (app) => {
     });
 
   route.get('/:id?',
-    //middlewares.isAuth,
+    middlewares.isAuth,
     async (req, res, next) => {
     const { id } = req.params;
     const { limit, sort, offset } = req.query;
-    const tagService = Container.get('tagService');
+    const ruleService = Container.get('ruleService');
     try {
       if (id) {
-        const tag = await tagService.findById(id);
-        if (!tag) {
+        const rule = await ruleService.findById(id, req.user.id);
+        if (!rule) {
           return res.sendStatus(404);
         }
-        return res.status(200).json(tag);
+        return res.status(200).json(rule);
       }
-      const tags = await tagService.findAll(limit, offset, sort );
-      return res.status(200).json(tags);
+      const rules = await ruleService.findAll(req.user.id, limit, offset, sort );
+      return res.status(200).json(rules);
     } catch (err) {
       loggerInstance.error('🔥 error: %o', err);
       return next(err);
@@ -82,9 +86,9 @@ export default (app) => {
     middlewares.isAuth,
     async (req, res, next) => {
     const { id } = req.params;
-    const tagService = Container.get('tagService');
+    const ruleService = Container.get('ruleService');
     try {
-      await tagService.deleteById(id);
+      await ruleService.deleteById(id);
       return res.sendStatus(204);
     } catch (err) {
       loggerInstance.error('🔥 error: %o', err);

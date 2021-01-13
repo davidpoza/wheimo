@@ -6,12 +6,23 @@ export const definition = [
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
     name: { type: Sequelize.STRING, allowNull: false, unique: true},
     type: {
-      type: Sequelize.ENUM,
-      values: ['emitter', 'amount']
+      type: Sequelize.STRING,
+      validate: { // sqlite doesnt support ENUM
+        isIn: [['emitter', 'emitterName', 'amount']],
+      },
+      allowNull: false,
     },
     value: { type: Sequelize.STRING, allowNull: false },
     createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
-    updatedAt: { type: Sequelize.DATE }
+    updatedAt: { type: Sequelize.DATE },
+    userId: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'users',
+        key: 'id'
+      }
+    },
   }, {
     timestamps:true,
   }

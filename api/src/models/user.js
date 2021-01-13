@@ -9,7 +9,10 @@ export const definition = [
     password: { type: Sequelize.STRING, allowNull: false },
     active: { type: Sequelize.BOOLEAN, defaultValue: false },
     level: {
-      type: Sequelize.ENUM('user', 'admin'),
+      type: Sequelize.STRING,
+      validate: { // sqlite doesnt support ENUM
+        isIn: [['user', 'admin']],
+      },
       defaulValue: 'user',
       allowNull: false,
     },

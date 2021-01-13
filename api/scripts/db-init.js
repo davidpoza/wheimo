@@ -9,6 +9,7 @@ import { definition as tagDefinition } from '../src/models/tag.js';
 import { definition as recurrentPaymentDefinition } from '../src/models/recurrent-payment.js';
 import { definition as ruleDefinition } from '../src/models/rule.js';
 import { definition as taggedDefinition } from '../src/models/tagged.js';
+import { definition as appliedRulesDefinition } from '../src/models/applied-rules.js';
 
 const sequelize = sequelizeLoader.newConnection();
 const queryInterface = sequelize.getQueryInterface();
@@ -20,6 +21,7 @@ queryInterface.dropTable('tags');
 queryInterface.dropTable('recurrentPayments');
 queryInterface.dropTable('rules');
 queryInterface.dropTable('tagged');
+queryInterface.dropTable('appliedRules');
 
 queryInterface.createTable(...userDefinition);
 queryInterface.createTable(...accountDefinition);
@@ -28,6 +30,7 @@ queryInterface.createTable(...tagDefinition);
 queryInterface.createTable(...recurrentPaymentDefinition);
 queryInterface.createTable(...ruleDefinition);
 queryInterface.createTable(...taggedDefinition);
+queryInterface.createTable(...appliedRulesDefinition);
 
 sequelize.models.users.create({
   email: 'admin@gmail.com', name: 'admin', password: bcrypt.hashSync('admin', config.bcryptRounds, config.bcryptSalt), active: true, level: 'admin'
