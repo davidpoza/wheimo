@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-
+import pickBy from 'lodash.pickby';
 
 export default class TransactionService {
   constructor() {
@@ -51,15 +51,21 @@ export default class TransactionService {
     }
   }
 
-  async findAll(accountId, limit, offset, sort) {
-    let transactions;
-    if (accountId) {
-      transactions = await this.transactionModel.findAll(
-        { include: this.sequelize.models.tags, limit, offset, where: { accountId }, order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ] });
-    } else {
-      transactions = await this.transactionModel.findAll(
-        { include: this.sequelize.models.tags, limit, offset, order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ] });
-    }
+  async findAll(accountId, tags, limit, offset, sort) {
+    let filter = pickBy({ // pickBy (by default) removes undefined keys
+      accountId,
+      '$tags.id$': tags,
+    });
+
+    const transactions = await this.transactionModel.findAll(
+      {
+        include: { model: this.sequelize.models.tags, as: 'tags' } ,
+        limit,
+        offset,
+        where: filter,
+        order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ]
+      });
+
     return transactions.map((t) => {
       return this.getTemplate(t);
     });
