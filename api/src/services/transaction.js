@@ -7,17 +7,41 @@ export default class TransactionService {
     this.logger = Container.get('loggerInstance');
     this.transactionModel = this.sequelize.models.transactions;
   }
+
+  getTemplate(t) {
+    return ({
+      id: t.id,
+      emitter: t.emitter,
+      emitterName: t.emitterName,
+      description: t.description,
+      amount: t.amount,
+      accountId: t.accountId,
+      createdAt: t.createdAt,
+      updatedAt: t.updatedAt,
+      tags: t.tags.map(tag => ({
+        id: tag.id,
+        name: tag.name
+      }))
+    });
+  }
+
   async create({
     emitter,
     emitterName,
     description,
     amount,
     accountId,
+    tags
   }) {
+    let assTags;
     try {
       const transaction = await this.transactionModel.create(
         { emitter, emitterName, description, amount, accountId });
-      return transaction;
+      // associates tags
+      if (tags) {
+        assTags = await transaction.setTags(tags);
+      }
+      return { ...transaction.dataValues, tags: assTags };
     } catch (err) {
       this.logger.error(err);
       throw err;
@@ -28,40 +52,28 @@ export default class TransactionService {
     let transactions;
     if (accountId) {
       transactions = await this.transactionModel.findAll(
-        { limit, offset, where: { accountId }, order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ] });
+        { include: this.sequelize.models.tags, limit, offset, where: { accountId }, order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ] });
     } else {
       transactions = await this.transactionModel.findAll(
-        { limit, offset, order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ] });
+        { include: this.sequelize.models.tags, limit, offset, order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ] });
     }
     return transactions.map((t) => {
-      return ({
-        id: t.id,
-        emitter: t.emitter,
-        emitterName: t.emitterName,
-        description: t.description,
-        amount: t.amount,
-        accountId: t.accountId,
-        createdAt: t.createdAt,
-        updatedAt: t.updatedAt,
-      });
+      return this.getTemplate(t);
     });
   }
 
-  async findById(id) {
-    const transaction = await this.transactionModel.findOne({ where: { id } });
+  async findById(id, entity = false) {
+    const transaction = await this.transactionModel.findOne({
+      where: { id },
+      include: this.sequelize.models.tags
+    });
     if (!transaction) {
       return null;
     }
-    return ({
-      id: transaction.dataValues.id,
-      emitter: transaction.dataValues.emitter,
-      emitterName: transaction.dataValues.emitterName,
-      description: transaction.dataValues.description,
-      amount: transaction.dataValues.amount,
-      accountId: transaction.dataValues.accountId,
-      createdAt: transaction.dataValues.createdAt,
-      updatedAt: transaction.dataValues.updatedAt,
-    });
+    if (entity) {
+      return transaction;
+    }
+    return this.getTemplate(transaction.dataValues);
   }
 
   async updateById(id, values) {
@@ -69,7 +81,14 @@ export default class TransactionService {
     if (affectedRows === 0) {
       return null;
     }
-    return this.findById(id);
+    let transaction = await this.findById(id, true);
+
+    if (values.tags) {
+      await transaction.setTags(values.tags);
+      transaction = await this.findById(id, true);
+    }
+
+    return this.getTemplate(transaction);
   }
 
   async deleteById(id) {

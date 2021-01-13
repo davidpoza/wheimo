@@ -20,14 +20,15 @@ export default (app) => {
         amount: Joi.number().required(),
         description: Joi.string(),
         accountId: Joi.number().required(),
+        tags: Joi.array().items(Joi.number()),
       }),
     }),
     async (req, res, next) => {
       const transactionService = Container.get('transactionService');
-      const { emitter, emitterName, amount, description, accountId } = req.body;
+      const { emitter, emitterName, amount, description, accountId, tags } = req.body;
       try {
         const transaction = await transactionService.create(
-          { emitter, emitterName, amount, description, accountId }
+          { emitter, emitterName, amount, description, accountId, tags }
         );
         res.status(201).json(transaction);
       } catch (err) {
@@ -48,15 +49,16 @@ export default (app) => {
         amount: Joi.number(),
         description: Joi.string(),
         accountId: Joi.number(),
+        tags: Joi.array().items(Joi.number()),
       }),
     }),
     async (req, res, next) => {
       const transactionService = Container.get('transactionService');
       const { id } = req.params;
-      const { emitter, emitterName, amount, description, accountId } = req.body;
+      const { emitter, emitterName, amount, description, accountId, tags } = req.body;
       try {
         const transaction = await transactionService.updateById(id,
-          { emitter, emitterName, amount, description, accountId }
+          { emitter, emitterName, amount, description, accountId, tags }
         );
         if (!transaction) {
           res.sendStatus(404);
