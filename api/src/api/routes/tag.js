@@ -1,0 +1,94 @@
+import { Router } from 'express';
+import { Container } from 'typedi';
+import { celebrate, Joi } from 'celebrate';
+
+import middlewares from '../middlewares/index.js';
+
+const route = Router();
+
+export default (app) => {
+  const loggerInstance = Container.get('loggerInstance');
+
+  app.use('/tags', route);
+
+  route.post('/',
+ //   middlewares.isAuth,
+    celebrate({
+      body: Joi.object({
+        name: Joi.string().required(),
+      }),
+    }),
+    async (req, res, next) => {
+      const tagService = Container.get('tagService');
+      const { name } = req.body;
+      try {
+        const transaction = await tagService.create({ name });
+        res.status(201).json(transaction);
+      } catch (err) {
+        loggerInstance.error('🔥 error: %o', err);
+        if (err.name === 'SequelizeUniqueConstraintError') {
+          return res.sendStatus(400);
+        }
+        return next(err);
+      }
+    });
+
+  route.patch('/:id',
+   // middlewares.isAuth,
+    celebrate({
+      body: Joi.object({
+        name: Joi.string(),
+      }),
+    }),
+    async (req, res, next) => {
+      const tagService = Container.get('tagService');
+      const { id } = req.params;
+      const { name } = req.body;
+      try {
+        const tag = await tagService.updateById(id, { name });
+        if (!tag) {
+          res.sendStatus(404);
+        }
+        res.status(200).json(tag);
+      } catch (err) {
+        loggerInstance.error('🔥 error: %o', err);
+        return next(err);
+      }
+    });
+
+  route.get('/:id?',
+    //middlewares.isAuth,
+    async (req, res, next) => {
+    const { id } = req.params
+    const { limit, sort, offset } = req.query;
+    const tagService = Container.get('tagService');
+    try {
+      if (id) {
+        const tag = await tagService.findById(id);
+        if (!tag) {
+          return res.sendStatus(404);
+        }
+        return res.status(200).json(tag);
+      }
+      const tags = await tagService.findAll(limit, offset, sort );
+      return res.status(200).json(tags);
+    } catch (err) {
+      loggerInstance.error('🔥 error: %o', err);
+      return next(err);
+    }
+  });
+
+  route.delete('/:id',
+    middlewares.isAuth,
+    async (req, res, next) => {
+    const { id } = req.params
+    const tagService = Container.get('tagService');
+    try {
+      await tagService.deleteById(id);
+      return res.sendStatus(204);
+    } catch (err) {
+      loggerInstance.error('🔥 error: %o', err);
+      return res.sendStatus(404);
+    }
+  });
+};

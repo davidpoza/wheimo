@@ -1,7 +1,7 @@
 import { Container } from 'typedi';
 
 export default ({
-  sequelize, logger, UserService, AuthService, AccountService, TransactionService
+  sequelize, logger, UserService, AuthService, AccountService, TransactionService, TagService
 }) => {
   Container.set('sequelizeInstance', sequelize);
   logger.info('💉 sequelizeInstance injected');
@@ -21,4 +21,7 @@ export default ({
 
   Container.set('transactionService', new TransactionService());
   logger.info('💉 transaction service instance injected');
+
+  Container.set('tagService', new TagService());
+  logger.info('💉 tag service instance injected');
 }
