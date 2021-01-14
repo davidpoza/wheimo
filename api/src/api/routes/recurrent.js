@@ -34,6 +34,8 @@ export default (app) => {
         loggerInstance.error('🔥 error: %o', err);
         if (err.name === 'SequelizeUniqueConstraintError') {
           return res.sendStatus(400);
+        } else if (err.name === '403') {
+          return res.sendStatus(403);
         }
         return next(err);
       }

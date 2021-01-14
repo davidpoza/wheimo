@@ -1,9 +1,9 @@
 import { Container } from 'typedi';
 import pickBy from 'lodash.pickby';
-
 export default class RecurrentService {
   constructor() {
     this.sequelize = Container.get('sequelizeInstance');
+    this.transactionService = Container.get('transactionService');
     this.logger = Container.get('loggerInstance');
     this.recurrentModel = this.sequelize.models.recurrents;
   }
@@ -23,6 +23,10 @@ export default class RecurrentService {
     return null;
   }
 
+  /**
+   * It only creates owned recurrents->transactions->accounts,
+   * when transactionId is specified
+   */
   async create({
     name,
     amount,
@@ -31,10 +35,19 @@ export default class RecurrentService {
     userId
   }) {
     try {
-      // TODO: check if transaction is owned
-      const recurrent = await this.recurrentModel.create(
-        { name, amount, emitter, transactionId });
-      return recurrent;
+      let transaction;
+      if (transactionId) {
+        transaction = await this.transactionService.findById(transactionId, userId, true);
+      }
+      if (!transactionId || transaction) {
+        const recurrent = await this.recurrentModel.create(
+          { name, amount, emitter, transactionId });
+        return recurrent;
+      }
+      const forbidden = new Error('Forbidden: Referenced transaction is from a not owned account');
+      forbidden.name = '403';
+      this.logger.error(forbidden.message);
+      throw forbidden;
     } catch (err) {
       this.logger.error(err);
       throw err;
