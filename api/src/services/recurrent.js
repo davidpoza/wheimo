@@ -28,8 +28,10 @@ export default class RecurrentService {
     amount,
     emitter,
     transactionId,
+    userId
   }) {
     try {
+      // TODO: check if transaction is owned
       const recurrent = await this.recurrentModel.create(
         { name, amount, emitter, transactionId });
       return recurrent;
@@ -39,16 +41,26 @@ export default class RecurrentService {
     }
   }
 
+  /**
+   * It only selects owned recurrents->transactions->accounts
+   */
   async findAll(transactionId, userId, limit, offset, sort) {
     let filter = pickBy({ // pickBy (by default) removes undefined keys
-      transactionId
+      transactionId,
+      '$transaction.account.user_id$': userId,
     });
     const recurrents = await this.recurrentModel.findAll(
       {
+        where: filter,
         attributes: { exclude: ['accountId'] },
+        include: {
+          model: this.sequelize.models.transactions,
+          include: {
+            model: this.sequelize.models.accounts,
+          },
+        },
         limit,
         offset,
-        where: filter,
         order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ]
       });
 
@@ -57,10 +69,22 @@ export default class RecurrentService {
     });
   }
 
+  /**
+   * It only selects owned recurrents->transactions->accounts
+   */
   async findById(id, userId, entity = false) {
     const recurrent = await this.recurrentModel.findOne({
       attributes: { exclude: ['accountId'] },
-      where: { id }
+      where: {
+        id,
+        '$transaction.account.user_id$': userId,
+      },
+      include: {
+        model: this.sequelize.models.transactions,
+        include: {
+          model: this.sequelize.models.accounts,
+        },
+      }
     });
     if (!recurrent) {
       return null;
@@ -71,13 +95,22 @@ export default class RecurrentService {
     return this.getTemplate(recurrent.dataValues);
   }
 
-  async updateById(id, values) {
-    const affectedRows = await this.recurrentModel.update(values, { where: { id } });
-    if (affectedRows === 0) {
-      return null;
+  /**
+   * It only update owned recurrents->transactions->accounts
+   */
+  async updateById(id, userId, values) {
+    const recurrent = await this.findById(id, userId, true);
+    if (recurrent) {
+      const affectedRows = await this.recurrentModel.update(values, {
+        where: { id },
+      });
+      if (affectedRows === 0) {
+        return null;
+      }
+      const recurrent = await this.findById(id, userId, true);
+      return this.getTemplate(recurrent);
     }
-    const recurrent = await this.findById(id, true);
-    return this.getTemplate(recurrent);
+    return null;
   }
 
   async deleteById(id) {

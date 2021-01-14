@@ -24,9 +24,10 @@ export default (app) => {
     async (req, res, next) => {
       const recurrentService = Container.get('recurrentService');
       const { name, amount, emitter, transactionId } = req.body;
+      const userId = req.user.id;
       try {
         const recurrent = await recurrentService.create(
-          { name, amount, emitter, transactionId }
+          { name, amount, emitter, transactionId, userId }
         );
         res.status(201).json(recurrent);
       } catch (err) {
@@ -54,7 +55,7 @@ export default (app) => {
       const { name, amount, emitter, transactionId } = req.body;
       const userId = req.user.id;
       try {
-        const recurrent = await recurrentService.updateById(id,
+        const recurrent = await recurrentService.updateById(id, userId,
           { name, amount, emitter, transactionId }
         );
         if (!recurrent) {
