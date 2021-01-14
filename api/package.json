@@ -36,7 +36,7 @@
     "lodash.get": "^4.4.2",
     "lodash.pickby": "^4.6.0",
     "morgan": "^1.10.0",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "node-pre-gyp": "^0.17.0",
     "sequelize": "^6.3.5",
     "sqlite3": "^5.0.1",
