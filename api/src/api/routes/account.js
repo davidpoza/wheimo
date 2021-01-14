@@ -23,11 +23,11 @@ export default (app) => {
     }),
     async (req, res, next) => {
       const accountService = Container.get('accountService');
-      const { name, number, description, bankId } = req.body;
+      const { name, number, description, bankId, accessId, accessPassword } = req.body;
       const userId = req.user.id;
       try {
         const account = await accountService.create(
-          { name, number, description, userId, bankId }
+          { name, number, description, userId, bankId, accessId, accessPassword }
         );
         res.status(201).json(account);
       } catch (err) {
@@ -54,10 +54,10 @@ export default (app) => {
       const accountService = Container.get('accountService');
       const { id } = req.params;
       const userId = req.user.id;
-      const { name, number, description, balance, bankId } = req.body;
+      const { name, number, description, balance, bankId, accessId, accessPassword } = req.body;
       try {
         const account = await accountService.updateById(id, userId,
-          { name, number, description, balance, bankId }
+          { name, number, description, balance, bankId, accessId, accessPassword }
         );
         if (!account) {
           res.sendStatus(404);

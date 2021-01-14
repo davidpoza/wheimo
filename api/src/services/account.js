@@ -27,11 +27,14 @@ export default class AccountService {
     number,
     name,
     description,
+    userId,
     bankId,
+    accessId,
+    accessPassword,
   }) {
     try {
       const account = await this.accountModel.create(
-        { number, name, description, userId, bankId });
+        { number, name, description, userId, bankId, accessId, accessPassword });
       return account;
     } catch (err) {
       this.logger.error(err);

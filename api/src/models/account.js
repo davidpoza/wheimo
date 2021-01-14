@@ -9,6 +9,8 @@ export const definition = [
     description: Sequelize.TEXT,
     balance: { type: Sequelize.FLOAT, allowNull: false, defaultValue: 0.0 },
     bankId: { type: Sequelize.STRING },
+    accessId: { type: Sequelize.STRING },
+    accessPassword: { type: Sequelize.STRING },
     createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
     updatedAt: { type: Sequelize.DATE },
     userId: {
