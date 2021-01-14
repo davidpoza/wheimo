@@ -18,15 +18,16 @@ export default (app) => {
         name: Joi.string().required(),
         number: Joi.string().required(),
         description: Joi.string(),
+        bankId: Joi.string(),
       }),
     }),
     async (req, res, next) => {
       const accountService = Container.get('accountService');
-      const { name, number, description } = req.body;
+      const { name, number, description, bankId } = req.body;
       const userId = req.user.id;
       try {
         const account = await accountService.create(
-          { name, number, description, userId }
+          { name, number, description, userId, bankId }
         );
         res.status(201).json(account);
       } catch (err) {
@@ -45,17 +46,18 @@ export default (app) => {
         name: Joi.string(),
         number: Joi.string(),
         description: Joi.string(),
-        balance: Joi.number()
+        balance: Joi.number(),
+        bankId: Joi.string(),
       }),
     }),
     async (req, res, next) => {
       const accountService = Container.get('accountService');
       const { id } = req.params;
       const userId = req.user.id;
-      const { name, number, description, balance } = req.body;
+      const { name, number, description, balance, bankId } = req.body;
       try {
         const account = await accountService.updateById(id, userId,
-          { name, number, description, balance}
+          { name, number, description, balance, bankId }
         );
         if (!account) {
           res.sendStatus(404);

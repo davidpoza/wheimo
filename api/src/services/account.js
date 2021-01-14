@@ -17,6 +17,7 @@ export default class AccountService {
       name: a.name,
       description: a.description,
       balance: a.balance,
+      bankId: a.bankId,
       createdAt: a.createdAt,
       updatedAt: a.updatedAt,
     });
@@ -26,11 +27,11 @@ export default class AccountService {
     number,
     name,
     description,
-    userId
+    bankId,
   }) {
     try {
       const account = await this.accountModel.create(
-        { number, name, description, userId });
+        { number, name, description, userId, bankId });
       return account;
     } catch (err) {
       this.logger.error(err);
