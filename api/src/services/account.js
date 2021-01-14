@@ -49,10 +49,13 @@ export default class AccountService {
     });
   }
 
-  async findById(id, userId) {
+  async findById(id, userId, entity = false) {
     const account = await this.accountModel.findOne({ where: { id, userId } });
     if (!account) {
       return null;
+    }
+    if (entity) {
+      return account;
     }
     return (this.getTemplate(account.dataValues));
   }

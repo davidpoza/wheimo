@@ -29,8 +29,11 @@ export default (app) => {
       const userId = req.user.id;
       try {
         const transaction = await transactionService.create(
-          { emitter, emitterName, amount, description, accountId, tags }
+          { emitter, emitterName, amount, description, accountId, tags, userId }
         );
+        if (!transaction) {
+          res.sendStatus(403);
+        }
         res.status(201).json(transaction);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);

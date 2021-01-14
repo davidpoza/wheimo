@@ -6,6 +6,7 @@ export default class TransactionService {
     this.sequelize = Container.get('sequelizeInstance');
     this.logger = Container.get('loggerInstance');
     this.transactionModel = this.sequelize.models.transactions;
+    this.accountService = Container.get('accountService');
   }
 
   getTemplate(t) {
@@ -28,24 +29,31 @@ export default class TransactionService {
     return null;
   }
 
+  /**
+   * It only creates transactions in within owned accounts
+   */
   async create({
     emitter,
     emitterName,
     description,
     amount,
     accountId,
-    tags
+    tags,
+    userId,
   }) {
     let assTags;
     try {
-      // TODO: check if account is owned
-      const transaction = await this.transactionModel.create(
-        { emitter, emitterName, description, amount, accountId });
-      // associates tags
-      if (tags) {
-        assTags = await transaction.setTags(tags);
+      const account = await this.accountService.findById(accountId, userId, true);
+      if (account) {
+        const transaction = await this.transactionModel.create(
+          { emitter, emitterName, description, amount, accountId });
+        // associates tags
+        if (tags) {
+          assTags = await transaction.setTags(tags);
+        }
+        return { ...transaction.dataValues, tags: assTags };
       }
-      return { ...transaction.dataValues, tags: assTags };
+      return null;
     } catch (err) {
       this.logger.error(err);
       throw err;
