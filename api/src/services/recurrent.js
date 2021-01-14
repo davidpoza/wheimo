@@ -45,7 +45,7 @@ export default class RecurrentService {
         return recurrent;
       }
       const forbidden = new Error('Forbidden: Referenced transaction is from a not owned account');
-      forbidden.name = '403';
+      forbidden.name = 'forbidden';
       this.logger.error(forbidden.message);
       throw forbidden;
     } catch (err) {
