@@ -32,5 +32,6 @@ export default {
   jwtLifetime: parseInt(process.env.JWT_LIFETIME, 10),
   jwtSecret: process.env.JWT_SECRET,
   jwtAlgorithm: process.env.JWT_ALGORITHM,
+  aesPassphrase: process.env.AES_PASSPHRASE
 };
 

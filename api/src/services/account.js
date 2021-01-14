@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { Container } from 'typedi';
+import AES from 'crypto-js/aes.js';
 
 import config from '../config/config.js';
 
@@ -33,8 +34,9 @@ export default class AccountService {
     accessPassword,
   }) {
     try {
+      const encryptedPassword = AES.encrypt(accessPassword, config.aesPassphrase).toString();
       const account = await this.accountModel.create(
-        { number, name, description, userId, bankId, accessId, accessPassword });
+        { number, name, description, userId, bankId, accessId, accessPassword: encryptedPassword });
       return account;
     } catch (err) {
       this.logger.error(err);
@@ -61,6 +63,11 @@ export default class AccountService {
   }
 
   async updateById(id, userId, values) {
+    let encryptedPassword;
+    if (values.accessPassword) {
+      encryptedPassword = AES.encrypt(values.accessPassword, config.aesPassphrase).toString();
+      values.accessPassword = encryptedPassword;
+    }
     const affectedRows = await this.accountModel.update(values, { where: { id, userId } });
     if (affectedRows === 0) {
       return null;

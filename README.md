@@ -23,6 +23,9 @@ JWT_LIFETIME=86400
 
 # algorithm used in token signing
 JWT_ALGORITHM=HS256
+
+# passphrase used to encrypt access password
+AES_PASSPHRASE=xxxxxxx
 ```
 
 ## API
@@ -71,6 +74,12 @@ Fields:
 - accessPassword <string>
 #### PATCH: /accounts
 Updates bank account
+Fields:
+- name <string> (required)
+- number <string> (required)
+- description <string>
+- accessId <string>
+- accessPassword <string>
 
 #### DELETE: /accounts
 Deletes bank account

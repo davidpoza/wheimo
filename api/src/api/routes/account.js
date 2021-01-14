@@ -19,6 +19,8 @@ export default (app) => {
         number: Joi.string().required(),
         description: Joi.string(),
         bankId: Joi.number().allow(null),
+        accessId: Joi.string(),
+        accessPassword: Joi.string(),
       }),
     }),
     async (req, res, next) => {
@@ -48,6 +50,8 @@ export default (app) => {
         description: Joi.string(),
         balance: Joi.number(),
         bankId: Joi.number().allow(null),
+        accessId: Joi.string(),
+        accessPassword: Joi.string(),
       }),
     }),
     async (req, res, next) => {
