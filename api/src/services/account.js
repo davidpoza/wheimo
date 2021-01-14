@@ -27,6 +27,7 @@ export default class AccountService {
     number,
     name,
     description,
+    userId,
     bankId,
   }) {
     try {
