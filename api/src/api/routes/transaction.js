@@ -73,37 +73,37 @@ export default (app) => {
   route.get('/:id?',
     //middlewares.isAuth,
     async (req, res, next) => {
-    const { id } = req.params
-    const { accountId, tags, limit, sort, offset } = req.query;
-    const tagsArray = tags ? tags.split(',').map((id) => parseInt(id, 10)) : undefined;
-    const transactionService = Container.get('transactionService');
-    try {
-      if (id) {
-        const transaction = await transactionService.findById(id);
-        if (!transaction) {
-          return res.sendStatus(404);
+      const { id } = req.params
+      const { accountId, tags, limit, sort, offset } = req.query;
+      const tagsArray = tags ? tags.split(',').map((id) => parseInt(id, 10)) : undefined;
+      const transactionService = Container.get('transactionService');
+      try {
+        if (id) {
+          const transaction = await transactionService.findById(id);
+          if (!transaction) {
+            return res.sendStatus(404);
+          }
+          return res.status(200).json(transaction);
         }
-        return res.status(200).json(transaction);
+        const transactions = await transactionService.findAll(accountId, tagsArray, limit, offset, sort );
+        return res.status(200).json(transactions);
+      } catch (err) {
+        loggerInstance.error('🔥 error: %o', err);
+        return next(err);
       }
-      const transactions = await transactionService.findAll(accountId, tagsArray, limit, offset, sort );
-      return res.status(200).json(transactions);
-    } catch (err) {
-      loggerInstance.error('🔥 error: %o', err);
-      return next(err);
-    }
   });
 
   route.delete('/:id',
     middlewares.isAuth,
     async (req, res, next) => {
-    const { id } = req.params
-    const transactionService = Container.get('transactionService');
-    try {
-      await transactionService.deleteById(id);
-      return res.sendStatus(204);
-    } catch (err) {
-      loggerInstance.error('🔥 error: %o', err);
-      return res.sendStatus(404);
-    }
+      const { id } = req.params
+      const transactionService = Container.get('transactionService');
+      try {
+        await transactionService.deleteById(id);
+        return res.sendStatus(204);
+      } catch (err) {
+        loggerInstance.error('🔥 error: %o', err);
+        return res.sendStatus(404);
+      }
   });
 };

@@ -8,7 +8,8 @@ export default ({
   AccountService,
   TransactionService,
   TagService,
-  RuleService
+  RuleService,
+  RecurrentService,
 }) => {
   Container.set('sequelizeInstance', sequelize);
   logger.info('💉 sequelizeInstance injected');
@@ -34,4 +35,7 @@ export default ({
 
   Container.set('ruleService', new RuleService());
   logger.info('💉 rule service instance injected');
+
+  Container.set('recurrentService', new RecurrentService());
+  logger.info('💉 recurrent payments service instance injected');
 }

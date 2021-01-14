@@ -8,6 +8,7 @@ import TransactionService from '../services/transaction.js';
 import AccountService from '../services/account.js';
 import TagService from '../services/tag.js';
 import RuleService from '../services/rule.js';
+import RecurrentService from '../services/recurrent.js';
 
 export default async ({ expressApp }) => {
   const sequelize = await sequelizeLoader.newConnection();
@@ -21,7 +22,8 @@ export default async ({ expressApp }) => {
     TransactionService,
     AccountService,
     TagService,
-    RuleService
+    RuleService,
+    RecurrentService
   });
   logger.info('🟢 Dependency injection loaded');
 

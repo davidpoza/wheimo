@@ -7,6 +7,7 @@ import account from './routes/account.js';
 import transaction from './routes/transaction.js';
 import tag from './routes/tag.js';
 import rule from './routes/rule.js';
+import recurrent from './routes/recurrent.js';
 
 export default () => {
   const app = Router();
@@ -16,5 +17,6 @@ export default () => {
   transaction(app);
   tag(app);
   rule(app);
+  recurrent(app);
   return app
 }

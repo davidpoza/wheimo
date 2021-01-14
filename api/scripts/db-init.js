@@ -18,7 +18,7 @@ queryInterface.dropTable('users');
 queryInterface.dropTable('accounts');
 queryInterface.dropTable('transactions');
 queryInterface.dropTable('tags');
-queryInterface.dropTable('recurrentPayments');
+queryInterface.dropTable('recurrents');
 queryInterface.dropTable('rules');
 queryInterface.dropTable('tagged');
 queryInterface.dropTable('appliedRules');

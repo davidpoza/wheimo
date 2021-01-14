@@ -4,7 +4,7 @@ export const definition = [
   'accounts',
   {
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-    number: { type: Sequelize.STRING, allowNull: false, unique: true},
+    number: { type: Sequelize.STRING, allowNull: false },
     name: { type: Sequelize.TEXT, allowNull: false},
     description: Sequelize.TEXT,
     balance: { type: Sequelize.FLOAT, allowNull: false, defaultValue: 0.0 },

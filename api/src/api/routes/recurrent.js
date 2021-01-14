@@ -9,27 +9,26 @@ const route = Router();
 export default (app) => {
   const loggerInstance = Container.get('loggerInstance');
 
-  app.use('/accounts', route);
+  app.use('/recurrents', route);
 
   route.post('/',
     middlewares.isAuth,
     celebrate({
       body: Joi.object({
         name: Joi.string().required(),
-        number: Joi.string().required(),
-        description: Joi.string(),
-        bankId: Joi.number().allow(null),
+        amount: Joi.number().required(),
+        emitter: Joi.string().required(),
+        transactionId: Joi.number().allow(null),
       }),
     }),
     async (req, res, next) => {
-      const accountService = Container.get('accountService');
-      const { name, number, description, bankId, accessId, accessPassword } = req.body;
-      const userId = req.user.id;
+      const recurrentService = Container.get('recurrentService');
+      const { name, amount, emitter, transactionId } = req.body;
       try {
-        const account = await accountService.create(
-          { name, number, description, userId, bankId, accessId, accessPassword }
+        const recurrent = await recurrentService.create(
+          { name, amount, emitter, transactionId }
         );
-        res.status(201).json(account);
+        res.status(201).json(recurrent);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
         if (err.name === 'SequelizeUniqueConstraintError') {
@@ -44,25 +43,24 @@ export default (app) => {
     celebrate({
       body: Joi.object({
         name: Joi.string(),
-        number: Joi.string(),
-        description: Joi.string(),
-        balance: Joi.number(),
-        bankId: Joi.number().allow(null),
+        amount: Joi.number(),
+        emitter: Joi.string(),
+        transactionId: Joi.number().allow(null),
       }),
     }),
     async (req, res, next) => {
-      const accountService = Container.get('accountService');
+      const recurrentService = Container.get('recurrentService');
       const { id } = req.params;
+      const { name, amount, emitter, transactionId } = req.body;
       const userId = req.user.id;
-      const { name, number, description, balance, bankId, accessId, accessPassword } = req.body;
       try {
-        const account = await accountService.updateById(id, userId,
-          { name, number, description, balance, bankId, accessId, accessPassword }
+        const recurrent = await recurrentService.updateById(id,
+          { name, amount, emitter, transactionId }
         );
-        if (!account) {
+        if (!recurrent) {
           res.sendStatus(404);
         }
-        res.status(200).json(account);
+        res.status(200).json(recurrent);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
         return next(err);
@@ -72,39 +70,37 @@ export default (app) => {
   route.get('/:id?',
     middlewares.isAuth,
     async (req, res, next) => {
-      const { id } = req.params;
+      const { id } = req.params
+      const { transactionId, limit, sort, offset } = req.query;
       const userId = req.user.id;
-      const accountService = Container.get('accountService');
+      const recurrentService = Container.get('recurrentService');
       try {
         if (id) {
-          const account = await accountService.findById(id, userId);
-          if (!account) {
+          const recurrent = await recurrentService.findById(id, userId);
+          if (!recurrent) {
             return res.sendStatus(404);
           }
-          return res.status(200).json(account);
+          return res.status(200).json(recurrent);
         }
-        const accounts = await accountService.findAll(userId);
-        return res.status(200).json(accounts);
+        const recurrents = await recurrentService.findAll(transactionId, userId, limit, offset, sort );
+        return res.status(200).json(recurrents);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
         return next(err);
       }
-    }
-  );
+  });
 
   route.delete('/:id',
     middlewares.isAuth,
     async (req, res, next) => {
-      const accountService = Container.get('accountService');
-      const { id } = req.params;
-      const userId = req.user.id;
+      const { id } = req.params
+      const recurrentService = Container.get('recurrentService');
       try {
-        await accountService.deleteById(id, userId);
+        await recurrentService.deleteById(id);
         return res.sendStatus(204);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
         return res.sendStatus(404);
       }
-    }
-  );
+  });
 };

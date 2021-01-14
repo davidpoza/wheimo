@@ -1,12 +1,19 @@
 import Sequelize from 'sequelize';
 
 export const definition = [
-  'recurrentPayments',
+  'recurrents',
   {
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
-    name: { type: Sequelize.STRING, allowNull: false, unique: true},
+    name: { type: Sequelize.STRING, allowNull: false },
     amount: { type: Sequelize.FLOAT, allowNull: false, defaultValue: 0.0 }, // estimation
-    emitter: { type: Sequelize.TEXT, allowNull: false},
+    emitter: { type: Sequelize.TEXT, allowNull: false },
+    transactionId: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: 'transactions',
+        key: 'id'
+      }
+    },
     createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
     updatedAt: { type: Sequelize.DATE }
   }, {
