@@ -99,7 +99,7 @@ export default class RecurrentService {
    * It only update owned recurrents->transactions->accounts
    */
   async updateById(id, userId, values) {
-    const recurrent = await this.findById(id, userId, true);
+    let recurrent = await this.findById(id, userId, true);
     if (recurrent) {
       const affectedRows = await this.recurrentModel.update(values, {
         where: { id },
@@ -107,16 +107,23 @@ export default class RecurrentService {
       if (affectedRows === 0) {
         return null;
       }
-      const recurrent = await this.findById(id, userId, true);
+      recurrent = await this.findById(id, userId, true);
       return this.getTemplate(recurrent);
     }
     return null;
   }
 
-  async deleteById(id) {
-    const affectedRows = await this.recurrentModel.destroy({ where: { id } });
-    if (affectedRows === 0) {
-      throw new Error('Recurrent payment does not exist');
+  /**
+   * It only deletes owned transactions->accounts
+   */
+  async deleteById(id, userId) {
+    let recurrent = await this.findById(id, userId, true);
+    if (recurrent) {
+      const affectedRows = await this.recurrentModel.destroy({ where: { id } });
+      if (affectedRows === 0) {
+        throw new Error('Recurrent payment does not exist');
+      }
     }
+    return null;
   }
 };

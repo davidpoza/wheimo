@@ -26,6 +26,7 @@ export default (app) => {
     async (req, res, next) => {
       const transactionService = Container.get('transactionService');
       const { emitter, emitterName, amount, description, accountId, tags } = req.body;
+      const userId = req.user.id;
       try {
         const transaction = await transactionService.create(
           { emitter, emitterName, amount, description, accountId, tags }
@@ -55,9 +56,10 @@ export default (app) => {
     async (req, res, next) => {
       const transactionService = Container.get('transactionService');
       const { id } = req.params;
+      const userId = req.user.id;
       const { emitter, emitterName, amount, description, accountId, tags } = req.body;
       try {
-        const transaction = await transactionService.updateById(id,
+        const transaction = await transactionService.updateById(id, userId,
           { emitter, emitterName, amount, description, accountId, tags }
         );
         if (!transaction) {
@@ -71,21 +73,22 @@ export default (app) => {
     });
 
   route.get('/:id?',
-    //middlewares.isAuth,
+    middlewares.isAuth,
     async (req, res, next) => {
       const { id } = req.params
+      const userId = req.user.id;
       const { accountId, tags, limit, sort, offset } = req.query;
       const tagsArray = tags ? tags.split(',').map((id) => parseInt(id, 10)) : undefined;
       const transactionService = Container.get('transactionService');
       try {
         if (id) {
-          const transaction = await transactionService.findById(id);
+          const transaction = await transactionService.findById(id, userId);
           if (!transaction) {
             return res.sendStatus(404);
           }
           return res.status(200).json(transaction);
         }
-        const transactions = await transactionService.findAll(accountId, tagsArray, limit, offset, sort );
+        const transactions = await transactionService.findAll(accountId, userId, tagsArray, limit, offset, sort );
         return res.status(200).json(transactions);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
@@ -97,9 +100,10 @@ export default (app) => {
     middlewares.isAuth,
     async (req, res, next) => {
       const { id } = req.params
+      const userId = req.user.id;
       const transactionService = Container.get('transactionService');
       try {
-        await transactionService.deleteById(id);
+        await transactionService.deleteById(id, userId);
         return res.sendStatus(204);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);

@@ -95,9 +95,10 @@ export default (app) => {
     middlewares.isAuth,
     async (req, res, next) => {
       const { id } = req.params
+      const userId = req.user.id;
       const recurrentService = Container.get('recurrentService');
       try {
-        await recurrentService.deleteById(id);
+        await recurrentService.deleteById(id, userId);
         return res.sendStatus(204);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);

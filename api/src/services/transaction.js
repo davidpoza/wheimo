@@ -38,6 +38,7 @@ export default class TransactionService {
   }) {
     let assTags;
     try {
+      // TODO: check if account is owned
       const transaction = await this.transactionModel.create(
         { emitter, emitterName, description, amount, accountId });
       // associates tags
@@ -51,15 +52,22 @@ export default class TransactionService {
     }
   }
 
-  async findAll(accountId, tags, limit, offset, sort) {
+  /**
+   * It only selects owned transactions->accounts
+   */
+  async findAll(accountId, userId, tags, limit, offset, sort) {
     let filter = pickBy({ // pickBy (by default) removes undefined keys
       accountId,
       '$tags.id$': tags,
+      '$account.user_id$': userId,
     });
 
     const transactions = await this.transactionModel.findAll(
       {
-        include: { model: this.sequelize.models.tags, as: 'tags' } ,
+        include: [
+          { model: this.sequelize.models.accounts },
+          { model: this.sequelize.models.tags, as: 'tags' }
+        ],
         limit,
         offset,
         where: filter,
@@ -71,10 +79,19 @@ export default class TransactionService {
     });
   }
 
-  async findById(id, entity = false) {
+  /**
+   * It only selects owned transactions->accounts
+   */
+  async findById(id, userId, entity = false) {
     const transaction = await this.transactionModel.findOne({
-      where: { id },
-      include: this.sequelize.models.tags
+      where: {
+        id,
+        '$account.user_id$': userId,
+      },
+      include: [
+        { model: this.sequelize.models.tags },
+        { model: this.sequelize.models.accounts },
+      ]
     });
     if (!transaction) {
       return null;
@@ -85,25 +102,40 @@ export default class TransactionService {
     return this.getTemplate(transaction.dataValues);
   }
 
-  async updateById(id, values) {
-    const affectedRows = await this.transactionModel.update(values, { where: { id } });
-    if (affectedRows === 0) {
-      return null;
-    }
-    let transaction = await this.findById(id, true);
 
-    if (values.tags) {
-      await transaction.setTags(values.tags);
-      transaction = await this.findById(id, true);
-    }
+  /**
+   * It only updates owned transactions->accounts
+   */
+  async updateById(id, userId, values) {
+    let transaction = this.findById(id, userId);
+    if (transaction) {
+      const affectedRows = await this.transactionModel.update(values, { where: { id } });
+      if (affectedRows === 0) {
+        return null;
+      }
+      transaction = await this.findById(id, userId, true);
 
-    return this.getTemplate(transaction);
+      if (values.tags) {
+        await transaction.setTags(values.tags);
+        transaction = await this.findById(id, true);
+      }
+
+      return this.getTemplate(transaction);
+    }
+    return null;
   }
 
-  async deleteById(id) {
-    const affectedRows = await this.transactionModel.destroy({ where: { id } });
-    if (affectedRows === 0) {
-      throw new Error('Transaction does not exist');
+  /**
+   * It only deletes owned transactions->accounts
+   */
+  async deleteById(id, userId) {
+    const transaction = this.findById(id, userId);
+    if (transaction) {
+      const affectedRows = await this.transactionModel.destroy({ where: { id } });
+      if (affectedRows === 0) {
+        throw new Error('Transaction does not exist');
+      }
     }
+    return null;
   }
 };
