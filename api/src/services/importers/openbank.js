@@ -52,14 +52,16 @@ export default class OpenbankImporter {
       return ({
         balance: json.movimientos ? json.movimientos[0].saldo.importe : 0.0,
         transactions: json.movimientos.map((t) => {
+          const [emitter, concept] = t.conceptoTabla.trim().split(', CONCEPTO ');
           return ({
-            description: t.conceptoTabla,
+            description: concept,
+            emitterName: emitter.replace('TRANSFERENCIA DE ', ''),
             valueDate: t.fechaValor,
             transactionDate: t.fechaOperacion,
             amount: t.importe.importe,
           });
         }),
-        holder: json.titular,
+        holder: json.titular.trim(),
       });
     } catch (err) {
       throw err;
