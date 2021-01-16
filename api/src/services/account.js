@@ -21,6 +21,7 @@ export default class AccountService {
       description: a.description,
       balance: a.balance,
       bankId: a.bankId,
+      lastSyncCount: a.lastSyncCount,
       createdAt: a.createdAt,
       updatedAt: a.updatedAt,
     });
@@ -92,7 +93,7 @@ export default class AccountService {
     if (!account) {
       throw new Error('Account does not exist');
     }
-    const { bankId, accessId, accessPassword } = account.dataValues;
+    const { bankId, accessId, accessPassword, lastSyncCount } = account.dataValues;
     let importer;
 
     // select importer
@@ -115,10 +116,34 @@ export default class AccountService {
     }
 
     // fetch transactions
-    const transactions = await importer.fetchTransactions(token, from, contract, product);
-    console.log(transactions)
+    const { balance, transactions } = await importer.fetchTransactions(token, from, contract, product);
 
     // process transactions and get the new ones
-    // save into database
+    const newTransactionsCount = transactions.length - lastSyncCount;
+    this.logger.info(`There are ${newTransactionsCount} new transactions in account #${account.id}`);
+
+    if (newTransactionsCount > 0) {
+      const newTransactions = transactions.slice(0, newTransactionsCount - 1);
+
+      // save new transactions into database
+      const queryArray = newTransactions.map((t) => {
+        return({
+          receipt: t.receipt,
+          emitterName: t.emitterName,
+          description: t.description,
+          amount: t.amount,
+          currency: t.currency,
+          date: t.transactionDate,
+          valueDate: t.valueDate,
+          accountId,
+          userId,
+        });
+      });
+      await this.transactionModel.bulkCreate(queryArray);
+
+      // update sync count
+      this.logger.info(`Updating lastSyncAccount`);
+      await this.updateById(accountId, userId, { lastSyncCount: lastSyncCount + newTransactionsCount });
+    }
   }
 };

@@ -15,9 +15,12 @@ export default (app) => {
     middlewares.isAuth,
     celebrate({
       body: Joi.object({
-        emitter: Joi.string().required(),
+        receipt: Joi.boolean(),
         emitterName: Joi.string(),
         amount: Joi.number().required(),
+        currency: Joi.string().required(),
+        date: Joi.string().required(),
+        valueDate: Joi.string().required(),
         description: Joi.string(),
         accountId: Joi.number().required(),
         tags: Joi.array().items(Joi.number()),
@@ -25,11 +28,11 @@ export default (app) => {
     }),
     async (req, res, next) => {
       const transactionService = Container.get('transactionService');
-      const { emitter, emitterName, amount, description, accountId, tags } = req.body;
+      const { receipt, emitterName, amount, currency, description, accountId, date, valueDate, tags } = req.body;
       const userId = req.user.id;
       try {
         const transaction = await transactionService.create(
-          { emitter, emitterName, amount, description, accountId, tags, userId }
+          { receipt, emitterName, amount, currency, description, accountId, date, valueDate, tags, userId }
         );
         if (!transaction) {
           res.sendStatus(403);
@@ -48,9 +51,12 @@ export default (app) => {
     middlewares.isAuth,
     celebrate({
       body: Joi.object({
-        emitter: Joi.string(),
+        receipt: Joi.boolean(),
         emitterName: Joi.string(),
         amount: Joi.number(),
+        currency: Joi.string(),
+        date: Joi.string(),
+        valueDate: Joi.string(),
         description: Joi.string(),
         accountId: Joi.number(),
         tags: Joi.array().items(Joi.number()),
@@ -60,10 +66,10 @@ export default (app) => {
       const transactionService = Container.get('transactionService');
       const { id } = req.params;
       const userId = req.user.id;
-      const { emitter, emitterName, amount, description, accountId, tags } = req.body;
+      const { emitterName, amount, description, accountId, tags } = req.body;
       try {
         const transaction = await transactionService.updateById(id, userId,
-          { emitter, emitterName, amount, description, accountId, tags }
+          { emitterName, amount, description, accountId, tags }
         );
         if (!transaction) {
           res.sendStatus(404);

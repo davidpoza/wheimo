@@ -11,6 +11,7 @@ export const definition = [
     bankId: { type: Sequelize.STRING },
     accessId: { type: Sequelize.STRING },
     accessPassword: { type: Sequelize.STRING },
+    lastSyncCount: { type: Sequelize.INTEGER, defaultValue: 0 },
     createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
     updatedAt: { type: Sequelize.DATE },
     userId: {

@@ -34,7 +34,6 @@ export default class OpenbankImporter {
    * @param {string} product - number with format DDD
    */
   static async fetchTransactions(token, from, contract, product) {
-    console.log(token)
     try {
       let url = 'https://api.openbank.es/my-money/cuentas/movimientos';
       url += `?fechaDesde=${from}&numeroContrato=${contract}&producto=${product}`;
@@ -45,7 +44,6 @@ export default class OpenbankImporter {
         },
       });
       const json = await res.json();
-      console.log(JSON.stringify(json))
       if (json.error) {
         throw new Error(json.error);
       }
@@ -54,11 +52,20 @@ export default class OpenbankImporter {
         transactions: json.movimientos.map((t) => {
           const [emitter, concept] = t.conceptoTabla.trim().split(', CONCEPTO ');
           return ({
+            receipt: t.recibo,
+            categories: t.categorias.map((c) => {
+              return ({
+                online: c.online,
+                category: c.category,
+                subcategory: c.subcategory
+              });
+            }),
             description: concept,
             emitterName: emitter.replace('TRANSFERENCIA DE ', ''),
             valueDate: t.fechaValor,
             transactionDate: t.fechaOperacion,
             amount: t.importe.importe,
+            currency: t.importe.divisa,
           });
         }),
         holder: json.titular.trim(),

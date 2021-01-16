@@ -1,6 +1,6 @@
 import { Container } from 'typedi';
 import pickBy from 'lodash.pickby';
-
+import dayjs from 'dayjs';
 export default class TransactionService {
   constructor() {
     this.sequelize = Container.get('sequelizeInstance');
@@ -13,10 +13,13 @@ export default class TransactionService {
     if (t) {
       return ({
         id: t.id,
-        emitter: t.emitter,
+        receipt: t.receipt,
         emitterName: t.emitterName,
         description: t.description,
         amount: t.amount,
+        currency: t.currency,
+        date: t.date,
+        valueDate: t.valueDate,
         accountId: t.accountId,
         createdAt: t.createdAt,
         updatedAt: t.updatedAt,
@@ -30,13 +33,19 @@ export default class TransactionService {
   }
 
   /**
-   * It only creates transactions in within owned accounts
-   */
+    * It only creates transactions in within owned accounts
+    * @param {Object} params
+    * @param {string} params.date - date in format YYYY-MM-DD
+    * @param {string} params.valueDate - value date in format YYYY-MM-DD
+    */
   async create({
-    emitter,
+    receipt,
     emitterName,
     description,
     amount,
+    currency,
+    date,
+    valueDate,
     accountId,
     tags,
     userId,
@@ -45,8 +54,18 @@ export default class TransactionService {
     try {
       const account = await this.accountService.findById(accountId, userId, true);
       if (account) {
+
         const transaction = await this.transactionModel.create(
-          { emitter, emitterName, description, amount, accountId });
+          {
+            receipt,
+            emitterName,
+            description,
+            amount,
+            currency,
+            date,
+            valueDate,
+            accountId
+          });
         // associates tags
         if (tags) {
           assTags = await transaction.setTags(tags);
