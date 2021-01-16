@@ -1,6 +1,5 @@
 import { Container } from 'typedi';
 import pickBy from 'lodash.pickby';
-import dayjs from 'dayjs';
 export default class TransactionService {
   constructor() {
     this.sequelize = Container.get('sequelizeInstance');
@@ -15,6 +14,7 @@ export default class TransactionService {
         id: t.id,
         receipt: t.receipt,
         emitterName: t.emitterName,
+        receiverName: t.receiverName,
         description: t.description,
         amount: t.amount,
         currency: t.currency,
@@ -59,6 +59,7 @@ export default class TransactionService {
           {
             receipt,
             emitterName,
+            receiverName,
             description,
             amount,
             currency,

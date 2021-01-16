@@ -17,6 +17,7 @@ export default (app) => {
       body: Joi.object({
         receipt: Joi.boolean(),
         emitterName: Joi.string(),
+        receiverName: Joi.string(),
         amount: Joi.number().required(),
         currency: Joi.string().required(),
         date: Joi.string().required(),
@@ -28,11 +29,22 @@ export default (app) => {
     }),
     async (req, res, next) => {
       const transactionService = Container.get('transactionService');
-      const { receipt, emitterName, amount, currency, description, accountId, date, valueDate, tags } = req.body;
+      const {
+        receipt,
+        emitterName,
+        receiverName,
+        amount,
+        currency,
+        description,
+        accountId,
+        date,
+        valueDate,
+        tags
+       } = req.body;
       const userId = req.user.id;
       try {
         const transaction = await transactionService.create(
-          { receipt, emitterName, amount, currency, description, accountId, date, valueDate, tags, userId }
+          { receipt, emitterName, receiverName, amount, currency, description, accountId, date, valueDate, tags, userId }
         );
         if (!transaction) {
           res.sendStatus(403);
@@ -53,6 +65,7 @@ export default (app) => {
       body: Joi.object({
         receipt: Joi.boolean(),
         emitterName: Joi.string(),
+        receiverName: Joi.string(),
         amount: Joi.number(),
         currency: Joi.string(),
         date: Joi.string(),
@@ -66,10 +79,10 @@ export default (app) => {
       const transactionService = Container.get('transactionService');
       const { id } = req.params;
       const userId = req.user.id;
-      const { emitterName, amount, description, accountId, tags } = req.body;
+      const { emitterName, receiverName, amount, description, accountId, tags } = req.body;
       try {
         const transaction = await transactionService.updateById(id, userId,
-          { emitterName, amount, description, accountId, tags }
+          { emitterName, receiverName, amount, description, accountId, tags }
         );
         if (!transaction) {
           res.sendStatus(404);

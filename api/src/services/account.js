@@ -130,6 +130,7 @@ export default class AccountService {
         return({
           receipt: t.receipt,
           emitterName: t.emitterName,
+          receiverName: t.receiverName,
           description: t.description,
           amount: t.amount,
           currency: t.currency,

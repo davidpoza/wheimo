@@ -34,6 +34,9 @@ export default class OpenbankImporter {
    * @param {string} product - number with format DDD
    */
   static async fetchTransactions(token, from, contract, product) {
+    const concept_separator = /,? CONCEPTO /;
+    const hasReceiver = /(BIZUM|TRANSFERENCIA) ([A-Z]* )?A FAVOR DE/;
+    const hasEmitter = /(BIZUM|TRANSFERENCIA) ([A-Z]* )?DE /;
     try {
       let url = 'https://api.openbank.es/my-money/cuentas/movimientos';
       url += `?fechaDesde=${from}&numeroContrato=${contract}&producto=${product}`;
@@ -50,7 +53,16 @@ export default class OpenbankImporter {
       return ({
         balance: json.movimientos ? json.movimientos[0].saldo.importe : 0.0,
         transactions: json.movimientos.map((t) => {
-          const [emitter, concept] = t.conceptoTabla.trim().split(', CONCEPTO ');
+          let concept = '';
+          let emitter = '';
+          let receiver = '';
+          if (hasReceiver.test(t.conceptoTabla)) {
+            [receiver, concept] = t.conceptoTabla.trim().split(concept_separator);
+          } else if (hasEmitter.test(t.conceptoTabla)) {
+            [emitter, concept] = t.conceptoTabla.trim().split(concept_separator);
+          } else {
+            concept = t.conceptoTabla.trim();
+          }
           return ({
             receipt: t.recibo,
             categories: t.categorias.map((c) => {
@@ -61,7 +73,8 @@ export default class OpenbankImporter {
               });
             }),
             description: concept,
-            emitterName: emitter.replace('TRANSFERENCIA DE ', ''),
+            emitterName: emitter.replace(hasEmitter, ''),
+            receiverName: receiver.replace(hasReceiver, ''),
             valueDate: t.fechaValor,
             transactionDate: t.fechaOperacion,
             amount: t.importe.importe,

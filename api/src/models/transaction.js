@@ -6,6 +6,7 @@ export const definition = [
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
     receipt: { type: Sequelize.BOOLEAN, defaultValue: false },
     emitterName: { type: Sequelize.TEXT, allowNull: true },
+    receiverName: { type: Sequelize.TEXT, allowNull: true },
     description: Sequelize.TEXT,
     amount: { type: Sequelize.FLOAT, allowNull: false },
     currency: { type: Sequelize.TEXT, allowNull: false },
