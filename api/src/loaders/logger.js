@@ -19,6 +19,15 @@ if(process.env.NODE_ENV === 'development') {
   )
 }
 
+function levelIcon(level) {
+  switch (level) {
+    case 'error':
+      return '🔥';
+    default:
+      return 'ℹ️';
+  }
+}
+
 const LoggerInstance = winston.createLogger({
   level: config.logs.level,
   levels: winston.config.npm.levels,
@@ -32,7 +41,7 @@ const LoggerInstance = winston.createLogger({
         ret.ip = info.req? utils.getIp(info.req) : '';
         ret.timestamp = info.timestamp || '';
         ret.status = info.status || '';
-        ret.level = info.level || '';
+        ret.level = `${levelIcon(info.level)} ${info.level}` || '';
         ret.method = info.req? info.req.method : '';
         ret.stack = info.stack? info.stack : '';
         ret.path = info.req? info.req.originalUrl : '';
