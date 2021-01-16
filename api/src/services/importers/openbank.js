@@ -21,6 +21,13 @@ export default class OpenBankImporter {
     }
   }
 
+  /**
+   *
+   * @param {string} token - obtain it from login method
+   * @param {string} from - format AAAA-MM-DD
+   * @param {string} contract - number DDDDDDD format
+   * @param {string} product - number with format DDD
+   */
   async fetchTransactions(token, from, contract, product) {
     console.log(token)
     try {
@@ -33,6 +40,7 @@ export default class OpenBankImporter {
         },
       });
       const json = await res.json();
+      console.log(JSON.stringify(json))
       if (json.error) {
         throw new Error(json.error);
       }
@@ -52,11 +60,4 @@ export default class OpenBankImporter {
       throw err;
     }
   }
-}
-
-const instance = new OpenBankImporter();
-
-const token = await instance.login('xxxx', 'xxx');
-if (token) {
-  console.log(await instance.fetchTransactions(token, '2019-01-14', 'xxxx', 'xxx'));
 }
