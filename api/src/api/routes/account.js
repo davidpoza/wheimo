@@ -111,4 +111,35 @@ export default (app) => {
       }
     }
   );
+
+  route.post('/:id/resync',
+    middlewares.isAuth,
+    celebrate({
+      body: Joi.object({
+        from: Joi.string().required(),
+        contract: Joi.string(),
+        product: Joi.string()
+      }),
+    }),
+    async (req, res, next) => {
+      const accountService = Container.get('accountService');
+      const { from, contract, product } = req.body;
+      const { id } = req.params;
+      const userId = req.user.id;
+      try {
+        await accountService.resync(
+          { accountId:id, userId, from, other: { contract, product } }
+        );
+        res.sendStatus(204);
+      } catch (err) {
+        loggerInstance.error(err.message);
+        if (err.name === 'SequelizeUniqueConstraintError') {
+          return res.sendStatus(400);
+        } else if (err.name === 'forbidden') {
+          return res.sendStatus(403);
+        }
+        return next(err);
+      }
+    });
+
 };

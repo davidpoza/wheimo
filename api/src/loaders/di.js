@@ -10,6 +10,7 @@ export default ({
   TagService,
   RuleService,
   RecurrentService,
+  OpenbankImporter
 }) => {
   Container.set('sequelizeInstance', sequelize);
   logger.info('💉 sequelizeInstance injected');
@@ -38,4 +39,7 @@ export default ({
 
   Container.set('recurrentService', new RecurrentService());
   logger.info('💉 recurrent payments service instance injected');
+
+  Container.set('OpenbankImporter', OpenbankImporter);
+  logger.info('💉 openbank importer injected');
 }

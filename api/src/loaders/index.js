@@ -9,6 +9,7 @@ import AccountService from '../services/account.js';
 import TagService from '../services/tag.js';
 import RuleService from '../services/rule.js';
 import RecurrentService from '../services/recurrent.js';
+import OpenbankImporter from '../services/importers/openbank.js';
 
 export default async ({ expressApp }) => {
   const sequelize = await sequelizeLoader.newConnection();
@@ -23,7 +24,8 @@ export default async ({ expressApp }) => {
     AccountService,
     TagService,
     RuleService,
-    RecurrentService
+    RecurrentService,
+    OpenbankImporter
   });
   logger.info('🟢 Dependency injection loaded');
 

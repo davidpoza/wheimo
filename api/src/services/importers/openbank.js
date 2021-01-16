@@ -1,8 +1,13 @@
 import fetch from 'node-fetch';
 
 
-export default class OpenBankImporter {
-  async login(accessId, accessPassword) {
+export default class OpenbankImporter {
+
+  /**
+   * @param {string} accessId - national document identity e.g.: 55667788Y
+   * @param {string} accessPassword
+   */
+  static async login(accessId, accessPassword) {
     try {
       const res = await fetch('https://api.openbank.es/authenticationcomposite/login', {
         method: 'post',
@@ -28,7 +33,7 @@ export default class OpenBankImporter {
    * @param {string} contract - number DDDDDDD format
    * @param {string} product - number with format DDD
    */
-  async fetchTransactions(token, from, contract, product) {
+  static async fetchTransactions(token, from, contract, product) {
     console.log(token)
     try {
       let url = 'https://api.openbank.es/my-money/cuentas/movimientos';
@@ -45,7 +50,7 @@ export default class OpenBankImporter {
         throw new Error(json.error);
       }
       return ({
-        balance: json.movimientos[0].saldo.importe,
+        balance: json.movimientos ? json.movimientos[0].saldo.importe : 0.0,
         transactions: json.movimientos.map((t) => {
           return ({
             description: t.conceptoTabla,

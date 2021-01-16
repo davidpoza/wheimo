@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { Container } from 'typedi';
 import AES from 'crypto-js/aes.js';
+import CryptoJS from 'crypto-js';
 
 import config from '../config/config.js';
 
@@ -9,6 +10,7 @@ export default class AccountService {
     this.sequelize = Container.get('sequelizeInstance');
     this.logger = Container.get('loggerInstance');
     this.accountModel = this.sequelize.models.accounts;
+    this.transactionModel = this.sequelize.models.transactions;
   }
 
   getTemplate(a) {
@@ -80,5 +82,43 @@ export default class AccountService {
     if (affectedRows === 0) {
       throw new Error('Account does not exist');
     }
+  }
+
+  async resync({ accountId, userId, from, other }) {
+    const { contract, product } = other;
+
+    // get bankId of account
+    const account = await this.accountModel.findOne({ where: { id: accountId, userId } });
+    if (!account) {
+      throw new Error('Account does not exist');
+    }
+    const { bankId, accessId, accessPassword } = account.dataValues;
+    let importer;
+
+    // select importer
+    switch (bankId) {
+      case 'opbk':
+        importer = Container.get('OpenbankImporter');
+      break;
+      default:
+        throw new Error('Wrong bankId');
+    }
+
+    // login
+    const descryptedPassword = AES.decrypt(accessPassword, config.aesPassphrase).toString(CryptoJS.enc.Utf8);
+    const token = await importer.login(accessId, descryptedPassword);
+    this.logger.info('Login into bank account successfully');
+    if (!token) {
+      const forbidden = new Error('Forbidden: login into bank account failed');
+      forbidden.name = 'forbidden';
+      throw forbidden;
+    }
+
+    // fetch transactions
+    const transactions = await importer.fetchTransactions(token, from, contract, product);
+    console.log(transactions)
+
+    // process transactions and get the new ones
+    // save into database
   }
 };
