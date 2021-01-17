@@ -23,6 +23,7 @@ export default (app) => {
         date: Joi.string().required(),
         valueDate: Joi.string().required(),
         description: Joi.string(),
+        assCard: Joi.string(),
         accountId: Joi.number().required(),
         tags: Joi.array().items(Joi.number()),
       }),
@@ -36,6 +37,7 @@ export default (app) => {
         amount,
         currency,
         description,
+        assCard,
         accountId,
         date,
         valueDate,
@@ -44,7 +46,20 @@ export default (app) => {
       const userId = req.user.id;
       try {
         const transaction = await transactionService.create(
-          { receipt, emitterName, receiverName, amount, currency, description, accountId, date, valueDate, tags, userId }
+          {
+            receipt,
+            emitterName,
+            receiverName,
+            amount,
+            currency,
+            description,
+            assCard,
+            accountId,
+            date,
+            valueDate,
+            tags,
+            userId
+          }
         );
         if (!transaction) {
           res.sendStatus(403);
@@ -71,6 +86,7 @@ export default (app) => {
         date: Joi.string(),
         valueDate: Joi.string(),
         description: Joi.string(),
+        assCard: Joi.string(),
         accountId: Joi.number(),
         tags: Joi.array().items(Joi.number()),
       }),
@@ -79,10 +95,10 @@ export default (app) => {
       const transactionService = Container.get('transactionService');
       const { id } = req.params;
       const userId = req.user.id;
-      const { emitterName, receiverName, amount, description, accountId, tags } = req.body;
+      const { emitterName, receiverName, amount, description, assCard, accountId, tags } = req.body;
       try {
         const transaction = await transactionService.updateById(id, userId,
-          { emitterName, receiverName, amount, description, accountId, tags }
+          { emitterName, receiverName, amount, description, assCard, accountId, tags }
         );
         if (!transaction) {
           res.sendStatus(404);

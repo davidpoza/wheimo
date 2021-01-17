@@ -35,7 +35,7 @@ export default class Scheduler {
           console.log(a.dataValues.id);
           this.accountService.resync({
             accountId: a.dataValues.id,
-            from: dayjs().subtract(10, 'day').format('YYYY-MM-DD'), // time window of 10 days is more likely suficient
+            from: dayjs().subtract(60, 'day').format('YYYY-MM-DD'), // time window of 10 days is more likely suficient
             admin: true,
             settings: a.dataValues.settings || {}
           });

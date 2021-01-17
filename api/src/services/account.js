@@ -160,6 +160,7 @@ export default class AccountService {
           emitterName: t.emitterName,
           receiverName: t.receiverName,
           description: t.description,
+          assCard: t.assCard,
           amount: t.amount,
           currency: t.currency,
           date: t.transactionDate,

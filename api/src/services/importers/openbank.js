@@ -34,9 +34,10 @@ export default class OpenbankImporter {
    * @param {string} product - number with format DDD
    */
   static async fetchTransactions(token, from, contract, product) {
-    const concept_separator = /,? CONCEPTO /;
+    const conceptSeparator = /,? CONCEPTO /;
     const hasReceiver = /(BIZUM|TRANSFERENCIA) ([A-Z]* )?A FAVOR DE/;
     const hasEmitter = /(BIZUM|TRANSFERENCIA) ([A-Z]* )?DE /;
+    const withCard = /,? CON LA TARJETA : ([0-9X]{16})/;
     try {
       let url = 'https://api.openbank.es/my-money/cuentas/movimientos';
       url += `?fechaDesde=${from}&numeroContrato=${contract}&producto=${product}`;
@@ -61,10 +62,14 @@ export default class OpenbankImporter {
           let concept = '';
           let emitter = '';
           let receiver = '';
+          let assCard = '';
           if (hasReceiver.test(t.conceptoTabla)) {
-            [receiver, concept] = t.conceptoTabla.trim().split(concept_separator);
+            [receiver, concept] = t.conceptoTabla.trim().split(conceptSeparator);
           } else if (hasEmitter.test(t.conceptoTabla)) {
-            [emitter, concept] = t.conceptoTabla.trim().split(concept_separator);
+            [emitter, concept] = t.conceptoTabla.trim().split(conceptSeparator);
+          } else if (withCard.test(t.conceptoTabla)) {
+            assCard = t.conceptoTabla.match(withCard)[1];
+            [concept] = t.conceptoTabla.trim().split(withCard);
           } else {
             concept = t.conceptoTabla.trim();
           }
@@ -78,6 +83,7 @@ export default class OpenbankImporter {
               });
             }),
             description: concept,
+            assCard,
             emitterName: emitter.replace(hasEmitter, ''),
             receiverName: receiver.replace(hasReceiver, ''),
             valueDate: t.fechaValor,
