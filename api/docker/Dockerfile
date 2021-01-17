@@ -6,12 +6,12 @@ RUN apk add git
 WORKDIR /usr/src/app
 RUN git clone https://github.com/davidpoza/wheimo.git .
 COPY .env ./api
-RUN cd api
 RUN chown -R node:node .
 
 USER node
-RUN npm install --only=production
+RUN cd api && npm install --only=production
 
 EXPOSE 4321
 
-CMD [ "node", "src/app.js" ]
+RUN node api/scripts/db-init.js
+CMD [ "node", "api/src/app.js" ]
