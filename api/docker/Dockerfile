@@ -6,8 +6,9 @@ RUN apk add git
 WORKDIR /usr/src/app
 RUN git clone https://github.com/davidpoza/wheimo.git .
 COPY .env ./api
-
 RUN cd api
+RUN chown -R node:node .
+
 USER node
 RUN npm install --only=production
 
