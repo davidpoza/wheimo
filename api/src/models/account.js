@@ -1,5 +1,9 @@
 import Sequelize from 'sequelize';
 
+/**
+ * bankId: id used to select correct importer
+ * settings: bank depending options, used by importer
+ */
 export const definition = [
   'accounts',
   {
@@ -8,10 +12,17 @@ export const definition = [
     name: { type: Sequelize.TEXT, allowNull: false},
     description: Sequelize.TEXT,
     balance: { type: Sequelize.FLOAT, allowNull: false, defaultValue: 0.0 },
-    bankId: { type: Sequelize.STRING },
+    bankId: {
+      type: Sequelize.STRING,
+      validate: {
+        isIn: [['opbk']],
+      },
+      allowNull: false,
+    },
     accessId: { type: Sequelize.STRING },
     accessPassword: { type: Sequelize.STRING },
     lastSyncCount: { type: Sequelize.INTEGER, defaultValue: 0 },
+    settings: { type: Sequelize.JSON },
     createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
     updatedAt: { type: Sequelize.DATE },
     userId: {

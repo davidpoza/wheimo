@@ -26,6 +26,9 @@ JWT_ALGORITHM=HS256
 
 # passphrase used to encrypt access password
 AES_PASSPHRASE=xxxxxxx
+
+# Resync frequency in minutes
+RESYNC_FREQ=10
 ```
 
 ## API

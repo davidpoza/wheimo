@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import pickBy from 'lodash.pickby';
 import { Container } from 'typedi';
 import AES from 'crypto-js/aes.js';
 import CryptoJS from 'crypto-js';
@@ -11,6 +11,13 @@ export default class AccountService {
     this.logger = Container.get('loggerInstance');
     this.accountModel = this.sequelize.models.accounts;
     this.transactionModel = this.sequelize.models.transactions;
+    this.getTemplate = this.getTemplate.bind(this);
+    this.create = this.create.bind(this);
+    this.findAll = this.findAll.bind(this);
+    this.findById = this.findById.bind(this);
+    this.deleteById = this.deleteById.bind(this);
+    this.updateById = this.updateById.bind(this);
+    this.resync = this.resync.bind(this);
   }
 
   getTemplate(a) {
@@ -35,11 +42,21 @@ export default class AccountService {
     bankId,
     accessId,
     accessPassword,
+    settings
   }) {
     try {
       const encryptedPassword = AES.encrypt(accessPassword, config.aesPassphrase).toString();
       const account = await this.accountModel.create(
-        { number, name, description, userId, bankId, accessId, accessPassword: encryptedPassword });
+        {
+          number,
+          name,
+          description,
+          userId,
+          bankId,
+          accessId,
+          accessPassword: encryptedPassword,
+          settings
+        });
       return account;
     } catch (err) {
       this.logger.error(err);
@@ -55,7 +72,11 @@ export default class AccountService {
   }
 
   async findById(id, userId, entity = false) {
-    const account = await this.accountModel.findOne({ where: { id, userId } });
+    let filter = pickBy({ // pickBy (by default) removes undefined keys
+      id,
+      userId
+    });
+    const account = await this.accountModel.findOne({ where: filter });
     if (!account) {
       return null;
     }
@@ -66,12 +87,16 @@ export default class AccountService {
   }
 
   async updateById(id, userId, values) {
+    let filter = pickBy({ // pickBy (by default) removes undefined keys
+      id,
+      userId
+    });
     let encryptedPassword;
     if (values.accessPassword) {
       encryptedPassword = AES.encrypt(values.accessPassword, config.aesPassphrase).toString();
       values.accessPassword = encryptedPassword;
     }
-    const affectedRows = await this.accountModel.update(values, { where: { id, userId } });
+    const affectedRows = await this.accountModel.update(values, { where: filter });
     if (affectedRows === 0) {
       return null;
     }
@@ -85,11 +110,14 @@ export default class AccountService {
     }
   }
 
-  async resync({ accountId, userId, from, other }) {
-    const { contract, product } = other;
-
+  /**
+   *
+   * @param {Object} param
+   * @param {boolean} param.admin - if true then userId is not needed
+   */
+  async resync({ accountId, userId, from, admin, settings: { contract, product } = {} }) {
     // get bankId of account
-    const account = await this.accountModel.findOne({ where: { id: accountId, userId } });
+    const account = await this.accountModel.findOne({ where: admin ? { id: accountId } : { id: accountId, userId } });
     if (!account) {
       throw new Error('Account does not exist');
     }
@@ -144,7 +172,7 @@ export default class AccountService {
 
       // update sync count
       this.logger.info(`Updating lastSyncAccount`);
-      await this.updateById(accountId, userId, { lastSyncCount: lastSyncCount + newTransactionsCount });
+      await this.updateById(accountId, userId, { balance, lastSyncCount: lastSyncCount + newTransactionsCount });
     }
   }
 };

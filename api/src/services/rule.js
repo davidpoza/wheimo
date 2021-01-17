@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-
+import pickBy from 'lodash.pickby';
 
 export default class RuleService {
   constructor() {
@@ -47,7 +47,11 @@ export default class RuleService {
   }
 
   async findById(id, userId) {
-    const rule = await this.ruleModel.findOne({ where: { id, userId } });
+    const filter = pickBy({ // pickBy (by default) removes undefined keys
+      id,
+      userId,
+    });
+    const rule = await this.ruleModel.findOne({ where: filter });
     if (!rule) {
       return null;
     }
@@ -55,7 +59,11 @@ export default class RuleService {
   }
 
   async updateById(id, userId, values) {
-    const affectedRows = await this.ruleModel.update(values, { where: { id, userId } });
+    const filter = pickBy({ // pickBy (by default) removes undefined keys
+      id,
+      userId,
+    });
+    const affectedRows = await this.ruleModel.update(values, { where: filter });
     if (affectedRows === 0) {
       return null;
     }

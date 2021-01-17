@@ -2,6 +2,7 @@ import expressLoader from './express.js';
 import sequelizeLoader from './sequelize.js';
 import diLoader from './di.js';
 import logger from './logger.js';
+import Scheduler from './scheduler.js';
 import AuthService from '../services/auth.js';
 import UserService from '../services/user.js';
 import TransactionService from '../services/transaction.js';
@@ -25,9 +26,14 @@ export default async ({ expressApp }) => {
     TagService,
     RuleService,
     RecurrentService,
-    OpenbankImporter
+    OpenbankImporter,
+    //<-- add scheduler as last dependency
   });
   logger.info('🟢 Dependency injection loaded');
+
+  logger.info('🟢 scheduler loaded');
+  const scheduler = new Scheduler();
+  await scheduler.scheduleJobs();
 
   await expressLoader({ app: expressApp });
   logger.info('🟢 Express loaded');

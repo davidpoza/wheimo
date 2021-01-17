@@ -54,7 +54,6 @@ export default class TransactionService {
     try {
       const account = await this.accountService.findById(accountId, userId, true);
       if (account) {
-
         const transaction = await this.transactionModel.create(
           {
             receipt,
@@ -111,11 +110,12 @@ export default class TransactionService {
    * It only selects owned transactions->accounts
    */
   async findById(id, userId, entity = false) {
+    const filter = pickBy({ // pickBy (by default) removes undefined keys
+      id,
+      '$account.user_id$': userId,
+    });
     const transaction = await this.transactionModel.findOne({
-      where: {
-        id,
-        '$account.user_id$': userId,
-      },
+      where: filter,
       include: [
         { model: this.sequelize.models.tags },
         { model: this.sequelize.models.accounts },

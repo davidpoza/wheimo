@@ -86,12 +86,13 @@ export default class RecurrentService {
    * It only selects owned recurrents->transactions->accounts
    */
   async findById(id, userId, entity = false) {
+    const filter = pickBy({ // pickBy (by default) removes undefined keys
+      id,
+      '$transaction.account.user_id$': userId,
+    });
     const recurrent = await this.recurrentModel.findOne({
       attributes: { exclude: ['accountId'] },
-      where: {
-        id,
-        '$transaction.account.user_id$': userId,
-      },
+      where: filter,
       include: {
         model: this.sequelize.models.transactions,
         include: {

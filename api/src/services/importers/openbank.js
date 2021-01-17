@@ -48,6 +48,11 @@ export default class OpenbankImporter {
       });
       const json = await res.json();
       if (json.error) {
+        if (json.error === 'XX9511') {
+          const notFound = new Error('no transactions found');
+          notFound.name = 'not-found';
+          throw new Error(notFound);
+        }
         throw new Error(json.error);
       }
       return ({

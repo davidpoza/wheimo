@@ -19,17 +19,32 @@ export default (app) => {
         number: Joi.string().required(),
         description: Joi.string(),
         bankId: Joi.string().required(),
+        settings: Joi.object({
+          contract: Joi.string(),
+          product: Joi.string()
+        }),
         accessId: Joi.string(),
         accessPassword: Joi.string(),
       }),
     }),
     async (req, res, next) => {
       const accountService = Container.get('accountService');
-      const { name, number, description, bankId, accessId, accessPassword } = req.body;
+      const {
+        name, number, description, bankId, accessId, accessPassword, settings
+      } = req.body;
       const userId = req.user.id;
       try {
         const account = await accountService.create(
-          { name, number, description, userId, bankId, accessId, accessPassword }
+          {
+            name,
+            number,
+            description,
+            userId,
+            bankId,
+            accessId,
+            accessPassword,
+            settings
+          }
         );
         res.status(201).json(account);
       } catch (err) {
@@ -50,6 +65,10 @@ export default (app) => {
         description: Joi.string(),
         balance: Joi.number(),
         bankId: Joi.string(),
+        settings: Joi.object({
+          contract: Joi.string(),
+          product: Joi.string()
+        }),
         accessId: Joi.string(),
         accessPassword: Joi.string(),
       }),
@@ -58,10 +77,21 @@ export default (app) => {
       const accountService = Container.get('accountService');
       const { id } = req.params;
       const userId = req.user.id;
-      const { name, number, description, balance, bankId, accessId, accessPassword } = req.body;
+      const {
+        name, number, description, balance, bankId, accessId, accessPassword, settings
+      } = req.body;
       try {
         const account = await accountService.updateById(id, userId,
-          { name, number, description, balance, bankId, accessId, accessPassword }
+          {
+            name,
+            number,
+            description,
+            balance,
+            bankId,
+            accessId,
+            accessPassword,
+            settings
+          }
         );
         if (!account) {
           res.sendStatus(404);
@@ -128,13 +158,15 @@ export default (app) => {
       const userId = req.user.id;
       try {
         await accountService.resync(
-          { accountId:id, userId, from, other: { contract, product } }
+          { accountId:id, userId, from, settings: { contract, product } }
         );
         res.sendStatus(204);
       } catch (err) {
         loggerInstance.error(err.message);
         if (err.name === 'SequelizeUniqueConstraintError') {
           return res.sendStatus(400);
+        } else if (err.name === 'not-found') {
+          return res.sendStatus(404);
         } else if (err.name === 'forbidden') {
           return res.sendStatus(403);
         }
