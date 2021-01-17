@@ -32,13 +32,14 @@ export default class Scheduler {
       if (accounts) {
         this.logger.info(`There are ${accounts.length} accounts to process`);
         for (const a of accounts) {
-          console.log(a.dataValues.id);
-          this.accountService.resync({
-            accountId: a.dataValues.id,
-            from: dayjs().subtract(60, 'day').format('YYYY-MM-DD'), // time window of 10 days is more likely suficient
-            admin: true,
-            settings: a.dataValues.settings || {}
-          });
+          if (a.accessId && a.accessPassword) {
+            this.accountService.resync({
+              accountId: a.dataValues.id,
+              from: dayjs().subtract(60, 'day').format('YYYY-MM-DD'), // time window of 10 days is more likely suficient
+              admin: true,
+              settings: a.dataValues.settings || {}
+            });
+          }
         };
         this.logger.info(`Job ended`);
       }
