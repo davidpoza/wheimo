@@ -22,8 +22,9 @@ export default (app) => {
     async (req, res, next) => {
       const tagService = Container.get('tagService');
       const { name, rules } = req.body;
+      const userId = req.user.id;
       try {
-        const transaction = await tagService.create({ name, rules });
+        const transaction = await tagService.create({ name, rules, userId });
         res.status(201).json(transaction);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
@@ -46,8 +47,9 @@ export default (app) => {
       const tagService = Container.get('tagService');
       const { id } = req.params;
       const { name, rules } = req.body;
+      const userId = req.user.id;
       try {
-        const tag = await tagService.updateById(id, { name, rules });
+        const tag = await tagService.updateById(id, userId, { name, rules });
         if (!tag) {
           res.sendStatus(404);
         }
@@ -63,16 +65,17 @@ export default (app) => {
     async (req, res, next) => {
     const { id } = req.params;
     const { limit, sort, offset } = req.query;
+    const userId = req.user.id;
     const tagService = Container.get('tagService');
     try {
       if (id) {
-        const tag = await tagService.findById(id);
+        const tag = await tagService.findById(id, userId);
         if (!tag) {
           return res.sendStatus(404);
         }
         return res.status(200).json(tag);
       }
-      const tags = await tagService.findAll(limit, offset, sort );
+      const tags = await tagService.findAll(userId, limit, offset, sort );
       return res.status(200).json(tags);
     } catch (err) {
       loggerInstance.error('🔥 error: %o', err);
@@ -84,9 +87,10 @@ export default (app) => {
     middlewares.isAuth,
     async (req, res, next) => {
     const { id } = req.params;
+    const userId = req.user.id;
     const tagService = Container.get('tagService');
     try {
-      await tagService.deleteById(id);
+      await tagService.deleteById(id, userId);
       return res.sendStatus(204);
     } catch (err) {
       loggerInstance.error('🔥 error: %o', err);

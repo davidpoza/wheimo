@@ -11,12 +11,14 @@ export default function applyExtraSetup(sequelize) {
 
   tags.belongsToMany(transactions, { through: 'tagged' });
   tags.belongsToMany(rules, { through: 'appliedRules' });
+  tags.belongsTo(users);
 
   transactions.belongsTo(accounts);
   transactions.belongsToMany(tags, { through: 'tagged' });
 
   users.hasMany(accounts);
   users.hasMany(rules);
+  users.hasMany(tags);
 
   rules.belongsToMany(tags, { through: 'appliedRules' });
   rules.belongsTo(users);

@@ -1,5 +1,5 @@
 import { Container } from 'typedi';
-
+import pickBy from 'lodash.pickby';
 
 export default class TagService {
   constructor() {
@@ -9,26 +9,28 @@ export default class TagService {
   }
 
   getTemplate(t) {
-    return ({
-      id: t.id,
-      name: t.name,
-      createdAt: t.createdAt,
-      updatedAt: t.updatedAt,
-      rules: t.rules.map(rule => ({
-        id: rule.id,
-        name: rule.name,
-        type: rule.type,
-        value: rule.value,
-      }))
-    });
+    if (t) {
+      return ({
+        id: t.id,
+        name: t.name,
+        createdAt: t.createdAt,
+        updatedAt: t.updatedAt,
+        rules: t.rules && t.rules.map(rule => ({
+          id: rule.id,
+          name: rule.name,
+          type: rule.type,
+          value: rule.value,
+        }))
+      });
+    }
   }
 
   async create({
-    name, rules
+    name, rules = [], userId
   }) {
     let assRules;
     try {
-      const tag = await this.tagModel.create({ name });
+      const tag = await this.tagModel.create({ name, userId });
       // associates rules
       if (rules) {
         assRules = await tag.setRules(rules);
@@ -40,9 +42,14 @@ export default class TagService {
     }
   }
 
-  async findAll(limit, offset, sort) {
+  async findAll(userId, limit, offset, sort) {
+    const filter = pickBy({ // pickBy (by default) removes undefined keys
+      id,
+      userId
+    });
     const tags = await this.tagModel.findAll(
       {
+        where: filter,
         include: { model: this.sequelize.models.rules, as: 'rules' } ,
         limit,
         offset,
@@ -55,10 +62,14 @@ export default class TagService {
     });
   }
 
-  async findById(id, entity = false) {
+  async findById(id, userId, entity = false) {
+    const filter = pickBy({ // pickBy (by default) removes undefined keys
+      id,
+      userId
+    });
     const tag = await this.tagModel.findOne({
       include: { model: this.sequelize.models.rules, as: 'rules' } ,
-      where: { id }
+      where: filter
     });
     if (!tag) {
       return null;
@@ -69,23 +80,31 @@ export default class TagService {
     return (this.getTemplate(tag.dataValues));
   }
 
-  async updateById(id, values) {
-    const affectedRows = await this.tagModel.update(values, { where: { id } });
+  async updateById(id, userId, values) {
+    const filter = pickBy({ // pickBy (by default) removes undefined keys
+      id,
+      userId,
+    });
+    const affectedRows = await this.tagModel.update(values, { where: filter });
     if (affectedRows === 0) {
       return null;
     }
-    let tag = await this.findById(id, true);
+    let tag = await this.findById(id, userId, true);
 
     if (values.rules) {
       await tag.setRules(values.rules);
-      tag = await this.findById(id, true);
+      tag = await this.findById(id, userId, true);
     }
 
     return this.getTemplate(tag);
   }
 
-  async deleteById(id) {
-    const affectedRows = await this.tagModel.destroy({ where: { id } });
+  async deleteById(id, userId) {
+    const filter = pickBy({ // pickBy (by default) removes undefined keys
+      id,
+      userId,
+    });
+    const affectedRows = await this.tagModel.destroy({ where: filter });
     if (affectedRows === 0) {
       throw new Error('Tag does not exist');
     }

@@ -9,14 +9,16 @@ export default class RuleService {
   }
 
   getTemplate(rule) {
-    return ({
-      id: rule.id,
-      name: rule.name,
-      type: rule.type,
-      value: rule.value,
-      createdAt: rule.createdAt,
-      updatedAt: rule.updatedAt,
-    });
+    if (rule) {
+      return ({
+        id: rule.id,
+        name: rule.name,
+        type: rule.type,
+        value: rule.value,
+        createdAt: rule.createdAt,
+        updatedAt: rule.updatedAt,
+      });
+    }
   }
 
   async create({
