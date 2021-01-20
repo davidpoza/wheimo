@@ -6,6 +6,7 @@ export default class TagService {
     this.sequelize = Container.get('sequelizeInstance');
     this.logger = Container.get('loggerInstance');
     this.tagModel = this.sequelize.models.tags;
+    this.transactionService = Container.get('transactionService');
   }
 
   getTemplate(t) {
@@ -97,7 +98,7 @@ export default class TagService {
     }
 
     return this.getTemplate(tag);
-  }
+  }s
 
   async deleteById(id, userId) {
     const filter = pickBy({ // pickBy (by default) removes undefined keys
@@ -108,5 +109,19 @@ export default class TagService {
     if (affectedRows === 0) {
       throw new Error('Tag does not exist');
     }
+  }
+
+  /**
+   * Tag transaction with specified tag, adding it to existing ones.
+   * @param {*} transactionId
+   * @param {*} tagId
+   */
+  async tagTransaction(transactionId, tagId, userId) {
+    const transaction = await this.transactionService.findById(transactionId, userId, true);
+    if (!transaction) {
+      return null;
+    }
+    const existingTags = transaction.tags.map((t) => t.id);
+    transaction.setTags([ ...existingTags, tagId ]);
   }
 };
