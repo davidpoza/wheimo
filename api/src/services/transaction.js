@@ -42,6 +42,7 @@ export default class TransactionService {
   async create({
     receipt,
     emitterName,
+    receiverName,
     description,
     assCard,
     amount,
