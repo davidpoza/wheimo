@@ -267,7 +267,7 @@ export default class TransactionService {
         return (t.dataValues);
       });
       // apply tagging rules over all new transactions
-      const userRules = await this.ruleService.findAll(account.dataValues.userId, true); // get all user rules of transaction owner
+      const userRules = await this.ruleService.findAll(account.dataValues.userId); // get all user rules of transaction owner
       this.applyTags(createdTransactions, userRules);
 
       // update sync count
@@ -351,10 +351,21 @@ export default class TransactionService {
    * @param {Array<Object} userRules - objects must have tags prop
    */
   applyTags(transactions, userRules) {
+    const tagRules = {}; // las reglas de cada tag
     this.logger.info(`> applyTags`);
     transactions.forEach((transaction) => {
       const tagsToApply = {}; // tagId as key, value prop will be true only if it meets all rules which apply this specific tag
       userRules.forEach((rule) => {
+
+        rule.tags.forEach((tag) => {
+          if (!tagRules[tag.id]) {
+            tagRules[tag.id] = [rule.id];
+          } else if (!tagRules[tag.id].includes(rule.id)) {
+            tagRules[tag.id].push(rule.id);
+          }
+        })
+
+
         const appliedTags = rule.tags.map((t) => (t.id));
         if (this.transactionMeetsRule(transaction, rule)) { // meets rule
           this.logger.info(`> ✅ transaction ${transaction.id} meets rule ${rule.id}`);
