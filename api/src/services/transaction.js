@@ -266,7 +266,7 @@ export default class TransactionService {
       const createdTransactions = res.map((t) => {
         return (t.dataValues);
       });
-      // // apply tagging rules over all new transactions
+      // apply tagging rules over all new transactions
       const userRules = await this.ruleService.findAll(account.dataValues.userId, true); // get all user rules of transaction owner
       this.applyTags(createdTransactions, userRules);
 
@@ -282,7 +282,7 @@ export default class TransactionService {
    * @param {*} tagId
    */
   async tagTransaction(transactionId, tagId) {
-    this.logger.info(`> tagging transaction ${transactionId} with tag ${tagId}`);
+    this.logger.info(`> ✅ tagging🏷️transaction ${transactionId} with tag ${tagId}`);
     const transaction = await this.findById(transactionId, undefined, true, true);
     if (!transaction) {
       return null;
@@ -357,7 +357,11 @@ export default class TransactionService {
       userRules.forEach((rule) => {
         const appliedTags = rule.tags.map((t) => (t.id));
         if (this.transactionMeetsRule(transaction, rule)) { // meets rule
+          this.logger.info(`> ✅ transaction ${transaction.id} meets rule ${rule.id}`);
           appliedTags.forEach((tagId) => {
+            if (tagsToApply[tagId]) {
+              this.logger.info(`> ❗ tag ${tagId} application needs multiple rules to be met`);
+            }
             // true if this tagId is not applied by any rule yet, if not, it keeps its previous value
             tagsToApply[tagId] = tagsToApply[tagId] === undefined ? true : tagsToApply[tagId];
           })
