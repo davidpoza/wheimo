@@ -1,3 +1,5 @@
+import AES from 'crypto-js/aes.js';
+
 import expressLoader from './express.js';
 import sequelizeLoader from './sequelize.js';
 import diLoader from './di.js';
@@ -27,6 +29,7 @@ export default async ({ expressApp }) => {
     RuleService,
     RecurrentService,
     OpenbankImporter,
+    AES,
     //<-- add scheduler as last dependency
   });
   logger.info('🟢 Dependency injection loaded');

@@ -27,6 +27,10 @@ export default class RuleService {
         value: rule.value,
         createdAt: rule.createdAt,
         updatedAt: rule.updatedAt,
+        tags: rule.tags && rule.tags.map(tag => ({
+          id: tag.id,
+          name: tag.name,
+        }))
       });
     }
   }
@@ -49,6 +53,7 @@ export default class RuleService {
         where: { userId },
         limit,
         offset,
+        include: { model: this.sequelize.models.tags, as: 'tags' } ,
         order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ]
       }
     );
@@ -58,7 +63,7 @@ export default class RuleService {
     });
   }
 
-  async findById(id, userId) {
+  async findById(id, userId, entity = false) {
     const filter = pickBy({ // pickBy (by default) removes undefined keys
       id,
       userId,
@@ -66,6 +71,9 @@ export default class RuleService {
     const rule = await this.ruleModel.findOne({ where: filter });
     if (!rule) {
       return null;
+    }
+    if (entity) {
+      return account;
     }
     return (this.getTemplate(rule.dataValues));
   }
@@ -89,58 +97,4 @@ export default class RuleService {
     }
   }
 
-  /**
-   * Checks if rule matches with transaction
-   * @param {Object} transaction
-   * @param {string} transaction.emitterName
-   * @param {string} transaction.receiverName
-   * @param {string} transaction.description
-   * @param {string} transaction.currency
-   * @param {string} transaction.card
-   * @param {string} transaction.bankId
-   * @param {string} transaction.account - this is the account.number field
-   * @param {boolean} transaction.receipt
-   * @param {number} transaction.amount
-   * @param {Object} rule
-   * @param {string} rule.type
-   * @param {string} rule.value - expression with valid format. prepare doc
-   */
-  evalRule(transaction, rule) {
-    switch(rule.type) {
-      case 'emitterName':
-        return transaction.emitterName.match(new RegExp(rule.value, 'i'));
-      case 'receiverName':
-        return transaction.receiverName.match(new RegExp(rule.value, 'i'));
-      case 'description':
-        return transaction.description.match(new RegExp(rule.value, 'i'));
-      case 'currency':
-        return transaction.currency === rule.value;
-      case 'account':
-        return transaction.account === rule.value;
-      case 'bankId':
-        return transaction.bankId === rule.value;
-      case 'amount': // e.g. lt20;gt10
-        const comparisons = rule.value.split(';');
-        return comparisons.map((comp) => {
-          const matches = comp.match(/(gt|gte|lt|lte|eq)(\d*)/);
-          const op = matches[1];
-          const amount = parseFloat(matches[2]);
-          if (op === 'lt') {
-            return transaction.amount < amount;
-          } else if (op === 'gt') {
-            return transaction.amount > amount;
-          } else if (op === 'lte') {
-            return transaction.amount <= amount;
-          } else if (op === 'gte') {
-            return transaction.amount >= amount;
-          } else if (op === 'eq') {
-            return transaction.amount === amount;
-          }
-        }).every((c) => c);
-      case 'card':
-        return transaction.addCard.match(new RegExp(rule.value, 'i'));
-      case 'receipt': // true, false
-        return rule.value ? transaction.receipt : !transaction.receipt;
-    }
-  }
 };

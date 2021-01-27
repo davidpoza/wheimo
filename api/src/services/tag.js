@@ -110,18 +110,4 @@ export default class TagService {
       throw new Error('Tag does not exist');
     }
   }
-
-  /**
-   * Tag transaction with specified tag, adding it to existing ones.
-   * @param {*} transactionId
-   * @param {*} tagId
-   */
-  async tagTransaction(transactionId, tagId, userId) {
-    const transaction = await this.transactionService.findById(transactionId, userId, true);
-    if (!transaction) {
-      return null;
-    }
-    const existingTags = transaction.tags.map((t) => t.id);
-    transaction.setTags([ ...existingTags, tagId ]);
-  }
 };

@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 const envFound = dotenv.config();
+
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 if (envFound.error) {
@@ -7,6 +8,7 @@ if (envFound.error) {
 }
 export default {
   port: parseInt(process.env.PORT, 10),
+  debug: process.env.DEBUG === 'true',
   logs: {
     level: process.env.LOG_LEVEL || 'silly',
   },

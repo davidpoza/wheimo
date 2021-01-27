@@ -10,15 +10,22 @@ export default ({
   TagService,
   RuleService,
   RecurrentService,
-  OpenbankImporter
+  OpenbankImporter,
+  AES,
 }) => {
+  // dependency order is important, services are dependant of sequelize and logger
+  Container.set('AES', AES);
+  logger.info('💉 AES injected');
+
   Container.set('sequelizeInstance', sequelize);
   logger.info('💉 sequelizeInstance injected');
 
   Container.set('loggerInstance', logger);
   logger.info('💉 logger instance injected');
 
-  // dependency order is important, services are dependant of sequelize and logger
+  Container.set('ruleService', new RuleService());
+  logger.info('💉 rule service instance injected');
+
   Container.set('userService', new UserService());
   logger.info('💉 user service instance injected');
 
@@ -34,12 +41,10 @@ export default ({
   Container.set('tagService', new TagService());
   logger.info('💉 tag service instance injected');
 
-  Container.set('ruleService', new RuleService());
-  logger.info('💉 rule service instance injected');
-
   Container.set('recurrentService', new RecurrentService());
   logger.info('💉 recurrent payments service instance injected');
 
   Container.set('OpenbankImporter', OpenbankImporter);
   logger.info('💉 openbank importer injected');
+
 }

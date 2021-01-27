@@ -152,12 +152,12 @@ export default (app) => {
       }),
     }),
     async (req, res, next) => {
-      const accountService = Container.get('accountService');
+      const transactionService = Container.get('transactionService');
       const { from, contract, product } = req.body;
       const { id } = req.params;
       const userId = req.user.id;
       try {
-        await accountService.resync(
+        await transactionService.resync(
           { accountId:id, userId, from, settings: { contract, product } }
         );
         res.sendStatus(204);

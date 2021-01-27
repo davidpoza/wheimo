@@ -8,7 +8,7 @@ export default class Scheduler {
   constructor() {
     this.sequelize = Container.get('sequelizeInstance');
     this.logger = Container.get('loggerInstance');
-    this.accountService = Container.get('accountService');
+    this.transactionService = Container.get('transactionService');
     this.executeJob = this.executeJob.bind(this);
     this.scheduleJobs = this.scheduleJobs.bind(this);
   }
@@ -32,8 +32,8 @@ export default class Scheduler {
       if (accounts) {
         this.logger.info(`There are ${accounts.length} accounts to process`);
         for (const a of accounts) {
-          if (a.accessId && a.accessPassword) {
-            this.accountService.resync({
+          if ((a.accessId && a.accessPassword) || config.debug) {
+            this.transactionService.resync({
               accountId: a.dataValues.id,
               from: dayjs().subtract(60, 'day').format('YYYY-MM-DD'), // time window of 10 days is more likely suficient
               admin: true,
