@@ -16,6 +16,7 @@ export default class TransactionService {
     this.resync = this.resync.bind(this);
     this.tagTransaction = this.tagTransaction.bind(this);
     this.transactionMeetsRule = this.transactionMeetsRule.bind(this);
+    this.transactionMeetsRules = this.transactionMeetsRules.bind(this);
     this.applyTags = this.applyTags.bind(this);
   }
 
@@ -346,44 +347,30 @@ export default class TransactionService {
     }
   }
 
+  transactionMeetsRules(transaction, rules) {
+    return rules.reduce((acc, curr) => (acc && this.transactionMeetsRule(transaction, curr)), true);
+  }
+
   /**
    * @param {Array<Object>} transactions
    * @param {Array<Object} userRules - objects must have tags prop
    */
   applyTags(transactions, userRules) {
-    const tagRules = {}; // las reglas de cada tag
-    this.logger.info(`> applyTags`);
-    transactions.forEach((transaction) => {
-      const tagsToApply = {}; // tagId as key, value prop will be true only if it meets all rules which apply this specific tag
-      userRules.forEach((rule) => {
-
-        rule.tags.forEach((tag) => {
-          if (!tagRules[tag.id]) {
-            tagRules[tag.id] = [rule.id];
-          } else if (!tagRules[tag.id].includes(rule.id)) {
-            tagRules[tag.id].push(rule.id);
-          }
-        })
-
-
-        const appliedTags = rule.tags.map((t) => (t.id));
-        if (this.transactionMeetsRule(transaction, rule)) { // meets rule
-          this.logger.info(`> ✅ transaction ${transaction.id} meets rule ${rule.id}`);
-          appliedTags.forEach((tagId) => {
-            if (tagsToApply[tagId]) {
-              this.logger.info(`> ❗ tag ${tagId} application needs multiple rules to be met`);
-            }
-            // true if this tagId is not applied by any rule yet, if not, it keeps its previous value
-            tagsToApply[tagId] = tagsToApply[tagId] === undefined ? true : tagsToApply[tagId];
-          })
-        } else { // doesnt meet rule
-          appliedTags.forEach((tagId) => {
-            tagsToApply[tagId] = false; // one rule doesn't meet condition, so all its tags get disabled
-          })
+    const tagRules = {}; // build object with tagId as keys, and rule array as value
+    userRules.forEach((rule) => {
+      rule.tags.forEach((tag) => {
+        if (!tagRules[tag.id]) {
+          tagRules[tag.id] = [rule];
+        } else if (!tagRules[tag.id].includes(rule)) {
+          tagRules[tag.id].push(rule);
         }
       });
-      Object.keys(tagsToApply).forEach((tagId) => {
-        if (tagsToApply[tagId]) { // we only apply those remain true value (all rules applying them are met)
+    });
+
+    this.logger.info(`> applyTags`);
+    transactions.forEach((transaction) => {
+      Object.keys(tagRules).forEach((tagId) => {
+        if (this.transactionMeetsRules(transaction, tagRules[tagId])) {
           this.tagTransaction(transaction.id, parseInt(tagId, 10));
         }
       });
