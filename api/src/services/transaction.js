@@ -20,23 +20,26 @@ export default class TransactionService {
     this.applyTags = this.applyTags.bind(this);
   }
 
-  getTemplate(t) {
-    if (t) {
+  /**
+   * @param {Object} transaction
+   */
+  getTemplate(transaction) {
+    if (transaction) {
       return ({
-        id: t.id,
-        receipt: t.receipt,
-        emitterName: t.emitterName,
-        receiverName: t.receiverName,
-        assCard: t.assCard,
-        description: t.description,
-        amount: t.amount,
-        currency: t.currency,
-        date: t.date,
-        valueDate: t.valueDate,
-        accountId: t.accountId,
-        createdAt: t.createdAt,
-        updatedAt: t.updatedAt,
-        tags: t.tags.map(tag => ({
+        id: transaction.id,
+        receipt: transaction.receipt,
+        emitterName: transaction.emitterName,
+        receiverName: transaction.receiverName,
+        assCard: transaction.assCard,
+        description: transaction.description,
+        amount: transaction.amount,
+        currency: transaction.currency,
+        date: transaction.date,
+        valueDate: transaction.valueDate,
+        accountId: transaction.accountId,
+        createdAt: transaction.createdAt,
+        updatedAt: transaction.updatedAt,
+        tags: transaction.tags.map(tag => ({
           id: tag.id,
           name: tag.name
         }))
@@ -47,9 +50,9 @@ export default class TransactionService {
 
   /**
     * It only creates transactions in within owned accounts
-    * @param {Object} params
-    * @param {string} params.date - date in format YYYY-MM-DD
-    * @param {string} params.valueDate - value date in format YYYY-MM-DD
+    * @param {Object} param
+    * @param {string} param.date - date in format YYYY-MM-DD
+    * @param {string} param.valueDate - value date in format YYYY-MM-DD
     */
   async create({
     receipt,
@@ -97,8 +100,15 @@ export default class TransactionService {
 
   /**
    * It only selects owned transactions->accounts
+   * @param {Object} param
+   * @param {number} param.accountId - filter by account id
+   * @param {number} param.userId - filter by user id
+   * @param {number} param.limit - query limit
+   * @param {number} param.offset - query offset
+   * @param {Array<number>} param.tags - array of tag ids
+   * @param {string} param.sort - asc/desc sorting by created date
    */
-  async findAll(accountId, userId, tags, limit, offset, sort) {
+  async findAll({ accountId, userId, tags, limit, offset, sort }) {
     let filter = pickBy({ // pickBy (by default) removes undefined keys
       accountId,
       '$tags.id$': tags,
@@ -125,7 +135,7 @@ export default class TransactionService {
   /**
    * It only selects owned transactions->accounts
    */
-  async findById(id, userId, entity = false, admin = false) {
+  async findById({ id, userId, entity = false, admin = false }) {
     const filter = pickBy({ // pickBy (by default) removes undefined keys
       id,
       '$account.user_id$': admin ? undefined : userId,
@@ -151,17 +161,17 @@ export default class TransactionService {
    * It only updates owned transactions->accounts
    */
   async updateById(id, userId, values) {
-    let transaction = this.findById(id, userId);
+    let transaction = this.findById({ id, userId });
     if (transaction) {
       const affectedRows = await this.transactionModel.update(values, { where: { id } });
       if (affectedRows === 0) {
         return null;
       }
-      transaction = await this.findById(id, userId, true);
+      transaction = await this.findById({ id, userId, entity: true });
 
       if (values.tags) {
         await transaction.setTags(values.tags);
-        transaction = await this.findById(id, true);
+        transaction = await this.findById({ id });
       }
 
       return this.getTemplate(transaction);
@@ -173,7 +183,7 @@ export default class TransactionService {
    * It only deletes owned transactions->accounts
    */
   async deleteById(id, userId) {
-    const transaction = this.findById(id, userId);
+    const transaction = this.findById({ id, userId });
     if (transaction) {
       const affectedRows = await this.transactionModel.destroy({ where: { id } });
       if (affectedRows === 0) {
@@ -284,7 +294,7 @@ export default class TransactionService {
    */
   async tagTransaction(transactionId, tagId) {
     this.logger.info(`> ✅ tagging🏷️transaction ${transactionId} with tag ${tagId}`);
-    const transaction = await this.findById(transactionId, undefined, true, true);
+    const transaction = await this.findById({ id:transactionId, admin: true, entity: true });
     if (!transaction) {
       return null;
     }

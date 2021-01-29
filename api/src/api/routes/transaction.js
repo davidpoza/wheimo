@@ -120,13 +120,13 @@ export default (app) => {
       const transactionService = Container.get('transactionService');
       try {
         if (id) {
-          const transaction = await transactionService.findById(id, userId);
+          const transaction = await transactionService.findById({ id, userId });
           if (!transaction) {
             return res.sendStatus(404);
           }
           return res.status(200).json(transaction);
         }
-        const transactions = await transactionService.findAll(accountId, userId, tagsArray, limit, offset, sort );
+        const transactions = await transactionService.findAll({ accountId, userId, tagsArray, limit, offset, sort });
         return res.status(200).json(transactions);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);

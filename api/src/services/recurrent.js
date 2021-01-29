@@ -37,7 +37,7 @@ export default class RecurrentService {
     try {
       let transaction;
       if (transactionId) {
-        transaction = await this.transactionService.findById(transactionId, userId, true);
+        transaction = await this.transactionService.findById({ id: transactionId, userId, entity: true });
       }
       if (!transactionId || transaction) {
         const recurrent = await this.recurrentModel.create(
