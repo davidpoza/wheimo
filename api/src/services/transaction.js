@@ -386,4 +386,23 @@ export default class TransactionService {
       });
     });
   }
+
+  /**
+   * Calculates total income and total expenses for given transactions
+   * @param {*} transactions
+   */
+  calculateTotals(transactions) {
+    let income = 0;
+    let expenses = 0;
+    transactions.forEach((transaction) => {
+      if (transaction.amount > 0) {
+        income += transaction.amount;
+      } else {
+        expenses += (-1) * transaction.amount;
+      }
+    });
+    return ({
+      income, expenses
+    });
+  }
 };
