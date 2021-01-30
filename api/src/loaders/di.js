@@ -12,10 +12,14 @@ export default ({
   RecurrentService,
   OpenbankImporter,
   AES,
+  dayjs
 }) => {
   // dependency order is important, services are dependant of sequelize and logger
   Container.set('AES', AES);
   logger.info('💉 AES injected');
+
+  Container.set('dayjs', dayjs);
+  logger.info('💉 dayjs injected');
 
   Container.set('sequelizeInstance', sequelize);
   logger.info('💉 sequelizeInstance injected');

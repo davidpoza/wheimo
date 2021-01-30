@@ -7,6 +7,8 @@ import mockedImportedTransactions from './importers/mock.js';
 export default class TransactionService {
   constructor() {
     this.sequelize = Container.get('sequelizeInstance');
+    this.sequelizeOp = this.sequelize.Sequelize.Op;
+    this.dayjs = Container.get('dayjs');
     this.logger = Container.get('loggerInstance');
     this.transactionModel = this.sequelize.models.transactions;
     this.accountModel = this.sequelize.models.accounts;
@@ -49,7 +51,7 @@ export default class TransactionService {
   }
 
   /**
-    * It only creates transactions in within owned accounts
+    * It only creates transactions for owned accounts
     * @param {Object} param
     * @param {string} param.date - date in format YYYY-MM-DD
     * @param {string} param.valueDate - value date in format YYYY-MM-DD
@@ -105,14 +107,21 @@ export default class TransactionService {
    * @param {number} param.userId - filter by user id
    * @param {number} param.limit - query limit
    * @param {number} param.offset - query offset
-   * @param {Array<number>} param.tags - array of tag ids
+   * @param {Array<number>} param.tags - array of tag ids to filter by
+   * @param {string} param.from - includes transaction from date in format YYYY-MM-DD
+   * @param {string} param.to - includes transaction to date in format YYYY-MM-DD
    * @param {string} param.sort - asc/desc sorting by created date
    */
-  async findAll({ accountId, userId, tags, limit, offset, sort }) {
+  async findAll({ accountId, userId, tags, from, to, limit, offset, sort }) {
+    const dateFilter = (from || tag) ? {} : undefined;
+    if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD');
+    if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD');
+
     let filter = pickBy({ // pickBy (by default) removes undefined keys
       accountId,
       '$tags.id$': tags,
       '$account.user_id$': userId,
+      'date': dateFilter,
     });
 
     const transactions = await this.transactionModel.findAll(
@@ -194,7 +203,7 @@ export default class TransactionService {
   }
 
   /**
-   *
+   * Fetches transactions from all accounts (from all users) and apply tags if any rule is met
    * @param {Object} param
    * @param {boolean} param.admin - if true then userId is not needed
    */
@@ -241,12 +250,13 @@ export default class TransactionService {
       transactions = fetchedTransactions;
       balance = fetchedBalance;
     } else {
+      // with mocked data
       transactions = mockedImportedTransactions.transactions;
       balance = mockedImportedTransactions.balance;
       lastSyncCount = 0;
     }
 
-    // process transactions and get the new oness
+    // process transactions and get the new ones
     newTransactionsCount = transactions.length - lastSyncCount;
     this.logger.info(`There are ${newTransactionsCount} new transactions in account #${accountId}`);
 

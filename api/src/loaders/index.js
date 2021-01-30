@@ -1,4 +1,5 @@
 import AES from 'crypto-js/aes.js';
+import dayjs from 'dayjs';
 
 import expressLoader from './express.js';
 import sequelizeLoader from './sequelize.js';
@@ -30,6 +31,7 @@ export default async ({ expressApp }) => {
     RecurrentService,
     OpenbankImporter,
     AES,
+    dayjs
     //<-- add scheduler as last dependency
   });
   logger.info('🟢 Dependency injection loaded');

@@ -22,7 +22,6 @@ export default {
       define: {
         underscored: true
       },
-      operatorsAliases: false
     }
   },
   api: {
