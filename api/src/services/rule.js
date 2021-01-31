@@ -20,11 +20,17 @@ export default class RuleService {
 
   getTemplate(rule) {
     if (rule) {
+      let transformedValue = rule.value;
+      if (transformedValue === '1')  {
+        transformedValue = 'true'
+      } else if (transformedValue === '0') {
+        transformedValue = 'false'
+      }
       return ({
         id: rule.id,
         name: rule.name,
         type: rule.type,
-        value: rule.value,
+        value: transformedValue,
         createdAt: rule.createdAt,
         updatedAt: rule.updatedAt,
         tags: rule.tags && rule.tags.map(tag => ({
@@ -58,8 +64,8 @@ export default class RuleService {
       }
     );
 
-    return rules.map((t) => {
-      return (this.getTemplate(t));
+    return rules.map((rule) => {
+      return (this.getTemplate(rule));
     });
   }
 

@@ -329,42 +329,58 @@ export default class TransactionService {
    * @param {string} rule.value - expression with valid format. prepare doc
    */
   transactionMeetsRule(transaction, rule) {
+    let ret = false;
     switch(rule.type) {
       case 'emitterName':
-        return transaction.emitterName.match(new RegExp(rule.value, 'i'));
+        ret = transaction.emitterName && transaction.emitterName.match(new RegExp(rule.value, 'i'));
+        break;
       case 'receiverName':
-        return transaction.receiverName.match(new RegExp(rule.value, 'i'));
+        ret = transaction.receiverName.match(new RegExp(rule.value, 'i'));
+        break;
       case 'description':
-        return transaction.description.match(new RegExp(rule.value, 'i'));
+        ret = transaction.description.match(new RegExp(rule.value, 'i'));
+        break;
       case 'currency':
-        return transaction.currency === rule.value;
+        ret = transaction.currency === rule.value;
+        break;
       case 'account':
-        return transaction.account === rule.value;
+        ret = transaction.account === rule.value;
+        break;
       case 'bankId':
-        return transaction.bankId === rule.value;
+        ret = transaction.bankId === rule.value;
+        break;
       case 'amount': // e.g. lt20;gt10
         const comparisons = rule.value.split(';');
-        return comparisons.map((comp) => {
+        ret = comparisons.map((comp) => {
           const matches = comp.match(/(gt|gte|lt|lte|eq)(\d*)/);
           const op = matches[1];
-          const amount = parseFloat(matches[2]);
+          const ruleAmount = parseFloat(matches[2]);
+          const transactionAmount = Math.abs(transaction.amount);
           if (op === 'lt') {
-            return transaction.amount < amount;
+            return transactionAmount < ruleAmount;
           } else if (op === 'gt') {
-            return transaction.amount > amount;
+            return transactionAmount > ruleAmount;
           } else if (op === 'lte') {
-            return transaction.amount <= amount;
+            return transactionAmount <= ruleAmount;
           } else if (op === 'gte') {
-            return transaction.amount >= amount;
+            return transactionAmount >= ruleAmount;
           } else if (op === 'eq') {
-            return transaction.amount === amount;
+            return transactionAmount === ruleAmount;
           }
         }).every((c) => c);
+        break;
       case 'card':
-        return transaction.addCard.match(new RegExp(rule.value, 'i'));
-      case 'receipt': // true, false
-        return rule.value ? transaction.receipt : !transaction.receipt;
+        ret = transaction.addCard.match(new RegExp(rule.value, 'i'));
+        break;
+      case 'isReceipt': // 'true', 'false'
+        ret = rule.value === 'true' ? transaction.receipt : !transaction.receipt;
+        break;
+      case 'isExpense': // 'true', 'false'
+        ret = rule.value === 'true' ? parseFloat(transaction.amount) < 0 : parseFloat(transaction.amount) > 0;
+        break;
     }
+    this.logger.info(`> ${ret ? '✅' : '❌'} transaction ${transaction.id} ${ret ? 'meets' : 'doesnt meet'} rule ${rule.id} of type ${rule.type} with value ${rule.value}`);
+    return ret;
   }
 
   transactionMeetsRules(transaction, rules) {

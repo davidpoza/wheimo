@@ -52,11 +52,11 @@ sequelize.models.tags.create({
 });
 
 sequelize.models.rules.create({
-  name: 'pagos de pepe', type: 'emitterName', value: 'Pepe', userId: 1
+  name: 'regla pagos de pepe', type: 'emitterName', value: 'Pepe', userId: 1
 });
 
 sequelize.models.rules.create({
-  name: 'transacciones de más de 5 euros', type: 'amount', value: 'gt5', userId: 1
+  name: 'regla transacciones de más de 5 euros', type: 'amount', value: 'gt5', userId: 1
 });
 
 sequelize.models.appliedRules.create({
@@ -65,4 +65,27 @@ sequelize.models.appliedRules.create({
 
 sequelize.models.appliedRules.create({
   ruleId: 2, tagId: 1
+});
+
+// ---------------
+
+
+sequelize.models.tags.create({
+  name: 'pagos de más de 50€', userId: 1
+});
+
+sequelize.models.rules.create({
+  name: 'regla de gastos', type: 'isExpense', value: 'true', userId: 1
+});
+
+sequelize.models.rules.create({
+  name: 'regla de cantidad mayor que 50', type: 'amount', value: 'gt50', userId: 1
+});
+
+sequelize.models.appliedRules.create({
+  ruleId: 3, tagId: 2
+});
+
+sequelize.models.appliedRules.create({
+  ruleId: 4, tagId: 2
 });

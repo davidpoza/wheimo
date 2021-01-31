@@ -20,6 +20,15 @@ export default {
     },
     {
       "receipt": false,
+      "receiverName": "Movistar",
+      "description": "pago",
+      "amount": -60,
+      "currency": "EUR",
+      "transactionDate": "2020-01-24",
+      "valueDate": "2020-01-24"
+    },
+    {
+      "receipt": false,
       "emitterName": "Oscar",
       "description": "segunda transacción de prueba",
       "amount": 10,

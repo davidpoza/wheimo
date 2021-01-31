@@ -8,7 +8,7 @@ export const definition = [
     type: {
       type: Sequelize.STRING,
       validate: { // sqlite doesnt support ENUM
-        isIn: [['emitterName', 'receiverName', 'description', 'amount', 'card', 'receipt', 'account', 'currency', 'bankId']],
+        isIn: [['emitterName', 'receiverName', 'description', 'isExpense', 'amount', 'card', 'isReceipt', 'account', 'currency', 'bankId']],
       },
       allowNull: false,
     },
