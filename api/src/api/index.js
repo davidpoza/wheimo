@@ -8,6 +8,7 @@ import transaction from './routes/transaction.js';
 import tag from './routes/tag.js';
 import rule from './routes/rule.js';
 import recurrent from './routes/recurrent.js';
+import budget from './routes/budget.js';
 
 export default () => {
   const app = Router();
@@ -18,5 +19,6 @@ export default () => {
   tag(app);
   rule(app);
   recurrent(app);
+  budget(app);
   return app
 }

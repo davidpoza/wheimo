@@ -13,6 +13,7 @@ import AccountService from '../services/account.js';
 import TagService from '../services/tag.js';
 import RuleService from '../services/rule.js';
 import RecurrentService from '../services/recurrent.js';
+import BudgetService from '../services/budget.js';
 import OpenbankImporter from '../services/importers/openbank.js';
 
 export default async ({ expressApp }) => {
@@ -29,6 +30,7 @@ export default async ({ expressApp }) => {
     TagService,
     RuleService,
     RecurrentService,
+    BudgetService,
     OpenbankImporter,
     AES,
     dayjs

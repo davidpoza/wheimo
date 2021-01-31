@@ -9,6 +9,7 @@ export default ({
   TransactionService,
   TagService,
   RuleService,
+  BudgetService,
   RecurrentService,
   OpenbankImporter,
   AES,
@@ -29,6 +30,9 @@ export default ({
 
   Container.set('ruleService', new RuleService());
   logger.info('💉 rule service instance injected');
+
+  Container.set('budgetService', new BudgetService());
+  logger.info('💉 budget service instance injected');
 
   Container.set('userService', new UserService());
   logger.info('💉 user service instance injected');

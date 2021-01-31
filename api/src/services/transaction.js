@@ -114,8 +114,8 @@ export default class TransactionService {
    */
   async findAll({ accountId, userId, tags, from, to, limit, offset, sort }) {
     const dateFilter = (from || tag) ? {} : undefined;
-    if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD');
-    if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD');
+    if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
+    if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
 
     let filter = pickBy({ // pickBy (by default) removes undefined keys
       accountId,

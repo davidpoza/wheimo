@@ -45,7 +45,6 @@ export default class TagService {
 
   async findAll(userId, limit, offset, sort) {
     const filter = pickBy({ // pickBy (by default) removes undefined keys
-      id,
       userId
     });
     const tags = await this.tagModel.findAll(

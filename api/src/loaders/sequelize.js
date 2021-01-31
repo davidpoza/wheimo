@@ -9,6 +9,7 @@ import Tag from '../models/tag.js';
 import Account from '../models/account.js';
 import Rule from '../models/rule.js';
 import RecurrentPayment from '../models/recurrent-payment.js';
+import Budget from '../models/budget.js';
 
 let sequelize;
 export default {
@@ -21,7 +22,8 @@ export default {
       Tag,
       Account,
       Rule,
-      RecurrentPayment
+      RecurrentPayment,
+      Budget
     ];
     // We define all models according to their files.
     for (const modelDefiner of modelDefiners) {
