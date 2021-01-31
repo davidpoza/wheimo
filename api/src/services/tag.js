@@ -9,14 +9,14 @@ export default class TagService {
     this.transactionService = Container.get('transactionService');
   }
 
-  getTemplate(t) {
-    if (t) {
+  getTemplate(tag) {
+    if (tag) {
       return ({
-        id: t.id,
-        name: t.name,
-        createdAt: t.createdAt,
-        updatedAt: t.updatedAt,
-        rules: t.rules && t.rules.map(rule => ({
+        id: tag.id,
+        name: tag.name,
+        createdAt: tag.createdAt,
+        updatedAt: tag.updatedAt,
+        rules: tag.rules && tag.rules.map(rule => ({
           id: rule.id,
           name: rule.name,
           type: rule.type,
@@ -26,6 +26,13 @@ export default class TagService {
     }
   }
 
+  /**
+   * Creates a tag
+   * @param {Object} param
+   * @param {string} param.name - name for tag
+   * @param {number} param.userId - owner user identifier
+   * @param {Array<number>} param.rules - array of rules identifiers
+   */
   async create({
     name, rules = [], userId
   }) {
@@ -43,7 +50,15 @@ export default class TagService {
     }
   }
 
-  async findAll(userId, limit, offset, sort) {
+  /**
+   * Fetches all tags owned by user
+   * @param {Object} param
+   * @param {number} param.userId - owner user identifier
+   * @param {number} param.limit - query limit
+   * @param {number} param.offset - query offset
+   * @param {string} param.sort - asc/desc sorting by createdAt column
+   */
+  async findAll({ userId, limit, offset, sort }) {
     const filter = pickBy({ // pickBy (by default) removes undefined keys
       userId
     });
@@ -62,7 +77,14 @@ export default class TagService {
     });
   }
 
-  async findById(id, userId, entity = false) {
+  /**
+   * Fetches one tag owned by user
+   * @param {Object} param
+   * @param {number} param.id - tag identifier
+   * @param {number} param.userId - owner user identifier
+   * @param {boolean} param.entity - flag set true for returning an sequelize entity object or plain object if set to false
+   */
+  async findById({ id, userId, entity = false }) {
     const filter = pickBy({ // pickBy (by default) removes undefined keys
       id,
       userId
@@ -89,11 +111,11 @@ export default class TagService {
     if (affectedRows === 0) {
       return null;
     }
-    let tag = await this.findById(id, userId, true);
+    let tag = await this.findById({ id, userId, entity: true });
 
     if (values.rules) {
       await tag.setRules(values.rules);
-      tag = await this.findById(id, userId, true);
+      tag = await this.findById({ id, userId, entity:true });
     }
 
     return this.getTemplate(tag);

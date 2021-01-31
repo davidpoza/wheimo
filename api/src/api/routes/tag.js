@@ -69,13 +69,13 @@ export default (app) => {
     const tagService = Container.get('tagService');
     try {
       if (id) {
-        const tag = await tagService.findById(id, userId);
+        const tag = await tagService.findById({ id, userId });
         if (!tag) {
           return res.sendStatus(404);
         }
         return res.status(200).json(tag);
       }
-      const tags = await tagService.findAll(userId, limit, offset, sort );
+      const tags = await tagService.findAll({ userId, limit, offset, sort });
       return res.status(200).json(tags);
     } catch (err) {
       loggerInstance.error('🔥 error: %o', err);
