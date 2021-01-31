@@ -56,6 +56,15 @@ export default class BudgetService {
     }
   }
 
+  /**
+   * Fetches all budgets owned by user. And applies defined filters if any.
+   * @param {Object} param
+   * @param {number} param.userId - owner user identifier
+   * @param {number} param.tagId - filter by associated tag identifier
+   * @param {number} param.limit - query limit
+   * @param {number} param.offset - query offset
+   * @param {string} param.sort - query sorting by createdAt column
+   */
   async findAll({ userId, tagId, limit, offset, sort }) {
     const filter = pickBy({ // pickBy (by default) removes undefined keys
       '$tag.user_id$': userId,
@@ -76,6 +85,13 @@ export default class BudgetService {
     });
   }
 
+  /**
+   * Fetches budget by id if it's owned by user.
+   * @param {Object} param
+   * @param {number} param.id - budget identifier
+   * @param {number} param.userId - owner user identifier
+   * @param {boolean} param.entity - flag set true for returning an sequelize entity object or plain object if set to false
+   */
   async findById({ id, userId, entity = false }) {
     const filter = pickBy({ // pickBy (by default) removes undefined keys
       id,
@@ -107,6 +123,11 @@ export default class BudgetService {
     return null;
   }
 
+  /**
+   * Deletes budget if it's owned by user
+   * @param {number} id - budget identifier
+   * @param {number} userId - owner user identifier
+   */
   async deleteById(id, userId) {
     const budget = this.findById({ id, userId });
     if (budget) {
