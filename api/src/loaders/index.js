@@ -1,6 +1,7 @@
 import AES from 'crypto-js/aes.js';
 import dayjs from 'dayjs';
-
+//import es from 'dayjs/locale/es'
+dayjs.locale('es')
 import expressLoader from './express.js';
 import sequelizeLoader from './sequelize.js';
 import diLoader from './di.js';

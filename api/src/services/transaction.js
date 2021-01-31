@@ -83,8 +83,8 @@ export default class TransactionService {
             assCard,
             amount,
             currency,
-            date,
-            valueDate,
+            date: this.dayjs(date, 'YYYY-MM-DD').toDate(),
+            valueDate: this.dayjs(valueDate, 'YYYY-MM-DD').toDate(),
             accountId
           });
         // associates tags
@@ -113,9 +113,10 @@ export default class TransactionService {
    * @param {string} param.sort - asc/desc sorting by created date
    */
   async findAll({ accountId, userId, tags, from, to, limit, offset, sort }) {
-    const dateFilter = (from || tag) ? {} : undefined;
+    const dateFilter = (from || to) ? {} : undefined;
     if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
     if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
+    console.log("-->", dateFilter)
 
     let filter = pickBy({ // pickBy (by default) removes undefined keys
       accountId,
