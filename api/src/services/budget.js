@@ -56,9 +56,10 @@ export default class BudgetService {
     }
   }
 
-  async findAll({ userId, limit, offset, sort }) {
+  async findAll({ userId, tagId, limit, offset, sort }) {
     const filter = pickBy({ // pickBy (by default) removes undefined keys
-      '$tag.user_id$': userId
+      '$tag.user_id$': userId,
+      '$tag.id$': tagId,
     });
     const budgets = await this.budgetModel.findAll(
       {
