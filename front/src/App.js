@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Provider } from "react-redux";
 
 // own
 import './App.css';
@@ -7,19 +8,22 @@ import Navigation from './components/navigation';
 import Content from './components/content';
 import HomeView from './components/home-view';
 import LoginView from './components/login-view';
+import store from './store';
 
 function App() {
   return (
     <div className="App">
-      <Content>
-        <Router>
-          <Switch>
-            <Route path="/login" exact component={LoginView} />
-            <PrivateRoute path="/" exact component={HomeView}/>
-          </Switch>
-        </Router>
-      </Content>
-      <Navigation />
+      <Provider store={store}>
+        <Content>
+          <Router>
+            <Switch>
+              <Route path="/login" exact component={LoginView} />
+              <PrivateRoute path="/" exact component={HomeView}/>
+            </Switch>
+          </Router>
+        </Content>
+        <Navigation />
+      </Provider>
     </div>
   );
 }

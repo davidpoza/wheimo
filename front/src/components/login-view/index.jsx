@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import get from 'lodash.get';
 
 // material ui
@@ -9,15 +10,15 @@ import Typography from '@material-ui/core/Typography';
 
 // own
 import useStyles from './styles';
+import { getAuth } from '../../actions/user';
 
-export default function Login(props) {
+function Login(props) {
   const { getAuth, user, history } = props;
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   // useEffect(() => {
-  //   console.log("->", history)
   //   if (get(user, 'user')) {
   //     history.push("/");
   //   }
@@ -25,7 +26,11 @@ export default function Login(props) {
 
   async function onFormSubmit(e) {
     e.preventDefault();
-    getAuth(email, password);
+    try {
+      getAuth(email, password);
+    } catch {
+      console.log("ERROR CONTROLADO");
+    }
   }
 
   return (
@@ -48,6 +53,21 @@ export default function Login(props) {
         </form>
       </Grid>
     </Grid>
-
   );
 };
+
+const mapStateToProps = (state) => {
+  return {
+    loading: state.user.isLoading,
+    user: state.user.current,
+    error: state.user.error,
+    errorMessage: state.user.errorMessage,
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    getAuth: (email, password) => dispatch(getAuth(email, password)).catch(),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);
