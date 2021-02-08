@@ -18,19 +18,15 @@ function Login(props) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  // useEffect(() => {
-  //   if (get(user, 'user')) {
-  //     history.push("/");
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (get(user, 'token')) {
+      history.push("/");
+    }
+  }, [user]);
 
   async function onFormSubmit(e) {
     e.preventDefault();
-    try {
-      getAuth(email, password);
-    } catch {
-      console.log("ERROR CONTROLADO");
-    }
+    getAuth(email, password);
   }
 
   return (
@@ -66,7 +62,12 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = dispatch => {
   return {
-    getAuth: (email, password) => dispatch(getAuth(email, password)).catch(),
+    getAuth: (email, password) => {
+      dispatch(getAuth(email, password))
+        .catch(error => {
+          console.log(error.message);
+        });
+    },
   }
 }
 
