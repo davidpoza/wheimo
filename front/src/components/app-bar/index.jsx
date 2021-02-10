@@ -31,7 +31,7 @@ function MyAppBar({handleDrawerToggle, user}) {
         </IconButton>
         <Typography variant="h6" noWrap className={classes.title}>
         </Typography>
-        <Avatar url="https://reactify.api.davidinformatico.com/uploads/9b17726ba32542224909596cf182bcb7_ab511f16b9.jpeg" />
+        <Avatar />
       </Toolbar>
     </AppBar>
   )

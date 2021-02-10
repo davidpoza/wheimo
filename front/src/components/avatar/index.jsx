@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import get from 'lodash.get';
-import PropTypes from 'prop-types';
 
 // material ui
 import Avatar from '@material-ui/core/Avatar';
@@ -19,7 +18,7 @@ import config from '../../utils/config';
 import useStyles from './styles';
 
 function MyAvatar(props) {
-  const { user, resetUserState, url } = props;
+  const { user, resetUserState } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -35,6 +34,8 @@ function MyAvatar(props) {
     handleClose();
     resetUserState();
   };
+
+  const url = get(user, 'avatar.url', 'https://reactify.api.davidinformatico.com/uploads/9b17726ba32542224909596cf182bcb7_ab511f16b9.jpeg');
 
   if (user) {
     return (
@@ -85,7 +86,3 @@ const mapDispatchToProps = dispatch => {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyAvatar);
-
-MyAvatar.propTypes = {
-  url: PropTypes.string,
-};
