@@ -8,6 +8,7 @@ import Navigation from './components/navigation';
 import Content from './components/content';
 import HomeView from './components/home-view';
 import LoginView from './components/login-view';
+import AppBar from './components/app-bar';
 import store from './store';
 
 function App() {
@@ -16,6 +17,7 @@ function App() {
       <Provider store={store}>
         <Content>
           <Router>
+            <AppBar />
             <Switch>
               <Route path="/login" exact component={LoginView} />
               <PrivateRoute path="/" exact component={HomeView}/>

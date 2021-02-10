@@ -1,4 +1,5 @@
 import { getAuth } from '../actions/user';
+import types from '../actions/types';
 
 const initialState = {
   isLoading: false,
@@ -31,6 +32,8 @@ const reducer = (state = initialState, action) => {
         error: true,
         errorMessage: action.payload.message,
       };
+    case types.USER_RESET_STATE:
+      return initialState;
     default:
       return state;
   }
