@@ -8,6 +8,7 @@ export const definition = [
     emitterName: { type: Sequelize.TEXT, allowNull: true },
     receiverName: { type: Sequelize.TEXT, allowNull: true },
     description: Sequelize.TEXT,
+    comments: Sequelize.TEXT,
     assCard: { type: Sequelize.TEXT, allowNull: true },
     amount: { type: Sequelize.FLOAT, allowNull: false },
     currency: { type: Sequelize.TEXT, allowNull: false },

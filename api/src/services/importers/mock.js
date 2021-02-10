@@ -13,6 +13,7 @@ export default {
       "receipt": false,
       "emitterName": "Pepe Fernández",
       "description": "pago 2",
+      "comments": "me debía el regalo para Juanito",
       "amount": 6,
       "currency": "EUR",
       "transactionDate": "2020-01-24",
