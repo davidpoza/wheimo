@@ -7,6 +7,7 @@ import StateLoader from './utils/state-loader';
 
 // Reducers
 import user from './reducers/user';
+import transaction from './reducers/transaction';
 
 const stateLoader = new StateLoader();
 
@@ -15,7 +16,7 @@ const enhancer = composeWithDevTools(
 );
 
 const store = createStore(
-  combineReducers({ user }),
+  combineReducers({ user, transaction }),
   stateLoader.loadState(),
   enhancer
 );

@@ -26,6 +26,7 @@ export default class TransactionService {
    * @param {Object} transaction
    */
   getTemplate(transaction) {
+    console.log(transaction)
     if (transaction) {
       return ({
         id: transaction.id,
@@ -42,6 +43,7 @@ export default class TransactionService {
         accountId: transaction.accountId,
         createdAt: transaction.createdAt,
         updatedAt: transaction.updatedAt,
+        account: transaction.account,
         tags: transaction.tags.map(tag => ({
           id: tag.id,
           name: tag.name
@@ -119,7 +121,6 @@ export default class TransactionService {
     const dateFilter = (from || to) ? {} : undefined;
     if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
     if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
-    console.log("-->", dateFilter)
 
     let filter = pickBy({ // pickBy (by default) removes undefined keys
       accountId,
@@ -131,8 +132,8 @@ export default class TransactionService {
     const transactions = await this.transactionModel.findAll(
       {
         include: [
-          { model: this.sequelize.models.accounts },
-          { model: this.sequelize.models.tags, as: 'tags' }
+          { model: this.sequelize.models.accounts, as: 'account', duplicating: false },
+          { model: this.sequelize.models.tags, as: 'tags', duplicating: false }
         ],
         limit,
         offset,
