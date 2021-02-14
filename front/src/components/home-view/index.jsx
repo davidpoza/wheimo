@@ -3,15 +3,16 @@ import { connect } from 'react-redux';
 
 // own
 import { fetchAll } from '../../actions/transaction';
+import TransactionGrid from '../transaction-grid';
 
-function HomeView({ user, fetchAllTransactions }) {
+function HomeView({ user, transactions, fetchAllTransactions }) {
   useEffect(() => {
     fetchAllTransactions(user.token, 0, 20);
   }, []);
 
   return (
     <div>
-      HOME
+      <TransactionGrid transactions={transactions} />
     </div>
   );
 }
@@ -19,6 +20,7 @@ function HomeView({ user, fetchAllTransactions }) {
 const mapStateToProps = (state) => {
   return {
     user: state.user.current,
+    transactions: state.transaction.transactionsFetched,
     loading: state.transaction.isLoading,
     error: state.transaction.error,
     errorMessage: state.transaction.errorMessage,
