@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 // own
 import { fetchAll } from '../../actions/transaction';
 import TransactionGrid from '../transaction-grid';
+import CreateTransationDialog from '../create-transation-dialog';
 
 function HomeView({ user, transactions, fetchAllTransactions }) {
   useEffect(() => {
@@ -13,6 +14,7 @@ function HomeView({ user, transactions, fetchAllTransactions }) {
   return (
     <div>
       <TransactionGrid transactions={transactions} />
+      <CreateTransationDialog />
     </div>
   );
 }
