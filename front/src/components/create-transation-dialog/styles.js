@@ -10,7 +10,7 @@ export default makeStyles((theme) => ({
     justifyContent: 'space-between',
   },
   accountSelector: {
-    width: '10em',
-    marginBottom: '8px',
+    width: '14em',
+    marginBottom: '6px',
   },
 }));

@@ -36,6 +36,7 @@ function AccountSelect({ entries, label, value, handleChange }) {
         labelId="account-label"
         id="account"
         value={value}
+        renderValue={(value) => entries.filter((entry) => entry.id === value)[0].name}
         onChange={handleChange}
       >
         {
@@ -57,13 +58,23 @@ function CreateTransationDialog({
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [incoming, setIncoming] = useState(false);
+  const [amount, setAmount] = useState(0.0);
+  const [description, setDescription] = useState('');
+  const [comments, setComments] = useState('');
+  const [emitterName, setEmitterName] = useState('');
+  const [receiverName, setReceiverName] = useState('');
   const [accounts, setAccounts] = useState([]);
+  const [selectedAccount, setSelectedAccount] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   useEffect(() => {
     async function fetchData() {
-      const data = await fetchAllAccounts(user.token);
-      setAccounts(data);
+      try {
+        const data = await fetchAllAccounts(user.token);
+        setAccounts(data);
+      } catch(error) {
+        console.log(error.message);
+      }
     }
     fetchData();
   }, [user]);
@@ -106,7 +117,7 @@ function CreateTransationDialog({
                 }}
               />
             </MuiPickersUtilsProvider>
-            <AccountSelect entries={accounts} label="Account" value="Cuenta1" handleChange={() => {}} />
+            <AccountSelect entries={accounts} label="Account" value={selectedAccount} handleChange={(e) => { console.log(e.target);setSelectedAccount(e.target.value) }} />
           </div>
 
 
@@ -121,6 +132,14 @@ function CreateTransationDialog({
               id={incoming ? 'emitterName' : 'receiverName'}
               label={incoming ? 'Emitter' : 'Receiver'}
               type="text"
+              value={incoming ? emitterName : receiverName}
+              onChange={(e) => {
+                if (incoming) {
+                  setEmitterName(e.target.value);
+                } else {
+                  setReceiverName(e.target.value);
+                }
+              }}
               fullWidth
             />
           </FormGroup>
@@ -131,6 +150,8 @@ function CreateTransationDialog({
             id="amount"
             label="Amount"
             type="number"
+            value={amount}
+            onChange={(e) => { setAmount(e.target.value) }}
             fullWidth
           />
 
@@ -139,15 +160,19 @@ function CreateTransationDialog({
             id="description"
             label="Description"
             type="text"
+            value={description}
+            onChange={(e) => { setDescription(e.target.value) }}
             fullWidth
           />
 
           <TextField
             multiline
             margin="dense"
-            id="description"
+            id="comments"
             label="Comments"
             type="text"
+            value={comments}
+            onChange={(e) => { setComments(e.target.value) }}
             fullWidth
           />
         </DialogContent>
