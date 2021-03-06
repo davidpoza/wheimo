@@ -12,45 +12,15 @@ import Fab from '@material-ui/core/Fab';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
+
 import DayJsUtils from '@date-io/dayjs';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-// own
-import useStyles from './styles.js';
-import { fetchAll as fetchAllAccounts } from '../../api-client/account';
-
-function AccountSelect({ entries, label, value, handleChange }) {
-  const classes = useStyles();
-  return (
-    <FormControl>
-      <InputLabel id="account-label">{label}</InputLabel>
-      <Select
-        className={classes.accountSelector}
-        labelId="account-label"
-        id="account"
-        value={value}
-        renderValue={(value) => entries.filter((entry) => entry.id === value)[0].name}
-        onChange={handleChange}
-      >
-        {
-          entries.map((entry) => {
-            return (
-              <MenuItem value={entry.id}>{entry.name}</MenuItem>
-            );
-          })
-        }
-      </Select>
-    </FormControl>
-  );
-
-}
+import useStyles from './styles';
+import AccountSelect from '../account-select';
 
 function CreateTransationDialog({
   user,
@@ -67,17 +37,7 @@ function CreateTransationDialog({
   const [selectedAccount, setSelectedAccount] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const data = await fetchAllAccounts(user.token);
-        setAccounts(data);
-      } catch(error) {
-        console.log(error.message);
-      }
-    }
-    fetchData();
-  }, [user]);
+
 
   function handleDateChange(date) {
     setSelectedDate(date);
@@ -117,7 +77,7 @@ function CreateTransationDialog({
                 }}
               />
             </MuiPickersUtilsProvider>
-            <AccountSelect entries={accounts} label="Account" value={selectedAccount} handleChange={(e) => { console.log(e.target);setSelectedAccount(e.target.value) }} />
+            <AccountSelect label="Account" value={selectedAccount} handleChange={(e) => { console.log(e.target);setSelectedAccount(e.target.value) }} />
           </div>
 
 
@@ -189,11 +149,4 @@ function CreateTransationDialog({
   );
 }
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.user.current
-  }
-}
-
-
-export default connect(mapStateToProps)(CreateTransationDialog);
+export default CreateTransationDialog;
