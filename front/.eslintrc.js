@@ -46,5 +46,6 @@ module.exports = {
     'import/prefer-default-export': 'off',
     'import/no-named-default': 'off',
     'react/display-name': 'off',
+    'no-unused-vars': ['warn'],
   },
 };

@@ -4,6 +4,9 @@ export default makeStyles(() => ({
   root: {
 
   },
+  comments: {
+    marginBottom: '2em',
+  },
   selectGroup: {
     display: 'flex',
     alignItems: 'flex-end',

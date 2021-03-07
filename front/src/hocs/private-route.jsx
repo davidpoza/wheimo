@@ -23,7 +23,7 @@ const PrivateRoute = ({
 );
 
 PrivateRoute.propTypes = {
-  component: PropTypes.node,
+  component: PropTypes.elementType,
   user: PropTypes.object,
 };
 

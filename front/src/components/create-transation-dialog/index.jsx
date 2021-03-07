@@ -10,15 +10,16 @@ import Fab from '@material-ui/core/Fab';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
-
 import DayJsUtils from '@date-io/dayjs';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
+// own
 import useStyles from './styles';
 import AccountSelect from '../account-select';
+import TagsSelect from '../tags-select';
 
 function CreateTransationDialog() {
   const classes = useStyles();
@@ -30,6 +31,7 @@ function CreateTransationDialog() {
   const [emitterName, setEmitterName] = useState('');
   const [receiverName, setReceiverName] = useState('');
   const [selectedAccount, setSelectedAccount] = useState('');
+  const [tags, setTags] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
   function handleDateChange(date) {
@@ -121,6 +123,7 @@ function CreateTransationDialog() {
           />
 
           <TextField
+            className={classes.comments}
             multiline
             margin="dense"
             id="comments"
@@ -130,7 +133,12 @@ function CreateTransationDialog() {
             onChange={(e) => { setComments(e.target.value); }}
             fullWidth
           />
+
+          <TagsSelect label="Tags" values={tags} handleOnChange={ (e, value) => {
+            setTags(value.map((tag) => (tag.id)));
+          } } />
         </DialogContent>
+
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
