@@ -53,7 +53,7 @@ function AccountSelect({
 AccountSelect.propTypes = {
   user: PropTypes.object,
   label: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.number,
   handleChange: PropTypes.func,
 };
 

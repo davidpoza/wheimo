@@ -10,6 +10,7 @@ import Fab from '@material-ui/core/Fab';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
+import Checkbox from '@material-ui/core/Checkbox';
 import DayJsUtils from '@date-io/dayjs';
 import {
   MuiPickersUtilsProvider,
@@ -25,12 +26,13 @@ function CreateTransationDialog() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [incoming, setIncoming] = useState(false);
+  const [receipt, setReceipt] = useState(false);
   const [amount, setAmount] = useState(0.0);
   const [description, setDescription] = useState('');
   const [comments, setComments] = useState('');
   const [emitterName, setEmitterName] = useState('');
   const [receiverName, setReceiverName] = useState('');
-  const [selectedAccount, setSelectedAccount] = useState('');
+  const [selectedAccount, setSelectedAccount] = useState(0);
   const [tags, setTags] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -77,6 +79,12 @@ function CreateTransationDialog() {
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">Add manual transaction</DialogTitle>
         <DialogContent>
+          <FormGroup row>
+            <FormControlLabel
+              control={<Checkbox checked={receipt} onChange={() => { setReceipt(!receipt); }} name="receipt" />}
+              label={receipt ? 'It\'s a receipt' : 'It\'s not a receipt'}
+            />
+          </FormGroup>
           <div className={classes.selectGroup}>
             <MuiPickersUtilsProvider utils={DayJsUtils} className={classes.dateSelector}>
               <KeyboardDatePicker
@@ -98,27 +106,29 @@ function CreateTransationDialog() {
             />
           </div>
 
-          <FormGroup row>
+          <FormGroup row className={classes.transactionTargetSwitch}>
             <FormControlLabel
               control={<Switch checked={incoming} onChange={handleIncomingSwitch} name="incoming" />}
-              label={incoming ? 'Incoming' : 'Outgoing'}
-            />
-            <TextField
-              margin="dense"
-              id={incoming ? 'emitterName' : 'receiverName'}
-              label={incoming ? 'Emitter' : 'Receiver'}
-              type="text"
-              value={incoming ? emitterName : receiverName}
-              onChange={(e) => {
-                if (incoming) {
-                  setEmitterName(e.target.value);
-                } else {
-                  setReceiverName(e.target.value);
-                }
-              }}
-              fullWidth
+              label={incoming ? 'It\'s an incoming transaction' : 'It\'s an outgoing transaction'}
             />
           </FormGroup>
+
+          <TextField
+            className={classes.transactionTargetTextField}
+            margin="dense"
+            id={incoming ? 'emitterName' : 'receiverName'}
+            label={incoming ? 'Emitter' : 'Receiver'}
+            type="text"
+            value={incoming ? emitterName : receiverName}
+            onChange={(e) => {
+              if (incoming) {
+                setEmitterName(e.target.value);
+              } else {
+                setReceiverName(e.target.value);
+              }
+            }}
+            fullWidth
+          />
 
           <TextField
             required
