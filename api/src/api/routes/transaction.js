@@ -16,14 +16,14 @@ export default (app) => {
     celebrate({
       body: Joi.object({
         receipt: Joi.boolean(),
-        emitterName: Joi.string(),
-        receiverName: Joi.string(),
+        emitterName: Joi.string().allow(null, ''),
+        receiverName: Joi.string().allow(null, ''),
         amount: Joi.number().required(),
         currency: Joi.string().required(),
         date: Joi.string().required(),
         valueDate: Joi.string().required(),
-        description: Joi.string(),
-        comments: Joi.string(),
+        description: Joi.string().allow(null, ''),
+        comments: Joi.string().allow(null, ''),
         assCard: Joi.string(),
         accountId: Joi.number().required(),
         tags: Joi.array().items(Joi.number()),

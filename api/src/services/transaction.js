@@ -78,7 +78,7 @@ export default class TransactionService {
     try {
       const account = await this.accountService.findById(accountId, userId, true);
       if (account) {
-        const transaction = await this.transactionModel.create(
+        let transaction = await this.transactionModel.create(
           {
             receipt,
             emitterName,
@@ -95,8 +95,12 @@ export default class TransactionService {
         // associates tags
         if (tags) {
           assTags = await transaction.setTags(tags);
+          transaction = await this.findById({ id: transaction.dataValues.id, userId });
+        } else {
+          transaction = { ...transaction.dataValues, tags: [] };
         }
-        return { ...transaction.dataValues, tags: assTags };
+        console.log("-->", transaction)
+        return (this.getTemplate(transaction));
       }
       return null;
     } catch (err) {
