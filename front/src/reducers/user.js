@@ -6,10 +6,10 @@ const initialState = {
   current: null,
   error: false,
   errorMessage: undefined,
-}
+};
 
 const reducer = (state = initialState, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case String(getAuth.pending):
       return {
         ...state,
@@ -23,7 +23,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         current: action.payload,
-        error: false
+        error: false,
       };
     case String(getAuth.rejected):
       return {
@@ -37,6 +37,6 @@ const reducer = (state = initialState, action) => {
     default:
       return state;
   }
-}
+};
 
 export default reducer;

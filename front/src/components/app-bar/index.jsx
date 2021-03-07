@@ -1,6 +1,5 @@
 import React from 'react';
-import get from 'lodash.get';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
 // material ui
 import AppBar from '@material-ui/core/AppBar';
@@ -13,8 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '../avatar';
 import useStyles from './styles';
 
-
-function MyAppBar({handleDrawerToggle, user}) {
+function MyAppBar({ handleDrawerToggle }) {
   const classes = useStyles();
 
   return (
@@ -34,13 +32,11 @@ function MyAppBar({handleDrawerToggle, user}) {
         <Avatar />
       </Toolbar>
     </AppBar>
-  )
+  );
 }
 
-const mapStateToProps = (state) => {
-  return {
+MyAppBar.propTypes = {
+  handleDrawerToggle: PropTypes.func,
+};
 
-  }
-}
-export default connect(mapStateToProps)(MyAppBar);
-
+export default MyAppBar;

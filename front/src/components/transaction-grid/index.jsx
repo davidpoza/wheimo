@@ -2,33 +2,49 @@ import * as React from 'react';
 import Proptypes from 'prop-types';
 import { DataGrid } from '@material-ui/data-grid';
 
-
 // own
 import Tags from '../tags';
 import Popover from '../popover';
 
 const columns = [
-  { field: 'description', headerName: 'Description', width: 280,
-    renderCell: (params) => (<Popover text={params.row.description} size={10} />)
+  {
+    field: 'description',
+    headerName: 'Description',
+    width: 280,
+    renderCell: (params) => (<Popover text={params.row.description} size={10} />),
   },
   { field: 'emitterName', headerName: 'Emitter', width: 130 },
   { field: 'receiverName', headerName: 'Receiver', width: 130 },
-  { field: 'amount', headerName: 'Amount', width: 130, type: 'number' },
-  { field: 'date', headerName: 'Date', width: 130, type: 'date',
-    valueGetter: (params) => new Date(params.row.date)
+  {
+    field: 'amount', headerName: 'Amount', width: 130, type: 'number',
   },
-  { field: 'account', headerName: 'Account', width: 130,
-     valueGetter: (params) => params.row.account.name
+  {
+    field: 'date',
+    headerName: 'Date',
+    width: 130,
+    type: 'date',
+    valueGetter: (params) => new Date(params.row.date),
   },
-  { field: 'tags', headerName: 'Tags', width: 130, renderCell: (params) => { console.log(params);return <Tags tags={params.row.tags} />} },
+  {
+    field: 'account',
+    headerName: 'Account',
+    width: 130,
+    valueGetter: (params) => (params.row.account.name),
+  },
+  {
+    field: 'tags',
+    headerName: 'Tags',
+    width: 130,
+    renderCell: (params) => (<Tags tags={params.row.tags} />),
+  },
 ];
 
 export default function TransactionGrid({ transactions }) {
   return (
     <div style={{ height: '75vh', width: '100%' }}>
       {
-        transactions &&
-        <DataGrid rows={transactions} columns={columns} autoPageSize={true} />
+        transactions
+          && <DataGrid rows={transactions} columns={columns} autoPageSize={true} />
       }
 
     </div>
@@ -37,4 +53,4 @@ export default function TransactionGrid({ transactions }) {
 
 TransactionGrid.propTypes = {
   transactions: Proptypes.array,
-}
+};

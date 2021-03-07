@@ -13,5 +13,5 @@ export default makeStyles((theme) => ({
   },
   icon: {
     color: '#4d4d4d',
-  }
+  },
 }));

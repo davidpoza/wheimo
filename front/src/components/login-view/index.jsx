@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import get from 'lodash.get';
 
@@ -10,17 +11,16 @@ import Typography from '@material-ui/core/Typography';
 
 // own
 import useStyles from './styles';
-import { getAuth } from '../../actions/user';
+import { getAuth as getAuthAction } from '../../actions/user';
 
-function Login(props) {
-  const { getAuth, user, history } = props;
+function Login({ getAuth, user, history }) {
   const classes = useStyles();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   useEffect(() => {
     if (get(user, 'token')) {
-      history.push("/");
+      history.push('/');
     }
   }, [user]);
 
@@ -50,25 +50,28 @@ function Login(props) {
       </Grid>
     </Grid>
   );
+}
+
+Login.propTypes = {
+  getAuth: PropTypes.func,
+  user: PropTypes.object,
+  history: PropTypes.object,
 };
 
-const mapStateToProps = (state) => {
-  return {
-    loading: state.user.isLoading,
-    user: state.user.current,
-    error: state.user.error,
-    errorMessage: state.user.errorMessage,
-  }
-}
-const mapDispatchToProps = dispatch => {
-  return {
-    getAuth: (email, password) => {
-      dispatch(getAuth(email, password))
-        .catch(error => {
-          console.log(error.message);
-        });
-    },
-  }
-}
+const mapStateToProps = (state) => ({
+  loading: state.user.isLoading,
+  user: state.user.current,
+  error: state.user.error,
+  errorMessage: state.user.errorMessage,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getAuth: (email, password) => {
+    dispatch(getAuthAction(email, password))
+      .catch((error) => {
+        console.log(error.message);
+      });
+  },
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

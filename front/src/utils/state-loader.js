@@ -7,33 +7,34 @@ class StateLoader {
 
   loadState() {
     try {
-      let serializedState = localStorage.getItem("wheimo_redux_store");
+      const serializedState = localStorage.getItem('wheimo_redux_store');
 
       if (serializedState === null) {
         return this.initializeState();
       }
 
       return JSON.parse(serializedState);
-    }
-    catch (err) {
+    } catch (err) {
       return this.initializeState();
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   saveState(state) {
     try {
-      let serializedState = JSON.stringify(state);
-      localStorage.setItem("wheimo_redux_store", serializedState);
-    }
-    catch (err) {
+      const serializedState = JSON.stringify(state);
+      localStorage.setItem('wheimo_redux_store', serializedState);
+    } catch (err) {
+      console.log(err);
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   initializeState() {
     return {
-      user: {}
-    }
-  };
+      user: {},
+    };
+  }
 }
 
 export default StateLoader;

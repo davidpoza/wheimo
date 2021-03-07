@@ -4,7 +4,7 @@ const actions = [
 ];
 
 const actionTypes = {};
-actions.forEach(action => {
+actions.forEach((action) => {
   actionTypes[action] = action;
 });
 

@@ -5,10 +5,10 @@ const initialState = {
   transactionsFetched: null,
   error: false,
   errorMessage: undefined,
-}
+};
 
 const reducer = (state = initialState, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case String(fetchAll.pending):
       return {
         ...state,
@@ -22,7 +22,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         transactionsFetched: action.payload,
-        error: false
+        error: false,
       };
     case String(fetchAll.rejected):
       return {
@@ -34,6 +34,6 @@ const reducer = (state = initialState, action) => {
     default:
       return state;
   }
-}
+};
 
 export default reducer;

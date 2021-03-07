@@ -10,9 +10,8 @@ import FormControl from '@material-ui/core/FormControl';
 import useStyles from './styles';
 import { fetchAll as fetchAllAccounts } from '../../api-client/account';
 
-function AccountSelect({
-  user, label, value, handleChange,
-}) {
+
+function TagSelect({ user, label, value, handleChange }) {
   const classes = useStyles();
   const [accounts, setAccounts] = useState([]);
 
@@ -49,8 +48,8 @@ function AccountSelect({
   );
 }
 
-AccountSelect.propTypes = {
-  user: PropTypes.object,
+TagSelect.propTypes = {
+
   label: PropTypes.string,
   value: PropTypes.string,
   handleChange: PropTypes.func,
@@ -60,4 +59,4 @@ const mapStateToProps = (state) => ({
   user: state.user.current,
 });
 
-export default connect(mapStateToProps)(AccountSelect);
+export default connect(mapStateToProps)(TagSelect);

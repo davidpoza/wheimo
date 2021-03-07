@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-
-export default makeStyles((theme) => ({
+export default makeStyles(() => ({
   root: {
     textAlign: 'center',
     marginBottom: '20vh',
@@ -19,5 +18,5 @@ export default makeStyles((theme) => ({
   },
   password: {
     paddingBottom: '1rem',
-  }
+  },
 }));

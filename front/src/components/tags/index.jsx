@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Proptypes from 'prop-types';
 
 export default function Tags({ tags }) {
@@ -6,19 +6,16 @@ export default function Tags({ tags }) {
   return (
     <div>
       {
-        tags.map((tag) => {
-          return (
-            <span>
-              {tag.name}
-            </span>
-          );
-        })
+        tags.map((tag, index) => (
+          <span key={index}>
+            {tag.name}
+          </span>
+        ))
       }
-
     </div>
   );
 }
 
 Tags.propTypes = {
   tags: Proptypes.array,
-}
+};

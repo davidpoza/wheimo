@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AddIcon from '@material-ui/icons/Add';
 import Fab from '@material-ui/core/Fab';
@@ -22,9 +20,7 @@ import {
 import useStyles from './styles';
 import AccountSelect from '../account-select';
 
-function CreateTransationDialog({
-  user,
-}) {
+function CreateTransationDialog() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [incoming, setIncoming] = useState(false);
@@ -33,23 +29,20 @@ function CreateTransationDialog({
   const [comments, setComments] = useState('');
   const [emitterName, setEmitterName] = useState('');
   const [receiverName, setReceiverName] = useState('');
-  const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-
-
   function handleDateChange(date) {
     setSelectedDate(date);
-  };
+  }
 
   function handleClickOpen() {
     setOpen(true);
-  };
+  }
 
   function handleClose() {
     setOpen(false);
-  };
+  }
 
   function handleIncomingSwitch() {
     setIncoming(!incoming);
@@ -77,10 +70,12 @@ function CreateTransationDialog({
                 }}
               />
             </MuiPickersUtilsProvider>
-            <AccountSelect label="Account" value={selectedAccount} handleChange={(e) => { console.log(e.target);setSelectedAccount(e.target.value) }} />
+            <AccountSelect
+              label="Account"
+              value={selectedAccount}
+              handleChange={(e) => { setSelectedAccount(e.target.value); }}
+            />
           </div>
-
-
 
           <FormGroup row>
             <FormControlLabel
@@ -111,7 +106,7 @@ function CreateTransationDialog({
             label="Amount"
             type="number"
             value={amount}
-            onChange={(e) => { setAmount(e.target.value) }}
+            onChange={(e) => { setAmount(e.target.value); }}
             fullWidth
           />
 
@@ -121,7 +116,7 @@ function CreateTransationDialog({
             label="Description"
             type="text"
             value={description}
-            onChange={(e) => { setDescription(e.target.value) }}
+            onChange={(e) => { setDescription(e.target.value); }}
             fullWidth
           />
 
@@ -132,7 +127,7 @@ function CreateTransationDialog({
             label="Comments"
             type="text"
             value={comments}
-            onChange={(e) => { setComments(e.target.value) }}
+            onChange={(e) => { setComments(e.target.value); }}
             fullWidth
           />
         </DialogContent>

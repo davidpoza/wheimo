@@ -1,8 +1,5 @@
-import get from 'lodash.get';
-
 // own
 import config from '../utils/config';
-import { CustomError } from '../utils/utilities';
 
 export async function fetchAll(token) {
   try {
@@ -10,7 +7,7 @@ export async function fetchAll(token) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
     const result = await res.json();
@@ -18,4 +15,4 @@ export async function fetchAll(token) {
   } catch (err) {
     throw Error('Error during transactions fetch.');
   }
-};
+}

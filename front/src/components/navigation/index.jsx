@@ -8,7 +8,7 @@ import { default as TransactionIcon } from '@material-ui/icons/Receipt';
 import { default as ReportIcon } from '@material-ui/icons/Assessment';
 
 // own
-import useStyles from './styles.js'
+import useStyles from './styles';
 
 export default function Navigation() {
   const classes = useStyles();

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import get from 'lodash.get';
@@ -13,12 +14,11 @@ import ExitIcon from '@material-ui/icons/ExitToApp';
 import Typography from '@material-ui/core/Typography';
 
 // own
-import { resetState as resetUserState } from '../../actions/user';
+import { resetState } from '../../actions/user';
 import config from '../../utils/config';
 import useStyles from './styles';
 
-function MyAvatar(props) {
-  const { user, resetUserState } = props;
+function MyAvatar({ user, resetUserState }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -35,6 +35,7 @@ function MyAvatar(props) {
     resetUserState();
   };
 
+  // eslint-disable-next-line max-len
   const url = get(user, 'avatar.url', 'https://reactify.api.davidinformatico.com/uploads/9b17726ba32542224909596cf182bcb7_ab511f16b9.jpeg');
 
   if (user) {
@@ -73,16 +74,17 @@ function MyAvatar(props) {
   return (null);
 }
 
+MyAvatar.propTypes = {
+  user: PropTypes.object,
+  resetUserState: PropTypes.func,
+};
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.user.current || null,
-  }
-}
-const mapDispatchToProps = dispatch => {
-  return {
-    resetUserState: () => dispatch(resetUserState()),
-  }
-}
+const mapStateToProps = (state) => ({
+  user: state.user.current || null,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  resetUserState: () => dispatch(resetState()),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyAvatar);
