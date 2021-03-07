@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -21,8 +23,9 @@ import {
 import useStyles from './styles';
 import AccountSelect from '../account-select';
 import TagsSelect from '../tags-select';
+import { create } from '../../actions/transaction';
 
-function CreateTransationDialog() {
+function CreateTransactionDialog({ user, createTransaction }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [incoming, setIncoming] = useState(false);
@@ -35,6 +38,7 @@ function CreateTransationDialog() {
   const [selectedAccount, setSelectedAccount] = useState(0);
   const [tags, setTags] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [hasErrors, setHasErrors] = useState(true);
 
   function fixAmountSign(val) {
     if (incoming) {
@@ -47,6 +51,15 @@ function CreateTransationDialog() {
   useEffect(() => {
     fixAmountSign(amount);
   }, [incoming]);
+
+  // controls hasErrors
+  useEffect(() => {
+    if (selectedAccount === 0) {
+      setHasErrors(true);
+    } else {
+      setHasErrors(false);
+    }
+  }, [selectedAccount]);
 
   function handleDateChange(date) {
     setSelectedDate(date);
@@ -69,6 +82,22 @@ function CreateTransationDialog() {
     if (str) {
       fixAmountSign(parseFloat(str, 10));
     }
+  }
+
+  async function handleCreate() {
+    createTransaction(user.token, {
+      emitterName,
+      receiverName,
+      amount,
+      description,
+      comments,
+      tags,
+      accountId: selectedAccount,
+      currency: 'EUR',
+      date: selectedDate,
+      valueDate: selectedDate,
+    });
+    setOpen(false);
   }
 
   return (
@@ -172,7 +201,7 @@ function CreateTransationDialog() {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={handleClose} color="primary">
+          <Button disabled={hasErrors} onClick={handleCreate} color="primary">
             Add
           </Button>
         </DialogActions>
@@ -181,4 +210,22 @@ function CreateTransationDialog() {
   );
 }
 
-export default CreateTransationDialog;
+CreateTransactionDialog.propTypes = {
+  user: PropTypes.object,
+  createTransaction: PropTypes.func,
+};
+
+const mapStateToProps = (state) => ({
+  user: state.user.current,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  createTransaction: (token, data) => {
+    dispatch(create(token, data))
+      .catch((error) => {
+        console.log(error.message);
+      });
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreateTransactionDialog);

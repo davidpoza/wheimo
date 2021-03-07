@@ -1,4 +1,4 @@
-import { fetchAll } from '../actions/transaction';
+import { fetchAll, create } from '../actions/transaction';
 
 const initialState = {
   isLoading: false,
@@ -7,6 +7,7 @@ const initialState = {
   errorMessage: undefined,
 };
 
+/* eslint-disable no-case-declarations */
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case String(fetchAll.pending):
@@ -25,6 +26,28 @@ const reducer = (state = initialState, action) => {
         error: false,
       };
     case String(fetchAll.rejected):
+      return {
+        ...state,
+        isLoading: false,
+        error: true,
+        errorMessage: action.payload.message,
+      };
+    case String(create.pending):
+      return {
+        ...state,
+        isLoading: true,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(create.fulfilled):
+      const newTransactionsFetched = [action.payload, ...state.transactionsFetched];
+      return {
+        ...state,
+        isLoading: false,
+        transactionsFetched: newTransactionsFetched,
+        error: false,
+      };
+    case String(create.rejected):
       return {
         ...state,
         isLoading: false,

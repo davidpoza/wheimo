@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 // own
 import { fetchAll } from '../../actions/transaction';
 import TransactionGrid from '../transaction-grid';
-import CreateTransationDialog from '../create-transation-dialog';
+import CreateTransationDialog from '../create-transaction-dialog';
 
-function HomeView({ user, transactions, fetchAllTransactions }) {
+function HomeView({ user, transactions = [], fetchAllTransactions }) {
   useEffect(() => {
     fetchAllTransactions(user.token, 0, 20);
   }, []);
