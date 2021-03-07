@@ -47,7 +47,7 @@ function TagsSelect({
 TagsSelect.propTypes = {
   user: PropTypes.object,
   label: PropTypes.string,
-  values: PropTypes.string,
+  values: PropTypes.array,
   handleOnChange: PropTypes.func,
 };
 

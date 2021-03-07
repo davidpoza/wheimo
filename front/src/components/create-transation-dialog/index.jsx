@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -34,6 +34,18 @@ function CreateTransationDialog() {
   const [tags, setTags] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  function fixAmountSign(val) {
+    if (incoming) {
+      setAmount(Math.abs(val));
+    } else {
+      setAmount(Math.abs(val) * -1);
+    }
+  }
+
+  useEffect(() => {
+    fixAmountSign(amount);
+  }, [incoming]);
+
   function handleDateChange(date) {
     setSelectedDate(date);
   }
@@ -48,6 +60,13 @@ function CreateTransationDialog() {
 
   function handleIncomingSwitch() {
     setIncoming(!incoming);
+  }
+
+  function handleAmountChange(e) {
+    const str = e.target.value;
+    if (str) {
+      fixAmountSign(parseFloat(str, 10));
+    }
   }
 
   return (
@@ -108,7 +127,7 @@ function CreateTransationDialog() {
             label="Amount"
             type="number"
             value={amount}
-            onChange={(e) => { setAmount(e.target.value); }}
+            onChange={handleAmountChange}
             fullWidth
           />
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import get from 'lodash.get';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Select from '@material-ui/core/Select';
@@ -36,7 +37,7 @@ function AccountSelect({
         labelId="account-label"
         id="account"
         value={value}
-        renderValue={(v) => accounts.filter((entry) => entry.id === v)[0].name}
+        renderValue={(v) => get(accounts.filter((entry) => entry.id === v), '[0].name')}
         onChange={handleChange}
       >
         {
