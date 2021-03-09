@@ -9,7 +9,7 @@ import CreateTransationDialog from '../create-transaction-dialog';
 
 function HomeView({ user, transactions = [], fetchAllTransactions }) {
   useEffect(() => {
-    fetchAllTransactions(user.token, 0, 20);
+    fetchAllTransactions(user.token);
   }, []);
 
   return (

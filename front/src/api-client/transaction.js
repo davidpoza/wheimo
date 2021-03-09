@@ -1,10 +1,13 @@
 // own
 import config from '../utils/config';
 
-export async function fetchAll(token, page, size) {
-  const offset = page * size;
+export async function fetchAll(token, offset, limit) {
   try {
-    const res = await fetch(`${config.API_HOST}/transactions?limit=${size}&offset=${offset}`, {
+    let url = `${config.API_HOST}/transactions`;
+    if (offset && limit) {
+      url += `?offset=${offset}&limit=${limit}`;
+    }
+    const res = await fetch(url, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
