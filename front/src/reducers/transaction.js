@@ -14,7 +14,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: true,
-        transactionsFetched: null,
+        // transactionsFetched: null,
         error: false,
         errorMessage: undefined,
       };
