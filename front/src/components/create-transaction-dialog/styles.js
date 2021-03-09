@@ -21,4 +21,7 @@ export default makeStyles(() => ({
     alignItems: 'flex-end',
     justifyContent: 'space-between',
   },
+  addButton: {
+    maxHeight: '60px',
+  },
 }));

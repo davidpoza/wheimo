@@ -7,7 +7,7 @@ import Pagination from '@material-ui/lab/Pagination';
 import TransactionGridItem from '../transaction-grid-item';
 import useStyles from './styles';
 
-export default function TransactionGrid({ transactions }) {
+function TransactionGrid({ transactions }) {
   const classes = useStyles();
   const PAGE_SIZE = 8; // TODO: recalculate this number with viewport height
   const [page, setPage] = useState(1);
@@ -59,3 +59,5 @@ export default function TransactionGrid({ transactions }) {
 TransactionGrid.propTypes = {
   transactions: Proptypes.array,
 };
+
+export default TransactionGrid;

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 
 // material ui
 import Snackbar from '@material-ui/core/Snackbar';
@@ -6,18 +6,19 @@ import Snackbar from '@material-ui/core/Snackbar';
 // own
 import Loader from '../components/loader';
 
-const withLoader = (Component) => ({loading, error, errorMessage, cleanErrors, ...rest}) => {
-  return (
+/* eslint-disable react/prop-types */
+const withLoader = (Component) => ({
+  loading, error, errorMessage, ...rest
+}) => (
     <>
       {
-        errorMessage &&
-        <Snackbar
-          style={{zIndex: 999999}}
+        errorMessage
+          && <Snackbar
+          style={{ zIndex: 999999 }}
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'left',
           }}
-          onClose={() => { if (cleanErrors) cleanErrors(); }}
           open={errorMessage}
           autoHideDuration={3000}
           message={errorMessage}
@@ -25,12 +26,10 @@ const withLoader = (Component) => ({loading, error, errorMessage, cleanErrors, .
       }
 
       {
-        loading &&
-        <Loader />
+        loading && <Loader />
       }
       <Component {...rest} />
     </>
-  )
-}
+);
 
 export default withLoader;

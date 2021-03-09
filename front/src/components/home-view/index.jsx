@@ -6,14 +6,17 @@ import { connect } from 'react-redux';
 import { fetchAll } from '../../actions/transaction';
 import TransactionGrid from '../transaction-grid';
 import CreateTransationDialog from '../create-transaction-dialog';
+import withLoader from '../../hocs/with-loader';
+import useStyles from './styles';
 
 function HomeView({ user, transactions = [], fetchAllTransactions }) {
+  const classes = useStyles();
   useEffect(() => {
     fetchAllTransactions(user.token);
   }, []);
 
   return (
-    <div>
+    <div id="tt" className={classes.root}>
       <TransactionGrid transactions={transactions} />
       <CreateTransationDialog />
     </div>
@@ -43,4 +46,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeView);
+export default connect(mapStateToProps, mapDispatchToProps)(withLoader(HomeView));
