@@ -1,12 +1,26 @@
 // own
 import config from '../utils/config';
 
-export async function fetchAll(token, offset, limit) {
+export async function fetchAll(token, {
+  offset, limit, from, to,
+}) {
   try {
     let url = `${config.API_HOST}/transactions`;
-    if (offset && limit) {
-      url += `?offset=${offset}&limit=${limit}`;
-    }
+    const params = [];
+    if (offset) params.push(`offset=${offset}`);
+    if (limit) params.push(`limit=${limit}`);
+    if (from) params.push(`from=${from}`);
+    if (to) params.push(`to=${to}`);
+
+    params.forEach((param, index) => {
+      if (index === 0) {
+        url += '?';
+      } else {
+        url += '&';
+      }
+      url += param;
+    });
+
     const res = await fetch(url, {
       method: 'GET',
       headers: {

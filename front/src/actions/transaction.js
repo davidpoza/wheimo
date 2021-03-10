@@ -1,8 +1,12 @@
 import { createAsyncAction } from 'redux-promise-middleware-actions';
 import * as transactionApi from '../api-client/transaction';
 
-export const fetchAll = createAsyncAction('TRANSACTIONS', async (token, offset, limit) => {
-  const res = await transactionApi.fetchAll(token, offset, limit);
+export const fetchAll = createAsyncAction('TRANSACTIONS', async (token, {
+  offset, limit, from, to,
+}) => {
+  const res = await transactionApi.fetchAll(token, {
+    offset, limit, from, to,
+  });
   return res;
 });
 
