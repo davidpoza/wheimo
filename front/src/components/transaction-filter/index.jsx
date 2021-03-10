@@ -10,18 +10,32 @@ import {
 // own
 
 import useStyles from './styles';
+import AccountSelect from '../account-select';
 
 function TransactionFilter({ handleChangeFilter }) {
   const classes = useStyles();
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(dayjs().subtract(3, 'month').toDate());
+  const [endDate, setEndDate] = useState();
+  const [accountId, setAccountId] = useState(new Date());
 
   useEffect(() => {
-    handleChangeFilter({
-      from: dayjs(startDate).format('YYYY-MM-DD'),
-      to: dayjs(endDate).format('YYYY-MM-DD'),
-    });
-  }, [endDate, startDate]);
+    const filter = {};
+    const strStartDate = dayjs(startDate).format('YYYY-MM-DD');
+    const strEndDate = dayjs(endDate).format('YYYY-MM-DD');
+    if (strStartDate && strEndDate && strStartDate !== strEndDate) {
+      filter.from = strStartDate;
+      filter.to = strEndDate;
+    } else if (strStartDate && !strEndDate) {
+      filter.from = strStartDate;
+    } else if (!strStartDate && strEndDate) {
+      filter.to = strEndDate;
+    }
+    if (accountId) filter.accountId = accountId;
+
+    if (Object.keys(filter).length > 0) {
+      handleChangeFilter(filter);
+    }
+  }, [endDate, startDate, accountId]);
 
   return (
     <div className={classes.root}>
@@ -49,6 +63,11 @@ function TransactionFilter({ handleChangeFilter }) {
           }}
         />
       </MuiPickersUtilsProvider>
+      <AccountSelect
+        label="Account"
+        value={accountId}
+        handleChange={(e) => { setAccountId(e.target.value); }}
+      />
     </div>
   );
 }

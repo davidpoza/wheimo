@@ -2,7 +2,7 @@
 import config from '../utils/config';
 
 export async function fetchAll(token, {
-  offset, limit, from, to,
+  offset, limit, from, to, accountId,
 }) {
   try {
     let url = `${config.API_HOST}/transactions`;
@@ -11,6 +11,7 @@ export async function fetchAll(token, {
     if (limit) params.push(`limit=${limit}`);
     if (from) params.push(`from=${from}`);
     if (to) params.push(`to=${to}`);
+    if (accountId) params.push(`accountId=${accountId}`);
 
     params.forEach((param, index) => {
       if (index === 0) {

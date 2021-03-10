@@ -40,6 +40,7 @@ function AccountSelect({
         renderValue={(v) => get(accounts.filter((entry) => entry.id === v), '[0].name')}
         onChange={handleChange}
       >
+        <MenuItem key='none' value={undefined}>None</MenuItem>
         {
           accounts.map((entry, index) => (
             <MenuItem key={index} value={entry.id}>{entry.name}</MenuItem>
