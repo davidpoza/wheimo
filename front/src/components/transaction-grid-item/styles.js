@@ -4,6 +4,7 @@ export default makeStyles(() => ({
   root: {
     borderTop: '1px solid #ccc',
     paddingBottom: '10px',
+    height: '81px',
   },
   content: {
     width: '100%',

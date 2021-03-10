@@ -11,7 +11,7 @@ import useWindowSize from '../../hooks/use-window-size';
 function TransactionGrid({ transactions }) {
   const classes = useStyles();
   const windowSize = useWindowSize();
-  const HEADER_FOOTER_SIZE = 310; // TODO: this value should be calculated
+  const HEADER_FOOTER_SIZE = 310 + 74; // TODO: this value should be calculated
   const ITEM_SIZE = 81; // TODO: this value should be calculated
   const PAGE_SIZE = windowSize
     ? Math.round((windowSize.height - HEADER_FOOTER_SIZE) / ITEM_SIZE)
