@@ -9,7 +9,7 @@ import useStyles from './styles';
 import { fetchAll as fetchAllTags } from '../../api-client/tag';
 
 function TagsSelect({
-  user, label, handleOnChange,
+  user, label, handleOnChange, limitTags,
 }) {
   const classes = useStyles();
   const [tags, setTags] = useState([]);
@@ -28,23 +28,27 @@ function TagsSelect({
 
   return (
     <Autocomplete
-        multiple
-        id="tags"
-        options={tags}
-        getOptionLabel={(option) => option.name}
-        onChange={handleOnChange}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="outlined"
-            label={label}
-          />
-        )}
-      />
+      className={classes.root}
+      size="small"
+      multiple
+      limitTags={limitTags}
+      id="tags"
+      options={tags}
+      getOptionLabel={(option) => option.name}
+      onChange={handleOnChange}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="outlined"
+          label={label}
+        />
+      )}
+    />
   );
 }
 
 TagsSelect.propTypes = {
+  limitTags: PropTypes.number,
   user: PropTypes.object,
   label: PropTypes.string,
   handleOnChange: PropTypes.func,

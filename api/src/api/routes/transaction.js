@@ -130,7 +130,7 @@ export default (app) => {
           }
           return res.status(200).json(transaction);
         }
-        const transactions = await transactionService.findAll({ accountId, userId, tagsArray, from, to, limit, offset, sort });
+        const transactions = await transactionService.findAll({ accountId, userId, tags: tagsArray, from, to, limit, offset, sort });
         return res.status(200).json(transactions);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);

@@ -11,12 +11,14 @@ import {
 
 import useStyles from './styles';
 import AccountSelect from '../account-select';
+import TagsSelect from '../tags-select';
 
 function TransactionFilter({ handleChangeFilter }) {
   const classes = useStyles();
   const [startDate, setStartDate] = useState(dayjs().subtract(3, 'month').toDate());
-  const [endDate, setEndDate] = useState();
-  const [accountId, setAccountId] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+  const [accountId, setAccountId] = useState();
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     const filter = {};
@@ -31,11 +33,12 @@ function TransactionFilter({ handleChangeFilter }) {
       filter.to = strEndDate;
     }
     if (accountId) filter.accountId = accountId;
+    if (tags) filter.tags = tags;
 
     if (Object.keys(filter).length > 0) {
       handleChangeFilter(filter);
     }
-  }, [endDate, startDate, accountId]);
+  }, [endDate, startDate, accountId, tags]);
 
   return (
     <div className={classes.root}>
@@ -68,6 +71,9 @@ function TransactionFilter({ handleChangeFilter }) {
         value={accountId}
         handleChange={(e) => { setAccountId(e.target.value); }}
       />
+      <TagsSelect limitTags={3} label="Tags" values={tags} handleOnChange={ (e, value) => {
+        setTags(value.map((tag) => (tag.id)));
+      } } />
     </div>
   );
 }
