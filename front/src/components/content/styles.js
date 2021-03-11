@@ -5,7 +5,7 @@ export default makeStyles(() => ({
     paddingTop: '60px',
     flex: 1,
     display: 'flex',
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
     flexDirection: 'column',
   },
 }));
