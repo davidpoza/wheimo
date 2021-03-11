@@ -26,6 +26,7 @@ function TransactionGrid({ transactions }) {
     ? transactions.slice((page - 1) * PAGE_SIZE, (page - 1) * PAGE_SIZE + PAGE_SIZE)
     : [];
 
+  const pagesCount = Math.floor(transactions.length / PAGE_SIZE);
   return (
     <div id="ww" className={classes.root}>
       {
@@ -51,11 +52,18 @@ function TransactionGrid({ transactions }) {
                 ))
               }
             </List>
-            <Pagination
-              className={classes.pagination}
-              count={Math.floor(transactions.length / PAGE_SIZE)}
-              onChange={handlePageChange}
-            />
+            <div className={classes.bottomBar}>
+              <div className={classes.resultsCounter}>
+                {`${transactions.length} results found`}
+              </div>
+              <Pagination
+                className={classes.pagination}
+                count={Math.floor(transactions.length / PAGE_SIZE)}
+                onChange={handlePageChange}
+                hidePrevButton={pagesCount === 0}
+                hideNextButton={pagesCount === 0}
+              />
+            </div>
           </>
       }
     </div>

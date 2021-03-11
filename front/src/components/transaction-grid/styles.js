@@ -10,4 +10,14 @@ export default makeStyles(() => ({
       justifyContent: 'flex-end',
     },
   },
+  bottomBar: {
+    margin: '0 3em 0 3em',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  resultsCounter: {
+    fontSize: '0.9em',
+    fontWeight: 300,
+  },
 }));
