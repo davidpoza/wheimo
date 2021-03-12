@@ -17,6 +17,7 @@ import useStyles from './styles';
 
 export default function TransactionGridItem({
   index,
+  id,
   emitterName,
   receiverName,
   description,
@@ -27,11 +28,25 @@ export default function TransactionGridItem({
   amount,
   account,
   handleToggle,
+  handleOnContextMenu,
 }) {
   const classes = useStyles();
   const labelId = `checkbox-list-label-${index}`;
+
+  function handleContextMenu(e) {
+    handleOnContextMenu(e, id);
+  }
+
   return (
-    <ListItem key={index} role={undefined} dense button onClick={handleToggle(index)} className={classes.root}>
+    <ListItem
+      key={index}
+      role={undefined}
+      dense
+      button
+      onClick={handleToggle(index)}
+      className={classes.root}
+      onContextMenu={handleContextMenu}
+    >
       <ListItemIcon>
         <Checkbox
           edge="start"
@@ -76,6 +91,7 @@ export default function TransactionGridItem({
 
 TransactionGridItem.propTypes = {
   index: Proptypes.number,
+  id: Proptypes.string,
   emitterName: Proptypes.string,
   receiverName: Proptypes.string,
   description: Proptypes.string,
@@ -86,4 +102,5 @@ TransactionGridItem.propTypes = {
   amount: Proptypes.number,
   account: Proptypes.string,
   handleToggle: Proptypes.func,
+  handleOnContextMenu: Proptypes.func,
 };

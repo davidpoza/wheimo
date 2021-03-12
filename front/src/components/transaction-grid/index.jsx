@@ -7,7 +7,12 @@ import Pagination from '@material-ui/lab/Pagination';
 import TransactionGridItem from '../transaction-grid-item';
 import useStyles from './styles';
 import useWindowSize from '../../hooks/use-window-size';
+import OperationDropdown from '../operation-dropdown';
 
+const contextMenuInitialState = {
+  mouseX: null,
+  mouseY: null,
+};
 function TransactionGrid({ transactions }) {
   const classes = useStyles();
   const windowSize = useWindowSize();
@@ -17,6 +22,22 @@ function TransactionGrid({ transactions }) {
     ? Math.round((windowSize.height - HEADER_FOOTER_SIZE) / ITEM_SIZE)
     : 0;
   const [page, setPage] = useState(1);
+  const [contextMenuState, setContextMenuState] = useState(contextMenuInitialState);
+  const [contextMenuId, setContextMenuId] = useState(); // transaction.id associated to grid item
+
+  function handleOnContextMenu(event, transactionId) {
+    setContextMenuId(transactionId);
+    event.preventDefault();
+    setContextMenuState({
+      mouseX: event.clientX - 2,
+      mouseY: event.clientY - 4,
+    });
+  }
+
+  function handleCloseContextMenu() {
+    setContextMenuId(undefined);
+    setContextMenuState(contextMenuInitialState);
+  }
 
   function handlePageChange(event, value) {
     setPage(value);
@@ -29,6 +50,12 @@ function TransactionGrid({ transactions }) {
   const pagesCount = Math.floor(transactions.length / PAGE_SIZE);
   return (
     <div id="ww" className={classes.root}>
+      <OperationDropdown
+        contextMenuId={contextMenuId}
+        handleClose={handleCloseContextMenu}
+        contextMenuState={contextMenuState}
+        handleOnContextMenu={handleOnContextMenu}
+      />
       {
         chunk && transactions
           && <>
@@ -37,6 +64,7 @@ function TransactionGrid({ transactions }) {
                 chunk.map((transaction, index) => (
                   <TransactionGridItem
                     key={index}
+                    id={transaction.id}
                     index={index}
                     emitterName={transaction.emitterName}
                     receiverName={transaction.receiverName}
@@ -48,6 +76,7 @@ function TransactionGrid({ transactions }) {
                     amount={transaction.amount}
                     account={transaction.account.name}
                     handleToggle={() => { console.log(''); }}
+                    handleOnContextMenu={handleOnContextMenu}
                   />
                 ))
               }

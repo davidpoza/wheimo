@@ -42,8 +42,9 @@ function TransactionFilter({ handleChangeFilter }) {
 
   return (
     <div className={classes.root}>
-      <MuiPickersUtilsProvider utils={DayJsUtils} className={classes.dateSelector}>
+      <MuiPickersUtilsProvider utils={DayJsUtils}>
         <KeyboardDatePicker
+         className={classes.dateSelector}
           margin="normal"
           id="date-picker-dialog"
           label="Start date"
@@ -55,6 +56,7 @@ function TransactionFilter({ handleChangeFilter }) {
           }}
         />
         <KeyboardDatePicker
+          className={classes.dateSelector}
           margin="normal"
           id="date-picker-dialog"
           label="End date"
