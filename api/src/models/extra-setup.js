@@ -15,7 +15,7 @@ export default function applyExtraSetup(sequelize) {
   tags.hasMany(budgets);
 
   transactions.belongsTo(accounts);
-  transactions.belongsToMany(tags, { through: 'tagged' });
+  transactions.belongsToMany(tags, { through: 'tagged', onDelete: 'cascade', hooks:true });
 
   users.hasMany(accounts);
   users.hasMany(rules);

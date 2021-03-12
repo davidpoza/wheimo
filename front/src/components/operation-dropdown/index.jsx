@@ -1,18 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
 // own
 import useStyles from './styles';
+import { remove as removeAction } from '../../actions/transaction';
 
-export default function OperationDropdown({
-  handleClose, contextMenuState, handleOnContextMenu, contextMenuId,
+function OperationDropdown({
+  handleClose, contextMenuState, handleOnContextMenu, contextMenuId, remove, user,
 }) {
   const classes = useStyles();
 
   function handleContextMenu(e) {
     handleOnContextMenu(e, contextMenuId);
+  }
+
+  function handleRemove() {
+    remove(user.token, contextMenuId, contextMenuState.index);
+    handleClose();
   }
 
   return (
@@ -30,14 +37,34 @@ export default function OperationDropdown({
     >
       <MenuItem onClick={handleClose}>Duplicate</MenuItem>
       <MenuItem onClick={handleClose}>Edit</MenuItem>
-      <MenuItem onClick={handleClose}>Delete</MenuItem>
+      <MenuItem onClick={handleRemove}>Delete</MenuItem>
     </Menu>
   );
 }
 
 OperationDropdown.propTypes = {
+  user: PropTypes.object,
+  remove: PropTypes.func,
   contextMenuId: PropTypes.number,
   contextMenuState: PropTypes.bool,
   handleOnContextMenu: PropTypes.func,
   handleClose: PropTypes.func,
 };
+
+const mapStateToProps = (state) => ({
+  loading: state.transaction.isLoading,
+  user: state.user.current,
+  error: state.user.error,
+  errorMessage: state.user.errorMessage,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  remove: (token, id, index) => {
+    dispatch(removeAction(token, id, index))
+      .catch((error) => {
+        console.log(error.message);
+      });
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(OperationDropdown);

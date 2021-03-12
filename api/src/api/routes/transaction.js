@@ -149,6 +149,7 @@ export default (app) => {
         return res.sendStatus(204);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
+        console.log('ERRRR', err);
         return res.sendStatus(404);
       }
   });

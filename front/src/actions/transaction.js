@@ -14,3 +14,9 @@ export const create = createAsyncAction('CREATE_TRANSACTION', async (token, data
   const res = await transactionApi.create(token, data);
   return res;
 });
+
+export const remove = createAsyncAction('DELETE_TRANSACTION', async (token, id, index) => {
+  console.log('action llamada con ', id, index);
+  const res = await transactionApi.remove(token, id);
+  return ({ response: res, index });
+});

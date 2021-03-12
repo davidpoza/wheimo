@@ -34,7 +34,7 @@ export default function TransactionGridItem({
   const labelId = `checkbox-list-label-${index}`;
 
   function handleContextMenu(e) {
-    handleOnContextMenu(e, id);
+    handleOnContextMenu(e, id, index);
   }
 
   return (

@@ -26,7 +26,6 @@ export default class TransactionService {
    * @param {Object} transaction
    */
   getTemplate(transaction) {
-    console.log(transaction)
     if (transaction) {
       return ({
         id: transaction.id,
@@ -201,9 +200,10 @@ export default class TransactionService {
    * It only deletes owned transactions->accounts
    */
   async deleteById(id, userId) {
-    const transaction = this.findById({ id, userId });
+     const transaction = await this.findById({ id, userId, entity: true });
     if (transaction) {
-      const affectedRows = await this.transactionModel.destroy({ where: { id } });
+      const affectedRows = await transaction.destroy();
+      console.log('////////////////////affectedRows', affectedRows);
       if (affectedRows === 0) {
         throw new Error('Transaction does not exist');
       }

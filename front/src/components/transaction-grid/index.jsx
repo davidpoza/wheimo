@@ -12,6 +12,7 @@ import OperationDropdown from '../operation-dropdown';
 const contextMenuInitialState = {
   mouseX: null,
   mouseY: null,
+  index: null,
 };
 function TransactionGrid({ transactions }) {
   const classes = useStyles();
@@ -25,12 +26,13 @@ function TransactionGrid({ transactions }) {
   const [contextMenuState, setContextMenuState] = useState(contextMenuInitialState);
   const [contextMenuId, setContextMenuId] = useState(); // transaction.id associated to grid item
 
-  function handleOnContextMenu(event, transactionId) {
+  function handleOnContextMenu(event, transactionId, index) {
     setContextMenuId(transactionId);
     event.preventDefault();
     setContextMenuState({
       mouseX: event.clientX - 2,
       mouseY: event.clientY - 4,
+      index,
     });
   }
 
