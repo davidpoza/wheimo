@@ -19,7 +19,7 @@ function TransactionGrid({ transactions }) {
   const windowSize = useWindowSize();
   const HEADER_FOOTER_SIZE = 310 + 74; // TODO: this value should be calculated
   const ITEM_SIZE = 81; // TODO: this value should be calculated
-  const PAGE_SIZE = windowSize
+  const pageSize = windowSize
     ? Math.round((windowSize.height - HEADER_FOOTER_SIZE) / ITEM_SIZE)
     : 0;
   const [page, setPage] = useState(1);
@@ -29,11 +29,12 @@ function TransactionGrid({ transactions }) {
   function handleOnContextMenu(event, transactionId, index) {
     setContextMenuId(transactionId);
     event.preventDefault();
-    setContextMenuState({
+    const newState = {
       mouseX: event.clientX - 2,
       mouseY: event.clientY - 4,
-      index,
-    });
+    };
+    if (index) newState.index = index;
+    setContextMenuState(newState);
   }
 
   function handleCloseContextMenu() {
@@ -45,11 +46,11 @@ function TransactionGrid({ transactions }) {
     setPage(value);
   }
 
-  const chunk = (transactions && PAGE_SIZE)
-    ? transactions.slice((page - 1) * PAGE_SIZE, (page - 1) * PAGE_SIZE + PAGE_SIZE)
+  const chunk = (transactions && pageSize)
+    ? transactions.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize)
     : [];
 
-  const pagesCount = Math.floor(transactions.length / PAGE_SIZE);
+  const pagesCount = Math.floor(transactions.length / pageSize);
   return (
     <div id="ww" className={classes.root}>
       <OperationDropdown
@@ -68,6 +69,7 @@ function TransactionGrid({ transactions }) {
                     key={index}
                     id={transaction.id}
                     index={index}
+                    indexInStore={(page - 1) * pageSize + index}
                     emitterName={transaction.emitterName}
                     receiverName={transaction.receiverName}
                     description={transaction.description}

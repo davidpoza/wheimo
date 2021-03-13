@@ -8,8 +8,7 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
-  const newTransactionsFetched = [action.payload, ...state.transactionsFetched];
-  const removeTransactionsFetched = [action.payload, ...state.transactionsFetched];
+  const transactionsFetchedCopy = [...state.transactionsFetched];
   switch (action.type) {
     case String(fetchAll.pending):
       return {
@@ -44,7 +43,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        transactionsFetched: newTransactionsFetched,
+        transactionsFetched: [action.payload, ...state.transactionsFetched],
         error: false,
       };
     case String(create.rejected):
@@ -55,7 +54,6 @@ const reducer = (state = initialState, action) => {
         errorMessage: action.payload.message,
       };
     case String(remove.pending):
-      console.log('pending', action.payload);
       return {
         ...state,
         isLoading: true,
@@ -63,16 +61,14 @@ const reducer = (state = initialState, action) => {
         errorMessage: undefined,
       };
     case String(remove.fulfilled):
-      console.log(action.payload);
-      delete removeTransactionsFetched[action.payload];
+      transactionsFetchedCopy.splice(action.payload, 1);
       return {
         ...state,
         isLoading: false,
-        transactionsFetched: removeTransactionsFetched,
+        transactionsFetched: transactionsFetchedCopy,
         error: false,
       };
     case String(remove.rejected):
-      console.log('action failed');
       return {
         ...state,
         isLoading: false,

@@ -17,6 +17,7 @@ import useStyles from './styles';
 
 export default function TransactionGridItem({
   index,
+  indexInStore,
   id,
   emitterName,
   receiverName,
@@ -34,7 +35,8 @@ export default function TransactionGridItem({
   const labelId = `checkbox-list-label-${index}`;
 
   function handleContextMenu(e) {
-    handleOnContextMenu(e, id, index);
+    console.log(indexInStore);
+    handleOnContextMenu(e, id, indexInStore);
   }
 
   return (
@@ -91,6 +93,7 @@ export default function TransactionGridItem({
 
 TransactionGridItem.propTypes = {
   index: Proptypes.number,
+  indexInStore: Proptypes.number,
   id: Proptypes.string,
   emitterName: Proptypes.string,
   receiverName: Proptypes.string,
