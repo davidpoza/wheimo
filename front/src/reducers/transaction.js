@@ -64,7 +64,7 @@ const reducer = (state = initialState, action) => {
       };
     case String(remove.fulfilled):
       console.log(action.payload);
-      delete removeTransactionsFetched[action.payload.index];
+      delete removeTransactionsFetched[action.payload];
       return {
         ...state,
         isLoading: false,

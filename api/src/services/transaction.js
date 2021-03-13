@@ -203,7 +203,6 @@ export default class TransactionService {
      const transaction = await this.findById({ id, userId, entity: true });
     if (transaction) {
       const affectedRows = await transaction.destroy();
-      console.log('////////////////////affectedRows', affectedRows);
       if (affectedRows === 0) {
         throw new Error('Transaction does not exist');
       }

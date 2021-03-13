@@ -59,16 +59,14 @@ export async function create(token, data) {
 
 export async function remove(token, id) {
   try {
-    const res = await fetch(`${config.API_HOST}/transactions/${id}`, {
+    await fetch(`${config.API_HOST}/transactions/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log('res', res);
-    const result = await res.json();
-    return (result);
+    return (id);
   } catch (err) {
     throw Error('Error during transaction deletion.');
   }

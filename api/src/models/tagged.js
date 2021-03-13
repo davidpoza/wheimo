@@ -10,25 +10,28 @@ export const definition = [
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true, allowNull: false },
     transaction_id: {
       type: Sequelize.INTEGER,
-      allowNull: false,
       references: {
         model: 'transactions',
-        key: 'id'
-      }
+        key: 'id',
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
     },
     tag_id: {
       type: Sequelize.INTEGER,
-      allowNull: false,
       references: {
         model: 'tags',
-        key: 'id'
-      }
+        key: 'id',
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
     },
     created_at: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
-    updated_at: { type: Sequelize.DATE }
+    updated_at: { type: Sequelize.DATE },
   }, {
     underscored: true,
     timestamps:true,
+    tableName: 'tagged'
   }
 ];
 
