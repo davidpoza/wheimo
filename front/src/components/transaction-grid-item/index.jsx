@@ -23,22 +23,23 @@ import {
 } from '../../actions/transaction';
 
 function TransactionGridItem({
-  index,
-  indexInStore,
-  id,
-  emitterName,
-  receiverName,
-  description,
-  comments,
-  date,
-  valueDate,
-  tags,
-  amount,
   account,
-  handleToggle,
-  changePosition,
+  amount,
   changeId,
   changeIndex,
+  changePosition,
+  comments,
+  date,
+  description,
+  emitterName,
+  favourite,
+  handleToggle,
+  id,
+  index,
+  indexInStore,
+  receiverName,
+  tags,
+  valueDate,
 }) {
   const classes = useStyles();
   const labelId = `checkbox-list-label-${index}`;
@@ -72,10 +73,14 @@ function TransactionGridItem({
       <div className={classes.content}>
         <div className={classes.firstLine}>
           <span className={`${classes.icon} ${amount > 0 ? classes.down : classes.up}`}>
-            {amount > 0 ? <ExpandMoreIcon /> : <ExpandLessIcon />}
+            { amount > 0 ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
           </span>
           <span className={classes.star}>
-            <StarBorderIcon fontSize="small" />
+          {
+            favourite
+              ? <StarIcon className={classes.activeStar} fontSize="small" />
+              : <StarBorderIcon fontSize="small" />
+          }
           </span>
           <span className={classes.amount}>
             {`${amount}€`}
@@ -103,22 +108,23 @@ function TransactionGridItem({
 }
 
 TransactionGridItem.propTypes = {
-  index: PropTypes.number,
-  indexInStore: PropTypes.number,
-  id: PropTypes.string,
-  emitterName: PropTypes.string,
-  receiverName: PropTypes.string,
-  description: PropTypes.string,
-  comments: PropTypes.string,
-  date: PropTypes.string,
-  valueDate: PropTypes.string,
-  tags: PropTypes.array,
-  amount: PropTypes.number,
   account: PropTypes.string,
-  handleToggle: PropTypes.func,
-  changePosition: PropTypes.func,
+  amount: PropTypes.number,
   changeId: PropTypes.func,
   changeIndex: PropTypes.func,
+  changePosition: PropTypes.func,
+  comments: PropTypes.string,
+  date: PropTypes.string,
+  description: PropTypes.string,
+  emitterName: PropTypes.string,
+  favourite: PropTypes.bool,
+  handleToggle: PropTypes.func,
+  id: PropTypes.string,
+  index: PropTypes.number,
+  indexInStore: PropTypes.number,
+  receiverName: PropTypes.string,
+  tags: PropTypes.array,
+  valueDate: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({

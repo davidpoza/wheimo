@@ -14,6 +14,8 @@ export const definition = [
     currency: { type: Sequelize.TEXT, allowNull: false },
     date: { type: Sequelize.DATE },
     valueDate: { type: Sequelize.DATE },
+    favourite: { type: Sequelize.BOOLEAN, defaultValue: false },
+    balance: { type: Sequelize.FLOAT, defaultValue: 0.0 },
     createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
     updatedAt: { type: Sequelize.DATE },
     accountId: {

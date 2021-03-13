@@ -39,6 +39,8 @@ export default class TransactionService {
         currency: transaction.currency,
         date: transaction.date,
         valueDate: transaction.valueDate,
+        favourite: transaction.favourite,
+        balance: transaction.balance,
         accountId: transaction.accountId,
         createdAt: transaction.createdAt,
         updatedAt: transaction.updatedAt,
@@ -59,19 +61,20 @@ export default class TransactionService {
     * @param {string} param.valueDate - value date in format YYYY-MM-DD
     */
   async create({
-    receipt,
-    emitterName,
-    receiverName,
-    description,
-    comments,
-    assCard,
+    accountId,
     amount,
+    assCard,
+    balance,
+    comments,
     currency,
     date,
-    valueDate,
-    accountId,
+    description,
+    emitterName,
+    receipt,
+    receiverName,
     tags,
     userId,
+    valueDate,
   }) {
     let assTags;
     try {
@@ -79,17 +82,18 @@ export default class TransactionService {
       if (account) {
         let transaction = await this.transactionModel.create(
           {
-            receipt,
-            emitterName,
-            receiverName,
-            description,
-            comments,
-            assCard,
+            accountId,
             amount,
+            assCard,
+            balance,
+            comments,
             currency,
             date: this.dayjs(date, 'YYYY-MM-DD').toDate(),
+            description,
+            emitterName,
+            receipt,
+            receiverName,
             valueDate: this.dayjs(valueDate, 'YYYY-MM-DD').toDate(),
-            accountId
           });
         // associates tags
         if (tags) {

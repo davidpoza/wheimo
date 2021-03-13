@@ -15,53 +15,56 @@ export default (app) => {
     middlewares.isAuth,
     celebrate({
       body: Joi.object({
-        receipt: Joi.boolean(),
-        emitterName: Joi.string().allow(null, ''),
-        receiverName: Joi.string().allow(null, ''),
+        accountId: Joi.number().required(),
         amount: Joi.number().required(),
+        assCard: Joi.string(),
+        balance: Joi.number(),
+        comments: Joi.string().allow(null, ''),
         currency: Joi.string().required(),
         date: Joi.string().required(),
-        valueDate: Joi.string().required(),
         description: Joi.string().allow(null, ''),
-        comments: Joi.string().allow(null, ''),
-        assCard: Joi.string(),
-        accountId: Joi.number().required(),
+        emitterName: Joi.string().allow(null, ''),
+        receipt: Joi.boolean(),
+        receiverName: Joi.string().allow(null, ''),
         tags: Joi.array().items(Joi.number()),
+        valueDate: Joi.string().required(),
       }),
     }),
     async (req, res, next) => {
       const transactionService = Container.get('transactionService');
       const {
-        receipt,
-        emitterName,
-        receiverName,
-        amount,
-        currency,
-        description,
-        comments,
-        assCard,
         accountId,
+        amount,
+        assCard,
+        balance,
+        comments,
+        currency,
         date,
+        description,
+        emitterName,
+        receipt,
+        receiverName,
+        tags,
         valueDate,
-        tags
        } = req.body;
       const userId = req.user.id;
       try {
         const transaction = await transactionService.create(
           {
-            receipt,
-            emitterName,
-            receiverName,
-            amount,
-            currency,
-            description,
-            comments,
-            assCard,
             accountId,
+            amount,
+            assCard,
+            balance,
+            comments,
+            currency,
             date,
-            valueDate,
+            description,
+            emitterName,
+            receipt,
+            receiverName,
             tags,
-            userId
+            userId,
+            valueDate,
           }
         );
         if (!transaction) {
@@ -81,28 +84,55 @@ export default (app) => {
     middlewares.isAuth,
     celebrate({
       body: Joi.object({
-        receipt: Joi.boolean(),
-        emitterName: Joi.string(),
-        receiverName: Joi.string(),
+        accountId: Joi.number(),
         amount: Joi.number(),
+        assCard: Joi.string(),
+        balance: Joi.number(),
+        comments: Joi.string(),
         currency: Joi.string(),
         date: Joi.string(),
-        valueDate: Joi.string(),
         description: Joi.string(),
-        comments: Joi.string(),
-        assCard: Joi.string(),
-        accountId: Joi.number(),
+        emitterName: Joi.string(),
+        favourite: Joi.boolean(),
+        receipt: Joi.boolean(),
+        receiverName: Joi.string(),
         tags: Joi.array().items(Joi.number()),
+        valueDate: Joi.string(),
       }),
     }),
     async (req, res, next) => {
       const transactionService = Container.get('transactionService');
       const { id } = req.params;
       const userId = req.user.id;
-      const { emitterName, receiverName, amount, description, comments, assCard, accountId, tags, date, valueDate } = req.body;
+      const {
+        accountId,
+        amount,
+        assCard,
+        balance,
+        comments,
+        date,
+        description,
+        emitterName,
+        favourite,
+        receiverName,
+        tags,
+        valueDate,
+      } = req.body;
       try {
         const transaction = await transactionService.updateById(id, userId,
-          { emitterName, receiverName, amount, description, assCard, accountId, tags, date, valueDate }
+          {
+            emitterName,
+            receiverName,
+            amount,
+            description,
+            assCard,
+            accountId,
+            tags,
+            date,
+            valueDate,
+            balance,
+            favourite,
+          }
         );
         if (!transaction) {
           res.sendStatus(404);

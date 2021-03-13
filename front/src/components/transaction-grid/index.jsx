@@ -52,6 +52,7 @@ function TransactionGrid({ transactions }) {
                     amount={transaction.amount}
                     account={transaction.account.name}
                     handleToggle={() => { console.log(''); }}
+                    favourite={transaction.favourite}
                   />
                 ))
               }

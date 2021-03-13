@@ -6,6 +6,9 @@ export default makeStyles(() => ({
     paddingBottom: '10px',
     height: '81px',
   },
+  activeStar: {
+    color: '#eea300',
+  },
   content: {
     width: '100%',
     display: 'flex',
