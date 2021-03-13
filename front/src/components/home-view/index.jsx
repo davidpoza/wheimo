@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import dayjs from 'dayjs';
@@ -13,6 +13,7 @@ import useStyles from './styles';
 
 function HomeView({ user, transactions = [], fetchAllTransactions }) {
   const classes = useStyles();
+
   useEffect(() => {
     fetchAllTransactions(user.token, { from: dayjs().subtract(3, 'month').format('YYYY-MM-DD') });
   }, []);

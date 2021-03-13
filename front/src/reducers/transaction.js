@@ -4,6 +4,7 @@ import types from '../actions/types';
 const initialState = {
   isLoading: false,
   transactionsFetched: [],
+  createEditDialogOpen: false,
   contextMenuState: {
     mouseX: null,
     mouseY: null,
@@ -105,6 +106,20 @@ const reducer = (state = initialState, action) => {
           ...state.contextMenuState,
           mouseX: action.payload.x,
           mouseY: action.payload.y,
+        },
+      };
+    case types.TRANSACTIONS_CREATE_EDIT_DIALOG_OPEN:
+      return {
+        ...state,
+        createEditDialogOpen: true,
+      };
+    case types.TRANSACTIONS_CREATE_EDIT_DIALOG_CLOSE:
+      return {
+        ...state,
+        createEditDialogOpen: false,
+        contextMenuState: {
+          ...state.contextMenuState,
+          index: undefined,
         },
       };
     default:

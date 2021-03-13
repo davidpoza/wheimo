@@ -35,3 +35,11 @@ export const contextMenuChangePosition = (x, y) => ({
   type: types.TRANSACTIONS_CONTEXT_MENU_CHANGE_POSITION,
   payload: { x, y },
 });
+
+export const createEditDialogOpen = () => ({
+  type: types.TRANSACTIONS_CREATE_EDIT_DIALOG_OPEN,
+});
+
+export const createEditDialogClose = () => ({
+  type: types.TRANSACTIONS_CREATE_EDIT_DIALOG_CLOSE,
+});

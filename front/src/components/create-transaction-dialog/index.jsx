@@ -23,11 +23,22 @@ import {
 import useStyles from './styles';
 import AccountSelect from '../account-select';
 import TagsSelect from '../tags-select';
-import { create } from '../../actions/transaction';
+import {
+  create,
+  createEditDialogOpen as openAction,
+  createEditDialogClose as closeAction,
+} from '../../actions/transaction';
 
-function CreateTransactionDialog({ user, createTransaction, initialState }) {
+function CreateTransactionDialog({
+  index,
+  transactions,
+  isOpen,
+  open,
+  close,
+  user,
+  createTransaction,
+}) {
   const classes = useStyles();
-  const [open, setOpen] = useState(false);
   const [incoming, setIncoming] = useState(false);
   const [receipt, setReceipt] = useState(false);
   const [amount, setAmount] = useState(0.0);
@@ -49,16 +60,18 @@ function CreateTransactionDialog({ user, createTransaction, initialState }) {
   }
 
   function setInitialState() {
-    setIncoming(initialState.incoming);
-    setReceipt(initialState.receipt);
-    setAmount(initialState.amount);
-    setDescription(initialState.description);
-    setComments(initialState.comments);
-    setEmitterName(initialState.emitterName);
-    setReceiverName(initialState.receiverName);
-    setSelectedAccount(initialState.selectedAccount);
-    setTags(initialState.tags);
-    setSelectedDate(initialState.selectedDate);
+    if (transactions[index]) {
+      setIncoming(transactions[index].amount > 0);
+      setReceipt(transactions[index].receipt);
+      setAmount(transactions[index].amount);
+      setDescription(transactions[index].description);
+      setComments(transactions[index].comments);
+      setEmitterName(transactions[index].emitterName);
+      setReceiverName(transactions[index].receiverName);
+      setSelectedAccount(transactions[index].accountId);
+      setTags(transactions[index].tags);
+      setSelectedDate(transactions[index].selectedDate);
+    }
   }
 
   function clearForm() {
@@ -74,6 +87,12 @@ function CreateTransactionDialog({ user, createTransaction, initialState }) {
     setSelectedDate(new Date());
     setHasErrors(true);
   }
+
+  useEffect(() => {
+    if (index !== undefined) {
+      setInitialState();
+    }
+  }, [index]);
 
   useEffect(() => {
     amountSignCorrection(amount);
@@ -93,11 +112,12 @@ function CreateTransactionDialog({ user, createTransaction, initialState }) {
   }
 
   function handleClickOpen() {
-    setOpen(true);
+    open();
   }
 
   function handleClose() {
-    setOpen(false);
+    clearForm();
+    close();
   }
 
   function handleIncomingSwitch() {
@@ -125,7 +145,7 @@ function CreateTransactionDialog({ user, createTransaction, initialState }) {
       valueDate: selectedDate,
     });
     clearForm();
-    setOpen(false);
+    close();
   }
 
   return (
@@ -133,9 +153,9 @@ function CreateTransactionDialog({ user, createTransaction, initialState }) {
       <Fab className={classes.addButton} color="primary" aria-label="add" onClick={handleClickOpen}>
         <AddIcon />
       </Fab>
-      <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog open={isOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
         <DialogTitle id="form-dialog-title">
-          { initialState ? 'Edit transaction' : 'Add manual transaction' }
+          { index !== undefined ? 'Edit transaction' : 'Add manual transaction' }
         </DialogTitle>
         <DialogContent>
           <FormGroup row>
@@ -241,24 +261,21 @@ function CreateTransactionDialog({ user, createTransaction, initialState }) {
 }
 
 CreateTransactionDialog.propTypes = {
-  initialState: PropTypes.shape({
-    incoming: PropTypes.bool,
-    receipt: PropTypes.bool,
-    amount: PropTypes.number,
-    description: PropTypes.string,
-    comments: PropTypes.string,
-    emitterName: PropTypes.string,
-    receiverName: PropTypes.string,
-    selectedAccount: PropTypes.number,
-    tags: PropTypes.arrayOf(PropTypes.number),
-    selectedDate: PropTypes.object,
-  }),
+  index: PropTypes.number,
+  isOpen: PropTypes.bool,
+  open: PropTypes.func,
+  close: PropTypes.func,
   user: PropTypes.object,
   createTransaction: PropTypes.func,
+  transactions: PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user.current,
+  isOpen: state.transaction.createEditDialogOpen,
+  contextMenuState: state.transaction.contextMenuState,
+  index: state.transaction.contextMenuState.index,
+  transactions: state.transaction.transactionsFetched,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -267,6 +284,12 @@ const mapDispatchToProps = (dispatch) => ({
       .catch((error) => {
         console.log(error.message);
       });
+  },
+  open: () => {
+    dispatch(openAction());
+  },
+  close: () => {
+    dispatch(closeAction());
   },
 });
 

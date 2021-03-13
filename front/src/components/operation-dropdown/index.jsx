@@ -11,10 +11,11 @@ import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
+  createEditDialogOpen as openAction,
 } from '../../actions/transaction';
 
 function OperationDropdown({
-  remove, user, changePosition, changeId, changeIndex, contextMenuState,
+  remove, user, changePosition, changeId, changeIndex, contextMenuState, openDialog,
 }) {
   const classes = useStyles();
 
@@ -35,7 +36,8 @@ function OperationDropdown({
   }
 
   function handleEdit() {
-    close();
+    changePosition(null, null);
+    openDialog();
   }
 
   return (
@@ -65,6 +67,7 @@ OperationDropdown.propTypes = {
   changePosition: PropTypes.func,
   changeId: PropTypes.func,
   changeIndex: PropTypes.func,
+  openDialog: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -90,6 +93,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   changeIndex: (index) => {
     dispatch(changeIndexAction(index));
+  },
+  openDialog: () => {
+    dispatch(openAction());
   },
 });
 
