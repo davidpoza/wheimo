@@ -14,6 +14,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Checkbox from '@material-ui/core/Checkbox';
 import DayJsUtils from '@date-io/dayjs';
+import dayjs from 'dayjs';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -73,7 +74,7 @@ function CreateTransactionDialog({
       setReceiverName(transactions[index].receiverName);
       setSelectedAccount(transactions[index].accountId);
       setTags(transactions[index].tags);
-      setSelectedDate(transactions[index].selectedDate);
+      setSelectedDate(new Date(transactions[index].date));
     }
   }
 
@@ -144,8 +145,8 @@ function CreateTransactionDialog({
       tags,
       accountId: selectedAccount,
       currency: 'EUR',
-      date: selectedDate,
-      valueDate: selectedDate,
+      date: dayjs(selectedDate).format('YYYY-MM-DD'),
+      valueDate: dayjs(selectedDate).format('YYYY-MM-DD'),
     };
 
     if (index !== undefined) {

@@ -99,10 +99,10 @@ export default (app) => {
       const transactionService = Container.get('transactionService');
       const { id } = req.params;
       const userId = req.user.id;
-      const { emitterName, receiverName, amount, description, comments, assCard, accountId, tags } = req.body;
+      const { emitterName, receiverName, amount, description, comments, assCard, accountId, tags, date, valueDate } = req.body;
       try {
         const transaction = await transactionService.updateById(id, userId,
-          { emitterName, receiverName, amount, description, assCard, accountId, tags }
+          { emitterName, receiverName, amount, description, assCard, accountId, tags, date, valueDate }
         );
         if (!transaction) {
           res.sendStatus(404);
