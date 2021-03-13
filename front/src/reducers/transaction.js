@@ -1,4 +1,6 @@
-import { fetchAll, create, remove } from '../actions/transaction';
+import {
+  fetchAll, create, remove, update,
+} from '../actions/transaction';
 import types from '../actions/types';
 
 const initialState = {
@@ -55,6 +57,28 @@ const reducer = (state = initialState, action) => {
         error: false,
       };
     case String(create.rejected):
+      return {
+        ...state,
+        isLoading: false,
+        error: true,
+        errorMessage: action.payload.message,
+      };
+    case String(update.pending):
+      return {
+        ...state,
+        isLoading: true,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(update.fulfilled):
+      transactionsFetchedCopy[action.payload.index] = action.payload;
+      return {
+        ...state,
+        isLoading: false,
+        transactionsFetched: transactionsFetchedCopy,
+        error: false,
+      };
+    case String(update.rejected):
       return {
         ...state,
         isLoading: false,

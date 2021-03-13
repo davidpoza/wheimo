@@ -51,9 +51,28 @@ export async function create(token, data) {
       body: JSON.stringify(adaptedData),
     });
     const result = await res.json();
-    // result.tags = result.tags.map((tag) => {
 
-    // });
+    return (result);
+  } catch (err) {
+    throw Error('Error during transaction creation.');
+  }
+}
+
+export async function update(token, id, data) {
+  const adaptedData = { ...data };
+  adaptedData.tags = data.tags.map((tag) => (tag.id));
+
+  try {
+    const res = await fetch(`${config.API_HOST}/transactions/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(adaptedData),
+    });
+    const result = await res.json();
+
     return (result);
   } catch (err) {
     throw Error('Error during transaction creation.');

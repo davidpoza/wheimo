@@ -16,6 +16,12 @@ export const create = createAsyncAction('CREATE_TRANSACTION', async (token, data
   return res;
 });
 
+export const update = createAsyncAction('UPDATE_TRANSACTION', async (token, id, index, data) => {
+  const res = await transactionApi.update(token, id, data);
+  res.index = index;
+  return res;
+});
+
 export const remove = createAsyncAction('DELETE_TRANSACTION', async (token, id, index) => {
   await transactionApi.remove(token, id);
   return (index);
