@@ -89,7 +89,7 @@ function TransactionGrid({ transactions }) {
               </div>
               <Pagination
                 className={classes.pagination}
-                count={Math.floor(transactions.length / PAGE_SIZE)}
+                count={Math.ceil(transactions.length / pageSize)}
                 onChange={handlePageChange}
                 hidePrevButton={pagesCount === 0}
                 hideNextButton={pagesCount === 0}
