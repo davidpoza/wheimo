@@ -9,7 +9,7 @@ import useStyles from './styles';
 import { fetchAll as fetchAllTags } from '../../api-client/tag';
 
 function TagsSelect({
-  user, label, handleOnChange, limitTags,
+  user, label, handleOnChange, limitTags, value,
 }) {
   const classes = useStyles();
   const [tags, setTags] = useState([]);
@@ -28,6 +28,7 @@ function TagsSelect({
 
   return (
     <Autocomplete
+      value={value}
       className={classes.root}
       size="small"
       multiple
@@ -48,6 +49,7 @@ function TagsSelect({
 }
 
 TagsSelect.propTypes = {
+  value: PropTypes.array,
   limitTags: PropTypes.number,
   user: PropTypes.object,
   label: PropTypes.string,

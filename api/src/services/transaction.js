@@ -98,7 +98,6 @@ export default class TransactionService {
         } else {
           transaction = { ...transaction.dataValues, tags: [] };
         }
-        console.log("-->", transaction)
         return (this.getTemplate(transaction));
       }
       return null;

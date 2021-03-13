@@ -241,10 +241,13 @@ function CreateTransactionDialog({
             onChange={(e) => { setComments(e.target.value); }}
             fullWidth
           />
-
-          <TagsSelect label="Tags" values={tags} handleOnChange={ (e, value) => {
-            setTags(value.map((tag) => (tag.id)));
-          } } />
+          <TagsSelect
+            label="Tags"
+            value={tags}
+            handleOnChange={ (e, value) => {
+              setTags(value);
+            } }
+          />
         </DialogContent>
 
         <DialogActions>

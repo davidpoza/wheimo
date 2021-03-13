@@ -38,6 +38,9 @@ export async function fetchAll(token, {
 }
 
 export async function create(token, data) {
+  const adaptedData = { ...data };
+  adaptedData.tags = data.tags.map((tag) => (tag.id));
+
   try {
     const res = await fetch(`${config.API_HOST}/transactions`, {
       method: 'POST',
@@ -45,7 +48,7 @@ export async function create(token, data) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(adaptedData),
     });
     const result = await res.json();
     // result.tags = result.tags.map((tag) => {
