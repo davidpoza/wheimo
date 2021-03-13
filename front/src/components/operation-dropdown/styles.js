@@ -1,9 +1,10 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles(() => ({
-  root: {
-    flex: 1,
-    height: '90px',
-    maxHeight: '90px',
+  item: {
+    '&:hover': {
+      color: 'white',
+      background: '#3f51b5 !important',
+    },
   },
 }));

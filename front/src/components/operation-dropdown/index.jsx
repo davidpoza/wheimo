@@ -35,9 +35,9 @@ function OperationDropdown({
           : undefined
       }
     >
-      <MenuItem onClick={handleClose}>Duplicate</MenuItem>
-      <MenuItem onClick={handleClose}>Edit</MenuItem>
-      <MenuItem onClick={handleRemove}>Delete</MenuItem>
+      <MenuItem className={classes.item} onClick={handleClose}>Duplicate</MenuItem>
+      <MenuItem className={classes.item} onClick={handleClose}>Edit</MenuItem>
+      <MenuItem className={classes.item} onClick={handleRemove}>Delete</MenuItem>
     </Menu>
   );
 }
