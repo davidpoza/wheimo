@@ -4,7 +4,7 @@ import config from '../../utils/config';
 export default makeStyles((theme) => ({
   appBar: {
     [theme.breakpoints.up('sm')]: {
-      width: `calc(100% - ${config.drawerWidth}px)`,
+      // width: `calc(100% - ${config.drawerWidth}px)`,
       marginLeft: config.drawerWidth,
     },
   },
