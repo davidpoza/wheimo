@@ -33,7 +33,7 @@ function TransactionFilter({ handleChangeFilter }) {
       filter.to = strEndDate;
     }
     if (accountId) filter.accountId = accountId;
-    if (tags) filter.tags = tags;
+    if (tags && tags.length > 0) filter.tags = tags;
 
     if (Object.keys(filter).length > 0) {
       handleChangeFilter(filter);
