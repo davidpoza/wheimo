@@ -25,7 +25,7 @@ import AccountSelect from '../account-select';
 import TagsSelect from '../tags-select';
 import { create } from '../../actions/transaction';
 
-function CreateTransactionDialog({ user, createTransaction }) {
+function CreateTransactionDialog({ user, createTransaction, initialState }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [incoming, setIncoming] = useState(false);
@@ -46,6 +46,19 @@ function CreateTransactionDialog({ user, createTransaction }) {
     } else {
       setAmount(Math.abs(val) * -1);
     }
+  }
+
+  function setInitialState() {
+    setIncoming(initialState.incoming);
+    setReceipt(initialState.receipt);
+    setAmount(initialState.amount);
+    setDescription(initialState.description);
+    setComments(initialState.comments);
+    setEmitterName(initialState.emitterName);
+    setReceiverName(initialState.receiverName);
+    setSelectedAccount(initialState.selectedAccount);
+    setTags(initialState.tags);
+    setSelectedDate(initialState.selectedDate);
   }
 
   function clearForm() {
@@ -121,7 +134,9 @@ function CreateTransactionDialog({ user, createTransaction }) {
         <AddIcon />
       </Fab>
       <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Add manual transaction</DialogTitle>
+        <DialogTitle id="form-dialog-title">
+          { initialState ? 'Edit transaction' : 'Add manual transaction' }
+        </DialogTitle>
         <DialogContent>
           <FormGroup row>
             <FormControlLabel
@@ -226,6 +241,18 @@ function CreateTransactionDialog({ user, createTransaction }) {
 }
 
 CreateTransactionDialog.propTypes = {
+  initialState: PropTypes.shape({
+    incoming: PropTypes.bool,
+    receipt: PropTypes.bool,
+    amount: PropTypes.number,
+    description: PropTypes.string,
+    comments: PropTypes.string,
+    emitterName: PropTypes.string,
+    receiverName: PropTypes.string,
+    selectedAccount: PropTypes.number,
+    tags: PropTypes.arrayOf(PropTypes.number),
+    selectedDate: PropTypes.object,
+  }),
   user: PropTypes.object,
   createTransaction: PropTypes.func,
 };

@@ -6,27 +6,43 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 // own
 import useStyles from './styles';
-import { remove as removeAction } from '../../actions/transaction';
+import {
+  remove as removeAction,
+  contextMenuChangePosition as changePositionAction,
+  contextMenuChangeId as changeIdAction,
+  contextMenuChangeIndex as changeIndexAction,
+} from '../../actions/transaction';
 
 function OperationDropdown({
-  handleClose, contextMenuState, handleOnContextMenu, contextMenuId, remove, user,
+  remove, user, changePosition, changeId, changeIndex, contextMenuState,
 }) {
   const classes = useStyles();
 
   function handleContextMenu(e) {
-    handleOnContextMenu(e, contextMenuId);
+    e.preventDefault();
+    changePosition(e.clientX - 2, e.clientY - 4);
+  }
+
+  function close() {
+    changePosition(null, null);
+    changeId(undefined);
+    changeIndex(undefined);
   }
 
   function handleRemove() {
-    remove(user.token, contextMenuId, contextMenuState.index);
-    handleClose();
+    remove(user.token, contextMenuState.id, contextMenuState.index);
+    close();
+  }
+
+  function handleEdit() {
+    close();
   }
 
   return (
     <Menu
       keepMounted
       open={contextMenuState.mouseY !== null}
-      onClose={handleClose}
+      onClose={close}
       anchorReference="anchorPosition"
       onContextMenu={handleContextMenu}
       anchorPosition={
@@ -35,24 +51,25 @@ function OperationDropdown({
           : undefined
       }
     >
-      <MenuItem className={classes.item} onClick={handleClose}>Duplicate</MenuItem>
-      <MenuItem className={classes.item} onClick={handleClose}>Edit</MenuItem>
+      <MenuItem className={classes.item} onClick={close}>Duplicate</MenuItem>
+      <MenuItem className={classes.item} onClick={handleEdit}>Edit</MenuItem>
       <MenuItem className={classes.item} onClick={handleRemove}>Delete</MenuItem>
     </Menu>
   );
 }
 
 OperationDropdown.propTypes = {
+  contextMenuState: PropTypes.object,
   user: PropTypes.object,
   remove: PropTypes.func,
-  contextMenuId: PropTypes.number,
-  contextMenuState: PropTypes.bool,
-  handleOnContextMenu: PropTypes.func,
-  handleClose: PropTypes.func,
+  changePosition: PropTypes.func,
+  changeId: PropTypes.func,
+  changeIndex: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   loading: state.transaction.isLoading,
+  contextMenuState: state.transaction.contextMenuState,
   user: state.user.current,
   error: state.user.error,
   errorMessage: state.user.errorMessage,
@@ -64,6 +81,15 @@ const mapDispatchToProps = (dispatch) => ({
       .catch((error) => {
         console.log(error.message);
       });
+  },
+  changePosition: (x, y) => {
+    dispatch(changePositionAction(x, y));
+  },
+  changeId: (id) => {
+    dispatch(changeIdAction(id));
+  },
+  changeIndex: (index) => {
+    dispatch(changeIndexAction(index));
   },
 });
 

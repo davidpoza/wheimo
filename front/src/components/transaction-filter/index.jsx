@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Proptypes from 'prop-types';
+import PropTypes from 'prop-types';
 import DayJsUtils from '@date-io/dayjs';
 import dayjs from 'dayjs';
 import {
@@ -81,7 +81,7 @@ function TransactionFilter({ handleChangeFilter }) {
 }
 
 TransactionFilter.propTypes = {
-  handleChangeFilter: Proptypes.func,
+  handleChangeFilter: PropTypes.func,
 };
 
 export default TransactionFilter;

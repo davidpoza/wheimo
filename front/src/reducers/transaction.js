@@ -1,8 +1,15 @@
 import { fetchAll, create, remove } from '../actions/transaction';
+import types from '../actions/types';
 
 const initialState = {
   isLoading: false,
   transactionsFetched: [],
+  contextMenuState: {
+    mouseX: null,
+    mouseY: null,
+    index: null,
+    id: null,
+  },
   error: false,
   errorMessage: undefined,
 };
@@ -74,6 +81,31 @@ const reducer = (state = initialState, action) => {
         isLoading: false,
         error: true,
         errorMessage: action.payload.message,
+      };
+    case types.TRANSACTIONS_CONTEXT_MENU_CHANGE_INDEX:
+      return {
+        ...state,
+        contextMenuState: {
+          ...state.contextMenuState,
+          index: action.payload,
+        },
+      };
+    case types.TRANSACTIONS_CONTEXT_MENU_CHANGE_ID:
+      return {
+        ...state,
+        contextMenuState: {
+          ...state.contextMenuState,
+          id: action.payload,
+        },
+      };
+    case types.TRANSACTIONS_CONTEXT_MENU_CHANGE_POSITION:
+      return {
+        ...state,
+        contextMenuState: {
+          ...state.contextMenuState,
+          mouseX: action.payload.x,
+          mouseY: action.payload.y,
+        },
       };
     default:
       return state;

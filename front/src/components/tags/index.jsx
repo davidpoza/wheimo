@@ -1,5 +1,7 @@
 import React from 'react';
-import Proptypes from 'prop-types';
+import PropTypes from 'prop-types';
+
+// own
 
 import useStyles from './styles';
 
@@ -20,5 +22,5 @@ export default function Tags({ tags }) {
 }
 
 Tags.propTypes = {
-  tags: Proptypes.array,
+  tags: PropTypes.array,
 };

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Proptypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 export default function PopOver({ text }) {
   return (
@@ -10,5 +10,5 @@ export default function PopOver({ text }) {
 }
 
 PopOver.propTypes = {
-  text: Proptypes.string,
+  text: PropTypes.string,
 };

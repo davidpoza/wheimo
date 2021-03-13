@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Proptypes from 'prop-types';
+import PropTypes from 'prop-types';
 import List from '@material-ui/core/List';
 import Pagination from '@material-ui/lab/Pagination';
 
@@ -9,11 +9,6 @@ import useStyles from './styles';
 import useWindowSize from '../../hooks/use-window-size';
 import OperationDropdown from '../operation-dropdown';
 
-const contextMenuInitialState = {
-  mouseX: null,
-  mouseY: null,
-  index: null,
-};
 function TransactionGrid({ transactions }) {
   const classes = useStyles();
   const windowSize = useWindowSize();
@@ -23,24 +18,6 @@ function TransactionGrid({ transactions }) {
     ? Math.round((windowSize.height - HEADER_FOOTER_SIZE) / ITEM_SIZE)
     : 0;
   const [page, setPage] = useState(1);
-  const [contextMenuState, setContextMenuState] = useState(contextMenuInitialState);
-  const [contextMenuId, setContextMenuId] = useState(); // transaction.id associated to grid item
-
-  function handleOnContextMenu(event, transactionId, index) {
-    setContextMenuId(transactionId);
-    event.preventDefault();
-    const newState = {
-      mouseX: event.clientX - 2,
-      mouseY: event.clientY - 4,
-    };
-    if (index) newState.index = index;
-    setContextMenuState(newState);
-  }
-
-  function handleCloseContextMenu() {
-    setContextMenuId(undefined);
-    setContextMenuState(contextMenuInitialState);
-  }
 
   function handlePageChange(event, value) {
     setPage(value);
@@ -53,12 +30,7 @@ function TransactionGrid({ transactions }) {
   const pagesCount = Math.floor(transactions.length / pageSize);
   return (
     <div id="ww" className={classes.root}>
-      <OperationDropdown
-        contextMenuId={contextMenuId}
-        handleClose={handleCloseContextMenu}
-        contextMenuState={contextMenuState}
-        handleOnContextMenu={handleOnContextMenu}
-      />
+      <OperationDropdown />
       {
         chunk && transactions
           && <>
@@ -80,7 +52,6 @@ function TransactionGrid({ transactions }) {
                     amount={transaction.amount}
                     account={transaction.account.name}
                     handleToggle={() => { console.log(''); }}
-                    handleOnContextMenu={handleOnContextMenu}
                   />
                 ))
               }
@@ -104,7 +75,7 @@ function TransactionGrid({ transactions }) {
 }
 
 TransactionGrid.propTypes = {
-  transactions: Proptypes.array,
+  transactions: PropTypes.array,
 };
 
 export default TransactionGrid;
