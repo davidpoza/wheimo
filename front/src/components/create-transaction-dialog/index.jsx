@@ -40,7 +40,7 @@ function CreateTransactionDialog({ user, createTransaction }) {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [hasErrors, setHasErrors] = useState(true);
 
-  function fixAmountSign(val) {
+  function amountSignCorrection(val) {
     if (incoming) {
       setAmount(Math.abs(val));
     } else {
@@ -48,8 +48,22 @@ function CreateTransactionDialog({ user, createTransaction }) {
     }
   }
 
+  function clearForm() {
+    setIncoming(false);
+    setReceipt(false);
+    setAmount(0.0);
+    setDescription('');
+    setComments('');
+    setEmitterName('');
+    setReceiverName('');
+    setSelectedAccount(0);
+    setTags([]);
+    setSelectedDate(new Date());
+    setHasErrors(true);
+  }
+
   useEffect(() => {
-    fixAmountSign(amount);
+    amountSignCorrection(amount);
   }, [incoming]);
 
   // controls hasErrors
@@ -80,7 +94,7 @@ function CreateTransactionDialog({ user, createTransaction }) {
   function handleAmountChange(e) {
     const str = e.target.value;
     if (str) {
-      fixAmountSign(parseFloat(str, 10));
+      amountSignCorrection(parseFloat(str, 10));
     }
   }
 
@@ -97,6 +111,7 @@ function CreateTransactionDialog({ user, createTransaction }) {
       date: selectedDate,
       valueDate: selectedDate,
     });
+    clearForm();
     setOpen(false);
   }
 
