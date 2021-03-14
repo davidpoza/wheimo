@@ -13,6 +13,8 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Checkbox from '@material-ui/core/Checkbox';
+import Paper from '@material-ui/core/Paper';
+import Draggable from 'react-draggable';
 import DayJsUtils from '@date-io/dayjs';
 import dayjs from 'dayjs';
 import {
@@ -30,6 +32,14 @@ import {
   createEditDialogOpen as openAction,
   createEditDialogClose as closeAction,
 } from '../../actions/transaction';
+
+function PaperComponent(props) {
+  return (
+    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...props} />
+    </Draggable>
+  );
+}
 
 function CreateTransactionDialog({
   id,
@@ -163,8 +173,8 @@ function CreateTransactionDialog({
       <Fab className={classes.addButton} color="primary" aria-label="add" onClick={handleClickOpen}>
         <AddIcon />
       </Fab>
-      <Dialog open={isOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">
+      <Dialog open={isOpen} onClose={handleClose} aria-labelledby="form-dialog-title" PaperComponent={PaperComponent}>
+        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
           { index !== undefined ? 'Edit transaction' : 'Add manual transaction' }
         </DialogTitle>
         <DialogContent>
