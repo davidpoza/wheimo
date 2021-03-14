@@ -41,7 +41,7 @@ function TransactionGrid({ transactions }) {
                     account={transaction.account.name}
                     accountBalance={transaction.balance}
                     amount={transaction.amount}
-                    checked={transaction.checked}
+                    checked={transaction.checked || false}
                     comments={transaction.comments}
                     date={transaction.date}
                     description={transaction.description}
