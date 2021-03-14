@@ -57,6 +57,12 @@ function TransactionGridItem({
     changeIndex(indexInStore);
   }
 
+  function handleOpenDetailsDialog() {
+    changeId(id);
+    changeIndex(indexInStore);
+    openDetailsDialog();
+  }
+
   function toggleFavourite(e) {
     e.preventDefault();
     updateFavourite(user.token, id, indexInStore, favourite);
@@ -72,7 +78,7 @@ function TransactionGridItem({
       onContextMenu={handleContextMenu}
       disableTouchRipple
       onDoubleClick={() => {
-        openDetailsDialog();
+        handleOpenDetailsDialog();
       }}
     >
       <ListItemIcon>
@@ -177,7 +183,6 @@ const mapDispatchToProps = (dispatch) => ({
       });
   },
   toggleChecked: (index) => {
-    console.log('-->');
     dispatch(toggleCheckedAction(index));
   },
   openDetailsDialog: () => {

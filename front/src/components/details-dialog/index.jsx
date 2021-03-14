@@ -13,11 +13,14 @@ import dayjs from 'dayjs';
 
 // own
 import useStyles from './styles';
+import Editor from '../editor';
 import {
   create as createAction,
   update as updateAction,
   detailsDialogOpen as openAction,
   detailsDialogClose as closeAction,
+  contextMenuChangeId as changeIdAction,
+  contextMenuChangeIndex as changeIndexAction,
 } from '../../actions/transaction';
 
 function PaperComponent(props) {
@@ -38,55 +41,22 @@ function DetailsDialog({
   user,
   createTransaction,
   updateTransaction,
+  changeId,
+  changeIndex,
 }) {
   const classes = useStyles();
-  const [incoming, setIncoming] = useState(false);
-  const [receipt, setReceipt] = useState(false);
-  const [amount, setAmount] = useState(0.0);
   const [description, setDescription] = useState('');
   const [comments, setComments] = useState('');
-  const [emitterName, setEmitterName] = useState('');
-  const [receiverName, setReceiverName] = useState('');
-  const [selectedAccount, setSelectedAccount] = useState(0);
-  const [tags, setTags] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [hasErrors, setHasErrors] = useState(true);
-
-  function amountSignCorrection(val) {
-    if (incoming) {
-      setAmount(Math.abs(val));
-    } else {
-      setAmount(Math.abs(val) * -1);
-    }
-  }
 
   function setInitialState() {
     if (transactions[index]) {
-      setIncoming(transactions[index].amount > 0);
-      setReceipt(transactions[index].receipt);
-      setAmount(transactions[index].amount);
-      setDescription(transactions[index].description);
-      setComments(transactions[index].comments);
-      setEmitterName(transactions[index].emitterName);
-      setReceiverName(transactions[index].receiverName);
-      setSelectedAccount(transactions[index].accountId);
-      setTags(transactions[index].tags);
-      setSelectedDate(new Date(transactions[index].date));
+      setComments(transactions[index]?.comments);
     }
   }
 
   function clearForm() {
-    setIncoming(false);
-    setReceipt(false);
-    setAmount(0.0);
     setDescription('');
     setComments('');
-    setEmitterName('');
-    setReceiverName('');
-    setSelectedAccount(0);
-    setTags([]);
-    setSelectedDate(new Date());
-    setHasErrors(true);
   }
 
   useEffect(() => {
@@ -95,80 +65,45 @@ function DetailsDialog({
     }
   }, [index]);
 
-  useEffect(() => {
-    amountSignCorrection(amount);
-  }, [incoming]);
-
-  // controls hasErrors
-  useEffect(() => {
-    if (selectedAccount === 0) {
-      setHasErrors(true);
-    } else {
-      setHasErrors(false);
-    }
-  }, [selectedAccount]);
-
-  function handleDateChange(date) {
-    setSelectedDate(date);
-  }
-
-  function handleClickOpen() {
-    open();
-  }
-
   function handleClose() {
     clearForm();
+    changeId(undefined);
+    changeIndex(undefined);
     close();
-  }
-
-  function handleIncomingSwitch() {
-    setIncoming(!incoming);
-  }
-
-  function handleAmountChange(e) {
-    const str = e.target.value;
-    if (str) {
-      amountSignCorrection(parseFloat(str, 10));
-    }
   }
 
   async function processData() {
     const data = {
-      emitterName: emitterName || undefined,
-      receiverName: receiverName || undefined,
-      amount,
-      description: description || undefined,
+      // description: description || undefined,
       comments: comments || undefined,
-      tags,
-      accountId: selectedAccount,
-      currency: 'EUR',
-      date: dayjs(selectedDate).format('YYYY-MM-DD'),
-      valueDate: dayjs(selectedDate).format('YYYY-MM-DD'),
     };
 
-    if (index !== undefined) {
-      updateTransaction(user.token, id, index, data);
-    } else {
-      createTransaction(user.token, data);
-    }
+    updateTransaction(user.token, id, index, data);
     clearForm();
     close();
   }
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} aria-labelledby="form-dialog-title" PaperComponent={PaperComponent}>
+    <Dialog
+      maxWidth="sm"
+      fullWidth
+      open={isOpen}
+      onClose={handleClose}
+      aria-labelledby="form-dialog-title"
+      PaperComponent={PaperComponent}
+    >
       <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
         Transaction details
       </DialogTitle>
       <DialogContent>
-
+        <Editor content={comments} setContent={ (_content) => { setComments(_content); }} />
       </DialogContent>
 
       <DialogActions>
         <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
-        <Button disabled={hasErrors} onClick={processData} color="primary">
+        <Button onClick={processData} color="primary">
           { index !== undefined ? 'Save changes' : 'Add' }
         </Button>
       </DialogActions>
@@ -185,6 +120,8 @@ DetailsDialog.propTypes = {
   user: PropTypes.object,
   createTransaction: PropTypes.func,
   updateTransaction: PropTypes.func,
+  changeId: PropTypes.func,
+  changeIndex: PropTypes.func,
   transactions: PropTypes.array,
 };
 
@@ -215,6 +152,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   close: () => {
     dispatch(closeAction());
+  },
+  changeId: (id) => {
+    dispatch(changeIdAction(id));
+  },
+  changeIndex: (index) => {
+    dispatch(changeIndexAction(index));
   },
 });
 

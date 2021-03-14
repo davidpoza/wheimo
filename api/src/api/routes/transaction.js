@@ -121,17 +121,18 @@ export default (app) => {
       try {
         const transaction = await transactionService.updateById(id, userId,
           {
-            emitterName,
-            receiverName,
-            amount,
-            description,
-            assCard,
             accountId,
-            tags,
-            date,
-            valueDate,
+            amount,
+            assCard,
             balance,
+            comments,
+            date,
+            description,
+            emitterName,
             favourite,
+            receiverName,
+            tags,
+            valueDate,
           }
         );
         if (!transaction) {
