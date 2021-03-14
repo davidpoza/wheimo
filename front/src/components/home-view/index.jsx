@@ -8,6 +8,7 @@ import { fetchAll } from '../../actions/transaction';
 import TransactionGrid from '../transaction-grid';
 import TransactionFilter from '../transaction-filter';
 import CreateTransationDialog from '../create-transaction-dialog';
+import DetailsDialog from '../details-dialog';
 import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
 
@@ -28,6 +29,7 @@ function HomeView({ user, transactions = [], fetchAllTransactions }) {
       <TransactionFilter handleChangeFilter={handleChangeFilter} />
       <TransactionGrid transactions={transactions} />
       <CreateTransationDialog />
+      <DetailsDialog />
     </div>
   );
 }

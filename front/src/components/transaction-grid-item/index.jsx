@@ -20,6 +20,7 @@ import {
   contextMenuChangeIndex as changeIndexAction,
   toggleChecked as toggleCheckedAction,
   update as updateAction,
+  detailsDialogOpen as openAction,
 } from '../../actions/transaction';
 
 function TransactionGridItem({
@@ -29,6 +30,7 @@ function TransactionGridItem({
   changeId,
   changeIndex,
   changePosition,
+  checked,
   comments,
   date,
   description,
@@ -37,12 +39,12 @@ function TransactionGridItem({
   id,
   index,
   indexInStore,
+  openDetailsDialog,
   receiverName,
   tags,
   toggleChecked,
   updateFavourite,
   user,
-  checked,
   valueDate,
 }) {
   const classes = useStyles();
@@ -66,15 +68,21 @@ function TransactionGridItem({
       role={undefined}
       dense
       button
-      onClick={() => { toggleChecked(indexInStore); }}
       className={classes.root}
       onContextMenu={handleContextMenu}
       disableTouchRipple
+      onDoubleClick={() => {
+        openDetailsDialog();
+      }}
     >
       <ListItemIcon>
         <Checkbox
           edge="start"
           checked={checked}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleChecked(indexInStore);
+          }}
           tabIndex={-1}
           disableRipple
           inputProps={{ 'aria-labelledby': labelId }}
@@ -130,9 +138,10 @@ TransactionGridItem.propTypes = {
   description: PropTypes.string,
   emitterName: PropTypes.string,
   favourite: PropTypes.bool,
-  id: PropTypes.string,
+  id: PropTypes.number,
   index: PropTypes.number,
   indexInStore: PropTypes.number,
+  openDetailsDialog: PropTypes.func,
   receiverName: PropTypes.string,
   tags: PropTypes.array,
   toggleChecked: PropTypes.func,
@@ -168,7 +177,11 @@ const mapDispatchToProps = (dispatch) => ({
       });
   },
   toggleChecked: (index) => {
+    console.log('-->');
     dispatch(toggleCheckedAction(index));
+  },
+  openDetailsDialog: () => {
+    dispatch(openAction());
   },
 });
 

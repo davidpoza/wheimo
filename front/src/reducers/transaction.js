@@ -7,6 +7,7 @@ const initialState = {
   isLoading: false,
   transactionsFetched: [],
   createEditDialogOpen: false,
+  detailsDialogOpen: false,
   contextMenuState: {
     mouseX: null,
     mouseY: null,
@@ -146,11 +147,24 @@ const reducer = (state = initialState, action) => {
           index: undefined,
         },
       };
+    case types.TRANSACTIONS_DETAILS_DIALOG_OPEN:
+      return {
+        ...state,
+        detailsDialogOpen: true,
+      };
+    case types.TRANSACTIONS_DETAILS_DIALOG_CLOSE:
+      return {
+        ...state,
+        detailsDialogOpen: false,
+        contextMenuState: {
+          ...state.contextMenuState,
+          index: undefined,
+        },
+      };
     case types.TRANSACTIONS_TOGGLE_CHECKBOX:
       transactionsFetchedCopy[action.payload].checked = !transactionsFetchedCopy[action.payload].checked;
       return {
         ...state,
-        createEditDialogOpen: false,
         transactionsFetched: transactionsFetchedCopy,
       };
     default:

@@ -54,3 +54,11 @@ export const toggleChecked = (index) => ({
   type: types.TRANSACTIONS_TOGGLE_CHECKBOX,
   payload: index,
 });
+
+export const detailsDialogOpen = () => ({
+  type: types.TRANSACTIONS_DETAILS_DIALOG_OPEN,
+});
+
+export const detailsDialogClose = () => ({
+  type: types.TRANSACTIONS_DETAILS_DIALOG_CLOSE,
+});
