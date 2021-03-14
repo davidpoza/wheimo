@@ -1,23 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
-// Import TinyMce
-import 'tinymce';
-
-// Default Icons
-import 'tinymce/icons/default';
-
-// Theme
-import 'tinymce/themes/silver';
-
-// Plugins
-import 'tinymce/plugins/image';
-import 'tinymce/plugins/link';
-import 'tinymce/plugins/lists';
-import 'tinymce/plugins/textpattern';
-
-// CSS
-import 'tinymce/skins/ui/oxide/skin.min.css';
 
 // own
 import './App.css';
