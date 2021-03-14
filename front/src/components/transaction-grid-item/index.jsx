@@ -4,8 +4,6 @@ import PropTypes from 'prop-types';
 import ListItem from '@material-ui/core/ListItem';
 import Checkbox from '@material-ui/core/Checkbox';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemText from '@material-ui/core/ListItemText';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StarIcon from '@material-ui/icons/Star';
@@ -20,6 +18,7 @@ import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
+  update as updateAction,
 } from '../../actions/transaction';
 
 function TransactionGridItem({
@@ -39,6 +38,8 @@ function TransactionGridItem({
   indexInStore,
   receiverName,
   tags,
+  updateFavourite,
+  user,
   valueDate,
 }) {
   const classes = useStyles();
@@ -51,6 +52,11 @@ function TransactionGridItem({
     changeIndex(indexInStore);
   }
 
+  function toggleFavourite(e) {
+    e.preventDefault();
+    updateFavourite(user.token, id, indexInStore, favourite);
+  }
+
   return (
     <ListItem
       key={index}
@@ -60,6 +66,7 @@ function TransactionGridItem({
       onClick={handleToggle(index)}
       className={classes.root}
       onContextMenu={handleContextMenu}
+      disableTouchRipple
     >
       <ListItemIcon>
         <Checkbox
@@ -78,8 +85,8 @@ function TransactionGridItem({
           <span className={classes.star}>
           {
             favourite
-              ? <StarIcon className={classes.activeStar} fontSize="small" />
-              : <StarBorderIcon fontSize="small" />
+              ? <StarIcon className={classes.activeStar} fontSize="small" onClick={toggleFavourite} />
+              : <StarBorderIcon fontSize="small" onClick={toggleFavourite} />
           }
           </span>
           <span className={classes.amount}>
@@ -124,14 +131,13 @@ TransactionGridItem.propTypes = {
   indexInStore: PropTypes.number,
   receiverName: PropTypes.string,
   tags: PropTypes.array,
+  updateFavourite: PropTypes.func,
+  user: PropTypes.object,
   valueDate: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
-  loading: state.transaction.isLoading,
   user: state.user.current,
-  error: state.user.error,
-  errorMessage: state.user.errorMessage,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -149,6 +155,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   changeIndex: (index) => {
     dispatch(changeIndexAction(index));
+  },
+  updateFavourite: (token, id, index, value) => {
+    dispatch(updateAction(token, id, index, { favourite: !value }))
+      .catch((error) => {
+        console.log(error.message);
+      });
   },
 });
 

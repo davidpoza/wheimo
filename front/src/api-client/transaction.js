@@ -60,7 +60,9 @@ export async function create(token, data) {
 
 export async function update(token, id, data) {
   const adaptedData = { ...data };
-  adaptedData.tags = data.tags.map((tag) => (tag.id));
+  if (data.tags) {
+    adaptedData.tags = data.tags.map((tag) => (tag.id));
+  }
 
   try {
     const res = await fetch(`${config.API_HOST}/transactions/${id}`, {
