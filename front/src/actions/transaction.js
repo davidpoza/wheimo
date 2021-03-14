@@ -49,3 +49,8 @@ export const createEditDialogOpen = () => ({
 export const createEditDialogClose = () => ({
   type: types.TRANSACTIONS_CREATE_EDIT_DIALOG_CLOSE,
 });
+
+export const toggleChecked = (index) => ({
+  type: types.TRANSACTIONS_TOGGLE_CHECKBOX,
+  payload: index,
+});

@@ -146,6 +146,13 @@ const reducer = (state = initialState, action) => {
           index: undefined,
         },
       };
+    case types.TRANSACTIONS_TOGGLE_CHECKBOX:
+      transactionsFetchedCopy[action.payload].checked = !transactionsFetchedCopy[action.payload].checked;
+      return {
+        ...state,
+        createEditDialogOpen: false,
+        transactionsFetched: transactionsFetchedCopy,
+      };
     default:
       return state;
   }

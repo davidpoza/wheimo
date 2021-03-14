@@ -18,6 +18,7 @@ import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
+  toggleChecked as toggleCheckedAction,
   update as updateAction,
 } from '../../actions/transaction';
 
@@ -33,14 +34,15 @@ function TransactionGridItem({
   description,
   emitterName,
   favourite,
-  handleToggle,
   id,
   index,
   indexInStore,
   receiverName,
   tags,
+  toggleChecked,
   updateFavourite,
   user,
+  checked,
   valueDate,
 }) {
   const classes = useStyles();
@@ -64,7 +66,7 @@ function TransactionGridItem({
       role={undefined}
       dense
       button
-      onClick={handleToggle(index)}
+      onClick={() => { toggleChecked(indexInStore); }}
       className={classes.root}
       onContextMenu={handleContextMenu}
       disableTouchRipple
@@ -72,7 +74,7 @@ function TransactionGridItem({
       <ListItemIcon>
         <Checkbox
           edge="start"
-          checked={true}
+          checked={checked}
           tabIndex={-1}
           disableRipple
           inputProps={{ 'aria-labelledby': labelId }}
@@ -122,17 +124,18 @@ TransactionGridItem.propTypes = {
   changeId: PropTypes.func,
   changeIndex: PropTypes.func,
   changePosition: PropTypes.func,
+  checked: PropTypes.bool,
   comments: PropTypes.string,
   date: PropTypes.string,
   description: PropTypes.string,
   emitterName: PropTypes.string,
   favourite: PropTypes.bool,
-  handleToggle: PropTypes.func,
   id: PropTypes.string,
   index: PropTypes.number,
   indexInStore: PropTypes.number,
   receiverName: PropTypes.string,
   tags: PropTypes.array,
+  toggleChecked: PropTypes.func,
   updateFavourite: PropTypes.func,
   user: PropTypes.object,
   valueDate: PropTypes.string,
@@ -163,6 +166,9 @@ const mapDispatchToProps = (dispatch) => ({
       .catch((error) => {
         console.log(error.message);
       });
+  },
+  toggleChecked: (index) => {
+    dispatch(toggleCheckedAction(index));
   },
 });
 

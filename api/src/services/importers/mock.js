@@ -7,7 +7,8 @@ export default {
       "amount": 35,
       "currency": "EUR",
       "transactionDate": "2020-01-01",
-      "valueDate": "2021-01-01"
+      "valueDate": "2021-01-01",
+      "balance": 500,
     },
     {
       "receipt": false,
@@ -16,7 +17,8 @@ export default {
       "amount": 30,
       "currency": "EUR",
       "transactionDate": "2020-12-18",
-      "valueDate": "2020-12-18"
+      "valueDate": "2020-12-18",
+      "balance": 650,
     },
     {
       "receipt": false,
@@ -25,7 +27,8 @@ export default {
       "amount": 5,
       "currency": "EUR",
       "transactionDate": "2020-01-24",
-      "valueDate": "2020-01-24"
+      "valueDate": "2020-01-24",
+      "balance": 788,
     },
     {
       "receipt": false,
@@ -35,7 +38,8 @@ export default {
       "amount": 6,
       "currency": "EUR",
       "transactionDate": "2020-01-24",
-      "valueDate": "2020-01-24"
+      "valueDate": "2020-01-24",
+      "balance": 930,
     },
     {
       "receipt": false,
@@ -44,7 +48,8 @@ export default {
       "amount": -60,
       "currency": "EUR",
       "transactionDate": "2020-01-24",
-      "valueDate": "2020-01-24"
+      "valueDate": "2020-01-24",
+      "balance": 1222.30,
     },
     {
       "receipt": false,
@@ -53,7 +58,8 @@ export default {
       "amount": 10,
       "currency": "EUR",
       "transactionDate": "2020-01-23",
-      "valueDate": "2020-01-23"
+      "valueDate": "2020-01-23",
+      "balance": 1230.30,
     }
   ],
   "balance": 1200

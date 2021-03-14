@@ -41,12 +41,12 @@ function TransactionGrid({ transactions }) {
                     account={transaction.account.name}
                     accountBalance={transaction.balance}
                     amount={transaction.amount}
+                    checked={transaction.checked}
                     comments={transaction.comments}
                     date={transaction.date}
                     description={transaction.description}
                     emitterName={transaction.emitterName}
                     favourite={transaction.favourite}
-                    handleToggle={() => { console.log(''); }}
                     id={transaction.id}
                     index={index}
                     indexInStore={(page - 1) * pageSize + index}
