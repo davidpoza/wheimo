@@ -55,7 +55,8 @@ export default class TransactionService {
   }
 
   /**
-    * It only creates transactions for owned accounts
+    * It only creates transactions for owned accounts.
+    * If balance is passed then doesn't update account, it's understood to be an old (passed) transaction
     * @param {Object} param
     * @param {string} param.date - date in format YYYY-MM-DD
     * @param {string} param.valueDate - value date in format YYYY-MM-DD
@@ -85,7 +86,7 @@ export default class TransactionService {
             accountId,
             amount,
             assCard,
-            balance,
+            balance: balance ? balance : account.balance + amount,
             comments,
             currency,
             date: this.dayjs(date, 'YYYY-MM-DD').toDate(),
@@ -101,6 +102,9 @@ export default class TransactionService {
           transaction = await this.findById({ id: transaction.dataValues.id, userId });
         } else {
           transaction = { ...transaction.dataValues, tags: [] };
+        }
+        if (!balance) {
+          await this.accountService.updateById(accountId, userId, { balance: account.balance + amount });
         }
         return (this.getTemplate(transaction));
       }

@@ -30,6 +30,7 @@ export default makeStyles(() => ({
   },
   account: {
     fontSize: '0.8em',
+    textTransform: 'uppercase',
   },
   tags: {
     marginLeft: '1em',
@@ -51,6 +52,7 @@ export default makeStyles(() => ({
   },
   star: {
     color: '#ccc',
+    alignSelf: 'normal',
     '&>svg': {
       verticalAlign: 'text-bottom',
     },

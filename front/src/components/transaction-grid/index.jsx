@@ -38,21 +38,22 @@ function TransactionGrid({ transactions }) {
               {
                 chunk.map((transaction, index) => (
                   <TransactionGridItem
-                    key={index}
+                    account={transaction.account.name}
+                    accountBalance={transaction.balance}
+                    amount={transaction.amount}
+                    comments={transaction.comments}
+                    date={transaction.date}
+                    description={transaction.description}
+                    emitterName={transaction.emitterName}
+                    favourite={transaction.favourite}
+                    handleToggle={() => { console.log(''); }}
                     id={transaction.id}
                     index={index}
                     indexInStore={(page - 1) * pageSize + index}
-                    emitterName={transaction.emitterName}
+                    key={index}
                     receiverName={transaction.receiverName}
-                    description={transaction.description}
-                    comments={transaction.comments}
-                    date={transaction.date}
-                    valueDate={transaction.valueDate}
                     tags={transaction.tags}
-                    amount={transaction.amount}
-                    account={transaction.account.name}
-                    handleToggle={() => { console.log(''); }}
-                    favourite={transaction.favourite}
+                    valueDate={transaction.valueDate}
                   />
                 ))
               }

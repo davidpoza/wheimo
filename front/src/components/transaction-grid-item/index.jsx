@@ -23,6 +23,7 @@ import {
 
 function TransactionGridItem({
   account,
+  accountBalance,
   amount,
   changeId,
   changeIndex,
@@ -82,13 +83,6 @@ function TransactionGridItem({
           <span className={`${classes.icon} ${amount > 0 ? classes.down : classes.up}`}>
             { amount > 0 ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
           </span>
-          <span className={classes.star}>
-          {
-            favourite
-              ? <StarIcon className={classes.activeStar} fontSize="small" onClick={toggleFavourite} />
-              : <StarBorderIcon fontSize="small" onClick={toggleFavourite} />
-          }
-          </span>
           <span className={classes.amount}>
             {`${amount}€`}
           </span>
@@ -101,12 +95,19 @@ function TransactionGridItem({
           <div className={classes.date}>
             {dayjs(date).format('dddd DD, MMM YY')}
           </div>
-        </div>
-        <div className={classes.account}>
-          {account}
+          <span className={classes.star}>
+          {
+            favourite
+              ? <StarIcon className={classes.activeStar} fontSize="small" onClick={toggleFavourite} />
+              : <StarBorderIcon fontSize="small" onClick={toggleFavourite} />
+          }
+          </span>
         </div>
         <div className={classes.description}>
           {description}
+        </div>
+        <div className={classes.account}>
+          {accountBalance}€ | {account}
         </div>
 
       </div>
@@ -116,6 +117,7 @@ function TransactionGridItem({
 
 TransactionGridItem.propTypes = {
   account: PropTypes.string,
+  accountBalance: PropTypes.number,
   amount: PropTypes.number,
   changeId: PropTypes.func,
   changeIndex: PropTypes.func,
