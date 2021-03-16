@@ -6,13 +6,16 @@ import dayjs from 'dayjs';
 // own
 import { fetchAll } from '../../actions/transaction';
 import TransactionGrid from '../transaction-grid';
+import Charts from '../charts';
 import TransactionFilter from '../transaction-filter';
 import CreateTransationDialog from '../create-transaction-dialog';
 import DetailsDialog from '../details-dialog';
 import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
 
-function HomeView({ user, transactions = [], fetchAllTransactions }) {
+function HomeView({
+  user, transactions = [], fetchAllTransactions, showCharts,
+}) {
   const classes = useStyles();
 
   useEffect(() => {
@@ -27,7 +30,11 @@ function HomeView({ user, transactions = [], fetchAllTransactions }) {
   return (
     <div id="tt" className={classes.root}>
       <TransactionFilter handleChangeFilter={handleChangeFilter} />
-      <TransactionGrid transactions={transactions} />
+      {
+        showCharts
+          ? <Charts />
+          : <TransactionGrid transactions={transactions} />
+      }
       <CreateTransationDialog />
       <DetailsDialog />
     </div>
@@ -36,6 +43,7 @@ function HomeView({ user, transactions = [], fetchAllTransactions }) {
 
 HomeView.propTypes = {
   user: PropTypes.object,
+  showCharts: PropTypes.bool,
   transactions: PropTypes.array,
   fetchAllTransactions: PropTypes.func,
 };
@@ -43,6 +51,7 @@ HomeView.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.user.current,
   transactions: state.transaction.transactionsFetched,
+  showCharts: state.transaction.showCharts,
   loading: state.transaction.isLoading,
   error: state.transaction.error,
   errorMessage: state.transaction.errorMessage,

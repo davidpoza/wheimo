@@ -14,6 +14,7 @@ const initialState = {
     index: null,
     id: null,
   },
+  showCharts: false,
   error: false,
   errorMessage: undefined,
 };
@@ -166,6 +167,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         transactionsFetched: transactionsFetchedCopy,
+      };
+    case types.TRANSACTIONS_TOGGLE_CHARTS:
+      return {
+        ...state,
+        showCharts: !state.showCharts,
       };
     default:
       return state;

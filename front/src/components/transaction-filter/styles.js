@@ -12,4 +12,7 @@ export default makeStyles(() => ({
   dateSelector: {
     width: '9em',
   },
+  chartsSwitch: {
+    alignSelf: 'normal',
+  },
 }));

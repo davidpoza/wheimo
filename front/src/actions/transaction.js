@@ -62,3 +62,7 @@ export const detailsDialogOpen = () => ({
 export const detailsDialogClose = () => ({
   type: types.TRANSACTIONS_DETAILS_DIALOG_CLOSE,
 });
+
+export const toggleCharts = () => ({
+  type: types.TRANSACTIONS_TOGGLE_CHARTS,
+});
