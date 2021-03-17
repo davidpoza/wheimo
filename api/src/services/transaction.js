@@ -125,7 +125,7 @@ export default class TransactionService {
    * @param {Array<number>} param.tags - array of tag ids to filter by
    * @param {string} param.from - includes transaction from date in format YYYY-MM-DD
    * @param {string} param.to - includes transaction to date in format YYYY-MM-DD
-   * @param {string} param.sort - asc/desc sorting by created date
+   * @param {string} param.sort - asc/desc sorting by date
    */
   async findAll({ accountId, userId, tags, from, to, limit, offset, sort }) {
     const dateFilter = (from || to) ? {} : undefined;
@@ -148,7 +148,7 @@ export default class TransactionService {
         limit,
         offset,
         where: filter,
-        order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ]
+        order: [ ['date', sort === 'asc' ? 'ASC' : 'DESC'] ]
       });
 
     return transactions.map((t) => {
@@ -291,6 +291,7 @@ export default class TransactionService {
           currency: t.currency,
           date: t.transactionDate,
           valueDate: t.valueDate,
+          balance: t.balance,
           accountId,
           userId,
         });

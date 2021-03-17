@@ -7,12 +7,11 @@ import dayjs from 'dayjs';
 import useStyles from './styles';
 
 function ToolTip({ balance, date }) {
-  console.log(date);
   const classes = useStyles();
   return (
     <div>
       <div>
-        {date}
+        {dayjs(date).format('DD/MM/YYYY')}
       </div>
       <div>
         {balance}€
@@ -28,18 +27,22 @@ ToolTip.propTypes = {
 
 function BalanceEvolutionChart({ transactions }) {
   const classes = useStyles();
-  /* TODO:
-    tengo que proporcionar una lista con un solo valor por fecha (dia).
-    Tengo que usar un datetime para poder discernir cuál es la última transaction del día que llevará el balance que necesito.
+
+  /**
+   * We left only last transaction of the day, it'll has the updated balance for this date.
   */
+  function cleanTransactions(transArray) {
+    return transArray.filter((t, i, arr) => !dayjs(arr[i].date).isSame(arr[i + 1]?.date, 'day'));
+  }
+
   const formatData = (data) => data.map(
     (value) => ({
       x: dayjs(new Date(value.date)).format('YYYY-MM-DD'),
       y: value.balance,
-      // date: value.date,
+      date: dayjs(new Date(value.date)).format('YYYY-MM-DD HH:mm'),
     }),
   );
-  console.log(formatData(transactions));
+
   return (
     <div className={classes.root}>
       <ResponsiveLine
@@ -48,21 +51,21 @@ function BalanceEvolutionChart({ transactions }) {
         curve="monotoneX"
         useMesh // interaction with mouse
         animate={false}
-        // tooltip={
-        //   (v) => (
-        //     <ToolTip
-        //       balance={v.point.data.yFormatted}
-        //       date={v.point.data.x}
-        //     />
-        //   )
-        // }
+        tooltip={
+          (v) => (
+            <ToolTip
+              balance={v.point.data.yFormatted}
+              date={v.point.data.xFormatted}
+            />
+          )
+        }
         margin={{
           top: 20, right: 20, bottom: 130, left: 60,
         }}
         data={[
           {
             id: 'balance evolution',
-            data: formatData(transactions),
+            data: formatData(cleanTransactions(transactions)),
           },
         ]}
         xScale={{
@@ -82,8 +85,7 @@ function BalanceEvolutionChart({ transactions }) {
           legend: 'account balance',
         }}
         axisBottom={{
-          format: '%b %d',
-          tickValues: 'every 30 days',
+          format: '%d %b',
           legend: 'date',
           legendOffset: 40,
           legendPosition: 'middle',

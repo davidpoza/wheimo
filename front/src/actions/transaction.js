@@ -3,10 +3,10 @@ import * as transactionApi from '../api-client/transaction';
 import types from './types';
 
 export const fetchAll = createAsyncAction('TRANSACTIONS', async (token, {
-  offset, limit, from, to, accountId, tags,
+  offset, limit, from, to, accountId, tags, sort,
 }) => {
   const res = await transactionApi.fetchAll(token, {
-    offset, limit, from, to, accountId, tags,
+    offset, limit, from, to, accountId, tags, sort,
   });
   return res;
 });

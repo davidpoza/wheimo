@@ -5,6 +5,7 @@ export default makeStyles(() => ({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'space-between',
   },
 }));

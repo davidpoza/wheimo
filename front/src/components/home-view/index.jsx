@@ -19,12 +19,12 @@ function HomeView({
   const classes = useStyles();
 
   useEffect(() => {
-    fetchAllTransactions(user.token, { from: dayjs().subtract(3, 'month').format('YYYY-MM-DD') });
+    fetchAllTransactions(user.token, { from: dayjs().subtract(3, 'month').format('YYYY-MM-DD'), sort: 'asc' });
   }, []);
 
   function handleChangeFilter(filter) {
     // TODO: call fetch action depending on filters selected
-    fetchAllTransactions(user.token, filter);
+    fetchAllTransactions(user.token, { ...filter, sort: 'asc' });
   }
 
   return (
