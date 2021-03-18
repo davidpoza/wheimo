@@ -8,19 +8,20 @@ export default makeStyles(() => ({
     justifyContent: 'space-between',
   },
   pagination: {
-    padding: '2em',
+    padding: '1em',
     '&>ul': {
       justifyContent: 'flex-end',
     },
   },
   bottomBar: {
-    margin: '0 3em 0 3em',
+    margin: 0,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   resultsCounter: {
     fontSize: '0.9em',
+    padding: '1em',
     fontWeight: 300,
   },
 }));

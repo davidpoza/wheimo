@@ -3,8 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles(() => ({
   root: {
     borderTop: '1px solid #ccc',
-    paddingBottom: '10px',
-    height: '81px',
+    padding: '0 30px 0 10px',
+    height: '60px',
+  },
+  checkbox: {
+    minWidth: '40px',
   },
   activeStar: {
     color: '#eea300',
@@ -18,6 +21,12 @@ export default makeStyles(() => ({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
+  },
+  secondLine: {
+    width: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   description: {
     padding: '5px 0 5px 0',

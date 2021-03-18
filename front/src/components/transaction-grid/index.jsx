@@ -12,8 +12,8 @@ import OperationDropdown from '../operation-dropdown';
 function TransactionGrid({ transactions }) {
   const classes = useStyles();
   const windowSize = useWindowSize();
-  const HEADER_FOOTER_SIZE = 310 + 74; // TODO: this value should be calculated
-  const ITEM_SIZE = 81; // TODO: this value should be calculated
+  const HEADER_FOOTER_SIZE = 64 + 94 + 64 + 56 + 90; // TODO: this value should be calculated
+  const ITEM_SIZE = 60; // TODO: this value should be calculated
   const pageSize = windowSize
     ? Math.round((windowSize.height - HEADER_FOOTER_SIZE) / ITEM_SIZE)
     : 0;

@@ -91,6 +91,7 @@ function TransactionGridItem({
           }}
           tabIndex={-1}
           disableRipple
+          className={classes.checkbox}
           inputProps={{ 'aria-labelledby': labelId }}
         />
       </ListItemIcon>
@@ -119,11 +120,13 @@ function TransactionGridItem({
           }
           </span>
         </div>
-        <div className={classes.description}>
-          {description}
-        </div>
-        <div className={classes.account}>
-          {accountBalance}€ | {account}
+        <div className={classes.secondLine}>
+          <div className={classes.description}>
+            {description}
+          </div>
+          <div className={classes.account}>
+          {account} | {accountBalance}€
+          </div>
         </div>
 
       </div>
