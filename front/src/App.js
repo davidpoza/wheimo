@@ -8,6 +8,7 @@ import PrivateRoute from './hocs/private-route';
 import Navigation from './components/navigation';
 import Content from './components/content';
 import HomeView from './components/home-view';
+import TagsView from './components/tags-view';
 import LoginView from './components/login-view';
 import AppBar from './components/app-bar';
 import store from './store';
@@ -16,16 +17,17 @@ function App() {
   return (
     <div className="App">
       <Provider store={store}>
-        <Content>
-          <Router>
+        <Router>
+          <Content>
             <AppBar />
             <Switch>
               <Route path="/login" exact component={LoginView} />
               <PrivateRoute path="/" exact component={HomeView}/>
+              <PrivateRoute path="/tags" exact component={TagsView}/>
             </Switch>
-          </Router>
-        </Content>
-        <Navigation />
+          </Content>
+          <Navigation />
+        </Router>
       </Provider>
     </div>
   );
