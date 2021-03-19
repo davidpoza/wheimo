@@ -38,6 +38,39 @@ export async function fetchAll(token, {
   }
 }
 
+export async function fetchExpensesByTag(token, {
+  from, to, accountId,
+}) {
+  try {
+    let url = `${config.API_HOST}/transactions/tags`;
+    const params = [];
+    if (from) params.push(`from=${from}`);
+    if (to) params.push(`to=${to}`);
+    if (accountId) params.push(`accountId=${accountId}`);
+
+    params.forEach((param, index) => {
+      if (index === 0) {
+        url += '?';
+      } else {
+        url += '&';
+      }
+      url += param;
+    });
+
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    throw Error('Error during expenses by tags fetch.');
+  }
+}
+
 export async function create(token, data) {
   const adaptedData = { ...data };
   adaptedData.tags = data.tags.map((tag) => (tag.id));

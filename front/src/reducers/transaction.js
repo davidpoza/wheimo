@@ -1,11 +1,12 @@
 import {
-  fetchAll, create, remove, update,
+  fetchAll, create, remove, update, fetchExpensesByTag,
 } from '../actions/transaction';
 import types from '../actions/types';
 
 const initialState = {
   isLoading: false,
   transactionsFetched: [],
+  expensesByTag: {},
   createEditDialogOpen: false,
   detailsDialogOpen: false,
   contextMenuState: {
@@ -38,6 +39,27 @@ const reducer = (state = initialState, action) => {
         error: false,
       };
     case String(fetchAll.rejected):
+      return {
+        ...state,
+        isLoading: false,
+        error: true,
+        errorMessage: action.payload.message,
+      };
+    case String(fetchExpensesByTag.pending):
+      return {
+        ...state,
+        isLoading: true,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(fetchExpensesByTag.fulfilled):
+      return {
+        ...state,
+        isLoading: false,
+        expensesByTag: action.payload,
+        error: false,
+      };
+    case String(fetchExpensesByTag.rejected):
       return {
         ...state,
         isLoading: false,

@@ -45,7 +45,7 @@ function TransactionFilter({ handleChangeFilter, toggleCharts, showCharts = fals
     if (Object.keys(filter).length > 0) {
       handleChangeFilter(filter);
     }
-  }, [endDate, startDate, accountId, tags]);
+  }, [endDate, startDate, accountId, tags, showCharts]);
 
   return (
     <div className={classes.root}>

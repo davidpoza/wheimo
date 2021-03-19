@@ -27,6 +27,16 @@ export const remove = createAsyncAction('DELETE_TRANSACTION', async (token, id, 
   return (index);
 });
 
+export const fetchExpensesByTag = createAsyncAction('TRANSACTIONS_EXPENSES_BY_TAG', async (token, {
+  from, to, accountId,
+}) => {
+  console.log('--->action');
+  const res = await transactionApi.fetchExpensesByTag(token, {
+    from, to, accountId,
+  });
+  return res;
+});
+
 export const contextMenuChangeIndex = (index) => ({
   type: types.TRANSACTIONS_CONTEXT_MENU_CHANGE_INDEX,
   payload: index,

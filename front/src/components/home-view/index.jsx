@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import dayjs from 'dayjs';
 
 // own
-import { fetchAll } from '../../actions/transaction';
+import {
+  fetchAll as fetchAllAction,
+  fetchExpensesByTag as fetchExpensesByTagAction,
+} from '../../actions/transaction';
 import TransactionGrid from '../transaction-grid';
 import Charts from '../charts';
 import TransactionFilter from '../transaction-filter';
@@ -14,17 +17,19 @@ import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
 
 function HomeView({
-  user, transactions = [], fetchAllTransactions, showCharts,
+  user, transactions = [], fetchAllTransactions, showCharts, fetchExpenses,
 }) {
   const classes = useStyles();
 
   useEffect(() => {
     fetchAllTransactions(user.token, { from: dayjs().subtract(3, 'month').format('YYYY-MM-DD'), sort: 'asc' });
+    fetchExpenses(user.token, { from: dayjs().subtract(3, 'month').format('YYYY-MM-DD') });
   }, []);
 
   function handleChangeFilter(filter) {
     // TODO: call fetch action depending on filters selected
     fetchAllTransactions(user.token, { ...filter, sort: 'asc' });
+    fetchExpenses(user.token, { ...filter });
   }
 
   return (
@@ -46,6 +51,7 @@ HomeView.propTypes = {
   showCharts: PropTypes.bool,
   transactions: PropTypes.array,
   fetchAllTransactions: PropTypes.func,
+  fetchExpenses: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -58,8 +64,14 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  fetchAllTransactions: (token, page, size) => {
-    dispatch(fetchAll(token, page, size))
+  fetchAllTransactions: (token, data) => {
+    dispatch(fetchAllAction(token, data))
+      .catch((error) => {
+        console.log(error.message);
+      });
+  },
+  fetchExpenses: (token, data) => {
+    dispatch(fetchExpensesByTagAction(token, data))
       .catch((error) => {
         console.log(error.message);
       });

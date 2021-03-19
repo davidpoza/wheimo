@@ -164,6 +164,7 @@ function CreateTransactionDialog({
     } else {
       createTransaction(user.token, data);
     }
+
     clearForm();
     close();
   }
