@@ -145,6 +145,22 @@ export default (app) => {
       }
     });
 
+  // get totals for each tag of given transactions
+  route.get('/tags',
+  middlewares.isAuth,
+  async (req, res, next) => {
+    const userId = req.user.id;
+    const { accountId, from, to } = req.query;
+    const transactionService = Container.get('transactionService');
+    try {
+      const transactions = await transactionService.calculateExpensesByTags({ accountId, userId, from, to });
+      return res.status(200).json(transactions);
+    } catch (err) {
+      loggerInstance.error('🔥 error: %o', err);
+      return next(err);
+    }
+  });
+
   route.get('/:id?',
     middlewares.isAuth,
     async (req, res, next) => {

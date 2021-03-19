@@ -448,4 +448,38 @@ export default class TransactionService {
       income, expenses
     });
   }
+
+  async calculateExpensesByTags({ accountId, userId, from, to }) {
+    const dateFilter = (from || to) ? {} : undefined;
+    if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
+    if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
+
+    let filter = pickBy({ // pickBy (by default) removes undefined keys
+      accountId,
+      '$account.user_id$': userId,
+      'date': dateFilter,
+      'amount': { [this.sequelizeOp.lt]: 0 },
+    });
+
+    const tags = await this.transactionModel.findAll(
+      {
+        attributes: [
+          [this.sequelize.fn('sum', this.sequelize.col('amount')), 'total_amount'],
+        ],
+        include: [
+          { model: this.sequelize.models.accounts, as: 'account', attributes: ['id', 'name'], duplicating: false },
+          { model: this.sequelize.models.tags, as: 'tags', duplicating: false }
+        ],
+        where: filter,
+        group: 'tags.id'
+      });
+
+    return tags.map(tag => {
+      return ({
+        amount: tag.dataValues.total_amount,
+        id: tag.tags[0]?.dataValues.id,
+        name: tag.tags[0]?.dataValues.name || 'no-tag',
+      })
+    });
+  }
 };
