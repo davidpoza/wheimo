@@ -6,25 +6,18 @@ import TextField from '@material-ui/core/TextField';
 
 // own
 import useStyles from './styles';
-import { fetchAll as fetchAllTags } from '../../api-client/tag';
+import {
+  fetchAll as fetchTagsAction,
+} from '../../actions/tag';
 
 function TagsSelect({
-  user, label, handleOnChange, limitTags, value,
+  user, label, handleOnChange, limitTags, value, fetchTags, fetchedTags,
 }) {
   const classes = useStyles();
-  const [tags, setTags] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const data = await fetchAllTags(user.token);
-        setTags(data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-    fetchData();
-  }, [user]);
+    fetchTags(user.token);
+  }, [user, fetchTags]);
 
   return (
     <Autocomplete
@@ -34,7 +27,7 @@ function TagsSelect({
       multiple
       limitTags={limitTags}
       id="tags"
-      options={tags}
+      options={fetchedTags}
       getOptionLabel={(option) => option.name}
       onChange={handleOnChange}
       renderInput={(params) => (
@@ -54,10 +47,22 @@ TagsSelect.propTypes = {
   user: PropTypes.object,
   label: PropTypes.string,
   handleOnChange: PropTypes.func,
+  fetchTags: PropTypes.func,
+  fetchedTags: PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user.current,
+  fetchedTags: state.tag.fetchedTags,
 });
 
-export default connect(mapStateToProps)(TagsSelect);
+const mapDispatchToProps = (dispatch) => ({
+  fetchTags: (token) => {
+    dispatch(fetchTagsAction(token))
+      .catch((error) => {
+        console.log(error.message);
+      });
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TagsSelect);
