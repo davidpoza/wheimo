@@ -460,26 +460,31 @@ export default class TransactionService {
       'date': dateFilter,
       'amount': { [this.sequelizeOp.lt]: 0 },
     });
-
-    const tags = await this.transactionModel.findAll(
+    const tags = {
+      '-1': { name: 'non-tagged', amount: 0 },
+    };
+    const transactions = await this.transactionModel.findAll(
       {
-        attributes: [
-          [this.sequelize.fn('sum', this.sequelize.col('amount')), 'total_amount'],
-        ],
         include: [
-          { model: this.sequelize.models.accounts, as: 'account', attributes: ['id', 'name'], duplicating: false },
+          { model: this.sequelize.models.accounts, as: 'account', duplicating: false },
           { model: this.sequelize.models.tags, as: 'tags', duplicating: false }
         ],
         where: filter,
-        group: 'tags.id'
       });
 
-    return tags.map(tag => {
-      return ({
-        amount: tag.dataValues.total_amount,
-        id: tag.tags[0]?.dataValues.id,
-        name: tag.tags[0]?.dataValues.name || 'no-tag',
-      })
+    transactions.forEach((transaction) => {
+      transaction.tags.forEach((tag) => {
+        const { id, name } = tag.dataValues;
+        if (!tags[id]) tags[id] = { name, amount: 0 };
+        if (transaction.amount < 0) {
+          tags[id].amount += transaction.amount;
+        }
+      });
+      if (transaction.tags.length === 0 && transaction.amount < 0) {
+        tags[-1].amount += transaction.amount;
+      }
     });
+
+    return tags;
   }
 };
