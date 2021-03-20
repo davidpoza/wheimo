@@ -15,9 +15,10 @@ import {
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
 } from '../../../../actions/ui';
+import TagRules from '../tag-rules';
 
 function AccordionItem({
-  name, id, changeId, changePosition, changeIndex, indexInStore,
+  name, id, rules, changeId, changePosition, changeIndex, indexInStore,
 }) {
   const classes = useStyles();
 
@@ -45,11 +46,7 @@ function AccordionItem({
           <Typography className={classes.heading}>{name}</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          [Edit] [Delete]
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-            sit amet blandit leo lobortis eget.
-          </Typography>
+          <TagRules rules={rules} />
         </AccordionDetails>
       </Accordion>
     </>
@@ -63,6 +60,11 @@ AccordionItem.propTypes = {
   id: PropTypes.number,
   indexInStore: PropTypes.number,
   name: PropTypes.string,
+  rules: PropTypes.arrayOf(PropTypes.shape({
+    name: PropTypes.string,
+    type: PropTypes.string,
+    value: PropTypes.string,
+  })),
 };
 
 const mapStateToProps = (state) => ({
