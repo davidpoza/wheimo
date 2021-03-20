@@ -43,7 +43,7 @@ function AccordionItem({
           onContextMenu={handleContextMenu}
         >
           <LabelIcon className={classes.icon} />
-          <Typography className={classes.heading}>{name}</Typography>
+          <Typography className={classes.heading}>{name} {rules.length > 0 && `(${rules.length} rules)`}</Typography>
         </AccordionSummary>
         <AccordionDetails>
           <TagRules rules={rules} />
