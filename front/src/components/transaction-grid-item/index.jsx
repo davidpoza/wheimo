@@ -15,13 +15,15 @@ import Tags from '../tags';
 import useStyles from './styles';
 import {
   remove as removeAction,
-  contextMenuChangePosition as changePositionAction,
-  contextMenuChangeId as changeIdAction,
-  contextMenuChangeIndex as changeIndexAction,
   toggleChecked as toggleCheckedAction,
   update as updateAction,
   detailsDialogOpen as openAction,
 } from '../../actions/transaction';
+import {
+  contextMenuChangePosition as changePositionAction,
+  contextMenuChangeId as changeIdAction,
+  contextMenuChangeIndex as changeIndexAction,
+} from '../../actions/ui';
 
 function TransactionGridItem({
   account,

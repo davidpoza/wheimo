@@ -23,7 +23,7 @@ Charts.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  transactions: state.transaction.transactionsFetched,
+  transactions: state.transaction.fetchedTransactions,
   expenses: state.transaction.expensesByTag,
 });
 

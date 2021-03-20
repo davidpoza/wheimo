@@ -111,7 +111,7 @@ export async function update(token, id, data) {
 
     return (result);
   } catch (err) {
-    throw Error('Error during transaction creation.');
+    throw Error('Error during transaction update.');
   }
 }
 

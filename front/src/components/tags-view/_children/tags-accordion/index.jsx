@@ -21,8 +21,8 @@ function TagsAccordion({
   return (
     <div className={classes.root} style={{ maxHeight: `${ref.current?.offsetHeight}px` }} ref={ref}>
       {
-        tags.sort(azOrder).map((tag) => (
-          <AccordionItem key={tag.id} name={tag.name} id={tag.id} />
+        tags.sort(azOrder).map((tag, index) => (
+          <AccordionItem key={tag.id} name={tag.name} id={tag.id} indexInStore={index}/>
         ))
       }
     </div>

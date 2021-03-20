@@ -9,6 +9,7 @@ import StateLoader from './utils/state-loader';
 import user from './reducers/user';
 import transaction from './reducers/transaction';
 import tag from './reducers/tag';
+import ui from './reducers/ui';
 
 const stateLoader = new StateLoader();
 
@@ -17,7 +18,9 @@ const enhancer = composeWithDevTools(
 );
 
 const store = createStore(
-  combineReducers({ user, transaction, tag }),
+  combineReducers({
+    user, transaction, tag, ui,
+  }),
   stateLoader.loadState(),
   enhancer,
 );

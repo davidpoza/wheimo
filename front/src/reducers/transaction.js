@@ -5,29 +5,23 @@ import types from '../actions/types';
 
 const initialState = {
   isLoading: false,
-  transactionsFetched: [],
+  fetchedTransactions: [],
   expensesByTag: {},
   createEditDialogOpen: false,
   detailsDialogOpen: false,
-  contextMenuState: {
-    mouseX: null,
-    mouseY: null,
-    index: null,
-    id: null,
-  },
   showCharts: false,
   error: false,
   errorMessage: undefined,
 };
 
 const reducer = (state = initialState, action) => {
-  const transactionsFetchedCopy = [...state.transactionsFetched];
+  const fetchedTransactionsCopy = [...state.fetchedTransactions];
   switch (action.type) {
     case String(fetchAll.pending):
       return {
         ...state,
         isLoading: true,
-        // transactionsFetched: null,
+        // fetchedTransactions: null,
         error: false,
         errorMessage: undefined,
       };
@@ -35,7 +29,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        transactionsFetched: action.payload,
+        fetchedTransactions: action.payload,
         error: false,
       };
     case String(fetchAll.rejected):
@@ -77,7 +71,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        transactionsFetched: [action.payload, ...state.transactionsFetched],
+        fetchedTransactions: [action.payload, ...state.fetchedTransactions],
         error: false,
       };
     case String(create.rejected):
@@ -95,11 +89,11 @@ const reducer = (state = initialState, action) => {
         errorMessage: undefined,
       };
     case String(update.fulfilled):
-      transactionsFetchedCopy[action.payload.index] = action.payload;
+      fetchedTransactionsCopy[action.payload.index] = action.payload;
       return {
         ...state,
         isLoading: false,
-        transactionsFetched: transactionsFetchedCopy,
+        fetchedTransactions: fetchedTransactionsCopy,
         error: false,
       };
     case String(update.rejected):
@@ -117,11 +111,11 @@ const reducer = (state = initialState, action) => {
         errorMessage: undefined,
       };
     case String(remove.fulfilled):
-      transactionsFetchedCopy.splice(action.payload, 1);
+      fetchedTransactionsCopy.splice(action.payload, 1);
       return {
         ...state,
         isLoading: false,
-        transactionsFetched: transactionsFetchedCopy,
+        fetchedTransactions: fetchedTransactionsCopy,
         error: false,
       };
     case String(remove.rejected):
@@ -130,31 +124,6 @@ const reducer = (state = initialState, action) => {
         isLoading: false,
         error: true,
         errorMessage: action.payload.message,
-      };
-    case types.TRANSACTIONS_CONTEXT_MENU_CHANGE_INDEX:
-      return {
-        ...state,
-        contextMenuState: {
-          ...state.contextMenuState,
-          index: action.payload,
-        },
-      };
-    case types.TRANSACTIONS_CONTEXT_MENU_CHANGE_ID:
-      return {
-        ...state,
-        contextMenuState: {
-          ...state.contextMenuState,
-          id: action.payload,
-        },
-      };
-    case types.TRANSACTIONS_CONTEXT_MENU_CHANGE_POSITION:
-      return {
-        ...state,
-        contextMenuState: {
-          ...state.contextMenuState,
-          mouseX: action.payload.x,
-          mouseY: action.payload.y,
-        },
       };
     case types.TRANSACTIONS_CREATE_EDIT_DIALOG_OPEN:
       return {
@@ -185,10 +154,10 @@ const reducer = (state = initialState, action) => {
         },
       };
     case types.TRANSACTIONS_TOGGLE_CHECKBOX:
-      transactionsFetchedCopy[action.payload].checked = !transactionsFetchedCopy[action.payload].checked;
+      fetchedTransactionsCopy[action.payload].checked = !fetchedTransactionsCopy[action.payload].checked;
       return {
         ...state,
-        transactionsFetched: transactionsFetchedCopy,
+        fetchedTransactions: fetchedTransactionsCopy,
       };
     case types.TRANSACTIONS_TOGGLE_CHARTS:
       return {

@@ -30,7 +30,6 @@ export const remove = createAsyncAction('DELETE_TRANSACTION', async (token, id, 
 export const fetchExpensesByTag = createAsyncAction('TRANSACTIONS_EXPENSES_BY_TAG', async (token, {
   from, to, accountId,
 }) => {
-  console.log('--->action');
   const res = await transactionApi.fetchExpensesByTag(token, {
     from, to, accountId,
   });

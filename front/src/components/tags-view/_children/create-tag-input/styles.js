@@ -5,7 +5,7 @@ export default makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: '0.5em',
+    margin: '2em 0.5em',
   },
   icon: {
     color: '#3f51b5',

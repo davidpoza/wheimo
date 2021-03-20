@@ -7,15 +7,28 @@ import MenuItem from '@material-ui/core/MenuItem';
 // own
 import useStyles from './styles';
 import {
-  remove as removeAction,
+  remove as removeTransactionAction,
+  createEditDialogOpen as openAction,
+} from '../../actions/transaction';
+import {
+  remove as removeTagAction,
+} from '../../actions/tag';
+import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
-  createEditDialogOpen as openAction,
-} from '../../actions/transaction';
+} from '../../actions/ui';
 
 function OperationDropdown({
-  remove, user, changePosition, changeId, changeIndex, contextMenuState, openDialog,
+  entity = 'transaction',
+  removeTransaction,
+  removeTag,
+  user,
+  changePosition,
+  changeId,
+  changeIndex,
+  contextMenuState,
+  openDialog,
 }) {
   const classes = useStyles();
 
@@ -31,7 +44,16 @@ function OperationDropdown({
   }
 
   function handleRemove() {
-    remove(user.token, contextMenuState.id, contextMenuState.index);
+    switch (entity) {
+      case 'transaction':
+        removeTransaction(user.token, contextMenuState.id, contextMenuState.index);
+        break;
+      case 'tag':
+        removeTag(user.token, contextMenuState.id, contextMenuState.index);
+        break;
+      default:
+        removeTransaction(user.token, contextMenuState.id, contextMenuState.index);
+    }
     close();
   }
 
@@ -61,9 +83,11 @@ function OperationDropdown({
 }
 
 OperationDropdown.propTypes = {
+  entity: PropTypes.string,
   contextMenuState: PropTypes.object,
   user: PropTypes.object,
-  remove: PropTypes.func,
+  removeTransaction: PropTypes.func,
+  removeTag: PropTypes.func,
   changePosition: PropTypes.func,
   changeId: PropTypes.func,
   changeIndex: PropTypes.func,
@@ -72,15 +96,21 @@ OperationDropdown.propTypes = {
 
 const mapStateToProps = (state) => ({
   loading: state.transaction.isLoading,
-  contextMenuState: state.transaction.contextMenuState,
+  contextMenuState: state.ui.contextMenuState,
   user: state.user.current,
   error: state.user.error,
   errorMessage: state.user.errorMessage,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  remove: (token, id, index) => {
-    dispatch(removeAction(token, id, index))
+  removeTransaction: (token, id, index) => {
+    dispatch(removeTransactionAction(token, id, index))
+      .catch((error) => {
+        console.log(error.message);
+      });
+  },
+  removeTag: (token, id, index) => {
+    dispatch(removeTagAction(token, id, index))
       .catch((error) => {
         console.log(error.message);
       });

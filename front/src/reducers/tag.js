@@ -1,5 +1,4 @@
-import { fetchAll, create } from '../actions/tag';
-import types from '../actions/types';
+import { fetchAll, create, remove } from '../actions/tag';
 import { azOrder } from '../utils/utilities';
 
 const initialState = {
@@ -48,6 +47,28 @@ const reducer = (state = initialState, action) => {
         error: false,
       };
     case String(create.rejected):
+      return {
+        ...state,
+        isLoading: false,
+        error: true,
+        errorMessage: action.payload.message,
+      };
+    case String(remove.pending):
+      return {
+        ...state,
+        isLoading: true,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(remove.fulfilled):
+      fetchedTagsCopy.splice(action.payload, 1);
+      return {
+        ...state,
+        isLoading: false,
+        fetchedTags: fetchedTagsCopy,
+        error: false,
+      };
+    case String(remove.rejected):
       return {
         ...state,
         isLoading: false,

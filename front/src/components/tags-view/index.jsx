@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import dayjs from 'dayjs';
 
 // own
 import {
   fetchAll as fetchTagsAction,
 } from '../../actions/tag';
 import TagsAccordion from './_children/tags-accordion';
+import OperationDropdown from '../operation-dropdown';
 import CreateTagInput from './_children/create-tag-input';
 import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
@@ -23,6 +23,7 @@ function TagsView({
 
   return (
     <div className={classes.root}>
+      <OperationDropdown entity="tag" />
       <TagsAccordion />
       <CreateTagInput />
     </div>

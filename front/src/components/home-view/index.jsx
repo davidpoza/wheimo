@@ -56,7 +56,7 @@ HomeView.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.current,
-  transactions: state.transaction.transactionsFetched,
+  transactions: state.transaction.fetchedTransactions,
   showCharts: state.transaction.showCharts,
   loading: state.transaction.isLoading,
   error: state.transaction.error,

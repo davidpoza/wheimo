@@ -4,4 +4,8 @@ export default makeStyles(() => ({
   root: {
     padding: '0 30px',
   },
+  icon: {
+    color: '#ccc',
+    marginRight: '10px',
+  },
 }));

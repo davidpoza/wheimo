@@ -299,10 +299,10 @@ CreateTransactionDialog.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.user.current,
   isOpen: state.transaction.createEditDialogOpen,
-  contextMenuState: state.transaction.contextMenuState,
-  id: state.transaction.contextMenuState.id,
-  index: state.transaction.contextMenuState.index,
-  transactions: state.transaction.transactionsFetched,
+  contextMenuState: state.ui.contextMenuState,
+  id: state.ui.contextMenuState.id,
+  index: state.ui.contextMenuState.index,
+  transactions: state.transaction.fetchedTransactions,
 });
 
 const mapDispatchToProps = (dispatch) => ({

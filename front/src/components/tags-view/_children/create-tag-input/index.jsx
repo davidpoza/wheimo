@@ -22,25 +22,32 @@ function CreateTagInput({
 
   function add() {
     create(user.token, { name: tagName });
+    setTagName('');
+  }
+
+  async function onFormSubmit(e) {
+    e.preventDefault();
+    add();
   }
 
   return (
-    <div className={classes.root}>
+    <form noValidate onSubmit={onFormSubmit} className={classes.root}>
       <input
         className={classes.input}
         id="tagName"
         type="text"
         value={tagName}
+        autoFocus={true}
         onChange={(e) => {
           setTagName(e.target.value);
         }}
       />
-       <AddBoxIcon
+      <AddBoxIcon
         fontSize="large"
         className={classes.icon}
         onClick={add}
-       />
-    </div>
+      />
+    </form>
   );
 }
 

@@ -10,3 +10,14 @@ export const create = createAsyncAction('CREATE_TAGS', async (token, data) => {
   const res = await tagApi.create(token, data);
   return res;
 });
+
+export const update = createAsyncAction('UPDATE_TAG', async (token, id, index, data) => {
+  const res = await tagApi.update(token, id, data);
+  res.index = index;
+  return res;
+});
+
+export const remove = createAsyncAction('DELETE_TAG', async (token, id, index) => {
+  await tagApi.remove(token, id);
+  return (index);
+});
