@@ -45,8 +45,10 @@ export default makeStyles(() => ({
     marginLeft: '1em',
   },
   amount: {
-    marginLeft: '0.6em',
+    marginLeft: '0.1em',
     fontWeight: 'bold',
+    width: '3em',
+
   },
   icon: {
     '&>svg': {
@@ -68,5 +70,7 @@ export default makeStyles(() => ({
   },
   emitter: {
     marginLeft: '0.5em',
+    width: '12em',
+    maxWidth: '12em',
   },
 }));

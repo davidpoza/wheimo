@@ -103,7 +103,7 @@ function TransactionGridItem({
             { amount > 0 ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
           </span>
           <span className={classes.amount}>
-            {`${amount}€`}
+            {`${Math.abs(amount)}€`}
           </span>
           <span className={classes.emitter}>
             {amount > 0 ? emitterName : receiverName}
