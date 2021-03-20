@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 
 // material ui
 import AppBar from '@material-ui/core/AppBar';
@@ -12,22 +13,27 @@ import Typography from '@material-ui/core/Typography';
 import Avatar from '../avatar';
 import useStyles from './styles';
 
-function MyAppBar({ handleDrawerToggle }) {
+function MyAppBar() {
   const classes = useStyles();
+  const location = useLocation();
+
+  function getTitle() {
+    switch (location.pathname) {
+      case '/tags':
+        return 'Tags & Rules';
+      default:
+        return 'Transactions';
+    }
+  }
 
   return (
     <AppBar position="fixed" className={classes.appBar} >
       <Toolbar>
-        <IconButton
-          color="inherit"
-          aria-label="open drawer"
-          edge="start"
-          onClick={handleDrawerToggle}
-          className={classes.menuButton}
-        >
-          <MenuIcon />
-        </IconButton>
         <Typography variant="h6" noWrap className={classes.title}>
+          <span title="Where is my money?" className={classes.appName}>
+            whei<span className={classes.appNameColored}>MO?</span>
+          </span>
+          {getTitle()}
         </Typography>
         <Avatar />
       </Toolbar>
@@ -36,7 +42,7 @@ function MyAppBar({ handleDrawerToggle }) {
 }
 
 MyAppBar.propTypes = {
-  handleDrawerToggle: PropTypes.func,
+
 };
 
 export default MyAppBar;

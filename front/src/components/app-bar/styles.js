@@ -3,18 +3,19 @@ import config from '../../utils/config';
 
 export default makeStyles((theme) => ({
   appBar: {
-    [theme.breakpoints.up('sm')]: {
-      // width: `calc(100% - ${config.drawerWidth}px)`,
-      marginLeft: config.drawerWidth,
-    },
   },
   title: {
     flexGrow: 1,
+    textAlign: 'left',
+    display: 'flex',
+    flexDirection: 'column',
+    lineHeight: '1',
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
+  appName: {
+    fontSize: '0.5em',
+    fontWeight: 'bold',
+  },
+  appNameColored: {
+    color: '#f96096',
   },
 }));
