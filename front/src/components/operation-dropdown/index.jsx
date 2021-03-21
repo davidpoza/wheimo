@@ -8,10 +8,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import useStyles from './styles';
 import {
   remove as removeTransactionAction,
-  createEditDialogOpen as openAction,
+  createEditDialogOpen as openTransactionDialogAction,
 } from '../../actions/transaction';
 import {
   remove as removeTagAction,
+  editDialogOpen as openEditTagDialogAction,
 } from '../../actions/tag';
 import {
   contextMenuChangePosition as changePositionAction,
@@ -28,7 +29,8 @@ function OperationDropdown({
   changeId,
   changeIndex,
   contextMenuState,
-  openDialog,
+  openTransactionDialog,
+  openTagDialog,
 }) {
   const classes = useStyles();
 
@@ -59,7 +61,16 @@ function OperationDropdown({
 
   function handleEdit() {
     changePosition(null, null);
-    openDialog();
+    switch (entity) {
+      case 'transaction':
+        openTransactionDialog();
+        break;
+      case 'tag':
+        openTagDialog();
+        break;
+      default:
+        openTransactionDialog();
+    }
   }
 
   return (
@@ -91,7 +102,8 @@ OperationDropdown.propTypes = {
   changePosition: PropTypes.func,
   changeId: PropTypes.func,
   changeIndex: PropTypes.func,
-  openDialog: PropTypes.func,
+  openTransactionDialog: PropTypes.func,
+  openTagDialog: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -124,8 +136,11 @@ const mapDispatchToProps = (dispatch) => ({
   changeIndex: (index) => {
     dispatch(changeIndexAction(index));
   },
-  openDialog: () => {
-    dispatch(openAction());
+  openTransactionDialog: () => {
+    dispatch(openTransactionDialogAction());
+  },
+  openTagDialog: () => {
+    dispatch(openEditTagDialogAction());
   },
 });
 

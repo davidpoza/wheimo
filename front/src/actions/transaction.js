@@ -38,21 +38,6 @@ export const fetchExpensesByTag = createAsyncAction('TRANSACTIONS_EXPENSES_BY_TA
   return res;
 });
 
-export const contextMenuChangeIndex = (index) => ({
-  type: types.TRANSACTIONS_CONTEXT_MENU_CHANGE_INDEX,
-  payload: index,
-});
-
-export const contextMenuChangeId = (id) => ({
-  type: types.TRANSACTIONS_CONTEXT_MENU_CHANGE_ID,
-  payload: id,
-});
-
-export const contextMenuChangePosition = (x, y) => ({
-  type: types.TRANSACTIONS_CONTEXT_MENU_CHANGE_POSITION,
-  payload: { x, y },
-});
-
 export const createEditDialogOpen = () => ({
   type: types.TRANSACTIONS_CREATE_EDIT_DIALOG_OPEN,
 });

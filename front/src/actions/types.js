@@ -12,6 +12,9 @@ const actions = [
   'UI_CONTEXT_MENU_CHANGE_INDEX',
   'UI_CONTEXT_MENU_CHANGE_ID',
   'UI_CONTEXT_MENU_CHANGE_POSITION',
+  // TAG
+  'TAGS_EDIT_DIALOG_OPEN',
+  'TAGS_EDIT_DIALOG_CLOSE',
 ];
 
 const actionTypes = {};

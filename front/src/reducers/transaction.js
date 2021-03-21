@@ -134,10 +134,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         createEditDialogOpen: false,
-        contextMenuState: {
-          ...state.contextMenuState,
-          index: undefined,
-        },
       };
     case types.TRANSACTIONS_DETAILS_DIALOG_OPEN:
       return {
@@ -148,10 +144,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         detailsDialogOpen: false,
-        contextMenuState: {
-          ...state.contextMenuState,
-          index: undefined,
-        },
       };
     case types.TRANSACTIONS_TOGGLE_CHECKBOX:
       fetchedTransactionsCopy[action.payload].checked = !fetchedTransactionsCopy[action.payload].checked;

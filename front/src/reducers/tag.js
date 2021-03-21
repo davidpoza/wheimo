@@ -2,10 +2,12 @@ import {
   fetchAll, create, remove, update,
 } from '../actions/tag';
 import { azOrder } from '../utils/utilities';
+import types from '../actions/types';
 
 const initialState = {
   isLoading: false,
   fetchedTags: [],
+  editDialogOpen: false,
   error: false,
   errorMessage: undefined,
 };
@@ -98,6 +100,16 @@ const reducer = (state = initialState, action) => {
         isLoading: false,
         error: true,
         errorMessage: action.payload.message,
+      };
+    case types.TAGS_EDIT_DIALOG_OPEN:
+      return {
+        ...state,
+        editDialogOpen: true,
+      };
+    case types.TAGS_EDIT_DIALOG_CLOSE:
+      return {
+        ...state,
+        editDialogOpen: false,
       };
     default:
       return state;
