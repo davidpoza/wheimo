@@ -48,7 +48,7 @@ function AccordionItem({
           }</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <TagRules rules={rules} />
+          <TagRules rules={rules} tagId={id} tagIndex={indexInStore} />
         </AccordionDetails>
       </Accordion>
     </>

@@ -14,7 +14,9 @@ export const definition = [
       references: {
         model: 'rules',
         key: 'id'
-      }
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
     },
     tag_id: {
       type: Sequelize.INTEGER,
@@ -22,7 +24,9 @@ export const definition = [
       references: {
         model: 'tags',
         key: 'id'
-      }
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
     },
     created_at: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
     updated_at: { type: Sequelize.DATE }

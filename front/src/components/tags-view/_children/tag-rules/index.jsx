@@ -13,9 +13,10 @@ import Paper from '@material-ui/core/Paper';
 import useStyles from './styles';
 import withLoader from '../../../../hocs/with-loader';
 import TagRulesItem from '../tag-rules-item';
+import CreateTagRuleInput from '../create-tag-rule-input';
 
 function TagRules({
-  rules,
+  rules, tagId, tagIndex,
 }) {
   const classes = useStyles();
 
@@ -34,14 +35,15 @@ function TagRules({
           </TableRow>
         </TableHead>
         <TableBody>
-        {
-          rules.map((rule, index) => <TagRulesItem
-            key={index}
-            name={rule.name}
-            type={rule.type}
-            value={rule.value}
-          />)
-        }
+          {
+            rules.map((rule, index) => <TagRulesItem
+              key={index}
+              name={rule.name}
+              type={rule.type}
+              value={rule.value}
+            />)
+          }
+          <CreateTagRuleInput tagId={tagId} tagIndex={tagIndex} currentRules={rules.map((r) => r.id)} />
         </TableBody>
       </Table>
     </TableContainer>
@@ -50,10 +52,13 @@ function TagRules({
 
 TagRules.propTypes = {
   rules: PropTypes.array,
+  tagId: PropTypes.number,
+  tagIndex: PropTypes.number,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user.current,
+
 });
 
 const mapDispatchToProps = (dispatch) => ({

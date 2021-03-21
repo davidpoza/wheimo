@@ -1,4 +1,6 @@
-import { fetchAll, create, remove } from '../actions/tag';
+import {
+  fetchAll, create, remove, update,
+} from '../actions/tag';
 import { azOrder } from '../utils/utilities';
 
 const initialState = {
@@ -69,6 +71,28 @@ const reducer = (state = initialState, action) => {
         error: false,
       };
     case String(remove.rejected):
+      return {
+        ...state,
+        isLoading: false,
+        error: true,
+        errorMessage: action.payload.message,
+      };
+    case String(update.pending):
+      return {
+        ...state,
+        isLoading: true,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(update.fulfilled):
+      fetchedTagsCopy[action.payload.index] = action.payload;
+      return {
+        ...state,
+        isLoading: false,
+        fetchedTags: fetchedTagsCopy,
+        error: false,
+      };
+    case String(update.rejected):
       return {
         ...state,
         isLoading: false,

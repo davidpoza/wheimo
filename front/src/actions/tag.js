@@ -12,6 +12,7 @@ export const create = createAsyncAction('CREATE_TAGS', async (token, data) => {
 });
 
 export const update = createAsyncAction('UPDATE_TAG', async (token, id, index, data) => {
+  console.log(data);
   const res = await tagApi.update(token, id, data);
   res.index = index;
   return res;
