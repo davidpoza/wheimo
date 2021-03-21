@@ -23,10 +23,19 @@ function CreateTagRuleInput({
   const [name, setName] = useState('');
   const [type, setType] = useState('');
   const [value, setValue] = useState('');
+  const [error, setError] = useState(true);
+
+  function checkErrors() {
+    if (name === '' || type === '' || value === '') {
+      setError(true);
+    } else {
+      setError(false);
+    }
+  }
 
   useEffect(() => {
-
-  }, []);
+    checkErrors();
+  }, [name, type, value]);
 
   async function add() {
     const rule = await ruleApi.create(user.token, { name, type, value });
@@ -39,7 +48,7 @@ function CreateTagRuleInput({
   async function onEnterKeyPress(e) {
     if (e.keyCode === 13) {
       e.preventDefault();
-      add();
+      if (!error) add();
     }
   }
 
@@ -51,6 +60,7 @@ function CreateTagRuleInput({
           id="tagName"
           type="text"
           value={name}
+          placeholder="type a name for a new rule"
           onChange={(e) => {
             setName(e.target.value);
           }}
@@ -81,6 +91,7 @@ function CreateTagRuleInput({
           id="tagName"
           type="text"
           value={value}
+          placeholder="type a rule using correct syntax"
           onChange={(e) => {
             setValue(e.target.value);
           }}
@@ -91,6 +102,7 @@ function CreateTagRuleInput({
           color="primary"
           title="Create rule"
           onClick={add}
+          disabled={error}
         >
           <AddBoxIcon
             fontSize="large"

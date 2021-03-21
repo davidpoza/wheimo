@@ -16,10 +16,19 @@ function CreateTagInput({
   const classes = useStyles();
 
   const [tagName, setTagName] = useState('');
+  const [error, setError] = useState(true);
+
+  function checkErrors() {
+    if (tagName === '') {
+      setError(true);
+    } else {
+      setError(false);
+    }
+  }
 
   useEffect(() => {
-
-  }, []);
+    checkErrors();
+  }, [tagName]);
 
   function add() {
     create(user.token, { name: tagName });
@@ -28,7 +37,7 @@ function CreateTagInput({
 
   async function onFormSubmit(e) {
     e.preventDefault();
-    add();
+    if (!error) add();
   }
 
   return (
@@ -39,6 +48,7 @@ function CreateTagInput({
         type="text"
         value={tagName}
         autoFocus={true}
+        placeholder="Type a new tag"
         onChange={(e) => {
           setTagName(e.target.value);
         }}
@@ -48,6 +58,7 @@ function CreateTagInput({
         color="primary"
         title="Create tag"
         onClick={add}
+        disabled={error}
       >
         <AddBoxIcon
           fontSize="large"
