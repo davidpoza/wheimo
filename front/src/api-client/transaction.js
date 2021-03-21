@@ -38,6 +38,23 @@ export async function fetchAll(token, {
   }
 }
 
+export async function fetchOne(token, id) {
+  try {
+    const url = `${config.API_HOST}/transactions/${id}`;
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    throw Error('Error during transaction fetch.');
+  }
+}
+
 export async function fetchExpensesByTag(token, {
   from, to, accountId,
 }) {

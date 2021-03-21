@@ -12,8 +12,9 @@ export const fetchAll = createAsyncAction('TRANSACTIONS', async (token, {
 });
 
 export const create = createAsyncAction('CREATE_TRANSACTION', async (token, data) => {
-  const res = await transactionApi.create(token, data);
+  let res = await transactionApi.create(token, data);
   await transactionApi.applyTags(token, res.id);
+  res = await transactionApi.fetchOne(token, res.id); // after applying tags we need refetch entity
   return res;
 });
 
