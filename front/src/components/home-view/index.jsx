@@ -22,13 +22,13 @@ function HomeView({
   const classes = useStyles();
 
   useEffect(() => {
-    fetchAllTransactions(user.token, { from: dayjs().subtract(3, 'month').format('YYYY-MM-DD'), sort: 'asc' });
+    fetchAllTransactions(user.token, { from: dayjs().subtract(3, 'month').format('YYYY-MM-DD'), sort: 'desc' });
     fetchExpenses(user.token, { from: dayjs().subtract(3, 'month').format('YYYY-MM-DD') });
   }, []);
 
   function handleChangeFilter(filter) {
     // TODO: call fetch action depending on filters selected
-    fetchAllTransactions(user.token, { ...filter, sort: 'asc' });
+    fetchAllTransactions(user.token, { ...filter, sort: 'desc' });
     fetchExpenses(user.token, { ...filter });
   }
 

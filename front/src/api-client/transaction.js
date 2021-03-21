@@ -129,3 +129,18 @@ export async function remove(token, id) {
     throw Error('Error during transaction deletion.');
   }
 }
+
+export async function applyTags(token, id) {
+  try {
+    await fetch(`${config.API_HOST}/transactions/${id}/apply-tags`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return (id);
+  } catch (err) {
+    throw Error('Error during tags application.');
+  }
+}

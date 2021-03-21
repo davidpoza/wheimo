@@ -200,4 +200,25 @@ export default (app) => {
         return res.sendStatus(404);
       }
   });
+
+  route.post('/:id/apply-tags',
+  middlewares.isAuth,
+  async (req, res, next) => {
+    const { id } = req.params
+    const userId = req.user.id;
+    const transactionService = Container.get('transactionService');
+    const ruleService = Container.get('ruleService');
+    try {
+      const transaction = await transactionService.findById({ id, userId });
+      if (!transaction) {
+        return res.sendStatus(404);
+      }
+      const userRules = await ruleService.findAll(userId);
+      await transactionService.applyTags([transaction], userRules);
+      return res.sendStatus(200);
+    } catch (err) {
+      loggerInstance.error('🔥 error: %o', err);
+      return next(err);
+    }
+});
 };

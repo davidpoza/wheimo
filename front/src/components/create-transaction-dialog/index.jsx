@@ -32,6 +32,9 @@ import {
   createEditDialogOpen as openAction,
   createEditDialogClose as closeAction,
 } from '../../actions/transaction';
+import {
+  contextMenuChangeIndex as changeIndexAction,
+} from '../../actions/ui';
 
 function PaperComponent(props) {
   return (
@@ -51,6 +54,7 @@ function CreateTransactionDialog({
   user,
   createTransaction,
   updateTransaction,
+  changeUIIndex,
 }) {
   const classes = useStyles();
   const [incoming, setIncoming] = useState(false);
@@ -132,6 +136,7 @@ function CreateTransactionDialog({
   function handleClose() {
     clearForm();
     close();
+    changeUIIndex(undefined);
   }
 
   function handleIncomingSwitch() {
@@ -164,9 +169,9 @@ function CreateTransactionDialog({
     } else {
       createTransaction(user.token, data);
     }
-
     clearForm();
     close();
+    changeUIIndex(undefined);
   }
 
   return (
@@ -294,6 +299,7 @@ CreateTransactionDialog.propTypes = {
   createTransaction: PropTypes.func,
   updateTransaction: PropTypes.func,
   transactions: PropTypes.array,
+  changeUIIndex: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -323,6 +329,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   close: () => {
     dispatch(closeAction());
+  },
+  changeUIIndex: (index) => {
+    dispatch(changeIndexAction(index));
   },
 });
 

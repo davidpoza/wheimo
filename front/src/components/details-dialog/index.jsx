@@ -2,14 +2,12 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
-import dayjs from 'dayjs';
 
 // own
 import useStyles from './styles';
@@ -19,9 +17,11 @@ import {
   update as updateAction,
   detailsDialogOpen as openAction,
   detailsDialogClose as closeAction,
-  contextMenuChangeId as changeIdAction,
-  contextMenuChangeIndex as changeIndexAction,
 } from '../../actions/transaction';
+import {
+  contextMenuChangeIndex as changeIndexAction,
+  contextMenuChangeId as changeIdAction,
+} from '../../actions/ui';
 
 function PaperComponent(props) {
   return (
@@ -41,8 +41,8 @@ function DetailsDialog({
   user,
   createTransaction,
   updateTransaction,
-  changeId,
-  changeIndex,
+  changeUIId,
+  changeUIIndex,
 }) {
   const classes = useStyles();
   const [description, setDescription] = useState('');
@@ -67,8 +67,8 @@ function DetailsDialog({
 
   function handleClose() {
     clearForm();
-    changeId(undefined);
-    changeIndex(undefined);
+    changeUIId(undefined);
+    changeUIIndex(undefined);
     close();
   }
 
@@ -120,8 +120,8 @@ DetailsDialog.propTypes = {
   user: PropTypes.object,
   createTransaction: PropTypes.func,
   updateTransaction: PropTypes.func,
-  changeId: PropTypes.func,
-  changeIndex: PropTypes.func,
+  changeUIId: PropTypes.func,
+  changeUIIndex: PropTypes.func,
   transactions: PropTypes.array,
 };
 
@@ -153,10 +153,10 @@ const mapDispatchToProps = (dispatch) => ({
   close: () => {
     dispatch(closeAction());
   },
-  changeId: (id) => {
+  changeUIId: (id) => {
     dispatch(changeIdAction(id));
   },
-  changeIndex: (index) => {
+  changeUIIndex: (index) => {
     dispatch(changeIndexAction(index));
   },
 });
