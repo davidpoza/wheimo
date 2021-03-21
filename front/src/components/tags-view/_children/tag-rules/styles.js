@@ -4,6 +4,6 @@ export default makeStyles(() => ({
   root: {
   },
   tableHead: {
-    fontWeight: 'bold',
+    fontWeight: 'bold !important',
   },
 }));

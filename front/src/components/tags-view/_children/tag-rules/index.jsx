@@ -26,11 +26,11 @@ function TagRules({
   return (
     <TableContainer component={Paper} className={classes.root}>
       <Table className={classes.table} aria-label="simple table">
-        <TableHead className={classes.tableHead}>
+        <TableHead>
           <TableRow>
-            <TableCell align="left">Rule name</TableCell>
-            <TableCell align="right">Type</TableCell>
-            <TableCell align="right">Value</TableCell>
+            <TableCell align="left" className={classes.tableHead}>Rule name</TableCell>
+            <TableCell align="right" className={classes.tableHead}>Type</TableCell>
+            <TableCell align="right" className={classes.tableHead}>Value</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
