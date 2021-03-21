@@ -79,6 +79,7 @@ function DetailsDialog({
     };
 
     updateTransaction(user.token, id, index, data);
+    changeUIIndex(undefined);
     clearForm();
     close();
   }
