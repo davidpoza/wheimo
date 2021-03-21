@@ -3,18 +3,28 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
 
 // own
 import useStyles from './styles';
-import withLoader from '../../../../hocs/with-loader';
+import {
+  update as updateAction,
+} from '../../../../actions/tag';
+import * as ruleApi from '../../../../api-client/rule';
 
 function TagRulesItem({
-  name, value, type,
+  user, name, value, type, tagId, tagIndex, currentRules, ruleId, updateTag,
 }) {
   const classes = useStyles();
 
   useEffect(() => {
   }, []);
+
+  async function deleteRule() {
+    updateTag(user.token, tagId, tagIndex, { rules: currentRules.filter((r) => r !== ruleId) });
+    await ruleApi.remove(user.token, ruleId);
+  }
 
   return (
     <TableRow key={name} className={classes.root}>
@@ -23,14 +33,30 @@ function TagRulesItem({
       </TableCell>
       <TableCell align="right">{type}</TableCell>
       <TableCell align="right">{value}</TableCell>
+      <TableCell align="right">
+        <IconButton
+          className={classes.deleteButton}
+          color="primary"
+          title="Delete rule"
+          onClick={deleteRule}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </TableCell>
     </TableRow>
   );
 }
 
 TagRulesItem.propTypes = {
+  currentRules: PropTypes.arrayOf(PropTypes.number),
   name: PropTypes.string,
-  value: PropTypes.string,
+  ruleId: PropTypes.number,
+  tagId: PropTypes.number,
+  tagIndex: PropTypes.number,
   type: PropTypes.string,
+  updateTag: PropTypes.func,
+  user: PropTypes.object,
+  value: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
@@ -41,7 +67,12 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-
+  updateTag: (token, id, index, data) => {
+    dispatch(updateAction(token, id, index, data))
+      .catch((error) => {
+        console.log(error.message);
+      });
+  },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withLoader(TagRulesItem));
+export default connect(mapStateToProps, mapDispatchToProps)(TagRulesItem);

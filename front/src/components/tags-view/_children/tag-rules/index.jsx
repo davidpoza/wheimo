@@ -32,6 +32,7 @@ function TagRules({
             <TableCell align="left" className={classes.tableHead}>Rule name</TableCell>
             <TableCell align="right" className={classes.tableHead}>Type</TableCell>
             <TableCell align="right" className={classes.tableHead}>Value</TableCell>
+            <TableCell align="right" className={classes.tableHead}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -41,6 +42,10 @@ function TagRules({
               name={rule.name}
               type={rule.type}
               value={rule.value}
+              currentRules={rules.map((r) => r.id)}
+              tagId={tagId}
+              tagIndex={tagIndex}
+              ruleId={rule.id}
             />)
           }
           <CreateTagRuleInput tagId={tagId} tagIndex={tagIndex} currentRules={rules.map((r) => r.id)} />

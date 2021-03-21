@@ -10,7 +10,6 @@ export const definition = [
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true, allowNull: false },
     rule_id: {
       type: Sequelize.INTEGER,
-      allowNull: false,
       references: {
         model: 'rules',
         key: 'id'
@@ -20,7 +19,6 @@ export const definition = [
     },
     tag_id: {
       type: Sequelize.INTEGER,
-      allowNull: false,
       references: {
         model: 'tags',
         key: 'id'

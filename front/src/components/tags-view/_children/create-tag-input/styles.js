@@ -7,8 +7,8 @@ export default makeStyles(() => ({
     justifyContent: 'center',
     margin: '2em 0.5em',
   },
-  icon: {
-    color: '#3f51b5',
+  createButton: {
+    cursor: 'pointer',
   },
   input: {
     fontSize: '1.2em',

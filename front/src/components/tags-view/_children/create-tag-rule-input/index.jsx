@@ -6,6 +6,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import IconButton from '@material-ui/core/IconButton';
 
 // own
 import useStyles from './styles';
@@ -15,7 +16,7 @@ import {
 import * as ruleApi from '../../../../api-client/rule';
 
 function CreateTagRuleInput({
-  user, update, currentRules, tagId, tagIndex,
+  user, updateTag, currentRules, tagId, tagIndex,
 }) {
   const classes = useStyles();
 
@@ -29,7 +30,7 @@ function CreateTagRuleInput({
 
   async function add() {
     const rule = await ruleApi.create(user.token, { name, type, value });
-    update(user.token, tagId, tagIndex, { rules: [...currentRules, rule.id] });
+    updateTag(user.token, tagId, tagIndex, { rules: [...currentRules, rule.id] });
     setName('');
     setType('');
     setValue('');
@@ -85,11 +86,16 @@ function CreateTagRuleInput({
           }}
           onKeyUp={onEnterKeyPress}
         />
-        <AddBoxIcon
-          fontSize="large"
-          className={classes.icon}
+        <IconButton
+          className={classes.createButton}
+          color="primary"
+          title="Create rule"
           onClick={add}
-        />
+        >
+          <AddBoxIcon
+            fontSize="large"
+          />
+        </IconButton>
       </TableCell>
     </TableRow>
   );
@@ -97,7 +103,7 @@ function CreateTagRuleInput({
 
 CreateTagRuleInput.propTypes = {
   user: PropTypes.object,
-  update: PropTypes.func,
+  updateTag: PropTypes.func,
   tagId: PropTypes.number,
   tagIndex: PropTypes.number,
   currentRules: PropTypes.arrayOf(PropTypes.number),
@@ -112,7 +118,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  update: (token, id, index, data) => {
+  updateTag: (token, id, index, data) => {
     dispatch(updateAction(token, id, index, data))
       .catch((error) => {
         console.log(error.message);

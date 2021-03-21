@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import IconButton from '@material-ui/core/IconButton';
 
 // own
 import useStyles from './styles';
@@ -42,11 +43,16 @@ function CreateTagInput({
           setTagName(e.target.value);
         }}
       />
-      <AddBoxIcon
-        fontSize="large"
-        className={classes.icon}
+      <IconButton
+        className={classes.createButton}
+        color="primary"
+        title="Create tag"
         onClick={add}
-      />
+      >
+        <AddBoxIcon
+          fontSize="large"
+        />
+      </IconButton>
     </form>
   );
 }

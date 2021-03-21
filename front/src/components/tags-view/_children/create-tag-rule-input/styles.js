@@ -9,6 +9,7 @@ const input = {
   width: '100%',
   border: '1px solid #ccc',
   borderRadius: '5px',
+  height: '1.3em',
   '&:focus': {
     outlineColor: '#3f51b5',
   },
@@ -18,8 +19,9 @@ export default makeStyles(() => ({
   root: {
 
   },
-  icon: {
-    color: '#3f51b5',
+  createButton: {
+    cursor: 'pointer',
+    paddingRight: 0,
   },
   input,
   inputWithSubmit: {
@@ -30,6 +32,7 @@ export default makeStyles(() => ({
     display: 'flex',
     flexDirection: 'inherit',
     justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   typeSelect: {
     height: '2.2em',
