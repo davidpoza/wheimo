@@ -33,7 +33,7 @@ function AccountsListItem({
 
   return (
     <>
-      <ListItem button alignItems="flex-start">
+      <ListItem button className={classes.root}>
         <ListItemIcon>
           <AccountBalanceIcon />
         </ListItemIcon>
