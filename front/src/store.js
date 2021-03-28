@@ -6,10 +6,11 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import StateLoader from './utils/state-loader';
 
 // Reducers
-import user from './reducers/user';
-import transaction from './reducers/transaction';
+import account from './reducers/account';
 import tag from './reducers/tag';
+import transaction from './reducers/transaction';
 import ui from './reducers/ui';
+import user from './reducers/user';
 
 const stateLoader = new StateLoader();
 
@@ -19,7 +20,7 @@ const enhancer = composeWithDevTools(
 
 const store = createStore(
   combineReducers({
-    user, transaction, tag, ui,
+    user, transaction, tag, ui, account,
   }),
   stateLoader.loadState(),
   enhancer,
