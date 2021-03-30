@@ -5,6 +5,7 @@ export default makeStyles(() => ({
     width: 'auto',
     margin: '0 10%',
     borderBottom: '1px solid #ccc',
+    cursor: 'pointer',
   },
   rulesCounter: {
     fontSize: '0.8em',
@@ -13,5 +14,18 @@ export default makeStyles(() => ({
   icon: {
     color: '#ccc',
     marginRight: '10px',
+  },
+  balance: {
+    fontSize: '1.2em',
+    textAlign: 'right',
+  },
+  positiveBalance: {
+    color: 'darkcyan',
+  },
+  negativeBalance: {
+    color: '#f50057',
+  },
+  number: {
+    fontSize: '0.8em',
   },
 }));

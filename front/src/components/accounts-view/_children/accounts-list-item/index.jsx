@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ListItem from '@material-ui/core/ListItem';
@@ -16,10 +16,10 @@ import {
 } from '../../../../actions/ui';
 
 function AccountsListItem({
-  name, id, balance, description, changeId, changePosition, changeIndex, indexInStore,
+  name, id, balance, description, number, bankId, changeId, changePosition, changeIndex, indexInStore,
 }) {
   const classes = useStyles();
-
+  const numberRef = useRef();
   useEffect(() => {
 
   }, []);
@@ -31,9 +31,29 @@ function AccountsListItem({
     changeIndex(indexInStore);
   }
 
+  function selectAndCopy(e) {
+    const range = document.createRange();
+    range.selectNodeContents(numberRef.current);
+    const currentSelection = window.getSelection();
+    currentSelection.removeAllRanges();
+    currentSelection.addRange(range);
+    document.execCommand('copy');
+  }
+
+  function formatBankId(bkId) {
+    switch (bkId) {
+      case 'opbk':
+        return 'Open Bank';
+      case 'wallet':
+        return 'Wallet';
+      default:
+        return 'Wallet';
+    }
+  }
+
   return (
     <>
-      <ListItem button className={classes.root}>
+      <ListItem className={classes.root}>
         <ListItemIcon>
           <AccountBalanceIcon />
         </ListItemIcon>
@@ -47,12 +67,25 @@ function AccountsListItem({
                 className={classes.inline}
                 color="textPrimary"
               >
-                Ali Connors
+                {description}
               </Typography>
-              {description}
             </React.Fragment>
           }
         />
+        <div>
+          <div className={classes.number}>
+            { formatBankId(bankId) }
+            { bankId !== 'wallet' && ': ' }
+            { bankId !== 'wallet'
+              && <span onClick={selectAndCopy} ref={numberRef}>
+                {number}
+              </span>
+            }
+          </div>
+          <div className={`${classes.balance} ${balance > 0 ? classes.positiveBalance : classes.negativeBalance}`}>
+            {balance}€
+          </div>
+        </div>
       </ListItem>
     </>
   );
@@ -65,7 +98,9 @@ AccountsListItem.propTypes = {
   id: PropTypes.number,
   indexInStore: PropTypes.number,
   balance: PropTypes.number,
+  bankId: PropTypes.number,
   name: PropTypes.string,
+  number: PropTypes.string,
   description: PropTypes.string,
 };
 

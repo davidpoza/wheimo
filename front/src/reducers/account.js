@@ -1,7 +1,7 @@
 import {
   fetchAll, create, remove, update,
 } from '../actions/account';
-
+import { azOrder } from '../utils/utilities';
 import types from '../actions/types';
 
 const initialState = {
@@ -36,27 +36,27 @@ const reducer = (state = initialState, action) => {
         error: true,
         errorMessage: action.payload.message,
       };
-    // case String(create.pending):
-    //   return {
-    //     ...state,
-    //     isLoading: true,
-    //     error: false,
-    //     errorMessage: undefined,
-    //   };
-    // case String(create.fulfilled):
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     fetchedTags: [...state.fetchedTags, action.payload].sort(azOrder),
-    //     error: false,
-    //   };
-    // case String(create.rejected):
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     error: true,
-    //     errorMessage: action.payload.message,
-    //   };
+    case String(create.pending):
+      return {
+        ...state,
+        isLoading: true,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(create.fulfilled):
+      return {
+        ...state,
+        isLoading: false,
+        fetchedAccounts: [...state.fetchedAccounts, action.payload].sort(azOrder),
+        error: false,
+      };
+    case String(create.rejected):
+      return {
+        ...state,
+        isLoading: false,
+        error: true,
+        errorMessage: action.payload.message,
+      };
     // case String(remove.pending):
     //   return {
     //     ...state,

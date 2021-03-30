@@ -9,7 +9,7 @@ import {
 import EditTagDialog from '../edit-tag-dialog';
 import AccountsList from './_children/accounts-list';
 import OperationDropdown from '../operation-dropdown';
-import CreateTagInput from './_children/create-tag-input';
+import CreateAccountInput from './_children/create-account-input';
 import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
 
@@ -26,7 +26,7 @@ function AccountsView({
     <div className={classes.root}>
       <OperationDropdown entity="tag" />
       <AccountsList />
-      <CreateTagInput />
+      <CreateAccountInput />
       <EditTagDialog />
     </div>
   );

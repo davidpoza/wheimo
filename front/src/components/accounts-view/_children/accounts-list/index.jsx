@@ -26,6 +26,10 @@ function AccountsList({
             indexInStore={index}
             key={account.id}
             name={account.name}
+            number={account.number}
+            balance={account.balance}
+            description={account.description}
+            bankId={account.bankId}
           />
         ))
       }

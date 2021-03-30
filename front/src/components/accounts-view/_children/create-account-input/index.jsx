@@ -8,18 +8,18 @@ import IconButton from '@material-ui/core/IconButton';
 import useStyles from './styles';
 import {
   create as createAction,
-} from '../../../../actions/tag';
+} from '../../../../actions/account';
 
-function CreateTagInput({
+function CreateAccountInput({
   user, tags = [], create,
 }) {
   const classes = useStyles();
 
-  const [tagName, setTagName] = useState('');
+  const [accountName, setAccountName] = useState('');
   const [error, setError] = useState(true);
 
   function checkErrors() {
-    if (tagName === '') {
+    if (accountName === '') {
       setError(true);
     } else {
       setError(false);
@@ -28,11 +28,11 @@ function CreateTagInput({
 
   useEffect(() => {
     checkErrors();
-  }, [tagName]);
+  }, [accountName]);
 
   function add() {
-    create(user.token, { name: tagName });
-    setTagName('');
+    create(user.token, { name: accountName, number: 'xxx', bankId: 'opbk' });
+    setAccountName('');
   }
 
   async function onFormSubmit(e) {
@@ -46,11 +46,11 @@ function CreateTagInput({
         className={classes.input}
         id="tagName"
         type="text"
-        value={tagName}
+        value={accountName}
         autoFocus={true}
-        placeholder="Type a new tag"
+        placeholder="Type a new account"
         onChange={(e) => {
-          setTagName(e.target.value);
+          setAccountName(e.target.value);
         }}
       />
       <IconButton
@@ -68,7 +68,7 @@ function CreateTagInput({
   );
 }
 
-CreateTagInput.propTypes = {
+CreateAccountInput.propTypes = {
   user: PropTypes.object,
   tags: PropTypes.array,
   create: PropTypes.func,
@@ -91,4 +91,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateTagInput);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateAccountInput);
