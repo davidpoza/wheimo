@@ -57,6 +57,7 @@ function EditAccountDialog({
   const [savingTargetAmount, setSavingTargetAmount] = useState();
   const [savingInitDate, setSavingInitDate] = useState();
   const [savingTargetDate, setSavingTargetDate] = useState();
+  const [savingAmountFunc, setSavingAmountFunc] = useState();
 
   function handleClose() {
     changeUIIndex(undefined);
@@ -70,8 +71,11 @@ function EditAccountDialog({
       setType(accounts[index].bankId);
       setDescription(accounts[index].description);
       setBalance(accounts[index].balance);
+      setSavingInitDate(accounts[index].savingInitDate);
+      setSavingTargetDate(accounts[index].savingTargetDate);
       setSavingInitialAmount(accounts[index].savingInitialAmount);
       setSavingTargetAmount(accounts[index].savingTargetAmount);
+      setSavingAmountFunc(accounts[index].savingAmountFunc);
     }
   }
 
@@ -89,6 +93,9 @@ function EditAccountDialog({
       bankId: type || undefined,
       savingInitialAmount: savingInitialAmount || undefined,
       savingTargetAmount: savingTargetAmount || undefined,
+      savingInitDate: savingInitDate || undefined,
+      savingTargetDate: savingTargetDate || undefined,
+      savingAmountFunc: savingAmountFunc || undefined,
     };
 
     if (index !== undefined) {
@@ -124,6 +131,11 @@ function EditAccountDialog({
           }}
           fullWidth
         />
+        <AccountTypeSelect
+          label="Account type"
+          value={type}
+          handleChange={(e) => { setType(e.target.value); }}
+        />
         <TextField
           className={classes.transactionTargetTextField}
           margin="dense"
@@ -135,75 +147,86 @@ function EditAccountDialog({
           }}
           fullWidth
         />
-        <AccountTypeSelect
-          label="Account type"
-          value={type}
-          handleChange={(e) => { setType(e.target.value); }}
-        />
-        <TextField
-          required
-          margin="dense"
-          id="balance"
-          label="Balance"
-          type="number"
-          value={balance}
-          onChange={(e) => {
-            setBalance(e.target.value);
-          }}
-          fullWidth
-        />
-        <MuiPickersUtilsProvider utils={DayJsUtils} className={classes.dateSelector}>
-          <KeyboardDatePicker
-            margin="normal"
-            className={classes.savingInitDate}
-            label="Savings start date"
-            format="DD/MM/YYYY"
-            value={savingInitDate}
-            onChange={(date) => {
-              setSavingInitDate(date);
-            }}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-          />
-          <KeyboardDatePicker
-            margin="normal"
-            className={classes.savingTargetDate}
-            label="Savings end date"
-            format="DD/MM/YYYY"
-            value={savingTargetDate}
-            onChange={(date) => {
-              setSavingTargetDate(date);
-            }}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-          />
-        </MuiPickersUtilsProvider>
-        <TextField
-          required
-          className={classes.savingInitialAmount}
-          margin="dense"
-          id="savingInitialAmount"
-          label="Saving initial amount"
-          type="number"
-          value={savingInitialAmount}
-          onChange={(e) => {
-            setSavingInitialAmount(e.target.value);
-          }}
-        />
-        <TextField
-          required
-          className={classes.savingTargetAmount}
-          margin="dense"
-          id="savingTargetAmount"
-          label="Saving target amount"
-          type="number"
-          value={savingTargetAmount}
-          onChange={(e) => {
-            setSavingTargetAmount(e.target.value);
-          }}
-        />
+        {
+          type === 'piggybank' && <>
+            <TextField
+              required
+              margin="dense"
+              id="balance"
+              label="Balance"
+              type="number"
+              value={balance}
+              onChange={(e) => {
+                setBalance(e.target.value);
+              }}
+              fullWidth
+            />
+            <MuiPickersUtilsProvider utils={DayJsUtils} className={classes.dateSelector}>
+              <KeyboardDatePicker
+                margin="normal"
+                className={classes.savingInitDate}
+                label="Savings start date"
+                format="DD/MM/YYYY"
+                value={savingInitDate}
+                onChange={(date) => {
+                  setSavingInitDate(date);
+                }}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+              />
+              <KeyboardDatePicker
+                margin="normal"
+                className={classes.savingTargetDate}
+                label="Savings end date"
+                format="DD/MM/YYYY"
+                value={savingTargetDate}
+                onChange={(date) => {
+                  setSavingTargetDate(date);
+                }}
+                KeyboardButtonProps={{
+                  'aria-label': 'change date',
+                }}
+              />
+            </MuiPickersUtilsProvider>
+            <TextField
+              required
+              className={classes.savingInitialAmount}
+              margin="dense"
+              id="savingInitialAmount"
+              label="Saving initial amount"
+              type="number"
+              value={savingInitialAmount}
+              onChange={(e) => {
+                setSavingInitialAmount(e.target.value);
+              }}
+            />
+            <TextField
+              required
+              className={classes.savingTargetAmount}
+              margin="dense"
+              id="savingTargetAmount"
+              label="Saving target amount"
+              type="number"
+              value={savingTargetAmount}
+              onChange={(e) => {
+                setSavingTargetAmount(e.target.value);
+              }}
+            />
+            <TextField
+              required
+              margin="dense"
+              id="savingAmountFunc"
+              label="Saving Amount Expression"
+              type="text"
+              value={savingAmountFunc}
+              onChange={(e) => {
+                setSavingAmountFunc(e.target.value);
+              }}
+              fullWidth
+            />
+          </>
+        }
       </DialogContent>
 
       <DialogActions>
