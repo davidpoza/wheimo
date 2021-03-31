@@ -29,6 +29,7 @@ export default makeStyles(() => ({
     color: '#f50057',
   },
   number: {
+    textAlign: 'right',
     fontSize: '0.8em',
   },
 }));

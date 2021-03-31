@@ -19,6 +19,12 @@ export default (app) => {
         number: Joi.string().required(),
         description: Joi.string(),
         bankId: Joi.string().required(),
+        savingTargetAmount: Joi.number(),
+        savingInitialAmount: Joi.number(),
+        savingFrequency: Joi.string(),
+        savingAmountFunc: Joi.string(),
+        savingTargetDate: Joi.string(),
+        savingInitDate: Joi.string(),
         settings: Joi.object({
           contract: Joi.string(),
           product: Joi.string()
@@ -64,6 +70,12 @@ export default (app) => {
         number: Joi.string(),
         description: Joi.string(),
         balance: Joi.number(),
+        savingTargetAmount: Joi.number(),
+        savingInitialAmount: Joi.number(),
+        savingFrequency: Joi.string(),
+        savingAmountFunc: Joi.string(),
+        savingTargetDate: Joi.string(),
+        savingInitDate: Joi.string(),
         bankId: Joi.string(),
         settings: Joi.object({
           contract: Joi.string(),

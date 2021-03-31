@@ -13,7 +13,7 @@ import {
   fetchAll as fetchAccountsAction,
 } from '../../actions/account';
 
-function AccountSelect({
+function BankTypeSelect({
   user, label, value, handleChange, fetchAccounts, accounts,
 }) {
   const classes = useStyles();
@@ -44,7 +44,7 @@ function AccountSelect({
   );
 }
 
-AccountSelect.propTypes = {
+BankTypeSelect.propTypes = {
   user: PropTypes.object,
   label: PropTypes.string,
   value: PropTypes.number,
@@ -67,4 +67,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AccountSelect);
+export default connect(mapStateToProps, mapDispatchToProps)(BankTypeSelect);

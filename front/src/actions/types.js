@@ -1,7 +1,7 @@
 const actions = [
   // user
   'USER_RESET_STATE',
-  // transactions
+  // TRANSACTIONS
   'TRANSACTIONS_CREATE_EDIT_DIALOG_OPEN',
   'TRANSACTIONS_CREATE_EDIT_DIALOG_CLOSE',
   'TRANSACTIONS_TOGGLE_CHECKBOX',
@@ -15,6 +15,9 @@ const actions = [
   // TAG
   'TAGS_EDIT_DIALOG_OPEN',
   'TAGS_EDIT_DIALOG_CLOSE',
+  // ACCOUNt
+  'ACCOUNTS_EDIT_DIALOG_OPEN',
+  'ACCOUNTS_EDIT_DIALOG_CLOSE',
 ];
 
 const actionTypes = {};

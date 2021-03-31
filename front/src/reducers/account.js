@@ -79,38 +79,38 @@ const reducer = (state = initialState, action) => {
         error: true,
         errorMessage: action.payload.message,
       };
-    // case String(update.pending):
-    //   return {
-    //     ...state,
-    //     isLoading: true,
-    //     error: false,
-    //     errorMessage: undefined,
-    //   };
-    // case String(update.fulfilled):
-    //   fetchedTagsCopy[action.payload.index] = action.payload;
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     fetchedTags: fetchedTagsCopy,
-    //     error: false,
-    //   };
-    // case String(update.rejected):
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     error: true,
-    //     errorMessage: action.payload.message,
-    //   };
-    // case types.TAGS_EDIT_DIALOG_OPEN:
-    //   return {
-    //     ...state,
-    //     editDialogOpen: true,
-    //   };
-    // case types.TAGS_EDIT_DIALOG_CLOSE:
-    //   return {
-    //     ...state,
-    //     editDialogOpen: false,
-    //   };
+    case String(update.pending):
+      return {
+        ...state,
+        isLoading: true,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(update.fulfilled):
+      fetchedAccountsCopy[action.payload.index] = action.payload;
+      return {
+        ...state,
+        isLoading: false,
+        fetchedAccounts: fetchedAccountsCopy,
+        error: false,
+      };
+    case String(update.rejected):
+      return {
+        ...state,
+        isLoading: false,
+        error: true,
+        errorMessage: action.payload.message,
+      };
+    case types.ACCOUNTS_EDIT_DIALOG_OPEN:
+      return {
+        ...state,
+        editDialogOpen: true,
+      };
+    case types.ACCOUNTS_EDIT_DIALOG_CLOSE:
+      return {
+        ...state,
+        editDialogOpen: false,
+      };
     default:
       return state;
   }

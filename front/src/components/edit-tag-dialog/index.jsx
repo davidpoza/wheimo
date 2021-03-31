@@ -30,7 +30,7 @@ function PaperComponent(props) {
   );
 }
 
-function DetailsDialog({
+function EditTagDialog({
   id,
   index,
   tags,
@@ -113,7 +113,7 @@ function DetailsDialog({
   );
 }
 
-DetailsDialog.propTypes = {
+EditTagDialog.propTypes = {
   id: PropTypes.number,
   index: PropTypes.number,
   isOpen: PropTypes.bool,
@@ -155,4 +155,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailsDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(EditTagDialog);

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import {
   fetchAll as fetchAccountsAction,
 } from '../../actions/account';
-import EditTagDialog from '../edit-tag-dialog';
+import EditAccountDialog from '../edit-account-dialog';
 import AccountsList from './_children/accounts-list';
 import OperationDropdown from '../operation-dropdown';
 import CreateAccountInput from './_children/create-account-input';
@@ -27,7 +27,7 @@ function AccountsView({
       <OperationDropdown entity="account" />
       <AccountsList />
       <CreateAccountInput />
-      <EditTagDialog />
+      <EditAccountDialog />
     </div>
   );
 }
