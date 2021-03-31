@@ -53,7 +53,7 @@ function AccountsListItem({
 
   return (
     <>
-      <ListItem className={classes.root}>
+      <ListItem className={classes.root} onContextMenu={handleContextMenu}>
         <ListItemIcon>
           <AccountBalanceIcon />
         </ListItemIcon>

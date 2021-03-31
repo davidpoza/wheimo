@@ -5,7 +5,6 @@ export default makeStyles(() => ({
     padding: '0 30px',
     boxShadow: 'none',
     position: 'inherit',
-
   },
   rulesCounter: {
     fontSize: '0.8em',
@@ -18,5 +17,8 @@ export default makeStyles(() => ({
   summary: {
     margin: '0 10%',
     borderBottom: '1px solid #ccc',
+    '&:hover': {
+      backgroundColor: '#f5f5f5',
+    },
   },
 }));

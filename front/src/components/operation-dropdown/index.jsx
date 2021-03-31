@@ -15,6 +15,10 @@ import {
   editDialogOpen as openEditTagDialogAction,
 } from '../../actions/tag';
 import {
+  remove as removeAccountAction,
+  editDialogOpen as openEditAccountDialogAction,
+} from '../../actions/account';
+import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
@@ -24,12 +28,14 @@ function OperationDropdown({
   entity = 'transaction',
   removeTransaction,
   removeTag,
+  removeAccount,
   user,
   changePosition,
   changeId,
   changeIndex,
   contextMenuState,
   openTransactionDialog,
+  openAccountDialog,
   openTagDialog,
 }) {
   const classes = useStyles();
@@ -53,6 +59,9 @@ function OperationDropdown({
       case 'tag':
         removeTag(user.token, contextMenuState.id, contextMenuState.index);
         break;
+      case 'account':
+        removeAccount(user.token, contextMenuState.id, contextMenuState.index);
+        break;
       default:
         removeTransaction(user.token, contextMenuState.id, contextMenuState.index);
     }
@@ -67,6 +76,9 @@ function OperationDropdown({
         break;
       case 'tag':
         openTagDialog();
+        break;
+      case 'account':
+        openAccountDialog();
         break;
       default:
         openTransactionDialog();
@@ -98,11 +110,13 @@ OperationDropdown.propTypes = {
   contextMenuState: PropTypes.object,
   user: PropTypes.object,
   removeTransaction: PropTypes.func,
+  removeAccount: PropTypes.func,
   removeTag: PropTypes.func,
   changePosition: PropTypes.func,
   changeId: PropTypes.func,
   changeIndex: PropTypes.func,
   openTransactionDialog: PropTypes.func,
+  openAccountDialog: PropTypes.func,
   openTagDialog: PropTypes.func,
 };
 
@@ -127,6 +141,12 @@ const mapDispatchToProps = (dispatch) => ({
         console.log(error.message);
       });
   },
+  removeAccount: (token, id, index) => {
+    dispatch(removeAccountAction(token, id, index))
+      .catch((error) => {
+        console.log(error.message);
+      });
+  },
   changePosition: (x, y) => {
     dispatch(changePositionAction(x, y));
   },
@@ -141,6 +161,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   openTagDialog: () => {
     dispatch(openEditTagDialogAction());
+  },
+  openAccountDialog: () => {
+    dispatch(openEditAccountDialogAction());
   },
 });
 

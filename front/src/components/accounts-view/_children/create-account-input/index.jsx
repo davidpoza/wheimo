@@ -31,7 +31,7 @@ function CreateAccountInput({
   }, [accountName]);
 
   function add() {
-    create(user.token, { name: accountName, number: 'xxx', bankId: 'opbk' });
+    create(user.token, { name: accountName, number: 'xxx', bankId: 'wallet' });
     setAccountName('');
   }
 

@@ -6,6 +6,9 @@ export default makeStyles(() => ({
     margin: '0 10%',
     borderBottom: '1px solid #ccc',
     cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: '#f5f5f5',
+    },
   },
   rulesCounter: {
     fontSize: '0.8em',

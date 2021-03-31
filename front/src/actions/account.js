@@ -24,9 +24,9 @@ export const remove = createAsyncAction('DELETE_ACCOUNT', async (token, id, inde
 });
 
 export const editDialogOpen = () => ({
-  type: types.TAGS_EDIT_DIALOG_OPEN,
+  type: types.ACCOUNTS_EDIT_DIALOG_OPEN,
 });
 
 export const editDialogClose = () => ({
-  type: types.TAGS_EDIT_DIALOG_CLOSE,
+  type: types.ACCOUNTS_EDIT_DIALOG_CLOSE,
 });

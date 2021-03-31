@@ -57,28 +57,28 @@ const reducer = (state = initialState, action) => {
         error: true,
         errorMessage: action.payload.message,
       };
-    // case String(remove.pending):
-    //   return {
-    //     ...state,
-    //     isLoading: true,
-    //     error: false,
-    //     errorMessage: undefined,
-    //   };
-    // case String(remove.fulfilled):
-    //   fetchedTagsCopy.splice(action.payload, 1);
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     fetchedTags: fetchedTagsCopy,
-    //     error: false,
-    //   };
-    // case String(remove.rejected):
-    //   return {
-    //     ...state,
-    //     isLoading: false,
-    //     error: true,
-    //     errorMessage: action.payload.message,
-    //   };
+    case String(remove.pending):
+      return {
+        ...state,
+        isLoading: true,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(remove.fulfilled):
+      fetchedAccountsCopy.splice(action.payload, 1);
+      return {
+        ...state,
+        isLoading: false,
+        fetchedAccounts: fetchedAccountsCopy,
+        error: false,
+      };
+    case String(remove.rejected):
+      return {
+        ...state,
+        isLoading: false,
+        error: true,
+        errorMessage: action.payload.message,
+      };
     // case String(update.pending):
     //   return {
     //     ...state,

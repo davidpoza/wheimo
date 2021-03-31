@@ -12,10 +12,14 @@ export const definition = [
     name: { type: Sequelize.TEXT, allowNull: false},
     description: Sequelize.TEXT,
     balance: { type: Sequelize.FLOAT, allowNull: false, defaultValue: 0.0 },
+    targetAmount: { type: Sequelize.FLOAT },
+    initialSavingAmount: { type: Sequelize.FLOAT },
+    savingAmount: { type: Sequelize.TEXT },
+    savingFrequency: { type: Sequelize.TEXT },
     bankId: {
       type: Sequelize.STRING,
       validate: {
-        isIn: [['opbk']],
+        isIn: [['opbk', 'wallet', 'piggybank']],
       },
       allowNull: false,
     },
