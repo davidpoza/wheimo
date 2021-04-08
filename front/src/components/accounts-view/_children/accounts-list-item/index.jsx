@@ -44,7 +44,7 @@ function AccountsListItem({
     switch (bkId) {
       case 'opbk':
         return 'Open Bank';
-      case 'wallet':
+      case 'piggybank':
         return 'Wallet';
       default:
         return 'Wallet';
@@ -75,10 +75,9 @@ function AccountsListItem({
         <div>
           <div className={classes.number}>
             { formatBankId(bankId) }
-            { bankId !== 'wallet' && ': ' }
-            { bankId !== 'wallet'
-              && <span onClick={selectAndCopy} ref={numberRef}>
-                {number}
+            { formatBankId(bankId) !== 'Wallet'
+              && <span>
+                : <span onClick={selectAndCopy} ref={numberRef}>{number}</span>
               </span>
             }
           </div>
