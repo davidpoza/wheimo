@@ -30,10 +30,14 @@ export default makeStyles(() => ({
   savingTargetDate: {
     marginLeft: '2em',
   },
+  savingFrequency: {
+
+  },
   savingInitialAmount: {
     width: '234px',
   },
   savingTargetAmount: {
     marginLeft: '2em',
+    width: '234px',
   },
 }));

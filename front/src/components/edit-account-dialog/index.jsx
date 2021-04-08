@@ -58,6 +58,7 @@ function EditAccountDialog({
   const [savingInitDate, setSavingInitDate] = useState();
   const [savingTargetDate, setSavingTargetDate] = useState();
   const [savingAmountFunc, setSavingAmountFunc] = useState();
+  const [savingFrequency, setSavingFrequency] = useState();
 
   function handleClose() {
     changeUIIndex(undefined);
@@ -76,6 +77,7 @@ function EditAccountDialog({
       setSavingInitialAmount(accounts[index].savingInitialAmount);
       setSavingTargetAmount(accounts[index].savingTargetAmount);
       setSavingAmountFunc(accounts[index].savingAmountFunc);
+      setSavingFrequency(accounts[index].savingFrequency);
     }
   }
 
@@ -96,6 +98,7 @@ function EditAccountDialog({
       savingInitDate: savingInitDate || undefined,
       savingTargetDate: savingTargetDate || undefined,
       savingAmountFunc: savingAmountFunc || undefined,
+      savingFrequency: savingFrequency || undefined,
     };
 
     if (index !== undefined) {
@@ -191,6 +194,19 @@ function EditAccountDialog({
             </MuiPickersUtilsProvider>
             <TextField
               required
+              className={classes.savingFrequency}
+              margin="dense"
+              id="savingFrequency"
+              label="Saving Frequency, e.g.: 1w"
+              type="text"
+              value={savingFrequency}
+              onChange={(e) => {
+                setSavingFrequency(e.target.value);
+              }}
+              fullWidth
+            />
+            <TextField
+              required
               className={classes.savingInitialAmount}
               margin="dense"
               id="savingInitialAmount"
@@ -217,7 +233,7 @@ function EditAccountDialog({
               required
               margin="dense"
               id="savingAmountFunc"
-              label="Saving Amount Expression"
+              label="Saving Amount Expression, e.g.: n+1"
               type="text"
               value={savingAmountFunc}
               onChange={(e) => {
