@@ -10,7 +10,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import DayJsUtils from '@date-io/dayjs';
-import dayjs from 'dayjs';
+
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -18,6 +18,7 @@ import {
 
 // own
 import useStyles from './styles';
+import { calculateSavingSeries } from '../../utils/utilities';
 import {
   editDialogOpen as openAction,
   editDialogClose as closeAction,
@@ -59,7 +60,7 @@ function EditAccountDialog({
   const [savingTargetDate, setSavingTargetDate] = useState();
   const [savingAmountFunc, setSavingAmountFunc] = useState();
   const [savingFrequency, setSavingFrequency] = useState();
-
+  calculateSavingSeries(50, 1200, '2021-04-12', '2022-02-01', '1w', 'n+1');
   function handleClose() {
     changeUIIndex(undefined);
     changeUIId(undefined);
