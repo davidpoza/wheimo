@@ -31,13 +31,17 @@ export default makeStyles(() => ({
     marginLeft: '2em',
   },
   savingFrequency: {
-
+    width: '250px',
   },
-  savingInitialAmount: {
-    width: '234px',
+  savingAmountFunc: {
+    marginLeft: '2em',
+    width: '250px',
+  },
+  savingAmount: {
+    width: '250px',
   },
   savingTargetAmount: {
     marginLeft: '2em',
-    width: '234px',
+    width: '250px',
   },
 }));

@@ -9,6 +9,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.57",
     "@material-ui/pickers": "^3.2.10",
+    "@nivo/bar": "^0.62.0",
     "@nivo/core": "^0.62.0",
     "@nivo/line": "^0.62.0",
     "@nivo/pie": "^0.62.0",

@@ -29,6 +29,7 @@ import {
   contextMenuChangeId as changeIdAction,
 } from '../../actions/ui';
 import AccountTypeSelect from '../account-type-select';
+import SavingsChart from '../savings-chart';
 
 function PaperComponent(props) {
   return (
@@ -54,13 +55,13 @@ function EditAccountDialog({
   const [description, setDescription] = useState('');
   const [type, setType] = useState('');
   const [balance, setBalance] = useState();
-  const [savingInitialAmount, setSavingInitialAmount] = useState();
+  const [savingAmount, setSavingAmount] = useState();
   const [savingTargetAmount, setSavingTargetAmount] = useState();
   const [savingInitDate, setSavingInitDate] = useState();
   const [savingTargetDate, setSavingTargetDate] = useState();
   const [savingAmountFunc, setSavingAmountFunc] = useState();
   const [savingFrequency, setSavingFrequency] = useState();
-  calculateSavingSeries(50, 1200, '2021-04-12', '2022-02-01', '1w', 'n+1');
+
   function handleClose() {
     changeUIIndex(undefined);
     changeUIId(undefined);
@@ -75,7 +76,7 @@ function EditAccountDialog({
       setBalance(accounts[index].balance);
       setSavingInitDate(accounts[index].savingInitDate);
       setSavingTargetDate(accounts[index].savingTargetDate);
-      setSavingInitialAmount(accounts[index].savingInitialAmount);
+      setSavingAmount(accounts[index].savingInitialAmount);
       setSavingTargetAmount(accounts[index].savingTargetAmount);
       setSavingAmountFunc(accounts[index].savingAmountFunc);
       setSavingFrequency(accounts[index].savingFrequency);
@@ -94,7 +95,7 @@ function EditAccountDialog({
       description: description || undefined,
       balance: balance || undefined,
       bankId: type || undefined,
-      savingInitialAmount: savingInitialAmount || undefined,
+      savingInitialAmount: savingAmount || undefined,
       savingTargetAmount: savingTargetAmount || undefined,
       savingInitDate: savingInitDate || undefined,
       savingTargetDate: savingTargetDate || undefined,
@@ -204,18 +205,29 @@ function EditAccountDialog({
               onChange={(e) => {
                 setSavingFrequency(e.target.value);
               }}
-              fullWidth
             />
             <TextField
               required
-              className={classes.savingInitialAmount}
+              className={classes.savingAmountFunc}
               margin="dense"
-              id="savingInitialAmount"
-              label="Saving initial amount"
-              type="number"
-              value={savingInitialAmount}
+              id="savingAmountFunc"
+              label="Saving Expression, e.g.: n+1"
+              type="text"
+              value={savingAmountFunc}
               onChange={(e) => {
-                setSavingInitialAmount(e.target.value);
+                setSavingAmountFunc(e.target.value);
+              }}
+            />
+            <TextField
+              required
+              className={classes.savingAmount}
+              margin="dense"
+              id="savingAmount"
+              label="Saving amount"
+              type="number"
+              value={savingAmount}
+              onChange={(e) => {
+                setSavingAmount(e.target.value);
               }}
             />
             <TextField
@@ -230,18 +242,15 @@ function EditAccountDialog({
                 setSavingTargetAmount(e.target.value);
               }}
             />
-            <TextField
-              required
-              margin="dense"
-              id="savingAmountFunc"
-              label="Saving Amount Expression, e.g.: n+1"
-              type="text"
-              value={savingAmountFunc}
-              onChange={(e) => {
-                setSavingAmountFunc(e.target.value);
-              }}
-              fullWidth
-            />
+            <SavingsChart
+              serie={ calculateSavingSeries(
+                parseFloat(savingAmount),
+                parseFloat(savingTargetAmount),
+                savingInitDate,
+                savingTargetDate,
+                savingFrequency,
+                savingAmountFunc,
+              ) } />
           </>
         }
       </DialogContent>

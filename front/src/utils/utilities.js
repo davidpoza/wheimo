@@ -27,7 +27,9 @@ export function azOrder(a, b) {
  * @return {function}
  */
 export function formatExpression(expression) {
+  if (!expression) return null;
   const tokens = expression.match(/n([+\-*/])(\d*)/);
+  if (!tokens) return null;
   const op = tokens[1];
   const number = parseInt(tokens[2], 10);
   if (op === '+') {
@@ -55,19 +57,24 @@ export function formatExpression(expression) {
  * @param {string} funcExpression
  * @param {Array<Object>}
  */
-export function calculateSavingSeries(initialSavedAmount, targetAmount, startDate, endDate, freq, funcExpression) {
+export function calculateSavingSeries(
+  initialSavedAmount, targetAmount, startDate, endDate, freq = '1w', funcExpression = 'n+1',
+) {
+  if (!initialSavedAmount || !targetAmount || !freq || !funcExpression) return [];
   const res = [];
   const tokens = freq.match(/(\d*)([wdM])/);
+  if (!tokens) return [];
   const number = parseFloat(tokens[1]);
   const symbol = tokens[2];
   const expression = formatExpression(funcExpression);
+  if (!expression) return [];
   let currentDate = dayjs(startDate);
   let currentAmount = initialSavedAmount;
   let currentSavings = 0;
   while (currentDate.isBefore(dayjs(endDate)) && currentSavings < targetAmount) {
     currentSavings += currentAmount;
     res.push({
-      date: currentDate.format('YYYY-MM-DD'),
+      date: currentDate.format('YYYY/MM/DD'),
       amount: currentAmount,
       savings: currentSavings,
     });
