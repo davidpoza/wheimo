@@ -9,16 +9,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
-import DayJsUtils from '@date-io/dayjs';
-
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
 
 // own
 import useStyles from './styles';
-import { calculateSavingSeries } from '../../utils/utilities';
+import PiggyConfig from './_children/piggy-config';
+
 import {
   editDialogOpen as openAction,
   editDialogClose as closeAction,
@@ -29,7 +24,6 @@ import {
   contextMenuChangeId as changeIdAction,
 } from '../../actions/ui';
 import AccountTypeSelect from '../account-type-select';
-import SavingsChart from '../savings-chart';
 
 function PaperComponent(props) {
   return (
@@ -152,108 +146,34 @@ function EditAccountDialog({
           }}
           fullWidth
         />
+        <TextField
+          required
+          margin="dense"
+          id="balance"
+          label="Balance"
+          type="number"
+          value={balance}
+          onChange={(e) => {
+            setBalance(e.target.value);
+          }}
+          fullWidth
+        />
         {
-          type === 'piggybank' && <>
-            <TextField
-              required
-              margin="dense"
-              id="balance"
-              label="Balance"
-              type="number"
-              value={balance}
-              onChange={(e) => {
-                setBalance(e.target.value);
-              }}
-              fullWidth
+          type === 'piggybank'
+            && <PiggyConfig
+              savingInitDate={savingInitDate}
+              setSavingInitDate={setSavingInitDate}
+              savingTargetDate={savingTargetDate}
+              setSavingTargetDate={setSavingTargetDate}
+              savingFrequency={savingFrequency}
+              setSavingFrequency={setSavingFrequency}
+              savingAmountFunc={savingAmountFunc}
+              setSavingAmountFunc={setSavingAmountFunc}
+              savingAmount={savingAmount}
+              setSavingAmount={setSavingAmount}
+              savingTargetAmount={savingTargetAmount}
+              setSavingTargetAmount={setSavingTargetAmount}
             />
-            <MuiPickersUtilsProvider utils={DayJsUtils} className={classes.dateSelector}>
-              <KeyboardDatePicker
-                margin="normal"
-                className={classes.savingInitDate}
-                label="Savings start date"
-                format="DD/MM/YYYY"
-                value={savingInitDate}
-                onChange={(date) => {
-                  setSavingInitDate(date);
-                }}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
-              />
-              <KeyboardDatePicker
-                margin="normal"
-                className={classes.savingTargetDate}
-                label="Savings end date"
-                format="DD/MM/YYYY"
-                value={savingTargetDate}
-                onChange={(date) => {
-                  setSavingTargetDate(date);
-                }}
-                KeyboardButtonProps={{
-                  'aria-label': 'change date',
-                }}
-              />
-            </MuiPickersUtilsProvider>
-            <TextField
-              required
-              className={classes.savingFrequency}
-              margin="dense"
-              id="savingFrequency"
-              label="Saving Frequency, e.g.: 1w"
-              type="text"
-              value={savingFrequency}
-              onChange={(e) => {
-                setSavingFrequency(e.target.value);
-              }}
-            />
-            <TextField
-              required
-              className={classes.savingAmountFunc}
-              margin="dense"
-              id="savingAmountFunc"
-              label="Saving Expression, e.g.: n+1"
-              type="text"
-              value={savingAmountFunc}
-              onChange={(e) => {
-                setSavingAmountFunc(e.target.value);
-              }}
-            />
-            <TextField
-              required
-              className={classes.savingAmount}
-              margin="dense"
-              id="savingAmount"
-              label="Saving amount"
-              type="number"
-              value={savingAmount}
-              onChange={(e) => {
-                const n = parseFloat(e.target.value);
-                if (n > 0) setSavingAmount(e.target.value);
-              }}
-            />
-            <TextField
-              required
-              className={classes.savingTargetAmount}
-              margin="dense"
-              id="savingTargetAmount"
-              label="Saving target amount"
-              type="number"
-              value={savingTargetAmount}
-              onChange={(e) => {
-                const n = parseFloat(e.target.value);
-                if (n > 0) setSavingTargetAmount(e.target.value);
-              }}
-            />
-            <SavingsChart
-              serie={ calculateSavingSeries(
-                parseFloat(savingAmount),
-                parseFloat(savingTargetAmount),
-                savingInitDate,
-                savingTargetDate,
-                savingFrequency,
-                savingAmountFunc,
-              ) } />
-          </>
         }
       </DialogContent>
 
