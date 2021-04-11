@@ -227,7 +227,8 @@ function EditAccountDialog({
               type="number"
               value={savingAmount}
               onChange={(e) => {
-                setSavingAmount(e.target.value);
+                const n = parseFloat(e.target.value);
+                if (n > 0) setSavingAmount(e.target.value);
               }}
             />
             <TextField
@@ -239,7 +240,8 @@ function EditAccountDialog({
               type="number"
               value={savingTargetAmount}
               onChange={(e) => {
-                setSavingTargetAmount(e.target.value);
+                const n = parseFloat(e.target.value);
+                if (n > 0) setSavingTargetAmount(e.target.value);
               }}
             />
             <SavingsChart

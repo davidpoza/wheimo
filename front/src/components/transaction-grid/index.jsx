@@ -29,38 +29,49 @@ function TransactionGrid({ transactions }) {
 
   const pagesCount = Math.floor(transactions.length / pageSize);
   return (
-    <div id="ww" className={classes.root}>
+    <div id="ww" className={classes.root}
+      style={{
+        justifyContent: transactions.length === 0
+          ? 'center'
+          : 'space-between',
+      }}>
       <OperationDropdown />
       {
         chunk && transactions
           && <>
-            <List>
-              {
-                chunk.map((transaction, index) => (
-                  <TransactionGridItem
-                    account={transaction.account.name}
-                    accountBalance={transaction.balance}
-                    amount={transaction.amount}
-                    checked={transaction.checked || false}
-                    comments={transaction.comments}
-                    date={transaction.date}
-                    description={transaction.description}
-                    emitterName={transaction.emitterName}
-                    favourite={transaction.favourite}
-                    id={transaction.id}
-                    index={index}
-                    indexInStore={(page - 1) * pageSize + index}
-                    key={index}
-                    receiverName={transaction.receiverName}
-                    tags={transaction.tags}
-                    valueDate={transaction.valueDate}
-                  />
-                ))
-              }
-            </List>
+            {
+              transactions.length > 0
+                ? <List>
+                    {
+                      chunk.map((transaction, index) => (
+                        <TransactionGridItem
+                          account={transaction.account.name}
+                          accountBalance={transaction.balance}
+                          amount={transaction.amount}
+                          checked={transaction.checked || false}
+                          comments={transaction.comments}
+                          date={transaction.date}
+                          description={transaction.description}
+                          emitterName={transaction.emitterName}
+                          favourite={transaction.favourite}
+                          id={transaction.id}
+                          index={index}
+                          indexInStore={(page - 1) * pageSize + index}
+                          key={index}
+                          receiverName={transaction.receiverName}
+                          tags={transaction.tags}
+                          valueDate={transaction.valueDate}
+                        />
+                      ))
+                    }
+                  </List>
+                : <div>
+                    No results found
+                  </div>
+            }
             <div className={classes.bottomBar}>
               <div className={classes.resultsCounter}>
-                {`${transactions.length} results found`}
+                { transactions.length !== 0 && `${transactions.length} results found`}
               </div>
               <Pagination
                 className={classes.pagination}
