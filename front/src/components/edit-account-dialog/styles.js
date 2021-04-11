@@ -4,6 +4,10 @@ export default makeStyles(() => ({
   root: {
 
   },
+  additionalConfig: {
+    fontWeight: 'normal',
+    fontSize: '1.2em',
+  },
   comments: {
     marginBottom: '2em',
   },
@@ -41,6 +45,13 @@ export default makeStyles(() => ({
     width: '250px',
   },
   savingTargetAmount: {
+    marginLeft: '2em',
+    width: '250px',
+  },
+  accessId: {
+    width: '250px',
+  },
+  accessPassword: {
     marginLeft: '2em',
     width: '250px',
   },

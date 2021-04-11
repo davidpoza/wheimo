@@ -13,6 +13,7 @@ import Draggable from 'react-draggable';
 // own
 import useStyles from './styles';
 import PiggyConfig from './_children/piggy-config';
+import OpbkConfig from './_children/opbk-config';
 
 import {
   editDialogOpen as openAction,
@@ -55,6 +56,9 @@ function EditAccountDialog({
   const [savingTargetDate, setSavingTargetDate] = useState();
   const [savingAmountFunc, setSavingAmountFunc] = useState();
   const [savingFrequency, setSavingFrequency] = useState();
+  const [accessId, setAccessId] = useState();
+  const [accessPassword, setAccessPassword] = useState();
+  const [settings, setSettings] = useState();
 
   function handleClose() {
     changeUIIndex(undefined);
@@ -74,6 +78,9 @@ function EditAccountDialog({
       setSavingTargetAmount(accounts[index].savingTargetAmount);
       setSavingAmountFunc(accounts[index].savingAmountFunc);
       setSavingFrequency(accounts[index].savingFrequency);
+      setAccessId(accounts[index].accessId);
+      setAccessPassword(accounts[index].accessPassword);
+      setSettings(accounts[index].settings);
     }
   }
 
@@ -84,6 +91,7 @@ function EditAccountDialog({
   }, [index]);
 
   async function processData() {
+    console.log('-->', settings);
     const data = {
       name: name || undefined,
       description: description || undefined,
@@ -95,6 +103,9 @@ function EditAccountDialog({
       savingTargetDate: savingTargetDate || undefined,
       savingAmountFunc: savingAmountFunc || undefined,
       savingFrequency: savingFrequency || undefined,
+      accessId: accessId || undefined,
+      accessPassword: accessPassword || undefined,
+      settings: settings || undefined,
     };
 
     if (index !== undefined) {
@@ -102,6 +113,8 @@ function EditAccountDialog({
     }
     setName('');
     setDescription('');
+    setAccessId('');
+    setAccessPassword('');
     close();
     changeUIIndex(undefined);
   }
@@ -173,6 +186,17 @@ function EditAccountDialog({
               setSavingAmount={setSavingAmount}
               savingTargetAmount={savingTargetAmount}
               setSavingTargetAmount={setSavingTargetAmount}
+            />
+        }
+        {
+          type === 'opbk'
+            && <OpbkConfig
+              accessId={accessId}
+              setAccessId={setAccessId}
+              accessPassword={accessPassword}
+              setAccessPassword={setAccessPassword}
+              settings={settings}
+              setSettings={setSettings}
             />
         }
       </DialogContent>

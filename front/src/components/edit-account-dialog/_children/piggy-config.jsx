@@ -23,6 +23,7 @@ export default function PiggyConfig({
   const classes = useStyles();
   return (
     <>
+      <h2 className={classes.additionalConfig}>Piggy bank config</h2>
       <MuiPickersUtilsProvider utils={DayJsUtils} className={classes.dateSelector}>
         <KeyboardDatePicker
           margin="normal"

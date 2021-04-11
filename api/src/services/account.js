@@ -32,6 +32,7 @@ export default class AccountService {
       savingTargetAmount: a.savingTargetAmount,
       savingAmountFunc: a.savingAmountFunc,
       savingFrequency: a.savingFrequency,
+      settings: a.settings,
       lastSyncCount: a.lastSyncCount,
       createdAt: a.createdAt,
       updatedAt: a.updatedAt,
