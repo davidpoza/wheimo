@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import List from '@material-ui/core/List';
 import Pagination from '@material-ui/lab/Pagination';
 
@@ -8,8 +9,11 @@ import TransactionGridItem from '../transaction-grid-item';
 import useStyles from './styles';
 import useWindowSize from '../../hooks/use-window-size';
 import OperationDropdown from '../operation-dropdown';
+import {
+  setPage as setPageAction,
+} from '../../actions/transaction';
 
-function TransactionGrid({ transactions }) {
+function TransactionGrid({ transactions, page = 1, setPage }) {
   const classes = useStyles();
   const windowSize = useWindowSize();
   const HEADER_FOOTER_SIZE = 64 + 94 + 64 + 56 + 90; // TODO: this value should be calculated
@@ -17,7 +21,6 @@ function TransactionGrid({ transactions }) {
   const pageSize = windowSize
     ? Math.round((windowSize.height - HEADER_FOOTER_SIZE) / ITEM_SIZE)
     : 0;
-  const [page, setPage] = useState(1);
 
   function handlePageChange(event, value) {
     setPage(value);
@@ -89,6 +92,18 @@ function TransactionGrid({ transactions }) {
 
 TransactionGrid.propTypes = {
   transactions: PropTypes.array,
+  page: PropTypes.number,
+  setPage: PropTypes.func,
 };
 
-export default TransactionGrid;
+const mapStateToProps = (state) => ({
+  page: state.transaction.page,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  setPage: (p) => {
+    dispatch(setPageAction(p));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TransactionGrid);

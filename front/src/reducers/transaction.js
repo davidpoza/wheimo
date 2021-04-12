@@ -6,6 +6,7 @@ import types from '../actions/types';
 const initialState = {
   isLoading: false,
   fetchedTransactions: [],
+  page: 1,
   expensesByTag: {},
   createEditDialogOpen: false,
   detailsDialogOpen: false,
@@ -155,6 +156,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         showCharts: !state.showCharts,
+      };
+    case types.TRANSACTIONS_SET_PAGE:
+      return {
+        ...state,
+        page: action.payload,
       };
     default:
       return state;

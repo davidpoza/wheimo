@@ -15,6 +15,9 @@ export default makeStyles(() => ({
       padding: '0',
     },
   },
+  search: {
+
+  },
   chartsSwitch: {
     alignSelf: 'normal',
     '& > label': {

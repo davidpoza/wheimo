@@ -126,17 +126,22 @@ export default class TransactionService {
    * @param {string} param.from - includes transaction from date in format YYYY-MM-DD
    * @param {string} param.to - includes transaction to date in format YYYY-MM-DD
    * @param {string} param.sort - asc/desc sorting by date
+   * @param {string} param.search - search term
    */
-  async findAll({ accountId, userId, tags, from, to, limit, offset, sort }) {
+  async findAll({ accountId, userId, tags, from, to, limit, offset, sort, search }) {
+    console.log("_>",search);
     const dateFilter = (from || to) ? {} : undefined;
     if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
     if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
+    const searchFilter = search ? {} : undefined;
+    if (search) searchFilter[this.sequelizeOp.substring] = search;
 
     let filter = pickBy({ // pickBy (by default) removes undefined keys
       accountId,
       '$tags.id$': tags,
       '$account.user_id$': userId,
       'date': dateFilter,
+      'description': searchFilter,
     });
 
     const transactions = await this.transactionModel.findAll(

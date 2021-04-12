@@ -3,10 +3,10 @@ import * as transactionApi from '../api-client/transaction';
 import types from './types';
 
 export const fetchAll = createAsyncAction('TRANSACTIONS', async (token, {
-  offset, limit, from, to, accountId, tags, sort,
+  offset, limit, from, to, accountId, tags, sort, search,
 }) => {
   const res = await transactionApi.fetchAll(token, {
-    offset, limit, from, to, accountId, tags, sort,
+    offset, limit, from, to, accountId, tags, sort, search,
   });
   return res;
 });
@@ -61,4 +61,9 @@ export const detailsDialogClose = () => ({
 
 export const toggleCharts = () => ({
   type: types.TRANSACTIONS_TOGGLE_CHARTS,
+});
+
+export const setPage = (page) => ({
+  type: types.TRANSACTIONS_SET_PAGE,
+  payload: page,
 });
