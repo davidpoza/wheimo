@@ -14,8 +14,8 @@ export default function OpbkConfig({
 
   function composeSettingsObject({ c, p }) {
     return ({
-      contract: c || settings.contract,
-      product: p || settings.product,
+      contract: c || settings?.contract,
+      product: p || settings?.product,
     });
   }
 
@@ -54,7 +54,7 @@ export default function OpbkConfig({
         id="contractNumber"
         label="Contract Number"
         type="password"
-        value={settings.contract}
+        value={settings?.contract}
         onChange={(e) => {
           setSettings(composeSettingsObject({ c: e.target.value }));
         }}
@@ -67,7 +67,7 @@ export default function OpbkConfig({
         id="product"
         label="Product Id"
         type="password"
-        value={settings.product}
+        value={settings?.product}
         onChange={(e) => {
           setSettings(composeSettingsObject({ p: e.target.value }));
         }}
