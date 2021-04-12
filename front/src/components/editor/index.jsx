@@ -29,13 +29,13 @@ export default function Editor({
             id="comments"
             type="text"
             value={content}
-            rows={18}
+            rows={10}
             variant="outlined"
             onChange={(e) => { setContent(e.target.value); }}
             fullWidth
           />
-        : <ReactMarkdown plugins={[gfm]} >
-            {content}
+        : <ReactMarkdown className={content ? classes.preview : classes.empty } plugins={[gfm]} >
+            { content || 'double click to edit' }
           </ReactMarkdown>
     }
     </div>

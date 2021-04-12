@@ -8,6 +8,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import dayjs from 'dayjs';
 
 // own
 import useStyles from './styles';
@@ -22,6 +23,7 @@ import {
   contextMenuChangeIndex as changeIndexAction,
   contextMenuChangeId as changeIdAction,
 } from '../../actions/ui';
+import Tags from '../tags';
 
 function PaperComponent(props) {
   return (
@@ -45,9 +47,11 @@ function DetailsDialog({
   changeUIIndex,
 }) {
   const classes = useStyles();
-  const [description, setDescription] = useState('');
   const [comments, setComments] = useState('');
-
+  const {
+    description, amount, date, tags,
+  } = transactions[index] || {};
+  const account = transactions[index]?.account?.name;
   function setInitialState() {
     if (transactions[index]) {
       setComments(transactions[index]?.comments);
@@ -55,7 +59,6 @@ function DetailsDialog({
   }
 
   function clearForm() {
-    setDescription('');
     setComments('');
   }
 
@@ -74,7 +77,6 @@ function DetailsDialog({
 
   async function processData() {
     const data = {
-      // description: description || undefined,
       comments: comments || undefined,
     };
 
@@ -96,7 +98,17 @@ function DetailsDialog({
       <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
         Transaction details
       </DialogTitle>
-      <DialogContent>
+      <DialogContent className={classes.root}>
+        <Tags tags={tags} />
+        <h2 className={classes.h2}>Amount:</h2>
+        {amount}€
+        <h2 className={classes.h2}>Date:</h2>
+        {dayjs(date).format('dddd DD MMM YYYY')}
+        <h2 className={classes.h2}>Description:</h2>
+        {description}
+        <h2 className={classes.h2}>Account:</h2>
+        {account}
+        <h2 className={classes.h2}>Notes:</h2>
         <Editor content={comments} setContent={ (_content) => { setComments(_content); }} />
       </DialogContent>
 
