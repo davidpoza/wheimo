@@ -10,9 +10,15 @@ export default makeStyles(() => ({
     },
   },
   dateSelector: {
-    width: '9em',
+    width: '7em',
+    '& .MuiIconButton-root': {
+      padding: '0',
+    },
   },
   chartsSwitch: {
     alignSelf: 'normal',
+    '& > label': {
+      margin: 0,
+    },
   },
 }));

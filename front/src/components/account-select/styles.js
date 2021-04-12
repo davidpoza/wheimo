@@ -5,7 +5,7 @@ export default makeStyles(() => ({
 
   },
   accountSelector: {
-    width: '14em',
+    width: '10em',
     marginBottom: '6px',
   },
 }));

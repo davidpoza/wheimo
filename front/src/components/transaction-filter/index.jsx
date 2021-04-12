@@ -86,7 +86,8 @@ function TransactionFilter({ handleChangeFilter, toggleCharts, showCharts = fals
       <FormGroup row className={classes.chartsSwitch}>
         <FormControlLabel
           control={<Switch checked={showCharts} onChange={toggleCharts} name="incoming" />}
-          label="Show charts"
+          labelPlacement="bottom"
+          label="charts"
         />
       </FormGroup>
 </div>
