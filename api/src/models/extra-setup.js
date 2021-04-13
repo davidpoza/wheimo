@@ -1,6 +1,6 @@
 // this file will define associations after all models have been defined.function applyExtraSetup(sequelize) {
 export default function applyExtraSetup(sequelize) {
-  const { users, accounts, transactions, tags, rules, recurrents, budgets } = sequelize.models;
+  const { users, accounts, transactions, tags, rules, recurrents, budgets, attachments } = sequelize.models;
 
   accounts.hasMany(transactions);
   accounts.hasMany(recurrents);
@@ -26,4 +26,5 @@ export default function applyExtraSetup(sequelize) {
 
   budgets.belongsTo(tags);
 
+  attachments.belongsTo(transactions);
 }
