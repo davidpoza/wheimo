@@ -18,6 +18,7 @@ export const definition = [
     },
   }, {
     timestamps:true,
+    underscored: true,
   }
 ];
 

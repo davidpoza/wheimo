@@ -16,6 +16,7 @@ import RuleService from '../services/rule.js';
 import RecurrentService from '../services/recurrent.js';
 import BudgetService from '../services/budget.js';
 import OpenbankImporter from '../services/importers/openbank.js';
+import AttachmentService from '../services/attachment.js';
 
 export default async ({ expressApp }) => {
   const sequelize = await sequelizeLoader.newConnection();
@@ -33,6 +34,7 @@ export default async ({ expressApp }) => {
     RecurrentService,
     BudgetService,
     OpenbankImporter,
+    AttachmentService,
     AES,
     dayjs
     //<-- add scheduler as last dependency

@@ -11,6 +11,7 @@ export default ({
   RuleService,
   BudgetService,
   RecurrentService,
+  AttachmentService,
   OpenbankImporter,
   AES,
   dayjs
@@ -51,6 +52,9 @@ export default ({
 
   Container.set('recurrentService', new RecurrentService());
   logger.info('💉 recurrent payments service instance injected');
+
+  Container.set('attachmentService', new AttachmentService());
+  logger.info('💉 attachments service instance injected');
 
   Container.set('OpenbankImporter', OpenbankImporter);
   logger.info('💉 openbank importer injected');

@@ -25,6 +25,7 @@ queryInterface.dropTable('rules');
 queryInterface.dropTable('tagged');
 queryInterface.dropTable('appliedRules');
 queryInterface.dropTable('budgets');
+queryInterface.dropTable('attachments');
 
 queryInterface.createTable(...userDefinition);
 queryInterface.createTable(...accountDefinition);
