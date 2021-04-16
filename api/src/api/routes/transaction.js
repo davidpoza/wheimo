@@ -192,7 +192,9 @@ export default (app) => {
       const userId = req.user.id;
       const transactionService = Container.get('transactionService');
       try {
-        await transactionService.deleteById(id, userId);
+        if (!await transactionService.deleteById(id, userId)) {
+          return res.sendStatus(404);
+        }
         return res.sendStatus(204);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);

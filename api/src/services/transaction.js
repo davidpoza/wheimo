@@ -218,6 +218,7 @@ export default class TransactionService {
       if (affectedRows === 0) {
         throw new Error('Transaction does not exist');
       }
+      return transaction;
     }
     return null;
   }

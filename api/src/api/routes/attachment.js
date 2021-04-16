@@ -9,7 +9,7 @@ const route = Router();
 export default (app) => {
   const loggerInstance = Container.get('loggerInstance');
 
-  app.use('/attachment', route);
+  app.use('/attachments', route);
 
   route.post('/',
     middlewares.isAuth,
@@ -101,40 +101,23 @@ export default (app) => {
       }
     });
 
-  // get totals for each tag of given transactions
-  route.get('/tags',
-  middlewares.isAuth,
-  async (req, res, next) => {
-    const userId = req.user.id;
-    const { accountId, from, to } = req.query;
-    const transactionService = Container.get('transactionService');
-    try {
-      const transactions = await transactionService.calculateExpensesByTags({ accountId, userId, from, to });
-      return res.status(200).json(transactions);
-    } catch (err) {
-      loggerInstance.error('🔥 error: %o', err);
-      return next(err);
-    }
-  });
-
   route.get('/:id?',
     middlewares.isAuth,
     async (req, res, next) => {
       const { id } = req.params
       const userId = req.user.id;
-      const { accountId, tags, limit, sort, offset, from, to, search } = req.query;
-      const tagsArray = tags ? tags.split(',').map((id) => parseInt(id, 10)) : undefined;
-      const transactionService = Container.get('transactionService');
+      const { limit, sort, offset, from, to, search } = req.query;
+      const attachmentService = Container.get('attachmentService');
       try {
         if (id) {
-          const transaction = await transactionService.findById({ id, userId });
-          if (!transaction) {
+          const attachment = await attachmentService.findById({ id, userId });
+          if (!attachment) {
             return res.sendStatus(404);
           }
-          return res.status(200).json(transaction);
+          return res.status(200).json(attachment);
         }
-        const transactions = await transactionService.findAll({ accountId, userId, tags: tagsArray, from, to, limit, offset, sort, search });
-        return res.status(200).json(transactions);
+        const attachments = await attachmentService.findAll({ userId, from, to, limit, offset, sort, search });
+        return res.status(200).json(attachments);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
         return next(err);
@@ -148,7 +131,9 @@ export default (app) => {
       const userId = req.user.id;
       const attachmentService = Container.get('attachmentService');
       try {
-        await attachmentService.deleteById(id, userId);
+        if (!await attachmentService.deleteById(id, userId)) {
+          return res.sendStatus(404);
+        }
         return res.sendStatus(204);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
