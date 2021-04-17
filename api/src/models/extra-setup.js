@@ -16,6 +16,7 @@ export default function applyExtraSetup(sequelize) {
 
   transactions.belongsTo(accounts);
   transactions.belongsToMany(tags, { through: 'tagged'  });
+  transactions.hasMany(attachments);
 
   users.hasMany(accounts);
   users.hasMany(rules);

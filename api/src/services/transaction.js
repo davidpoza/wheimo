@@ -45,10 +45,19 @@ export default class TransactionService {
         createdAt: transaction.createdAt,
         updatedAt: transaction.updatedAt,
         account: transaction.account,
-        tags: transaction.tags.map(tag => ({
-          id: tag.id,
-          name: tag.name
-        }))
+        attachments: transaction.attachments
+          ? transaction.attachments.map(attachment => ({
+            id: attachment.id,
+            filename: attachment.filename,
+            description: attachment.description
+          }))
+          : [],
+        tags: transaction.tags
+          ? transaction.tags.map(tag => ({
+            id: tag.id,
+            name: tag.name
+          }))
+          : [],
       });
     }
     return null;
@@ -129,7 +138,6 @@ export default class TransactionService {
    * @param {string} param.search - search term
    */
   async findAll({ accountId, userId, tags, from, to, limit, offset, sort, search }) {
-    console.log("_>",search);
     const dateFilter = (from || to) ? {} : undefined;
     if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
     if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
@@ -148,7 +156,8 @@ export default class TransactionService {
       {
         include: [
           { model: this.sequelize.models.accounts, as: 'account', duplicating: false },
-          { model: this.sequelize.models.tags, as: 'tags', duplicating: false }
+          { model: this.sequelize.models.tags, as: 'tags', duplicating: false },
+          { model: this.sequelize.models.attachments }
         ],
         limit,
         offset,
@@ -174,6 +183,7 @@ export default class TransactionService {
       include: [
         { model: this.sequelize.models.tags },
         { model: this.sequelize.models.accounts },
+        { model: this.sequelize.models.attachments }
       ]
     });
     if (!transaction) {
