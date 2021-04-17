@@ -26,7 +26,7 @@ import {
   contextMenuChangeId as changeIdAction,
 } from '../../actions/ui';
 import Tags from '../tags';
-import Attachments from './_children/attachments';
+import Attachments from './_children/attachment';
 
 function PaperComponent(props) {
   return (
@@ -131,11 +131,11 @@ function DetailsDialog({
       </DialogContent>
 
       <DialogActions>
-        <span>
+        <span className={classes.attachmentButton}>
           <input accept="image/*" className={classes.attachmentInput} id="icon-button-file" type="file" />
           <label htmlFor="icon-button-file">
             <IconButton color="primary" aria-label="Attach" component="span" className={classes.attachmentButton}>
-              <AttachFileIcon /> Attach file
+              <AttachFileIcon /> ATTACH FILE
             </IconButton>
           </label>
         </span>

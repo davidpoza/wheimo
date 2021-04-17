@@ -13,12 +13,16 @@ export default makeStyles(() => ({
   },
   itemDecoration: {
     verticalAlign: 'middle',
+    cursor: 'pointer',
   },
   createdAt: {
     fontSize: '0.9em',
     color: 'grey',
     marginLeft: '1em',
     fontStyle: 'italic',
+  },
+  link: {
+    textDecoration: 'none',
   },
 
 }));

@@ -15,7 +15,9 @@ export const definition = [
       references: {
         model: 'transactions',
         key: 'id'
-      }
+      },
+      onDelete: 'cascade',
+      onUpdate: 'cascade'
     },
   }, {
     timestamps:true,

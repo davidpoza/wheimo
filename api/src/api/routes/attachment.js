@@ -3,6 +3,8 @@ import { Container } from 'typedi';
 import { celebrate, Joi } from 'celebrate';
 import multer from 'multer';
 import config from '../../config/config.js';
+import fs from 'fs';
+import path from 'path';
 
 import middlewares from '../middlewares/index.js';
 
@@ -94,12 +96,19 @@ export default (app) => {
     async (req, res, next) => {
       const { id } = req.params
       const userId = req.user.id;
-      const { limit, sort, offset, from, to, search } = req.query;
+      const { limit, sort, offset, from, to, search, download } = req.query;
       const attachmentService = Container.get('attachmentService');
       try {
         if (id) {
           const attachment = await attachmentService.findById({ id, userId });
           if (!attachment) {
+            return res.sendStatus(404);
+          }
+          if (download) {
+            const path = `${config.uploadDir}/${attachment.filename}`;
+            if(fs.existsSync(path)) {
+              return res.download(path, `attachment_${attachment.id}_${attachment.description}.${attachment.type === 'image/jpeg' ? 'jpg' : 'pdf'}`);
+            }
             return res.sendStatus(404);
           }
           return res.status(200).json(attachment);
