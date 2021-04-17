@@ -38,7 +38,10 @@ export default (app) => {
         filename = attachmentService.validateUpload(req.file);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err.message);
-        return res.status(400).send(err.message);
+        return res.status(400).json({
+          error: 'Bad Request',
+          message: err.message
+        });
       }
 
       try {

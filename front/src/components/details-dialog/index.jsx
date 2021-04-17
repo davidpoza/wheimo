@@ -100,14 +100,18 @@ function DetailsDialog({
       </DialogTitle>
       <DialogContent className={classes.root}>
         <Tags tags={tags} />
-        <h2 className={classes.h2}>Amount:</h2>
-        {amount}€
-        <h2 className={classes.h2}>Date:</h2>
-        {dayjs(date).format('dddd DD MMM YYYY')}
-        <h2 className={classes.h2}>Description:</h2>
-        {description}
-        <h2 className={classes.h2}>Account:</h2>
-        {account}
+        <p className={classes.item}>
+          <h2 className={classes.h2}>{account} </h2>
+          <span>{amount}€</span>
+        </p>
+        <p className={classes.item}>
+          <h2 className={classes.h2}>Date: </h2>
+          <span>{dayjs(date).format('dddd DD MMM YYYY')}</span>
+        </p>
+        <p className={classes.item}>
+          <h2 className={classes.h2}>Description: </h2>
+          <span>{description}</span>
+        </p>
         <h2 className={classes.h2}>Notes:</h2>
         <Editor content={comments} setContent={ (_content) => { setComments(_content); }} />
       </DialogContent>

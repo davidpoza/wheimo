@@ -8,6 +8,8 @@ export default makeStyles(() => ({
   h2: {
     fontWeight: 'normal',
     fontSize: '1.2em',
+    margin: '0.8em 0 0.3em 0',
+    textTransform: 'capitalize',
   },
   comments: {
     marginBottom: '2em',
@@ -28,5 +30,11 @@ export default makeStyles(() => ({
   },
   addButton: {
     maxHeight: '60px',
+  },
+  item: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'baseline',
+    borderBottom: '1px solid #dedfe0',
   },
 }));
