@@ -1,9 +1,12 @@
 import { Router } from 'express';
 import { Container } from 'typedi';
 import { celebrate, Joi } from 'celebrate';
+import multer from 'multer';
+import config from '../../config/config.js';
 
 import middlewares from '../middlewares/index.js';
 
+const multipartMiddleware = multer({ dest: config.uploadDir })
 const route = Router();
 
 export default (app) => {
@@ -13,21 +16,31 @@ export default (app) => {
 
   route.post('/',
     middlewares.isAuth,
+    multipartMiddleware.single('attachment'),
     celebrate({
       body: Joi.object({
-        filename: Joi.string().required(),
+        // filename: Joi.string().required(),
         transactionId: Joi.number().required(),
         description: Joi.string(),
       }),
     }),
     async (req, res, next) => {
       const attachmentService = Container.get('attachmentService');
+
       const {
-        filename,
         description,
         transactionId,
        } = req.body;
       const userId = req.user.id;
+      let filename;
+
+      try {
+        filename = attachmentService.validateUpload(req.file);
+      } catch (err) {
+        loggerInstance.error('🔥 error: %o', err.message);
+        return res.status(400).send(err.message);
+      }
+
       try {
         const attachment = await attachmentService.create(
           {
@@ -36,15 +49,9 @@ export default (app) => {
             transactionId
           }
         );
-        if (!attachment) {
-          res.sendStatus(403);
-        }
         res.status(201).json(attachment);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
-        if (err.name === 'SequelizeUniqueConstraintError') {
-          return res.sendStatus(400);
-        }
         return next(err);
       }
     });
