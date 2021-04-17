@@ -67,3 +67,12 @@ export const setPage = (page) => ({
   type: types.TRANSACTIONS_SET_PAGE,
   payload: page,
 });
+
+export const addAttachment = createAsyncAction('TRANSACTIONS_ADD_ATTACHMENT', async (token, {
+  transactonId, description, attachment,
+}) => {
+  const res = await transactionApi.addAttachment(token, {
+    transactonId, description, attachment,
+  });
+  return res;
+});

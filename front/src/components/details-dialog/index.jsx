@@ -27,6 +27,7 @@ import {
 } from '../../actions/ui';
 import Tags from '../tags';
 import Attachments from './_children/attachment';
+import { addAttachment } from '../../api-client/transaction'; // borrar, solo es una prueba
 
 function PaperComponent(props) {
   return (
@@ -51,16 +52,17 @@ function DetailsDialog({
 }) {
   const classes = useStyles();
   const [comments, setComments] = useState('');
+  const [files, setFiles] = useState();
   const {
     description, amount, date, tags, attachments,
   } = transactions[index] || {};
   const account = transactions[index]?.account?.name;
+
   function setInitialState() {
     if (transactions[index]) {
       setComments(transactions[index]?.comments);
     }
   }
-
   function clearForm() {
     setComments('');
   }
@@ -70,6 +72,16 @@ function DetailsDialog({
       setInitialState();
     }
   }, [index]);
+
+  function handleOnAddFile(e) {
+    const attachmentsData = new FormData();
+    attachmentsData.append('attachment', e.target.files[0]);
+    attachmentsData.append('transactionId', 33);
+    attachmentsData.append('description', 'prueba');
+    console.log(e.target.files);
+    console.log(attachmentsData);
+    addAttachment(user.token, attachmentsData);
+  }
 
   function handleClose() {
     clearForm();
@@ -132,7 +144,13 @@ function DetailsDialog({
 
       <DialogActions>
         <span className={classes.attachmentButton}>
-          <input accept="image/*" className={classes.attachmentInput} id="icon-button-file" type="file" />
+          <input
+            accept="image/*"
+            className={classes.attachmentInput}
+            id="icon-button-file"
+            type="file"
+            onChange={handleOnAddFile}
+          />
           <label htmlFor="icon-button-file">
             <IconButton color="primary" aria-label="Attach" component="span" className={classes.attachmentButton}>
               <AttachFileIcon /> ATTACH FILE
