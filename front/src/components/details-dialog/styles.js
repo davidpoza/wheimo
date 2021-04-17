@@ -37,4 +37,11 @@ export default makeStyles(() => ({
     alignItems: 'baseline',
     borderBottom: '1px solid #dedfe0',
   },
+  attachmentInput: {
+    display: 'none',
+  },
+  attachmentButton: {
+    fontSize: '1em',
+    marginRight: 'auto',
+  },
 }));

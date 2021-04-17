@@ -32,10 +32,9 @@ export default (app) => {
         transactionId,
        } = req.body;
       const userId = req.user.id;
-      let filename;
 
       try {
-        filename = attachmentService.validateUpload(req.file);
+        attachmentService.validateUpload(req.file);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err.message);
         return res.status(400).json({
@@ -43,13 +42,14 @@ export default (app) => {
           message: err.message
         });
       }
-
       try {
         const attachment = await attachmentService.create(
           {
-            filename,
+            userId,
+            filename: req.file.filename,
             description,
-            transactionId
+            transactionId,
+            type: req.file.mimetype,
           }
         );
         res.status(201).json(attachment);

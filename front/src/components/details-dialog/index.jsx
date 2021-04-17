@@ -9,6 +9,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import dayjs from 'dayjs';
+import IconButton from '@material-ui/core/IconButton';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 
 // own
 import useStyles from './styles';
@@ -24,6 +26,7 @@ import {
   contextMenuChangeId as changeIdAction,
 } from '../../actions/ui';
 import Tags from '../tags';
+import Attachments from './_children/attachments';
 
 function PaperComponent(props) {
   return (
@@ -49,7 +52,7 @@ function DetailsDialog({
   const classes = useStyles();
   const [comments, setComments] = useState('');
   const {
-    description, amount, date, tags,
+    description, amount, date, tags, attachments,
   } = transactions[index] || {};
   const account = transactions[index]?.account?.name;
   function setInitialState() {
@@ -112,11 +115,30 @@ function DetailsDialog({
           <h2 className={classes.h2}>Description: </h2>
           <span>{description}</span>
         </p>
-        <h2 className={classes.h2}>Notes:</h2>
+        <p className={classes.item}>
+          <h2 className={classes.h2}>Notes:</h2>
+        </p>
         <Editor content={comments} setContent={ (_content) => { setComments(_content); }} />
+        {
+          attachments && attachments.length > 0
+            && <>
+              <p className={classes.item}>
+                <h2 className={classes.h2}>Attachments: </h2>
+              </p>
+              <Attachments files={attachments} />
+            </>
+        }
       </DialogContent>
 
       <DialogActions>
+        <span>
+          <input accept="image/*" className={classes.attachmentInput} id="icon-button-file" type="file" />
+          <label htmlFor="icon-button-file">
+            <IconButton color="primary" aria-label="Attach" component="span" className={classes.attachmentButton}>
+              <AttachFileIcon /> Attach file
+            </IconButton>
+          </label>
+        </span>
         <Button onClick={handleClose} color="primary">
           Cancel
         </Button>

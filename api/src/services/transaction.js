@@ -49,7 +49,9 @@ export default class TransactionService {
           ? transaction.attachments.map(attachment => ({
             id: attachment.id,
             filename: attachment.filename,
-            description: attachment.description
+            description: attachment.description,
+            type: attachment.type,
+            createdAt: attachment.createdAt
           }))
           : [],
         tags: transaction.tags

@@ -24,6 +24,8 @@ export default class AttachmentService {
         id: attachment.id,
         filename: attachment.filename,
         description: attachment.description,
+        type: attachment.type,
+        createdAt: attachment.createdAt,
       });
     }
     return null;
@@ -41,6 +43,7 @@ export default class AttachmentService {
     userId,
     filename,
     description,
+    type
   }) {
     try {
       const transaction = await this.transactionService.findById({ id: transactionId, userId });
@@ -50,6 +53,7 @@ export default class AttachmentService {
             transactionId,
             filename,
             description,
+            type
           });
         return (this.getTemplate(attachment));
       }
@@ -163,12 +167,12 @@ export default class AttachmentService {
 
   /**
    * @param {Object} file - multer middleware object
-   * @returns {String} - uploaded file name
+   * @returns {boolean}
    */
   validateUpload(file) {
     if (!file || file.fieldname !== 'attachment') throw new Error('Attachment field is required');
-    if (!['image/jpeg'].includes(file.mimetype)) throw new Error('Attachment is not jpg');
+    if (!['image/jpeg', 'application/pdf'].includes(file.mimetype)) throw new Error('Attachment is not jpg or pdf');
     if ((file.size / 1024 / 1024) > config.uploadMaxSize) throw new Error('Attachment file size is too big');
-    return file.filename;
+    return true;
   }
 };
