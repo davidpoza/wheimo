@@ -30,7 +30,7 @@ export default class AttachmentService {
   }
 
   /**
-    * It only creates attachment for owned transactions.
+    * It only creates attachment for owned attachment: attachment->transaction->account->userId.
     * @param {Object} param
     * @param {string} param.transactionId
     * @param {string} param.filename
@@ -61,7 +61,7 @@ export default class AttachmentService {
   }
 
   /**
-   * It only selects owned transactions->accounts
+   * It only selects owned: attachment->transaction->account->userId
    * @param {Object} param
    * @param {number} param.transactionId - filter by account id
    * @param {number} param.userId - filter by user id
@@ -101,7 +101,7 @@ export default class AttachmentService {
   }
 
   /**
-   * It only selects owned transactions->accounts
+   * It only selects owned: attachment->transaction->account->userId
    */
   async findById({ id, userId, entity = false, admin = false }) {
     const filter = pickBy({ // pickBy (by default) removes undefined keys
@@ -130,23 +130,18 @@ export default class AttachmentService {
 
 
   /**
-   * It only updates owned transactions->accounts
+   * It only updates owned: attachment->transaction->account->userId
    */
   async updateById(id, userId, values) {
-    let transaction = this.findById({ id, userId });
-    if (transaction) {
-      const affectedRows = await this.transactionModel.update(values, { where: { id } });
+    let attachment = this.findById({ id, userId });
+    if (attachment) {
+      const affectedRows = await this.attachmentModel.update(values, { where: { id } });
       if (affectedRows === 0) {
         return null;
       }
-      transaction = await this.findById({ id, userId, entity: true });
+      attachment = await this.findById({ id, userId, entity: true });
 
-      if (values.tags) {
-        await transaction.setTags(values.tags);
-        transaction = await this.findById({ id });
-      }
-
-      return this.getTemplate(transaction);
+      return this.getTemplate(attachment);
     }
     return null;
   }

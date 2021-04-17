@@ -57,44 +57,22 @@ export default (app) => {
       }),
     }),
     async (req, res, next) => {
-      const transactionService = Container.get('transactionService');
+      const attachmentService = Container.get('attachmentService');
       const { id } = req.params;
       const userId = req.user.id;
       const {
-        accountId,
-        amount,
-        assCard,
-        balance,
-        comments,
-        date,
-        description,
-        emitterName,
-        favourite,
-        receiverName,
-        tags,
-        valueDate,
+        description
       } = req.body;
       try {
-        const transaction = await transactionService.updateById(id, userId,
+        const attachment = await attachmentService.updateById(id, userId,
           {
-            accountId,
-            amount,
-            assCard,
-            balance,
-            comments,
-            date,
-            description,
-            emitterName,
-            favourite,
-            receiverName,
-            tags,
-            valueDate,
+           description
           }
         );
-        if (!transaction) {
+        if (!attachment) {
           res.sendStatus(404);
         }
-        res.status(200).json(transaction);
+        res.status(200).json(attachment);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
         return next(err);
