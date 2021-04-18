@@ -133,7 +133,7 @@ function DetailsDialog({
         </p>
         <Editor content={comments} setContent={ (_content) => { setComments(_content); }} />
         {
-          attachments && attachments.length > 0
+          ((attachments && attachments.length > 0) || (isUploadingAttachment))
             && <>
               <p className={classes.item}>
                 <h2 className={classes.h2}>Attachments: </h2>
