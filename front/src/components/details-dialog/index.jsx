@@ -150,7 +150,7 @@ function DetailsDialog({
       <DialogActions>
         <span className={classes.attachmentButton}>
           <input
-            accept="image/*"
+            accept=".jpg,.pdf"
             className={classes.attachmentInput}
             id="icon-button-file"
             type="file"
