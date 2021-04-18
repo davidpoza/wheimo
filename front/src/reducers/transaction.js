@@ -1,5 +1,5 @@
 import {
-  fetchAll, create, remove, update, fetchExpensesByTag, addAttachment,
+  fetchAll, create, remove, update, fetchExpensesByTag, addAttachment, removeAttachment,
 } from '../actions/transaction';
 import types from '../actions/types';
 
@@ -18,6 +18,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   const fetchedTransactionsCopy = [...state.fetchedTransactions];
+  const transactionIndex = fetchedTransactionsCopy.map((t) => t.id).indexOf(action.payload?.transactionId);
   switch (action.type) {
     case String(fetchAll.pending):
       return {
@@ -171,8 +172,6 @@ const reducer = (state = initialState, action) => {
         errorMessage: undefined,
       };
     case String(addAttachment.fulfilled):
-      // eslint-disable-next-line no-case-declarations
-      const transactionIndex = fetchedTransactionsCopy.map((t) => t.id).indexOf(action.payload.transactionId);
       if (transactionIndex !== -1) {
         fetchedTransactionsCopy[transactionIndex].attachments = [
           action.payload,
@@ -189,6 +188,28 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isUploadingAttachment: false,
+        error: true,
+        errorMessage: action.payload.message,
+      };
+    case String(removeAttachment.pending):
+      return {
+        ...state,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(removeAttachment.fulfilled):
+      if (transactionIndex !== -1) {
+        fetchedTransactionsCopy[transactionIndex].attachments = fetchedTransactionsCopy[transactionIndex].attachments
+          .filter((att) => att.id !== action.payload.id);
+      }
+      return {
+        ...state,
+        fetchedTransactions: fetchedTransactionsCopy,
+        error: false,
+      };
+    case String(removeAttachment.rejected):
+      return {
+        ...state,
         error: true,
         errorMessage: action.payload.message,
       };

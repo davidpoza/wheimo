@@ -1,5 +1,6 @@
 import { createAsyncAction } from 'redux-promise-middleware-actions';
 import * as transactionApi from '../api-client/transaction';
+import * as attachmentApi from '../api-client/attachment';
 import types from './types';
 
 export const fetchAll = createAsyncAction('TRANSACTIONS', async (token, {
@@ -72,3 +73,9 @@ export const addAttachment = createAsyncAction('TRANSACTIONS_ADD_ATTACHMENT', as
   const res = await transactionApi.addAttachment(token, formData);
   return { ...res, transactionId: parseInt(formData.get('transactionId'), 10) };
 });
+
+export const removeAttachment = createAsyncAction('TRANSACTIONS_REMOVE_ATTACHMENT',
+  async (token, id, transactionId) => {
+    await attachmentApi.remove(token, id);
+    return { id, transactionId };
+  });

@@ -9,6 +9,8 @@ export default makeStyles(() => ({
     paddingLeft: '1em',
   },
   item: {
+    display: 'flex',
+    alignItems: 'center',
     listStyleType: 'none',
   },
   itemDecoration: {
@@ -23,6 +25,12 @@ export default makeStyles(() => ({
   },
   link: {
     textDecoration: 'none',
+  },
+  trash: {
+    marginLeft: 'auto',
+    border: 'none',
+    background: 'none',
+    cursor: 'pointer',
   },
 
 }));

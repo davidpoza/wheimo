@@ -17,11 +17,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import useStyles from './styles';
 import Editor from '../editor';
 import {
-  create as createAction,
-  update as updateAction,
-  detailsDialogOpen as openAction,
-  detailsDialogClose as closeAction,
   addAttachment as addAttachmentAction,
+  create as createAction,
+  detailsDialogClose as closeAction,
+  detailsDialogOpen as openAction,
+  update as updateAction,
 } from '../../actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
@@ -39,19 +39,19 @@ function PaperComponent(props) {
 }
 
 function DetailsDialog({
-  id,
-  isUploadingAttachment,
-  index,
-  transactions,
-  isOpen,
-  open,
-  close,
-  user,
-  createTransaction,
-  updateTransaction,
+  addAttachment,
   changeUIId,
   changeUIIndex,
-  addAttachment,
+  close,
+  createTransaction,
+  id,
+  index,
+  isOpen,
+  isUploadingAttachment,
+  open,
+  transactions,
+  updateTransaction,
+  user,
 }) {
   const classes = useStyles();
   const [comments, setComments] = useState('');
@@ -142,7 +142,7 @@ function DetailsDialog({
                 isUploadingAttachment
                  && <CircularProgress className={classes.uploading} size={16}/>
               }
-              <Attachments files={attachments} />
+              <Attachments files={attachments} transactionId={transactions[index].id} />
             </>
         }
       </DialogContent>
@@ -174,29 +174,29 @@ function DetailsDialog({
 }
 
 DetailsDialog.propTypes = {
-  id: PropTypes.number,
-  isUploadingAttachment: PropTypes.bool,
-  index: PropTypes.number,
-  isOpen: PropTypes.bool,
-  open: PropTypes.func,
-  close: PropTypes.func,
-  user: PropTypes.object,
-  createTransaction: PropTypes.func,
-  updateTransaction: PropTypes.func,
+  addAttachment: PropTypes.func,
   changeUIId: PropTypes.func,
   changeUIIndex: PropTypes.func,
+  close: PropTypes.func,
+  createTransaction: PropTypes.func,
+  id: PropTypes.number,
+  index: PropTypes.number,
+  isOpen: PropTypes.bool,
+  isUploadingAttachment: PropTypes.bool,
+  open: PropTypes.func,
   transactions: PropTypes.array,
-  addAttachment: PropTypes.func,
+  updateTransaction: PropTypes.func,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
-  user: state.user.current,
-  isUploadingAttachment: state.transaction.isUploadingAttachment,
-  isOpen: state.transaction.detailsDialogOpen,
   contextMenuState: state.ui.contextMenuState,
   id: state.ui.contextMenuState.id,
   index: state.ui.contextMenuState.index,
+  isOpen: state.transaction.detailsDialogOpen,
+  isUploadingAttachment: state.transaction.isUploadingAttachment,
   transactions: state.transaction.fetchedTransactions,
+  user: state.user.current,
 });
 
 const mapDispatchToProps = (dispatch) => ({

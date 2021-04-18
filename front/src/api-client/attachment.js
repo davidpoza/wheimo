@@ -33,4 +33,3 @@ export async function remove(token, id) {
     throw Error('Error during attachment deletion.');
   }
 }
-

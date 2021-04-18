@@ -11,6 +11,7 @@ import 'react-awesome-lightbox/build/style.css';
 import useStyles from './styles';
 import config from '../../../../utils/config';
 import Modal from '../../../modal';
+import { removeAttachment as removeAttachmentAction } from '../../../../actions/transaction';
 
 function MimeIcon({
   id, type, setShowLightbox, clickedImage,
@@ -37,10 +38,16 @@ MimeIcon.propTypes = {
   clickedImage: PropTypes.func,
 };
 
-function Attachments({ user, files }) {
+function Attachments({
+  user, files, transactionId, removeAttachment,
+}) {
   const [showLightbox, setShowLightbox] = useState(false);
   const clickedImage = useRef(null);
   const classes = useStyles();
+
+  function handleRemoveAttachment(id) {
+    removeAttachment(user.token, id, transactionId);
+  }
 
   function handleOnClose() {
     setShowLightbox(false);
@@ -66,8 +73,14 @@ function Attachments({ user, files }) {
           <li key={file.id} className={classes.item}>
            <MimeIcon id={file.id} type={file.type} setShowLightbox={setShowLightbox} clickedImage={clickedImage} />
            {file.description}
+           <a className={classes.link} title="download attachment" href={getFileUrl(file)}> 📎</a>
            <span className={classes.createdAt}>{dayjs(file.createdAt).format('dddd DD MMM YYYY - HH:mm')}</span>
-           <a className={classes.link} title="download" href={getFileUrl(file)}> 📎</a>
+           <button
+             className={classes.trash}
+             title="delete attachment"
+             onClick={() => handleRemoveAttachment(file.id)}>
+               🗑
+           </button>
           </li>
         ))
       }
@@ -90,10 +103,18 @@ function Attachments({ user, files }) {
 Attachments.propTypes = {
   files: PropTypes.array,
   user: PropTypes.object,
+  transactionId: PropTypes.number,
+  removeAttachment: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user.current,
 });
 
-export default connect(mapStateToProps)(Attachments);
+const mapDispatchToProps = (dispatch) => ({
+  removeAttachment: (token, id, transactionId) => {
+    dispatch(removeAttachmentAction(token, id, transactionId));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Attachments);
