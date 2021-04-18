@@ -1,7 +1,7 @@
 import { Container } from 'typedi';
 import pickBy from 'lodash.pickby';
 import CryptoJS from 'crypto-js';
-
+import fs from 'fs';
 import config from '../config/config.js';
 
 export default class AttachmentService {
@@ -159,6 +159,11 @@ export default class AttachmentService {
       const affectedRows = await attachment.destroy();
       if (affectedRows === 0) {
         throw new Error('Attachment does not exist');
+      }
+      try {
+        fs.unlinkSync(`${config.uploadDir}/${attachment.filename}`);
+      } catch (error) {
+        throw new Error('Error during attachment deletion from disk.');
       }
       return attachment;
     }
