@@ -167,19 +167,18 @@ export async function applyTags(token, id) {
  *
  * @param {*} token
  * @param {Object} formData - FormData
- * @returns
+ * @returns {Object} - created attachment
  */
 export async function addAttachment(token, formData) {
   try {
     const att = await fetch(`${config.API_HOST}/attachments`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
       body: formData,
     });
-    return (att);
+    return (await att.json());
   } catch (err) {
     throw Error('Error adding attachment.');
   }

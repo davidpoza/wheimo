@@ -68,11 +68,7 @@ export const setPage = (page) => ({
   payload: page,
 });
 
-export const addAttachment = createAsyncAction('TRANSACTIONS_ADD_ATTACHMENT', async (token, {
-  transactonId, description, attachment,
-}) => {
-  const res = await transactionApi.addAttachment(token, {
-    transactonId, description, attachment,
-  });
-  return res;
+export const addAttachment = createAsyncAction('TRANSACTIONS_ADD_ATTACHMENT', async (token, formData) => {
+  const res = await transactionApi.addAttachment(token, formData);
+  return { ...res, transactionId: parseInt(formData.get('transactionId'), 10) };
 });

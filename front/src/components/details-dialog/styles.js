@@ -44,4 +44,7 @@ export default makeStyles(() => ({
     fontSize: '1em',
     marginRight: 'auto',
   },
+  uploading: {
+    marginLeft: '1.2em',
+  },
 }));

@@ -67,7 +67,7 @@ function Attachments({ user, files }) {
            <MimeIcon id={file.id} type={file.type} setShowLightbox={setShowLightbox} clickedImage={clickedImage} />
            {file.description}
            <span className={classes.createdAt}>{dayjs(file.createdAt).format('dddd DD MMM YYYY - HH:mm')}</span>
-           <a className={classes.link} href={getFileUrl(file)}> 📎</a>
+           <a className={classes.link} title="download" href={getFileUrl(file)}> 📎</a>
           </li>
         ))
       }

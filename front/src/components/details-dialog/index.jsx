@@ -11,6 +11,7 @@ import Draggable from 'react-draggable';
 import dayjs from 'dayjs';
 import IconButton from '@material-ui/core/IconButton';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // own
 import useStyles from './styles';
@@ -20,6 +21,7 @@ import {
   update as updateAction,
   detailsDialogOpen as openAction,
   detailsDialogClose as closeAction,
+  addAttachment as addAttachmentAction,
 } from '../../actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
@@ -27,7 +29,6 @@ import {
 } from '../../actions/ui';
 import Tags from '../tags';
 import Attachments from './_children/attachment';
-import { addAttachment } from '../../api-client/transaction'; // borrar, solo es una prueba
 
 function PaperComponent(props) {
   return (
@@ -39,6 +40,7 @@ function PaperComponent(props) {
 
 function DetailsDialog({
   id,
+  isUploadingAttachment,
   index,
   transactions,
   isOpen,
@@ -49,6 +51,7 @@ function DetailsDialog({
   updateTransaction,
   changeUIId,
   changeUIIndex,
+  addAttachment,
 }) {
   const classes = useStyles();
   const [comments, setComments] = useState('');
@@ -76,10 +79,8 @@ function DetailsDialog({
   function handleOnAddFile(e) {
     const attachmentsData = new FormData();
     attachmentsData.append('attachment', e.target.files[0]);
-    attachmentsData.append('transactionId', 33);
-    attachmentsData.append('description', 'prueba');
-    console.log(e.target.files);
-    console.log(attachmentsData);
+    attachmentsData.append('transactionId', transactions[index].id);
+    attachmentsData.append('description', 'attachment');
     addAttachment(user.token, attachmentsData);
   }
 
@@ -137,6 +138,10 @@ function DetailsDialog({
               <p className={classes.item}>
                 <h2 className={classes.h2}>Attachments: </h2>
               </p>
+              {
+                isUploadingAttachment
+                 && <CircularProgress className={classes.uploading} size={16}/>
+              }
               <Attachments files={attachments} />
             </>
         }
@@ -170,6 +175,7 @@ function DetailsDialog({
 
 DetailsDialog.propTypes = {
   id: PropTypes.number,
+  isUploadingAttachment: PropTypes.bool,
   index: PropTypes.number,
   isOpen: PropTypes.bool,
   open: PropTypes.func,
@@ -180,10 +186,12 @@ DetailsDialog.propTypes = {
   changeUIId: PropTypes.func,
   changeUIIndex: PropTypes.func,
   transactions: PropTypes.array,
+  addAttachment: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user.current,
+  isUploadingAttachment: state.transaction.isUploadingAttachment,
   isOpen: state.transaction.detailsDialogOpen,
   contextMenuState: state.ui.contextMenuState,
   id: state.ui.contextMenuState.id,
@@ -215,6 +223,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   changeUIIndex: (index) => {
     dispatch(changeIndexAction(index));
+  },
+  addAttachment: (token, formData) => {
+    dispatch(addAttachmentAction(token, formData));
   },
 });
 
