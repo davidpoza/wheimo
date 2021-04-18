@@ -11,7 +11,10 @@ import 'react-awesome-lightbox/build/style.css';
 import useStyles from './styles';
 import config from '../../../../utils/config';
 import Modal from '../../../modal';
-import { removeAttachment as removeAttachmentAction } from '../../../../actions/transaction';
+import {
+  removeAttachment as removeAttachmentAction,
+  updatedAttachment as updateAttachmentAction,
+} from '../../../../actions/transaction';
 
 function MimeIcon({
   id, type, setShowLightbox, clickedImage,
@@ -38,12 +41,36 @@ MimeIcon.propTypes = {
   clickedImage: PropTypes.func,
 };
 
+function EditableInput({ id, initialValue, handleOnBlur }) {
+  const classes = useStyles();
+  const [value, setValue] = useState(initialValue);
+
+  return (
+    <input
+      className={classes.description}
+      value={value}
+      onBlur={() => { handleOnBlur(id, value); }}
+      onChange={(e) => { setValue(e.target.value); }}
+    />
+  );
+}
+
+EditableInput.propTypes = {
+  id: PropTypes.number,
+  initialValue: PropTypes.string,
+  handleOnBlur: PropTypes.func,
+};
+
 function Attachments({
-  user, files, transactionId, removeAttachment,
+  user, files, transactionId, removeAttachment, updateAttachment,
 }) {
   const [showLightbox, setShowLightbox] = useState(false);
   const clickedImage = useRef(null);
   const classes = useStyles();
+
+  function handleChangeDescription(id, description) {
+    updateAttachment(user.token, id, { description }, transactionId);
+  }
 
   function handleRemoveAttachment(id) {
     removeAttachment(user.token, id, transactionId);
@@ -72,7 +99,7 @@ function Attachments({
         files && files.map((file) => (
           <li key={file.id} className={classes.item}>
            <MimeIcon id={file.id} type={file.type} setShowLightbox={setShowLightbox} clickedImage={clickedImage} />
-           {file.description}
+           <EditableInput id={file.id} initialValue={file.description} handleOnBlur={handleChangeDescription} />
            <a className={classes.link} title="download attachment" href={getFileUrl(file)}> 📎</a>
            <span className={classes.createdAt}>{dayjs(file.createdAt).format('dddd DD MMM YYYY - HH:mm')}</span>
            <button
@@ -105,6 +132,7 @@ Attachments.propTypes = {
   user: PropTypes.object,
   transactionId: PropTypes.number,
   removeAttachment: PropTypes.func,
+  updateAttachment: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -114,6 +142,12 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   removeAttachment: (token, id, transactionId) => {
     dispatch(removeAttachmentAction(token, id, transactionId));
+  },
+  updateAttachment: (token, data, transactionId) => {
+    dispatch(updateAttachmentAction(token, data, transactionId))
+      .catch((error) => {
+        console.log(error.message);
+      });
   },
 });
 

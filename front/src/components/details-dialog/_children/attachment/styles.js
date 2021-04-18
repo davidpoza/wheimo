@@ -32,5 +32,15 @@ export default makeStyles(() => ({
     background: 'none',
     cursor: 'pointer',
   },
+  description: {
+    padding: '1px',
+    border: 'none',
+    borderRadius: '0px !important',
+    '&:hover, &:focus': {
+      padding: '0px',
+      border: '1px solid #ccc',
+      outline: 'none !important',
+    },
+  },
 
 }));

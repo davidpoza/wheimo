@@ -55,7 +55,7 @@ function DetailsDialog({
 }) {
   const classes = useStyles();
   const [comments, setComments] = useState('');
-  const [files, setFiles] = useState();
+
   const {
     description, amount, date, tags, attachments,
   } = transactions[index] || {};

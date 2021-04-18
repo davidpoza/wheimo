@@ -1,5 +1,5 @@
 import {
-  fetchAll, create, remove, update, fetchExpensesByTag, addAttachment, removeAttachment,
+  fetchAll, create, remove, update, fetchExpensesByTag, addAttachment, removeAttachment, updatedAttachment,
 } from '../actions/transaction';
 import types from '../actions/types';
 
@@ -208,6 +208,30 @@ const reducer = (state = initialState, action) => {
         error: false,
       };
     case String(removeAttachment.rejected):
+      return {
+        ...state,
+        error: true,
+        errorMessage: action.payload.message,
+      };
+    case String(updatedAttachment.pending):
+      return {
+        ...state,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(updatedAttachment.fulfilled):
+      if (transactionIndex !== -1) {
+        fetchedTransactionsCopy[transactionIndex].attachments[
+          fetchedTransactionsCopy[transactionIndex].attachments
+            .map((att) => att.id).indexOf(action.payload.id)
+        ] = action.payload;
+      }
+      return {
+        ...state,
+        fetchedTransactions: fetchedTransactionsCopy,
+        error: false,
+      };
+    case String(updatedAttachment.rejected):
       return {
         ...state,
         error: true,

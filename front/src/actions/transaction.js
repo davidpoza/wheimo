@@ -74,6 +74,12 @@ export const addAttachment = createAsyncAction('TRANSACTIONS_ADD_ATTACHMENT', as
   return { ...res, transactionId: parseInt(formData.get('transactionId'), 10) };
 });
 
+export const updatedAttachment = createAsyncAction('TRANSACTIONS_UPDATE_ATTACHMENT',
+  async (token, id, data, transactionId) => {
+    const res = await attachmentApi.update(token, id, data);
+    return { ...res, transactionId };
+  });
+
 export const removeAttachment = createAsyncAction('TRANSACTIONS_REMOVE_ATTACHMENT',
   async (token, id, transactionId) => {
     await attachmentApi.remove(token, id);
