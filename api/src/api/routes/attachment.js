@@ -2,11 +2,12 @@ import { Router } from 'express';
 import { Container } from 'typedi';
 import { celebrate, Joi } from 'celebrate';
 import multer from 'multer';
-import config from '../../config/config.js';
 import fs from 'fs';
-import path from 'path';
 
+// own
+import utils from '../../../../utils/utilities.js';
 import middlewares from '../middlewares/index.js';
+import config from '../../config/config.js';
 
 const multipartMiddleware = multer({ dest: config.uploadDir })
 const route = Router();
@@ -107,7 +108,7 @@ export default (app) => {
           if (download) {
             const path = `${config.uploadDir}/${attachment.filename}`;
             if(fs.existsSync(path)) {
-              return res.download(path, `attachment_${attachment.id}_${attachment.description}.${attachment.type === 'image/jpeg' ? 'jpg' : 'pdf'}`);
+              return res.download(path, `attachment_${attachment.id}_${attachment.description}.${utils.mimeTypeExtension(attachment.type)}`);
             }
             return res.sendStatus(404);
           }

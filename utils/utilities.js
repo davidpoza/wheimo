@@ -3,7 +3,7 @@
 * Returns FALSE if the IBAN's length is not as should be (for CY the IBAN Should be 28 chars long starting with CY )
 * Returns any other number (checksum) when the IBAN is invalid (check digits do not match)
 */
-export function isValidIBANNumber(input) {
+function isValidIBANNumber(input) {
   var CODE_LENGTHS = {
       AD: 24, AE: 23, AT: 20, AZ: 28, BA: 20, BE: 16, BG: 22, BH: 22, BR: 29,
       CH: 21, CR: 21, CY: 28, CZ: 24, DE: 22, DK: 18, DO: 28, EE: 20, ES: 24,
@@ -30,7 +30,7 @@ export function isValidIBANNumber(input) {
   return mod97(digits);
 }
 
-export function mod97(string) {
+function mod97(string) {
   let checksum = string.slice(0, 2);
   let fragment;
   for (let offset = 2; offset < string.length; offset += 7) {
@@ -38,4 +38,19 @@ export function mod97(string) {
       checksum = parseInt(fragment, 10) % 97;
   }
   return checksum;
+}
+
+function mimeTypeExtension(mime) {
+  switch (mime) {
+    case 'image/jpeg':
+      return 'jpg';
+    case 'image/png':
+      return 'png';
+    case 'application/pdf':
+      return 'pdf';
+  }
+}
+
+module.exports = {
+  mimeTypeExtension,
 }

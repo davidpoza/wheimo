@@ -175,8 +175,9 @@ export default class AttachmentService {
    * @returns {boolean}
    */
   validateUpload(file) {
+    console.log(file);
     if (!file || file.fieldname !== 'attachment') throw new Error('Attachment field is required');
-    if (!['image/jpeg', 'application/pdf'].includes(file.mimetype)) throw new Error('Attachment is not jpg or pdf');
+    if (!['image/jpeg', 'image/png', 'application/pdf'].includes(file.mimetype)) throw new Error('Attachment is not jpg, png or pdf');
     if ((file.size / 1024 / 1024) > config.uploadMaxSize) throw new Error('Attachment file size is too big');
     return true;
   }

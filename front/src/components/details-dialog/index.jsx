@@ -61,6 +61,14 @@ function DetailsDialog({
   } = transactions[index] || {};
   const account = transactions[index]?.account?.name;
 
+  function uploadFile(blob, desc, transactionId) {
+    const attachmentsData = new FormData();
+    attachmentsData.append('attachment', blob);
+    attachmentsData.append('description', desc);
+    attachmentsData.append('transactionId', transactionId);
+    addAttachment(user.token, attachmentsData);
+  }
+
   function setInitialState() {
     if (transactions[index]) {
       setComments(transactions[index]?.comments);
@@ -76,12 +84,20 @@ function DetailsDialog({
     }
   }, [index]);
 
+  useEffect(() => {
+    document.onpaste = (pasteEvent) => {
+      const item = pasteEvent.clipboardData.items[0];
+      if (item.type.indexOf('image') === 0) {
+        uploadFile(item.getAsFile(), 'attachment', transactions[index].id);
+      }
+      return () => {
+        document.onpaste = null;
+      };
+    };
+  }, []);
+
   function handleOnAddFile(e) {
-    const attachmentsData = new FormData();
-    attachmentsData.append('attachment', e.target.files[0]);
-    attachmentsData.append('transactionId', transactions[index].id);
-    attachmentsData.append('description', 'attachment');
-    addAttachment(user.token, attachmentsData);
+    uploadFile(e.target.files[0], 'attachment', transactions[index].id);
   }
 
   function handleClose() {
@@ -115,6 +131,7 @@ function DetailsDialog({
         Transaction details
       </DialogTitle>
       <DialogContent className={classes.root}>
+        <img id="xxx" />
         <Tags tags={tags} />
         <p className={classes.item}>
           <h2 className={classes.h2}>{account} </h2>

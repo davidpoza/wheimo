@@ -19,8 +19,9 @@ import {
 function MimeIcon({
   id, type, setShowLightbox, clickedImage,
 }) {
+  const isImage = ['image/jpeg', 'image/png'].includes(type);
   function handleOnClick() {
-    if (type === 'image/jpeg') {
+    if (isImage) {
       setShowLightbox(true);
       // eslint-disable-next-line no-param-reassign
       clickedImage.current = id;
@@ -28,7 +29,7 @@ function MimeIcon({
   }
 
   const classes = useStyles();
-  if (type === 'image/jpeg') {
+  if (isImage) {
     return <ImageIcon className={classes.itemDecoration} onClick={handleOnClick} />;
   }
   return <DescriptionIcon className={classes.itemDecoration} onClick={handleOnClick} />;
@@ -87,7 +88,7 @@ function Attachments({
 
   function prepareLightboxArray(fa) {
     return fa
-      .filter((i) => (i.type === 'image/jpeg'))
+      .filter((i) => (['image/jpeg', 'image/png'].includes(i.type)))
       .map((i) => ({ id: i.id, url: getFileUrl(i) }));
   }
   const lightboxImages = prepareLightboxArray(files);
