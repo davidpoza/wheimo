@@ -51,6 +51,18 @@ function mimeTypeExtension(mime) {
   }
 }
 
+function isImage(mime) {
+  switch (mime) {
+    case 'image/jpeg':
+      return true;
+    case 'image/png':
+      return true;
+    default:
+      return false;
+  }
+}
+
 module.exports = {
   mimeTypeExtension,
+  isImage,
 }

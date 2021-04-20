@@ -14,7 +14,8 @@ export default ({
   AttachmentService,
   OpenbankImporter,
   AES,
-  dayjs
+  dayjs,
+  sharp,
 }) => {
   // dependency order is important, services are dependant of sequelize and logger
   Container.set('AES', AES);
@@ -22,6 +23,9 @@ export default ({
 
   Container.set('dayjs', dayjs);
   logger.info('💉 dayjs injected');
+
+  Container.set('sharp', sharp);
+  logger.info('💉 sharp injected');
 
   Container.set('sequelizeInstance', sequelize);
   logger.info('💉 sequelizeInstance injected');

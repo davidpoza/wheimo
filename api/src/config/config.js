@@ -26,7 +26,8 @@ export default {
     }
   },
   uploadDir: process.env.UPLOAD_DIR,
-  uploadMaxSize: process.env.UPLOAD_MAX_SIZE,
+  uploadMaxSize: parseInt(process.env.UPLOAD_MAX_SIZE, 10),
+  uploadMaxResolution: parseInt(process.env.UPLOAD_MAX_RESOLUTION, 10),
   api: {
     prefix: '/',
   },

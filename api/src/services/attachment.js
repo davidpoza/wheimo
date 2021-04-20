@@ -3,6 +3,7 @@ import pickBy from 'lodash.pickby';
 import CryptoJS from 'crypto-js';
 import fs from 'fs';
 import config from '../config/config.js';
+import { isImage } from '../../../utils/utilities.js';
 
 export default class AttachmentService {
   constructor() {
@@ -13,6 +14,7 @@ export default class AttachmentService {
     this.attachmentModel = this.sequelize.models.attachments;
     this.transactionService = Container.get('transactionService');
     this.AES = Container.get('AES');
+    this.sharp = Container.get('sharp');
   }
 
   /**
@@ -48,13 +50,26 @@ export default class AttachmentService {
     try {
       const transaction = await this.transactionService.findById({ id: transactionId, userId });
       if (transaction) {
+        const isImg = isImage(type);
         let attachment = await this.attachmentModel.create(
           {
             transactionId,
             filename,
             description,
-            type
+            type: isImg ? 'image/jpeg' : type,
           });
+        if (isImg) {
+          const file = `${config.uploadDir}/${filename}`;
+          this.logger.info(`resizing uploaded image: ${file}`);
+          const buffer = await this.sharp(file)
+            .resize({
+              width: config.uploadMaxResolution,
+              withoutEnlargement: true,
+            })
+            .jpeg({ quality: 80 })
+            .toBuffer();
+          await this.sharp(buffer).toFile(file);
+        }
         return (this.getTemplate(attachment));
       }
       return null;

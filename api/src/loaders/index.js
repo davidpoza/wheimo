@@ -1,5 +1,7 @@
 import AES from 'crypto-js/aes.js';
 import dayjs from 'dayjs';
+import sharp from 'sharp';
+
 //import es from 'dayjs/locale/es'
 dayjs.locale('es')
 import expressLoader from './express.js';
@@ -36,7 +38,8 @@ export default async ({ expressApp }) => {
     OpenbankImporter,
     AttachmentService,
     AES,
-    dayjs
+    dayjs,
+    sharp,
     //<-- add scheduler as last dependency
   });
   logger.info('🟢 Dependency injection loaded');
