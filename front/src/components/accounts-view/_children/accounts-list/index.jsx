@@ -28,6 +28,7 @@ function AccountsList({
             name={account.name}
             number={account.number}
             balance={account.balance}
+            savingTargetAmount={account.savingTargetAmount}
             description={account.description}
             bankId={account.bankId}
           />

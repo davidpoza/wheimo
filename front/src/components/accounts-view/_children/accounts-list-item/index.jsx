@@ -6,6 +6,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Typography from '@material-ui/core/Typography';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 // own
 import useStyles from './styles';
@@ -16,7 +17,17 @@ import {
 } from '../../../../actions/ui';
 
 function AccountsListItem({
-  name, id, balance, description, number, bankId, changeId, changePosition, changeIndex, indexInStore,
+  name,
+  id,
+  balance,
+  description,
+  number,
+  bankId,
+  changeId,
+  changePosition,
+  changeIndex,
+  indexInStore,
+  savingTargetAmount,
 }) {
   const classes = useStyles();
   const numberRef = useRef();
@@ -45,7 +56,7 @@ function AccountsListItem({
       case 'opbk':
         return 'Open Bank';
       case 'piggybank':
-        return 'Wallet';
+        return 'Piggy Bank';
       default:
         return 'Wallet';
     }
@@ -75,10 +86,17 @@ function AccountsListItem({
         <div>
           <div className={classes.number}>
             { formatBankId(bankId) }
-            { formatBankId(bankId) !== 'Wallet'
+            { !['Wallet', 'Piggy Bank'].includes(formatBankId(bankId))
               && <span>
                 : <span onClick={selectAndCopy} ref={numberRef}>{number}</span>
-              </span>
+                </span>
+            }
+            {
+              formatBankId(bankId) === 'Piggy Bank'
+                && <LinearProgress
+                className={classes.savingProgress}
+                variant="determinate" value={(balance * 100) / savingTargetAmount}
+              />
             }
           </div>
           <div className={`${classes.balance} ${balance > 0 ? classes.positiveBalance : classes.negativeBalance}`}>
@@ -97,6 +115,7 @@ AccountsListItem.propTypes = {
   id: PropTypes.number,
   indexInStore: PropTypes.number,
   balance: PropTypes.number,
+  savingTargetAmount: PropTypes.number,
   bankId: PropTypes.number,
   name: PropTypes.string,
   number: PropTypes.string,

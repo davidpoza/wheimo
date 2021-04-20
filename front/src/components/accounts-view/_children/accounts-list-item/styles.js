@@ -32,4 +32,7 @@ export default makeStyles(() => ({
     textAlign: 'right',
     fontSize: '0.8em',
   },
+  savingProgress: {
+    marginTop: '3px',
+  },
 }));
