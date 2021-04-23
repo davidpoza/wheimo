@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  front:
+    build: ./docker/front
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app
+  api:
+    build:
+      context: ./
+      dockerfile: ./docker/api/Dockerfile
+    ports:
+      - "4321:4321"
+    volumes:
+      - .:/usr/src/app
+    # env_file:
+    #   - ./api/.env
+
+  redis:
+    image: redis:alpine
+    restart: always

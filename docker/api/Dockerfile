@@ -3,6 +3,9 @@ FROM node:14.15.4-alpine3.12
 RUN apk update
 RUN apk add git
 
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+
 # add python dependency for node-pre-gyp in order to build sqlite3 package
 ENV PYTHONUNBUFFERED=1
 RUN apk add --update alpine-sdk
@@ -11,17 +14,15 @@ RUN python3 -m ensurepip
 RUN pip3 install --no-cache --upgrade pip setuptools
 
 # .env must be at WORKDIR to be found by dotenv package
-WORKDIR /usr/src/app
-RUN git clone https://github.com/davidpoza/wheimo.git
-RUN cp -r wheimo/api/* .
-RUN rm -rf wheimo
-COPY .env .
+RUN git clone https://github.com/davidpoza/wheimo.git .
+WORKDIR /usr/src/app/api
 RUN ls -la
-RUN ls -la
-RUN chown -R node:node .
+COPY ./api/.env .
+RUN npm i
+# RUN chown -R node:node .
 
-USER node
-RUN npm install --only=production
+# USER node
+
 
 EXPOSE 4321
 
