@@ -16,9 +16,10 @@ RUN pip3 install --no-cache --upgrade pip setuptools
 # .env must be at WORKDIR to be found by dotenv package
 RUN git clone https://github.com/davidpoza/wheimo.git .
 WORKDIR /usr/src/app/api
-RUN ls -la
 COPY ./api/.env .
-RUN npm i
+COPY ./docker/api/start.sh .
+RUN ls -la
+RUN chmod +x start.sh
 # RUN chown -R node:node .
 
 # USER node
@@ -26,5 +27,4 @@ RUN npm i
 
 EXPOSE 4321
 
-RUN node scripts/db-init.js
-CMD [ "node", "src/app.js" ]
+CMD [ "/usr/src/app/start.sh" ]
