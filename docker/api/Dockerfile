@@ -21,10 +21,10 @@ COPY ./docker/api/start.sh .
 RUN ls -la
 RUN chmod +x start.sh
 # RUN chown -R node:node .
-
 # USER node
+RUN npm i
 
 
 EXPOSE 4321
 
-CMD [ "/usr/src/app/start.sh" ]
+CMD [ "./start.sh" ]
