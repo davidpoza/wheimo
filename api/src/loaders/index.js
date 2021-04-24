@@ -1,6 +1,7 @@
 import AES from 'crypto-js/aes.js';
 import dayjs from 'dayjs';
 import sharp from 'sharp';
+import Queue from 'bee-queue';
 
 //import es from 'dayjs/locale/es'
 dayjs.locale('es')
@@ -40,6 +41,7 @@ export default async ({ expressApp }) => {
     AES,
     dayjs,
     sharp,
+    Queue,
     //<-- add scheduler as last dependency
   });
   logger.info('🟢 Dependency injection loaded');

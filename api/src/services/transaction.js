@@ -20,6 +20,7 @@ export default class TransactionService {
     this.transactionMeetsRule = this.transactionMeetsRule.bind(this);
     this.transactionMeetsRules = this.transactionMeetsRules.bind(this);
     this.applyTags = this.applyTags.bind(this);
+    this.notificationQueue = Container.get('notificationQueue');
   }
 
   /**
@@ -117,6 +118,8 @@ export default class TransactionService {
         if (!balance) {
           await this.accountService.updateById(accountId, userId, { balance: account.balance + amount });
         }
+        const msg = this.notificationQueue.createJob({ title: 'new transaction', content: `transaction of ${amount}€. ${description || ''}`, userId });
+        msg.save();
         return (this.getTemplate(transaction));
       }
       return null;

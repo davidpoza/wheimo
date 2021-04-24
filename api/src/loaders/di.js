@@ -16,8 +16,16 @@ export default ({
   AES,
   dayjs,
   sharp,
+  Queue,
 }) => {
   // dependency order is important, services are dependant of sequelize and logger
+  Container.set('notificationQueue', new Queue('notifications', {
+    redis: {
+      host: 'redis',
+    },
+  }));
+  logger.info('💉 Bee notifications queue injected');
+
   Container.set('AES', AES);
   logger.info('💉 AES injected');
 
@@ -62,5 +70,4 @@ export default ({
 
   Container.set('OpenbankImporter', OpenbankImporter);
   logger.info('💉 openbank importer injected');
-
 }

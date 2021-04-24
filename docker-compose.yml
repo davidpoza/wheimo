@@ -24,6 +24,16 @@ services:
   redis:
     image: redis:alpine
     restart: always
+    volumes:
+      - ./redis-volume:/data
+  redis-admin:
+    image: erikdubbelboer/phpredisadmin
+    ports:
+      - "1234:80"
+    environment:
+      - REDIS_1_HOST=redis
+      # - ADMIN_USER=xxx
+      # - ADMIN_PASS=yyyy
 
 volumes:
-  node_modules:
+  redis-volume:
