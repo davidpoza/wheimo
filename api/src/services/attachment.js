@@ -3,7 +3,7 @@ import pickBy from 'lodash.pickby';
 import CryptoJS from 'crypto-js';
 import fs from 'fs';
 import config from '../config/config.js';
-import { isImage } from '../../../shared/utilities.js';
+import { isImage } from '../shared/utilities.js';
 
 export default class AttachmentService {
   constructor() {

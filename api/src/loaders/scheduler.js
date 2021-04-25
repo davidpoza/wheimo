@@ -3,7 +3,7 @@ import { Container } from 'typedi';
 import dayjs from 'dayjs';
 
 import config from '../config/config.js';
-import utils from '../../../shared/utilities.js';
+import utils from '../shared/utilities.js';
 
 export default class Scheduler {
   constructor() {
