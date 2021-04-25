@@ -3,7 +3,7 @@ import { Container } from 'typedi';
 import dayjs from 'dayjs';
 
 import config from '../config/config.js';
-import utils from '../shared/utilities.js';
+import { calculateSavingSeries } from '../shared/utilities.js';
 
 export default class Scheduler {
   constructor() {
@@ -36,10 +36,9 @@ export default class Scheduler {
       const accounts = await this.sequelize.models.accounts.findAll({ where: { bankId: 'piggybank' } });
       if (accounts) {
         this.logger.info(`There are ${accounts.length} accounts to process`);
-        this.logger.info(JSON.stringify(utils));
         for (const a of accounts) {
           this.logger.info(`Found account with params: ${a.savingInitialAmount}, ${a.savingTargetAmount}, ${a.savingInitDate}, ${a.savingTargetDate}, ${a.savingFrequency}, ${a.savingAmountFunc}`);
-          const datesSerie = utils.calculateSavingSeries(a.savingInitialAmount, a.savingTargetAmount, a.savingInitDate, a.savingTargetDate, a.savingFrequency, a.savingAmountFunc);
+          const datesSerie = calculateSavingSeries(a.savingInitialAmount, a.savingTargetAmount, a.savingInitDate, a.savingTargetDate, a.savingFrequency, a.savingAmountFunc);
         };
         this.logger.info(`Job ended`);
       }

@@ -5,7 +5,7 @@ import multer from 'multer';
 import fs from 'fs';
 
 // own
-import utils from '../../shared/utilities.js';
+import { mimeTypeExtension } from '../../shared/utilities.js';
 import middlewares from '../middlewares/index.js';
 import config from '../../config/config.js';
 
@@ -108,7 +108,7 @@ export default (app) => {
           if (download) {
             const path = `${config.uploadDir}/${attachment.filename}`;
             if(fs.existsSync(path)) {
-              return res.download(path, `attachment_${attachment.id}_${attachment.description}.${utils.mimeTypeExtension(attachment.type)}`);
+              return res.download(path, `attachment_${attachment.id}_${attachment.description}.${mimeTypeExtension(attachment.type)}`);
             }
             return res.sendStatus(404);
           }
