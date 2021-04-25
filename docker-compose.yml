@@ -8,6 +8,7 @@ services:
     restart: always
     volumes:
       - .:/usr/src/app
+      - ./shared:/usr/src/app/front/src/shared
   api:
     build:
       context: ./

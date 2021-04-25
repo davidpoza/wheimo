@@ -5,7 +5,7 @@ import multer from 'multer';
 import fs from 'fs';
 
 // own
-import utils from '../../../../utils/utilities.js';
+import utils from '../../../../shared/utilities.js';
 import middlewares from '../middlewares/index.js';
 import config from '../../config/config.js';
 

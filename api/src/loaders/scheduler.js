@@ -3,32 +3,60 @@ import { Container } from 'typedi';
 import dayjs from 'dayjs';
 
 import config from '../config/config.js';
+import utils from '../../../shared/utilities.js';
 
 export default class Scheduler {
   constructor() {
     this.sequelize = Container.get('sequelizeInstance');
     this.logger = Container.get('loggerInstance');
     this.transactionService = Container.get('transactionService');
-    this.executeJob = this.executeJob.bind(this);
+    this.executeExtractionJob = this.executeExtractionJob.bind(this);
     this.scheduleJobs = this.scheduleJobs.bind(this);
   }
 
   async scheduleJobs() {
     try {
-      await this.executeJob(); // execute immediately
+      await this.executeSavingsJob(); // execute immediately
+      await this.executeExtractionJob(); // execute immediately
       schedule.scheduleJob('globalTimer', `*/${config.resyncFrequency} * * * *`, async () => {
-        await this.executeJob();
+        await this.executeExtractionJob();
       });
     } catch (err) {
       throw err;
     }
   }
 
-  async executeJob() {
+  /**
+   * This job notifies user about saving schedule
+   */
+  async executeSavingsJob() {
     try {
-      this.logger.info(`Starting scheduler with ${config.resyncFrequency}min frequency`);
+      this.logger.info(`Starting extraction job with ${config.resyncFrequency}min frequency`);
       // get all accounts
-      const accounts = await this.sequelize.models.accounts.findAll({ });
+      const accounts = await this.sequelize.models.accounts.findAll({ where: { bankId: 'piggybank' } });
+      if (accounts) {
+        this.logger.info(`There are ${accounts.length} accounts to process`);
+        this.logger.info(JSON.stringify(utils));
+        for (const a of accounts) {
+          this.logger.info(`Found account with params: ${a.savingInitialAmount}, ${a.savingTargetAmount}, ${a.savingInitDate}, ${a.savingTargetDate}, ${a.savingFrequency}, ${a.savingAmountFunc}`);
+          const datesSerie = utils.calculateSavingSeries(a.savingInitialAmount, a.savingTargetAmount, a.savingInitDate, a.savingTargetDate, a.savingFrequency, a.savingAmountFunc);
+        };
+        this.logger.info(`Job ended`);
+      }
+    } catch (err) {
+      if (err.name === 'not-found') {
+        this.logger('no transactions found for this query');
+      }
+      throw err;
+    }
+  }
+
+
+  async executeExtractionJob() {
+    try {
+      this.logger.info(`Starting savings checker job`);
+      // get all accounts
+      const accounts = await this.sequelize.models.accounts.findAll({});
       if (accounts) {
         this.logger.info(`There are ${accounts.length} accounts to process`);
         for (const a of accounts) {

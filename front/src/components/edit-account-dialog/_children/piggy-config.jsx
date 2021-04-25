@@ -10,7 +10,7 @@ import DayJsUtils from '@date-io/dayjs';
 // own
 import useStyles from '../styles';
 import SavingsChart from '../../savings-chart';
-import { calculateSavingSeries } from '../../../utils/utilities';
+import utils from '../../../shared/utilities';
 
 export default function PiggyConfig({
   savingInitDate, setSavingInitDate,
@@ -103,7 +103,7 @@ export default function PiggyConfig({
         }}
       />
       <SavingsChart
-        serie={ calculateSavingSeries(
+        serie={ utils.calculateSavingSeries(
           parseFloat(savingAmount),
           parseFloat(savingTargetAmount),
           savingInitDate,
