@@ -85,16 +85,18 @@ function DetailsDialog({
   }, [index]);
 
   useEffect(() => {
-    document.onpaste = (pasteEvent) => {
-      const item = pasteEvent.clipboardData.items[0];
-      if (item.type.indexOf('image') === 0) {
-        uploadFile(item.getAsFile(), 'attachment', transactions[index].id);
-      }
-      return () => {
-        document.onpaste = null;
+    if (index !== undefined) {
+      document.onpaste = (pasteEvent) => {
+        const item = pasteEvent.clipboardData.items[0];
+        if (item.type.indexOf('image') === 0) {
+          uploadFile(item.getAsFile(), 'attachment', transactions[index].id);
+        }
+        return () => {
+          document.onpaste = null;
+        };
       };
-    };
-  }, []);
+    }
+  }, [index]);
 
   function handleOnAddFile(e) {
     uploadFile(e.target.files[0], 'attachment', transactions[index].id);
