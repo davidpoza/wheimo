@@ -10,6 +10,7 @@ export default class Scheduler {
     this.sequelize = Container.get('sequelizeInstance');
     this.logger = Container.get('loggerInstance');
     this.transactionService = Container.get('transactionService');
+    this.notificationQueue = Container.get('notificationQueue');
     this.executeExtractionJob = this.executeExtractionJob.bind(this);
     this.scheduleJobs = this.scheduleJobs.bind(this);
   }
@@ -39,6 +40,18 @@ export default class Scheduler {
         for (const a of accounts) {
           this.logger.info(`Found account with params: ${a.savingInitialAmount}, ${a.savingTargetAmount}, ${a.savingInitDate}, ${a.savingTargetDate}, ${a.savingFrequency}, ${a.savingAmountFunc}`);
           const datesSerie = calculateSavingSeries(a.savingInitialAmount, a.savingTargetAmount, a.savingInitDate, a.savingTargetDate, a.savingFrequency, a.savingAmountFunc);
+          const today = dayjs().format('YYYY/MM/DD');
+          const found = datesSerie.find(d => d.date === today);
+          if (found) {
+            this.logger.info(`📨 Saving notification sent: ${found.amount}/${found.savings}`);
+            const msg = this.notificationQueue.createJob({
+              title: 'Remember to deposit in the piggy bank',
+              content: `Remember to deposit ${found.amount} in your piggy bank. Current savings are ${found.savings}`,
+              userId: a.userId
+            });
+            msg.save();
+          }
+
         };
         this.logger.info(`Job ended`);
       }

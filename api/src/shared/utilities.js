@@ -117,6 +117,5 @@ export function calculateSavingSeries(
     currentDate = currentDate.add(number, symbol);
     currentAmount = expression(currentAmount);
   }
-  console.log(res);
   return res;
 }
