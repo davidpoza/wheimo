@@ -31,6 +31,7 @@ services:
     image: erikdubbelboer/phpredisadmin
     ports:
       - "1234:80"
+    restart: always
     environment:
       - REDIS_1_HOST=redis
       # - ADMIN_USER=xxx
