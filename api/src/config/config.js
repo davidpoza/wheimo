@@ -38,6 +38,8 @@ export default {
   jwtSecret: process.env.JWT_SECRET,
   jwtAlgorithm: process.env.JWT_ALGORITHM,
   aesPassphrase: process.env.AES_PASSPHRASE,
-  resyncFrequency: process.env.RESYNC_FREQ
+  resyncFrequency: process.env.RESYNC_FREQ,
+  notificationsFrequency: process.env.NOTIFICATIONS_FREQ,
+  savingNotificationsQueue: 'savingNotifications',
 };
 

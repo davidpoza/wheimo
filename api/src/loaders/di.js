@@ -1,4 +1,6 @@
 import { Container } from 'typedi';
+import Config from '../config/config.js';
+
 
 export default ({
   sequelize,
@@ -19,7 +21,7 @@ export default ({
   Queue,
 }) => {
   // dependency order is important, services are dependant of sequelize and logger
-  Container.set('notificationQueue', new Queue('notifications', {
+  Container.set('notificationQueue', new Queue(Config.savingNotificationsQueue, {
     redis: {
       host: 'redis',
     },
