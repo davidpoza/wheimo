@@ -10,7 +10,7 @@ WORKDIR /usr/src/app
 RUN git clone https://github.com/davidpoza/wheimo.git .
 
 WORKDIR /usr/src/app/front
-
+COPY .env .
 RUN npm i
 
 

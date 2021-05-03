@@ -13,8 +13,11 @@ import AccountsView from './components/accounts-view';
 import LoginView from './components/login-view';
 import AppBar from './components/app-bar';
 import store from './store';
+import usePushNotifications from './hooks/use-push-notification';
 
 function App() {
+  const { userSubscription } = usePushNotifications();
+  console.log('--->', userSubscription);
   return (
     <div className="App">
       <Provider store={store}>

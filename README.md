@@ -36,6 +36,11 @@ AES_PASSPHRASE=xxxxxxx
 
 # Resync frequency in minutes
 RESYNC_FREQ=10
+
+# Vapid keys for web push notifications
+# generate using npx web-push generate-vapid-keys
+PRIVATE_VAPID_KEY=xxxxxxxxx
+REACT_APP_PUBLIC_VAPID_KEY=yyyyyyyyyy
 ```
 
 ## API

@@ -41,5 +41,6 @@ export default {
   resyncFrequency: process.env.RESYNC_FREQ,
   notificationsFrequency: process.env.NOTIFICATIONS_FREQ,
   savingNotificationsQueue: 'savingNotifications',
+  privateVapidKey: process.env.PRIVATE_VAPID_KEY
 };
 

@@ -16,7 +16,7 @@ RUN pip3 install --no-cache --upgrade pip setuptools
 # .env must be at WORKDIR to be found by dotenv package
 RUN git clone https://github.com/davidpoza/wheimo.git .
 WORKDIR /usr/src/app/api
-COPY ./api/.env .
+COPY .env .
 COPY ./docker/api/start.sh .
 RUN ls -la
 RUN chmod +x start.sh
