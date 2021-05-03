@@ -26,6 +26,15 @@ services:
       - ./api/database.sqlite:/usr/src/app/api/database.sqlite
     # env_file:
     #   - ./api/.env
+  notifier:
+    build:
+      context: ./
+      dockerfile: ./docker/notifier/Dockerfile
+    ports:
+      - "3002:3000"
+    restart: always
+    volumes:
+      - ./notifier/src:/usr/src/app/notifier/src
 
   redis:
     image: redis:alpine
