@@ -46,7 +46,7 @@ export default function usePushNotifications() {
       setLoading(true);
       setError(false);
       try {
-        await fetch(`${Config.NOTIFIER_HOST}/subscribe`, {
+        await fetch(`${Config.NOTIFIER_HOST}/subscription`, {
           method: 'POST',
           body: JSON.stringify(sub),
           headers: {
