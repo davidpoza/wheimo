@@ -11,6 +11,6 @@ export default ({ app }) => {
   app.enable('trust proxy');
   app.use(cors());
   app.use(bodyParser.json());
-  app.use(config.api.prefix, routes());
+  app.use(routes());
   app.use(errors());
 };

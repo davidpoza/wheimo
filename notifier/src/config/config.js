@@ -13,34 +13,5 @@ export default {
   logs: {
     level: process.env.LOG_LEVEL || 'silly',
   },
-  db: {
-    dbname: 'wheimo',
-    username: 'user', // not used on sqlite
-    password: 'password',// not used on sqlite
-    params: {
-      dialect: 'sqlite',
-      storage: './database.sqlite',
-      define: {
-        underscored: true
-      },
-    }
-  },
-  uploadDir: process.env.UPLOAD_DIR,
-  uploadMaxSize: parseInt(process.env.UPLOAD_MAX_SIZE, 10),
-  uploadMaxResolution: parseInt(process.env.UPLOAD_MAX_RESOLUTION, 10),
-  api: {
-    prefix: '/',
-  },
-  language: 'es',
-  currency: 'eur',
-  bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS, 10),
-  jwtLifetime: parseInt(process.env.JWT_LIFETIME, 10),
-  jwtSecret: process.env.JWT_SECRET,
-  jwtAlgorithm: process.env.JWT_ALGORITHM,
-  aesPassphrase: process.env.AES_PASSPHRASE,
-  resyncFrequency: process.env.RESYNC_FREQ,
-  notificationsFrequency: process.env.NOTIFICATIONS_FREQ,
-  savingNotificationsQueue: 'savingNotifications',
-  privateVapidKey: process.env.PRIVATE_VAPID_KEY
 };
 

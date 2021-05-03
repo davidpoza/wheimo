@@ -1,7 +1,5 @@
-import { Container } from 'typedi';
 import get from 'lodash.get';
-import jwt from 'jsonwebtoken';
-
+import fetch from 'node-fetch';
 import config from '../config/config.js';
 
 /**
@@ -10,10 +8,17 @@ import config from '../config/config.js';
  */
 export default async (req, res, next) => {
   if (!req.query.auth) {
-      return res.sendStatus(403);
+    return res.sendStatus(403);
   }
   const token = req.query.auth;
-  const validated = await fetch(`http://api:3001/auth/validate?auth=${token}`);
+  let validated;
+  try {
+    validated = await fetch(`http://api:${config.port}/auth/validate?auth=${token}`);
+  } catch (error) {
+    throw new Error('User is not authenticated');
+  }
   if (validated.status !== 200) throw new Error('User is not authenticated');
+  const { userId } = await validated.json();
+  req.user = userId;
   return next();
 }
