@@ -1,5 +1,6 @@
 import { createAsyncAction } from 'redux-promise-middleware-actions';
 import * as tagApi from '../api-client/tag';
+import types from './types';
 
 export const fetchAll = createAsyncAction('TAGS', async (token) => {
   const res = await tagApi.fetchAll(token);
@@ -20,4 +21,12 @@ export const update = createAsyncAction('UPDATE_TAG', async (token, id, index, d
 export const remove = createAsyncAction('DELETE_TAG', async (token, id, index) => {
   await tagApi.remove(token, id);
   return (index);
+});
+
+export const editDialogOpen = () => ({
+  type: types.TAGS_EDIT_DIALOG_OPEN,
+});
+
+export const editDialogClose = () => ({
+  type: types.TAGS_EDIT_DIALOG_CLOSE,
 });

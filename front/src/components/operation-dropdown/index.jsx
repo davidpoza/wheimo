@@ -8,11 +8,16 @@ import MenuItem from '@material-ui/core/MenuItem';
 import useStyles from './styles';
 import {
   remove as removeTransactionAction,
-  createEditDialogOpen as openAction,
+  createEditDialogOpen as openTransactionDialogAction,
 } from '../../actions/transaction';
 import {
   remove as removeTagAction,
+  editDialogOpen as openEditTagDialogAction,
 } from '../../actions/tag';
+import {
+  remove as removeAccountAction,
+  editDialogOpen as openEditAccountDialogAction,
+} from '../../actions/account';
 import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
@@ -23,12 +28,15 @@ function OperationDropdown({
   entity = 'transaction',
   removeTransaction,
   removeTag,
+  removeAccount,
   user,
   changePosition,
   changeId,
   changeIndex,
   contextMenuState,
-  openDialog,
+  openTransactionDialog,
+  openAccountDialog,
+  openTagDialog,
 }) {
   const classes = useStyles();
 
@@ -51,6 +59,9 @@ function OperationDropdown({
       case 'tag':
         removeTag(user.token, contextMenuState.id, contextMenuState.index);
         break;
+      case 'account':
+        removeAccount(user.token, contextMenuState.id, contextMenuState.index);
+        break;
       default:
         removeTransaction(user.token, contextMenuState.id, contextMenuState.index);
     }
@@ -59,7 +70,19 @@ function OperationDropdown({
 
   function handleEdit() {
     changePosition(null, null);
-    openDialog();
+    switch (entity) {
+      case 'transaction':
+        openTransactionDialog();
+        break;
+      case 'tag':
+        openTagDialog();
+        break;
+      case 'account':
+        openAccountDialog();
+        break;
+      default:
+        openTransactionDialog();
+    }
   }
 
   return (
@@ -87,11 +110,14 @@ OperationDropdown.propTypes = {
   contextMenuState: PropTypes.object,
   user: PropTypes.object,
   removeTransaction: PropTypes.func,
+  removeAccount: PropTypes.func,
   removeTag: PropTypes.func,
   changePosition: PropTypes.func,
   changeId: PropTypes.func,
   changeIndex: PropTypes.func,
-  openDialog: PropTypes.func,
+  openTransactionDialog: PropTypes.func,
+  openAccountDialog: PropTypes.func,
+  openTagDialog: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
@@ -115,6 +141,12 @@ const mapDispatchToProps = (dispatch) => ({
         console.log(error.message);
       });
   },
+  removeAccount: (token, id, index) => {
+    dispatch(removeAccountAction(token, id, index))
+      .catch((error) => {
+        console.log(error.message);
+      });
+  },
   changePosition: (x, y) => {
     dispatch(changePositionAction(x, y));
   },
@@ -124,8 +156,14 @@ const mapDispatchToProps = (dispatch) => ({
   changeIndex: (index) => {
     dispatch(changeIndexAction(index));
   },
-  openDialog: () => {
-    dispatch(openAction());
+  openTransactionDialog: () => {
+    dispatch(openTransactionDialogAction());
+  },
+  openTagDialog: () => {
+    dispatch(openEditTagDialogAction());
+  },
+  openAccountDialog: () => {
+    dispatch(openEditAccountDialogAction());
   },
 });
 

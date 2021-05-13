@@ -6,6 +6,7 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 if (envFound.error) {
   throw new Error("⚠️ Couldn't find .env file");
 }
+
 export default {
   port: parseInt(process.env.PORT, 10),
   debug: process.env.DEBUG === 'true',
@@ -24,6 +25,9 @@ export default {
       },
     }
   },
+  uploadDir: process.env.UPLOAD_DIR,
+  uploadMaxSize: parseInt(process.env.UPLOAD_MAX_SIZE, 10),
+  uploadMaxResolution: parseInt(process.env.UPLOAD_MAX_RESOLUTION, 10),
   api: {
     prefix: '/',
   },
@@ -34,6 +38,9 @@ export default {
   jwtSecret: process.env.JWT_SECRET,
   jwtAlgorithm: process.env.JWT_ALGORITHM,
   aesPassphrase: process.env.AES_PASSPHRASE,
-  resyncFrequency: process.env.RESYNC_FREQ
+  resyncFrequency: process.env.RESYNC_FREQ,
+  notificationsFrequency: process.env.NOTIFICATIONS_FREQ,
+  notificationsQueue: 'savingNotifications',
+  privateVapidKey: process.env.PRIVATE_VAPID_KEY
 };
 

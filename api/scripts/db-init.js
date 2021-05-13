@@ -11,6 +11,7 @@ import { definition as ruleDefinition } from '../src/models/rule.js';
 import { definition as taggedDefinition } from '../src/models/tagged.js';
 import { definition as appliedRulesDefinition } from '../src/models/applied-rules.js';
 import { definition as budgetDefinition } from '../src/models/budget.js';
+import { definition as attachmentDefinition } from '../src/models/attachment.js';
 
 const sequelize = sequelizeLoader.newConnection();
 const queryInterface = sequelize.getQueryInterface();
@@ -23,7 +24,8 @@ queryInterface.dropTable('recurrents');
 queryInterface.dropTable('rules');
 queryInterface.dropTable('tagged');
 queryInterface.dropTable('appliedRules');
-queryInterface.dropTable('budgetDefinition');
+queryInterface.dropTable('budgets');
+queryInterface.dropTable('attachments');
 
 queryInterface.createTable(...userDefinition);
 queryInterface.createTable(...accountDefinition);
@@ -34,6 +36,7 @@ queryInterface.createTable(...ruleDefinition);
 queryInterface.createTable(...taggedDefinition);
 queryInterface.createTable(...appliedRulesDefinition);
 queryInterface.createTable(...budgetDefinition);
+queryInterface.createTable(...attachmentDefinition);
 
 sequelize.models.users.create({
   email: 'admin@gmail.com', name: 'admin', password: bcrypt.hashSync('admin', config.bcryptRounds, config.bcryptSalt), active: true, level: 'admin'

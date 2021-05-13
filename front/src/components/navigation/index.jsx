@@ -30,7 +30,12 @@ export default function Navigation() {
         component={Link}
         to="/"
       />
-      <BottomNavigationAction label="Accounts" icon={<AccountIcon />} />
+      <BottomNavigationAction
+        label="Accounts"
+        icon={<AccountIcon />}
+        component={Link}
+        to="/accounts"
+      />
       <BottomNavigationAction label="Reports" icon={<ReportIcon />} />
       <BottomNavigationAction
         label="Tags & Rules"

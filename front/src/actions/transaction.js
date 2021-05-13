@@ -1,12 +1,13 @@
 import { createAsyncAction } from 'redux-promise-middleware-actions';
 import * as transactionApi from '../api-client/transaction';
+import * as attachmentApi from '../api-client/attachment';
 import types from './types';
 
 export const fetchAll = createAsyncAction('TRANSACTIONS', async (token, {
-  offset, limit, from, to, accountId, tags, sort,
+  offset, limit, from, to, accountId, tags, sort, search,
 }) => {
   const res = await transactionApi.fetchAll(token, {
-    offset, limit, from, to, accountId, tags, sort,
+    offset, limit, from, to, accountId, tags, sort, search,
   });
   return res;
 });
@@ -38,21 +39,6 @@ export const fetchExpensesByTag = createAsyncAction('TRANSACTIONS_EXPENSES_BY_TA
   return res;
 });
 
-export const contextMenuChangeIndex = (index) => ({
-  type: types.TRANSACTIONS_CONTEXT_MENU_CHANGE_INDEX,
-  payload: index,
-});
-
-export const contextMenuChangeId = (id) => ({
-  type: types.TRANSACTIONS_CONTEXT_MENU_CHANGE_ID,
-  payload: id,
-});
-
-export const contextMenuChangePosition = (x, y) => ({
-  type: types.TRANSACTIONS_CONTEXT_MENU_CHANGE_POSITION,
-  payload: { x, y },
-});
-
 export const createEditDialogOpen = () => ({
   type: types.TRANSACTIONS_CREATE_EDIT_DIALOG_OPEN,
 });
@@ -77,3 +63,25 @@ export const detailsDialogClose = () => ({
 export const toggleCharts = () => ({
   type: types.TRANSACTIONS_TOGGLE_CHARTS,
 });
+
+export const setPage = (page) => ({
+  type: types.TRANSACTIONS_SET_PAGE,
+  payload: page,
+});
+
+export const addAttachment = createAsyncAction('TRANSACTIONS_ADD_ATTACHMENT', async (token, formData) => {
+  const res = await transactionApi.addAttachment(token, formData);
+  return { ...res, transactionId: parseInt(formData.get('transactionId'), 10) };
+});
+
+export const updatedAttachment = createAsyncAction('TRANSACTIONS_UPDATE_ATTACHMENT',
+  async (token, id, data, transactionId) => {
+    const res = await attachmentApi.update(token, id, data);
+    return { ...res, transactionId };
+  });
+
+export const removeAttachment = createAsyncAction('TRANSACTIONS_REMOVE_ATTACHMENT',
+  async (token, id, transactionId) => {
+    await attachmentApi.remove(token, id);
+    return { id, transactionId };
+  });

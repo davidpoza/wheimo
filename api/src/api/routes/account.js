@@ -64,6 +64,12 @@ export default (app) => {
         number: Joi.string(),
         description: Joi.string(),
         balance: Joi.number(),
+        savingTargetAmount: Joi.number(),
+        savingInitialAmount: Joi.number(),
+        savingFrequency: Joi.string(),
+        savingAmountFunc: Joi.string(),
+        savingTargetDate: Joi.string(),
+        savingInitDate: Joi.string(),
         bankId: Joi.string(),
         settings: Joi.object({
           contract: Joi.string(),
@@ -78,18 +84,37 @@ export default (app) => {
       const { id } = req.params;
       const userId = req.user.id;
       const {
-        name, number, description, balance, bankId, accessId, accessPassword, settings
+        accessId,
+        accessPassword,
+        balance,
+        bankId,
+        description,
+        name,
+        number,
+        savingAmountFunc,
+        savingFrequency,
+        savingInitDate,
+        savingInitialAmount,
+        savingTargetAmount,
+        savingTargetDate,
+        settings,
       } = req.body;
       try {
         const account = await accountService.updateById(id, userId,
           {
-            name,
-            number,
-            description,
-            balance,
-            bankId,
             accessId,
             accessPassword,
+            balance,
+            bankId,
+            description,
+            name,
+            number,
+            savingAmountFunc,
+            savingFrequency,
+            savingInitDate,
+            savingInitialAmount,
+            savingTargetAmount,
+            savingTargetDate,
             settings
           }
         );

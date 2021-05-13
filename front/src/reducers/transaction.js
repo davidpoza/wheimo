@@ -1,11 +1,13 @@
 import {
-  fetchAll, create, remove, update, fetchExpensesByTag,
+  fetchAll, create, remove, update, fetchExpensesByTag, addAttachment, removeAttachment, updatedAttachment,
 } from '../actions/transaction';
 import types from '../actions/types';
 
 const initialState = {
   isLoading: false,
+  isUploadingAttachment: false,
   fetchedTransactions: [],
+  page: 1,
   expensesByTag: {},
   createEditDialogOpen: false,
   detailsDialogOpen: false,
@@ -16,6 +18,7 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   const fetchedTransactionsCopy = [...state.fetchedTransactions];
+  const transactionIndex = fetchedTransactionsCopy.map((t) => t.id).indexOf(action.payload?.transactionId);
   switch (action.type) {
     case String(fetchAll.pending):
       return {
@@ -134,10 +137,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         createEditDialogOpen: false,
-        contextMenuState: {
-          ...state.contextMenuState,
-          index: undefined,
-        },
       };
     case types.TRANSACTIONS_DETAILS_DIALOG_OPEN:
       return {
@@ -148,10 +147,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         detailsDialogOpen: false,
-        contextMenuState: {
-          ...state.contextMenuState,
-          index: undefined,
-        },
       };
     case types.TRANSACTIONS_TOGGLE_CHECKBOX:
       fetchedTransactionsCopy[action.payload].checked = !fetchedTransactionsCopy[action.payload].checked;
@@ -163,6 +158,84 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         showCharts: !state.showCharts,
+      };
+    case types.TRANSACTIONS_SET_PAGE:
+      return {
+        ...state,
+        page: action.payload,
+      };
+    case String(addAttachment.pending):
+      return {
+        ...state,
+        isUploadingAttachment: true,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(addAttachment.fulfilled):
+      if (transactionIndex !== -1) {
+        fetchedTransactionsCopy[transactionIndex].attachments = [
+          action.payload,
+          ...fetchedTransactionsCopy[transactionIndex].attachments,
+        ];
+      }
+      return {
+        ...state,
+        isUploadingAttachment: false,
+        fetchedTransactions: fetchedTransactionsCopy,
+        error: false,
+      };
+    case String(addAttachment.rejected):
+      return {
+        ...state,
+        isUploadingAttachment: false,
+        error: true,
+        errorMessage: action.payload.message,
+      };
+    case String(removeAttachment.pending):
+      return {
+        ...state,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(removeAttachment.fulfilled):
+      if (transactionIndex !== -1) {
+        fetchedTransactionsCopy[transactionIndex].attachments = fetchedTransactionsCopy[transactionIndex].attachments
+          .filter((att) => att.id !== action.payload.id);
+      }
+      return {
+        ...state,
+        fetchedTransactions: fetchedTransactionsCopy,
+        error: false,
+      };
+    case String(removeAttachment.rejected):
+      return {
+        ...state,
+        error: true,
+        errorMessage: action.payload.message,
+      };
+    case String(updatedAttachment.pending):
+      return {
+        ...state,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(updatedAttachment.fulfilled):
+      if (transactionIndex !== -1) {
+        fetchedTransactionsCopy[transactionIndex].attachments[
+          fetchedTransactionsCopy[transactionIndex].attachments
+            .map((att) => att.id).indexOf(action.payload.id)
+        ] = action.payload;
+      }
+      return {
+        ...state,
+        fetchedTransactions: fetchedTransactionsCopy,
+        error: false,
+      };
+    case String(updatedAttachment.rejected):
+      return {
+        ...state,
+        error: true,
+        errorMessage: action.payload.message,
       };
     default:
       return state;

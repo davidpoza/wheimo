@@ -38,9 +38,8 @@ function AccordionItem({
       <Accordion className={classes.root}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
           onContextMenu={handleContextMenu}
+          className={classes.summary}
         >
           <LabelIcon className={classes.icon} />
           <Typography className={classes.heading}>{name} {

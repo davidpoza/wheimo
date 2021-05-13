@@ -2,7 +2,7 @@
 import config from '../utils/config';
 
 export async function fetchAll(token, {
-  offset, limit, from, to, accountId, tags, sort,
+  offset, limit, from, to, accountId, tags, sort, search,
 }) {
   try {
     let url = `${config.API_HOST}/transactions`;
@@ -14,6 +14,7 @@ export async function fetchAll(token, {
     if (accountId) params.push(`accountId=${accountId}`);
     if (tags) params.push(`tags=${tags.join(',')}`);
     if (sort) params.push(`sort=${sort}`);
+    if (search) params.push(`search=${search}`);
 
     params.forEach((param, index) => {
       if (index === 0) {
@@ -159,5 +160,26 @@ export async function applyTags(token, id) {
     return (id);
   } catch (err) {
     throw Error('Error during tags application.');
+  }
+}
+
+/**
+ *
+ * @param {*} token
+ * @param {Object} formData - FormData
+ * @returns {Object} - created attachment
+ */
+export async function addAttachment(token, formData) {
+  try {
+    const att = await fetch(`${config.API_HOST}/attachments`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    });
+    return (await att.json());
+  } catch (err) {
+    throw Error('Error adding attachment.');
   }
 }

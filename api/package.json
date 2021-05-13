@@ -21,9 +21,9 @@
   "homepage": "https://github.com/davidpoza/wheimo#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "bee-queue": "^1.3.1",
     "body-parser": "^1.19.0",
     "celebrate": "^13.0.4",
-    "connect-multiparty": "^2.2.0",
     "cors": "^2.8.5",
     "cross-env": "^5.2.0",
     "crypto-js": "^4.0.0",
@@ -37,16 +37,19 @@
     "lodash.get": "^4.4.2",
     "lodash.pickby": "^4.6.0",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
     "node-fetch": "^2.6.1",
     "node-pre-gyp": "^0.17.0",
     "node-schedule": "^1.3.2",
     "sequelize": "^6.3.5",
+    "sharp": "^0.28.1",
     "sqlite3": "^5.0.1",
     "typedi": "^0.9.0",
     "winston": "^3.2.1",
     "winston-daily-rotate-file": "^3.10.0"
   },
   "devDependencies": {
+    "@types/multer": "^1.4.5",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "nodemon": "^1.19.0"

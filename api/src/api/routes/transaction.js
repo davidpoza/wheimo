@@ -166,7 +166,7 @@ export default (app) => {
     async (req, res, next) => {
       const { id } = req.params
       const userId = req.user.id;
-      const { accountId, tags, limit, sort, offset, from, to } = req.query;
+      const { accountId, tags, limit, sort, offset, from, to, search } = req.query;
       const tagsArray = tags ? tags.split(',').map((id) => parseInt(id, 10)) : undefined;
       const transactionService = Container.get('transactionService');
       try {
@@ -177,7 +177,7 @@ export default (app) => {
           }
           return res.status(200).json(transaction);
         }
-        const transactions = await transactionService.findAll({ accountId, userId, tags: tagsArray, from, to, limit, offset, sort });
+        const transactions = await transactionService.findAll({ accountId, userId, tags: tagsArray, from, to, limit, offset, sort, search });
         return res.status(200).json(transactions);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);
@@ -192,7 +192,9 @@ export default (app) => {
       const userId = req.user.id;
       const transactionService = Container.get('transactionService');
       try {
-        await transactionService.deleteById(id, userId);
+        if (!await transactionService.deleteById(id, userId)) {
+          return res.sendStatus(404);
+        }
         return res.sendStatus(204);
       } catch (err) {
         loggerInstance.error('🔥 error: %o', err);

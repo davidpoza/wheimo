@@ -90,6 +90,7 @@ export default class OpenbankImporter {
             transactionDate: t.fechaOperacion,
             amount: t.importe.importe,
             currency: t.importe.divisa,
+            balance: t.saldo.importe,
           });
         }),
         holder: json.titular.trim(),

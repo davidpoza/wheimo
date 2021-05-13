@@ -2,9 +2,16 @@
 Acronym for Where is my money, a web app for expenses tracking.
 This is a monorepo. For frontend I'm using React, and on backend, Node express.js with an sqlite database.
 
+## Installation
+```
+touch database.sqlite
+docker-compose up
+```
+
 ## Prerequisites
 - Node.js >= 13, I'm using 14.15.4
 - python to build sqlite3 package using node-pre-gyp (sudo apt install python)
+
 ## Environment variables
 
 ```
@@ -29,6 +36,11 @@ AES_PASSPHRASE=xxxxxxx
 
 # Resync frequency in minutes
 RESYNC_FREQ=10
+
+# Vapid keys for web push notifications
+# generate using npx web-push generate-vapid-keys
+PRIVATE_VAPID_KEY=xxxxxxxxx
+REACT_APP_PUBLIC_VAPID_KEY=yyyyyyyyyy
 ```
 
 ## API

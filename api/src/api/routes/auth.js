@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { Container } from 'typedi';
 import { celebrate, Joi } from 'celebrate';
-
+import middlewares from '../middlewares/index.js';
 
 const route = Router();
 
@@ -46,5 +46,12 @@ export default (app) => {
         loggerInstance.error('🔥 error: %o', e);
         return next(e);
       }
+    });
+
+  route.get('/validate',
+    middlewares.isAuth,
+    async (req, res, next) => {
+      const userId = req.user.id;
+      res.status(200).json({ userId });
     });
 };

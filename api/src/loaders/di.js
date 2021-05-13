@@ -1,4 +1,6 @@
 import { Container } from 'typedi';
+import Config from '../config/config.js';
+
 
 export default ({
   sequelize,
@@ -11,16 +13,29 @@ export default ({
   RuleService,
   BudgetService,
   RecurrentService,
+  AttachmentService,
   OpenbankImporter,
   AES,
-  dayjs
+  dayjs,
+  sharp,
+  Queue,
 }) => {
   // dependency order is important, services are dependant of sequelize and logger
+  Container.set('notificationQueue', new Queue(Config.notificationsQueue, {
+    redis: {
+      host: 'redis',
+    },
+  }));
+  logger.info('💉 Bee notifications queue injected');
+
   Container.set('AES', AES);
   logger.info('💉 AES injected');
 
   Container.set('dayjs', dayjs);
   logger.info('💉 dayjs injected');
+
+  Container.set('sharp', sharp);
+  logger.info('💉 sharp injected');
 
   Container.set('sequelizeInstance', sequelize);
   logger.info('💉 sequelizeInstance injected');
@@ -52,7 +67,9 @@ export default ({
   Container.set('recurrentService', new RecurrentService());
   logger.info('💉 recurrent payments service instance injected');
 
+  Container.set('attachmentService', new AttachmentService());
+  logger.info('💉 attachments service instance injected');
+
   Container.set('OpenbankImporter', OpenbankImporter);
   logger.info('💉 openbank importer injected');
-
 }

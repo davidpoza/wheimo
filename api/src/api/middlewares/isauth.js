@@ -4,11 +4,18 @@ import jwt from 'jsonwebtoken';
 
 import config from '../../config/config.js';
 
+/**
+ * This middleware can take auth token from headers or from query parameter
+ */
 export default (req, res, next) => {
-  if (!req.headers.authorization) {
+  if (!req.headers.authorization && !req.query.auth) {
       return res.sendStatus(403);
   }
-  const token = req.headers.authorization.split(' ')[1];
+  let token = req.headers.authorization?.split(' ')[1];
+  if (!token) {
+    token = req.query.auth;
+    console.log('se usa el token de la url', token)
+  }
   jwt.verify(token, config.jwtSecret, { algorithms: [ config.jwtAlgorithm ]}, async (err, payload) => {
     if (err) { // checks validity and expiration.
       return res.sendStatus(403);

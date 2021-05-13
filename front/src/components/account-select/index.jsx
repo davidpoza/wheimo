@@ -9,24 +9,17 @@ import FormControl from '@material-ui/core/FormControl';
 
 // own
 import useStyles from './styles';
-import { fetchAll as fetchAllAccounts } from '../../api-client/account';
+import {
+  fetchAll as fetchAccountsAction,
+} from '../../actions/account';
 
-function AccountSelect({
-  user, label, value, handleChange,
+function BankTypeSelect({
+  user, label, value, handleChange, fetchAccounts, accounts,
 }) {
   const classes = useStyles();
-  const [accounts, setAccounts] = useState([]);
 
   useEffect(() => {
-    async function fetchData() {
-      try {
-        const data = await fetchAllAccounts(user.token);
-        setAccounts(data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    }
-    fetchData();
+    fetchAccounts(user.token);
   }, [user]);
 
   return (
@@ -51,15 +44,27 @@ function AccountSelect({
   );
 }
 
-AccountSelect.propTypes = {
+BankTypeSelect.propTypes = {
   user: PropTypes.object,
   label: PropTypes.string,
   value: PropTypes.number,
+  accounts: PropTypes.array,
   handleChange: PropTypes.func,
+  fetchAccounts: PropTypes.func,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user.current,
+  accounts: state.account.fetchedAccounts,
 });
 
-export default connect(mapStateToProps)(AccountSelect);
+const mapDispatchToProps = (dispatch) => ({
+  fetchAccounts: (token) => {
+    dispatch(fetchAccountsAction(token))
+      .catch((error) => {
+        console.log(error.message);
+      });
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(BankTypeSelect);

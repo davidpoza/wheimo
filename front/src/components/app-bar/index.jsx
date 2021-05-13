@@ -21,6 +21,8 @@ function MyAppBar() {
     switch (location.pathname) {
       case '/tags':
         return 'Tags & Rules';
+      case '/accounts':
+        return 'Accounts';
       default:
         return 'Transactions';
     }

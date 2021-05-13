@@ -51,6 +51,7 @@ function TransactionGridItem({
 }) {
   const classes = useStyles();
   const labelId = `checkbox-list-label-${index}`;
+  const emitterReceiver = amount > 0 ? emitterName : receiverName;
 
   function handleContextMenu(e) {
     e.preventDefault();
@@ -83,7 +84,7 @@ function TransactionGridItem({
         handleOpenDetailsDialog();
       }}
     >
-      <ListItemIcon>
+      <ListItemIcon className={classes.checkbox}>
         <Checkbox
           edge="start"
           checked={checked}
@@ -105,9 +106,13 @@ function TransactionGridItem({
           <span className={classes.amount}>
             {`${Math.abs(amount)}€`}
           </span>
-          <span className={classes.emitter}>
-            {amount > 0 ? emitterName : receiverName}
-          </span>
+          {
+            emitterReceiver
+              && <span className={classes.emitter}>
+                {emitterReceiver.substr(0, 20)}
+                {emitterReceiver.length > 0 && <>...</> }
+              </span>
+          }
           <div className={classes.tags}>
             <Tags tags={tags} />
           </div>

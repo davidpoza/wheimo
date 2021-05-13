@@ -20,6 +20,7 @@ export default class TransactionService {
     this.transactionMeetsRule = this.transactionMeetsRule.bind(this);
     this.transactionMeetsRules = this.transactionMeetsRules.bind(this);
     this.applyTags = this.applyTags.bind(this);
+    this.notificationQueue = Container.get('notificationQueue');
   }
 
   /**
@@ -45,10 +46,21 @@ export default class TransactionService {
         createdAt: transaction.createdAt,
         updatedAt: transaction.updatedAt,
         account: transaction.account,
-        tags: transaction.tags.map(tag => ({
-          id: tag.id,
-          name: tag.name
-        }))
+        attachments: transaction.attachments
+          ? transaction.attachments.map(attachment => ({
+            id: attachment.id,
+            filename: attachment.filename,
+            description: attachment.description,
+            type: attachment.type,
+            createdAt: attachment.createdAt
+          }))
+          : [],
+        tags: transaction.tags
+          ? transaction.tags.map(tag => ({
+            id: tag.id,
+            name: tag.name
+          }))
+          : [],
       });
     }
     return null;
@@ -106,6 +118,8 @@ export default class TransactionService {
         if (!balance) {
           await this.accountService.updateById(accountId, userId, { balance: account.balance + amount });
         }
+        const msg = this.notificationQueue.createJob({ title: 'new transaction', content: `transaction of ${amount}€. ${description || ''}`, userId });
+        msg.save();
         return (this.getTemplate(transaction));
       }
       return null;
@@ -126,24 +140,29 @@ export default class TransactionService {
    * @param {string} param.from - includes transaction from date in format YYYY-MM-DD
    * @param {string} param.to - includes transaction to date in format YYYY-MM-DD
    * @param {string} param.sort - asc/desc sorting by date
+   * @param {string} param.search - search term
    */
-  async findAll({ accountId, userId, tags, from, to, limit, offset, sort }) {
+  async findAll({ accountId, userId, tags, from, to, limit, offset, sort, search }) {
     const dateFilter = (from || to) ? {} : undefined;
     if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
     if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
+    const searchFilter = search ? {} : undefined;
+    if (search) searchFilter[this.sequelizeOp.substring] = search;
 
     let filter = pickBy({ // pickBy (by default) removes undefined keys
       accountId,
       '$tags.id$': tags,
       '$account.user_id$': userId,
       'date': dateFilter,
+      'description': searchFilter,
     });
 
     const transactions = await this.transactionModel.findAll(
       {
         include: [
           { model: this.sequelize.models.accounts, as: 'account', duplicating: false },
-          { model: this.sequelize.models.tags, as: 'tags', duplicating: false }
+          { model: this.sequelize.models.tags, as: 'tags', duplicating: false },
+          { model: this.sequelize.models.attachments }
         ],
         limit,
         offset,
@@ -169,6 +188,7 @@ export default class TransactionService {
       include: [
         { model: this.sequelize.models.tags },
         { model: this.sequelize.models.accounts },
+        { model: this.sequelize.models.attachments }
       ]
     });
     if (!transaction) {
@@ -213,6 +233,7 @@ export default class TransactionService {
       if (affectedRows === 0) {
         throw new Error('Transaction does not exist');
       }
+      return transaction;
     }
     return null;
   }

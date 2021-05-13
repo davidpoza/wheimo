@@ -1,5 +1,8 @@
 import AES from 'crypto-js/aes.js';
 import dayjs from 'dayjs';
+import sharp from 'sharp';
+import Queue from 'bee-queue';
+
 //import es from 'dayjs/locale/es'
 dayjs.locale('es')
 import expressLoader from './express.js';
@@ -16,6 +19,7 @@ import RuleService from '../services/rule.js';
 import RecurrentService from '../services/recurrent.js';
 import BudgetService from '../services/budget.js';
 import OpenbankImporter from '../services/importers/openbank.js';
+import AttachmentService from '../services/attachment.js';
 
 export default async ({ expressApp }) => {
   const sequelize = await sequelizeLoader.newConnection();
@@ -33,8 +37,11 @@ export default async ({ expressApp }) => {
     RecurrentService,
     BudgetService,
     OpenbankImporter,
+    AttachmentService,
     AES,
-    dayjs
+    dayjs,
+    sharp,
+    Queue,
     //<-- add scheduler as last dependency
   });
   logger.info('🟢 Dependency injection loaded');

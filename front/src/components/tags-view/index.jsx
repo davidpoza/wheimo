@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import {
   fetchAll as fetchTagsAction,
 } from '../../actions/tag';
+import EditTagDialog from '../edit-tag-dialog';
 import TagsAccordion from './_children/tags-accordion';
 import OperationDropdown from '../operation-dropdown';
 import CreateTagInput from './_children/create-tag-input';
@@ -26,6 +27,7 @@ function TagsView({
       <OperationDropdown entity="tag" />
       <TagsAccordion />
       <CreateTagInput />
+      <EditTagDialog />
     </div>
   );
 }

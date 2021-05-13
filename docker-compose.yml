@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  front:
+    build:
+      context: ./
+      dockerfile: ./docker/front/Dockerfile
+    ports:
+      - "3000:3000"
+    restart: always
+    volumes:
+      - ./front/src:/usr/src/app/front/src
+      - ./front/public:/usr/src/app/front/public
+      - ./front/build:/usr/src/app/front/build
+      - ./front/node_modules:/usr/src/app/front/node_modules
+      - ./api/src/shared:/usr/src/app/front/src/shared
+  api:
+    build:
+      context: ./
+      dockerfile: ./docker/api/Dockerfile
+    ports:
+      - "3001:3000"
+    restart: always
+    volumes:
+      - ./api/src:/usr/src/app/api/src
+      - ./api/database.sqlite:/usr/src/app/api/database.sqlite
+    # env_file:
+    #   - ./api/.env
+  notifier:
+    build:
+      context: ./
+      dockerfile: ./docker/notifier/Dockerfile
+    ports:
+      - "3002:3000"
+    restart: always
+    volumes:
+      - ./notifier/src:/usr/src/app/notifier/src
+
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - ./redis-volume:/data
+  redis-admin:
+    image: erikdubbelboer/phpredisadmin
+    ports:
+      - "1234:80"
+    restart: always
+    environment:
+      - REDIS_1_HOST=redis
+      # - ADMIN_USER=xxx
+      # - ADMIN_PASS=yyyy
+
+volumes:
+  redis-volume:

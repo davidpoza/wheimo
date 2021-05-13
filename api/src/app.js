@@ -12,7 +12,7 @@ async function startServer() {
   app.listen(config.port, () => {
     Logger.info(`
       ################################################
-      # Server listening on: ${config.port}          #
+      # Api service listening on: ${config.port}          #
       ################################################
     `);
   }).on('error', err => {
