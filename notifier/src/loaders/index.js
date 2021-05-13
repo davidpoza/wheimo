@@ -1,8 +1,8 @@
 import dayjs from 'dayjs';
-import Queue from 'bee-queue';
 
 //import es from 'dayjs/locale/es'
 dayjs.locale('es')
+import Queue from './queue.js';
 import expressLoader from './express.js';
 import diLoader from './di.js';
 import logger from './logger.js';

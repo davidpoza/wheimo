@@ -21,7 +21,7 @@ export default ({
   Queue,
 }) => {
   // dependency order is important, services are dependant of sequelize and logger
-  Container.set('notificationQueue', new Queue(Config.savingNotificationsQueue, {
+  Container.set('notificationQueue', new Queue(Config.notificationsQueue, {
     redis: {
       host: 'redis',
     },

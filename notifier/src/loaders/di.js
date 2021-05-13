@@ -7,11 +7,7 @@ export default ({
   Queue,
 }) => {
   // dependency order is important, services are dependant of sequelize and logger
-  Container.set('notificationQueue', new Queue(Config.savingNotificationsQueue, {
-    redis: {
-      host: 'redis',
-    },
-  }));
+  Container.set('notificationQueue', Queue);
   logger.info('💉 Bee notifications queue injected');
 
   Container.set('loggerInstance', logger);

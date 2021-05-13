@@ -36,13 +36,6 @@ export default class Scheduler {
         await this.executeSavingsJob();
         await this.cleanSucceeded();
       });
-
-      // procesamiento de la cola de notificaciones ira en un endpoint que el cliente llamará para consultar si hay nuevas notificaciones
-
-      this.notificationQueue.process(async (job, done) => {
-        console.log(job);
-        done();
-      });
     } catch (err) {
       throw err;
     }

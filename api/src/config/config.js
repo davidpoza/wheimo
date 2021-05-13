@@ -40,7 +40,7 @@ export default {
   aesPassphrase: process.env.AES_PASSPHRASE,
   resyncFrequency: process.env.RESYNC_FREQ,
   notificationsFrequency: process.env.NOTIFICATIONS_FREQ,
-  savingNotificationsQueue: 'savingNotifications',
+  notificationsQueue: 'savingNotifications',
   privateVapidKey: process.env.PRIVATE_VAPID_KEY
 };
 

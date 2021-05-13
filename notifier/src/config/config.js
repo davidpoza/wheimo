@@ -13,5 +13,7 @@ export default {
   logs: {
     level: process.env.LOG_LEVEL || 'silly',
   },
+  notificationsQueue: 'savingNotifications',
+  privateVapidKey: process.env.PRIVATE_VAPID_KEY
 };
 
