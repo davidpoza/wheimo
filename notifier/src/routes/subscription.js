@@ -8,16 +8,30 @@ const route = Router();
 
 export default (app) => {
   const loggerInstance = Container.get('loggerInstance');
-
+  const db = Container.get('lowdb');
   app.use('/subscription', route);
 
   route.post('/',
     isAuthMiddleware,
     async (req, res, next) => {
-      const subscription = req.body;
+      const subscription = { ...req.body, userId: req.user };
+      db.defaults({ subscriptions: [] })
+        .write();
+
+      const existingSubcription  = db
+        .get('subscriptions')
+        .find({ userId: req.user })
+        .value();
+
+      if (!existingSubcription) {
+        db.get('subscriptions')
+          .push(subscription)
+          .write();
+      }
 
       // @TODO: store subscription into lowdb database
+      // @TODO solo puede haber un subscription por userId, si ya existe, se actualiza el objeto
 
-      return res.status(200);
+      return res.sendStatus(200);
     });
 };

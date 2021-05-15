@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import lowdb from 'lowdb';
+import FileSync from 'lowdb/adapters/FileSync.js';
 
 //import es from 'dayjs/locale/es'
 dayjs.locale('es')
@@ -13,6 +15,8 @@ export default async ({ expressApp }) => {
   diLoader({
     logger,
     Queue,
+    lowdb,
+    FileSync
     //<-- add scheduler as last dependency
   });
   logger.info('🟢 Dependency injection loaded');

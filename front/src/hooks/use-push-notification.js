@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Config from '../utils/config';
 
-export default function usePushNotifications() {
+export default function usePushNotifications(token) {
   const [userSubscription, setUserSubscription] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -46,7 +46,7 @@ export default function usePushNotifications() {
       setLoading(true);
       setError(false);
       try {
-        await fetch(`${Config.NOTIFIER_HOST}/subscription`, {
+        await fetch(`${Config.NOTIFIER_HOST}/subscription?auth=${token}`, {
           method: 'POST',
           body: JSON.stringify(sub),
           headers: {
