@@ -213,7 +213,7 @@ export default class TransactionService {
       }
       transaction = await this.findById({ id, userId, entity: true });
 
-      if (values.tags) {
+      if (transaction && values.tags) {
         await transaction.setTags(values.tags);
         transaction = await this.findById({ id });
       }

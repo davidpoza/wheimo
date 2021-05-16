@@ -78,7 +78,7 @@ function CreateTransactionDialog({
   }
 
   function setInitialState() {
-    if (transactions[index]) {
+    if (transactions?.[index]) {
       setIncoming(transactions[index].amount > 0);
       setReceipt(transactions[index].receipt);
       setAmount(transactions[index].amount);

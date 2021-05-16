@@ -20,7 +20,7 @@ import config from '../../utils/config';
 import useStyles from './styles';
 
 function MyAvatar({ user, resetUserState }) {
-  const { userSubscription } = usePushNotifications(user.token);
+  const { userSubscription } = usePushNotifications(user?.token);
   console.log('--->', userSubscription);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
