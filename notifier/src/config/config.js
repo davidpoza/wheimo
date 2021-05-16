@@ -15,6 +15,8 @@ export default {
   },
   lowdb: 'subs-db.json',
   notificationsQueue: 'savingNotifications',
-  privateVapidKey: process.env.PRIVATE_VAPID_KEY
+  privateVapidKey: process.env.PRIVATE_VAPID_KEY,
+  publicVapidKey: process.env.REACT_APP_PUBLIC_VAPID_KEY,
+  webPushEmail: process.env.WEB_PUSH_EMAIL
 };
 

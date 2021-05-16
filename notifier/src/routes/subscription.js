@@ -18,12 +18,12 @@ export default (app) => {
       db.defaults({ subscriptions: [] })
         .write();
 
-      const existingSubcription  = db
+      const existingSubscription  = db
         .get('subscriptions')
         .find({ userId: req.user })
         .value();
 
-      if (!existingSubcription) {
+      if (!existingSubscription) {
         db.get('subscriptions')
           .push(subscription)
           .write();
