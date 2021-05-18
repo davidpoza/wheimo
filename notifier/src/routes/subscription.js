@@ -20,7 +20,7 @@ export default (app) => {
 
       const existingSubscription  = db
         .get('subscriptions')
-        .find({ userId: req.user })
+        .find({ userId: req.user, endpoint: subscription.endpoint,  })
         .value();
 
       if (!existingSubscription) {

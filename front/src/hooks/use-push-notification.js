@@ -82,13 +82,17 @@ export default function usePushNotifications(token) {
     setLoading(true);
     setError(false);
     (async () => {
-      let sub = await getExistingSubscription();
-      if (!sub) {
-        sub = await createSubscription();
+      try {
+        let sub = await getExistingSubscription();
+        if (!sub) {
+          sub = await createSubscription();
+        }
+        sendSubscription(sub);
+        setUserSubscription(sub);
+        setLoading(false);
+      } catch (e) {
+        console.log('error', e);
       }
-      sendSubscription(sub);
-      setUserSubscription(sub);
-      setLoading(false);
     })();
   }, []);
 
