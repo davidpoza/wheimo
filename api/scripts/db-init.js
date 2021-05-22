@@ -1,5 +1,8 @@
 import bcrypt from 'bcrypt';
 
+import dotenv from 'dotenv';
+const envFound = dotenv.config();
+
 import config from '../src/config/config.js'
 import sequelizeLoader from '../src/loaders/sequelize.js';
 import { definition as userDefinition } from '../src/models/user.js';
@@ -39,7 +42,7 @@ queryInterface.createTable(...budgetDefinition);
 queryInterface.createTable(...attachmentDefinition);
 
 sequelize.models.users.create({
-  email: 'admin@gmail.com', name: 'admin', password: bcrypt.hashSync('admin', config.bcryptRounds, config.bcryptSalt), active: true, level: 'admin'
+  email: process.env.ADMIN_EMAIL, name: 'admin', password: bcrypt.hashSync(process.env.ADMIN_PASS, config.bcryptRounds, config.bcryptSalt), active: true, level: 'admin'
 });
 
 sequelize.models.accounts.create({
