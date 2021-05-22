@@ -14,11 +14,14 @@ import ExitIcon from '@material-ui/icons/ExitToApp';
 import Typography from '@material-ui/core/Typography';
 
 // own
+import usePushNotifications from '../../hooks/use-push-notification';
 import { resetState } from '../../actions/user';
 import config from '../../utils/config';
 import useStyles from './styles';
 
 function MyAvatar({ user, resetUserState }) {
+  const { userSubscription } = usePushNotifications(user?.token);
+  console.log('--->', userSubscription);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 

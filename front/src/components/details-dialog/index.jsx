@@ -58,8 +58,8 @@ function DetailsDialog({
 
   const {
     description, amount, date, tags, attachments,
-  } = transactions[index] || {};
-  const account = transactions[index]?.account?.name;
+  } = transactions?.[index] || {};
+  const account = transactions?.[index]?.account?.name;
 
   function uploadFile(blob, desc, transactionId) {
     const attachmentsData = new FormData();
@@ -70,8 +70,8 @@ function DetailsDialog({
   }
 
   function setInitialState() {
-    if (transactions[index]) {
-      setComments(transactions[index]?.comments);
+    if (transactions?.[index]) {
+      setComments(transactions?.[index]?.comments);
     }
   }
   function clearForm() {
@@ -89,7 +89,7 @@ function DetailsDialog({
       document.onpaste = (pasteEvent) => {
         const item = pasteEvent.clipboardData.items[0];
         if (item.type.indexOf('image') === 0) {
-          uploadFile(item.getAsFile(), 'attachment', transactions[index].id);
+          uploadFile(item.getAsFile(), 'attachment', transactions?.[index].id);
         }
         return () => {
           document.onpaste = null;
@@ -99,7 +99,7 @@ function DetailsDialog({
   }, [index]);
 
   function handleOnAddFile(e) {
-    uploadFile(e.target.files[0], 'attachment', transactions[index].id);
+    uploadFile(e.target.files[0], 'attachment', transactions?.[index].id);
   }
 
   function handleClose() {
@@ -161,7 +161,7 @@ function DetailsDialog({
                 isUploadingAttachment
                  && <CircularProgress className={classes.uploading} size={16}/>
               }
-              <Attachments files={attachments} transactionId={transactions[index].id} />
+              <Attachments files={attachments} transactionId={transactions?.[index].id} />
             </>
         }
       </DialogContent>

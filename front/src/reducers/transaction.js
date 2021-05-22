@@ -17,7 +17,9 @@ const initialState = {
 };
 
 const reducer = (state = initialState, action) => {
-  const fetchedTransactionsCopy = [...state.fetchedTransactions];
+  const fetchedTransactionsCopy = state.fetchedTransactions
+    ? [...state.fetchedTransactions]
+    : [];
   const transactionIndex = fetchedTransactionsCopy.map((t) => t.id).indexOf(action.payload?.transactionId);
   switch (action.type) {
     case String(fetchAll.pending):

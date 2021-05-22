@@ -15,7 +15,10 @@ docker-compose up
 ## Environment variables
 
 ```
-PORT=4321
+PORT=3000
+
+ADMIN_EMAIL=admin@gmail.com
+ADMIN_PASS=xxxxxxxx
 
 LOG_LEVEL=
 
@@ -37,10 +40,15 @@ AES_PASSPHRASE=xxxxxxx
 # Resync frequency in minutes
 RESYNC_FREQ=10
 
+UPLOAD_DIR=/tmp
+UPLOAD_MAX_SIZE=10
+UPLOAD_MAX_RESOLUTION=1920
+
 # Vapid keys for web push notifications
 # generate using npx web-push generate-vapid-keys
 PRIVATE_VAPID_KEY=xxxxxxxxx
 REACT_APP_PUBLIC_VAPID_KEY=yyyyyyyyyy
+WEB_PUSH_EMAIL=xxxx@xxx.com
 ```
 
 ## API
