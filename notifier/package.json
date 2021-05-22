@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node src/app.js",
-    "start-dev": "nodemon --ignore subs-db.json --verbose src/app.js",
+    "start-dev": "nodemon --ignore subs-db.json --verbose src/app.js"
   },
   "repository": {
     "type": "git",
