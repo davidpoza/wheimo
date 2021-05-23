@@ -36,8 +36,8 @@ jobs:
         server: ${{ secrets.FTP_HOST }}
         username: ${{ secrets.FTP_USER }}
         password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: web/
-        local-dir: front/build/
+        server-dir: ./web/
+        local-dir: ./front/build/
   deploy-backend:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
