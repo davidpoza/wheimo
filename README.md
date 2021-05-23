@@ -45,8 +45,10 @@ UPLOAD_MAX_RESOLUTION=1920
 # Vapid keys for web push notifications
 # generate using npx web-push generate-vapid-keys
 PRIVATE_VAPID_KEY=xxxxxxxxx
-REACT_APP_PUBLIC_VAPID_KEY=yyyyyyyyyy
 WEB_PUSH_EMAIL=xxxx@xxx.com
+REACT_APP_PUBLIC_VAPID_KEY=yyyyyyyyyy
+REACT_APP_API_HOST=http://localhost:3001
+REACT_APP_NOTIFIER_HOST=http://localhost:3002
 ```
 
 ## API
