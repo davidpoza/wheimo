@@ -8,7 +8,7 @@ if (envFound.error) {
 }
 
 export default {
-  port: parseInt(process.env.PORT, 10),
+  port: 3000,
   debug: process.env.DEBUG === 'true',
   logs: {
     level: process.env.LOG_LEVEL || 'silly',
@@ -25,21 +25,20 @@ export default {
       },
     }
   },
-  uploadDir: process.env.UPLOAD_DIR,
-  uploadMaxSize: parseInt(process.env.UPLOAD_MAX_SIZE, 10),
-  uploadMaxResolution: parseInt(process.env.UPLOAD_MAX_RESOLUTION, 10),
+  uploadDir: process.env.UPLOAD_DIR || '/tmp',
+  uploadMaxSize: parseInt(process.env.UPLOAD_MAX_SIZE, 10) || 10,
+  uploadMaxResolution: parseInt(process.env.UPLOAD_MAX_RESOLUTION, 10) || 1920,
   api: {
     prefix: '/',
   },
   language: 'es',
   currency: 'eur',
-  bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS, 10),
-  jwtLifetime: parseInt(process.env.JWT_LIFETIME, 10),
+  bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS, 10) || 12,
+  jwtLifetime: parseInt(process.env.JWT_LIFETIME, 10) || 86400,
   jwtSecret: process.env.JWT_SECRET,
-  jwtAlgorithm: process.env.JWT_ALGORITHM,
+  jwtAlgorithm: process.env.JWT_ALGORITHM || 'HS256',
   aesPassphrase: process.env.AES_PASSPHRASE,
-  resyncFrequency: process.env.RESYNC_FREQ,
-  notificationsFrequency: process.env.NOTIFICATIONS_FREQ,
+  resyncFrequency: process.env.RESYNC_FREQ || 10,
   notificationsQueue: 'savingNotifications',
   privateVapidKey: process.env.PRIVATE_VAPID_KEY
 };

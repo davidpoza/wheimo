@@ -1,0 +1,66 @@
+name: Deployment
+on: [push]
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: script to change ip of runner1github domain
+        env:
+          HETZNER_AUTH_API_TOKEN: ${{ secrets.HETZNER_AUTH_API_TOKEN }}
+        run: |
+          chmod +x ./.github/workflows/scripts/dyndns.sh
+          ./.github/workflows/scripts/dyndns.sh -Z davidinformatico.com -n runner1github
+          sleep 120
+      - name: Executing ssh commands
+        uses: appleboy/ssh-action@master
+        env:
+          ADMIN_EMAIL: ${{ secrets.ADMIN_EMAIL }}
+          ADMIN_PASS: ${{ secrets.ADMIN_PASS }}
+          DEBUG: false
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          BCRYPT_ROUNDS: ${{ secrets.BCRYPT_ROUNDS }}
+          JWT_LIFETIME: ${{ secrets.JWT_LIFETIME }}
+          JWT_ALGORITHM: ${{ secrets.JWT_ALGORITHM }}
+          AES_PASSPHRASE: ${{ secrets.AES_PASSPHRASE }}
+          RESYNC_FREQ: ${{ secrets.RESYNC_FREQ }}
+          UPLOAD_DIR: ${{ secrets.UPLOAD_DIR }}
+          UPLOAD_MAX_SIZE: ${{ secrets.UPLOAD_MAX_SIZE }}
+          UPLOAD_MAX_RESOLUTION: ${{ secrets.UPLOAD_MAX_RESOLUTION }}
+          PRIVATE_VAPID_KEY: ${{ secrets.PRIVATE_VAPID_KEY }}
+          REACT_APP_PUBLIC_VAPID_KEY: ${{ secrets.REACT_APP_PUBLIC_VAPID_KEY }}
+          WEB_PUSH_EMAIL: ${{ secrets.WEB_PUSH_EMAIL }}
+        with:
+          debug: true
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          username: ${{ secrets.SSH_USERNAME }}
+          timeout: '180s'
+          key: ${{ secrets.SSH_KEY }}
+          envs: AVATAR_SIZE_LIMIT,BCRYPT_ROUNDS,JWT_SECRET,BCRYPT_ROUNDS,JWT_LIFETIME,JWT_ALGORITHM,AES_PASSPHRASE,RESYNC_FREQ,UPLOAD_DIR,UPLOAD_MAX_SIZE,UPLOAD_MAX_RESOLUTION,PRIVATE_VAPID_KEY,REACT_APP_PUBLIC_VAPID_KEY,WEB_PUSH_EMAIL
+          script: |
+            pwd
+            cd  wheimo
+            rm .env
+            echo "ADMIN_EMAIL=$ADMIN_EMAIL" > .env
+            echo "ADMIN_PASS=$ADMIN_PASS" >> .env
+            echo "DEBUG=$DEBUG" >> .env
+            echo "JWT_SECRET=$JWT_SECRET" >> .env
+            echo "BCRYPT_ROUNDS=$BCRYPT_ROUNDS" >> .env
+            echo "JWT_LIFETIME=$JWT_LIFETIME" >> .env
+            echo "JWT_ALGORITHM=$JWT_ALGORITHM" >> .env
+            echo "AES_PASSPHRASE=$AES_PASSPHRASE" >> .env
+            echo "RESYNC_FREQ=$RESYNC_FREQ" >> .env
+            echo "UPLOAD_DIR=$UPLOAD_DIR" >> .env
+            echo "UPLOAD_MAX_SIZE=$UPLOAD_MAX_SIZE" >> .env
+            echo "UPLOAD_MAX_RESOLUTION=$UPLOAD_MAX_RESOLUTION" >> .env
+            echo "PRIVATE_VAPID_KEY=$PRIVATE_VAPID_KEY" >> .env
+            echo "REACT_APP_PUBLIC_VAPID_KEY=$REACT_APP_PUBLIC_VAPID_KEY" >> .env
+            echo "WEB_PUSH_EMAIL=$WEB_PUSH_EMAIL" >> .env
+            git fetch
+            git reset --hard origin/master
+            make build
+            make start
