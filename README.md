@@ -15,8 +15,6 @@ docker-compose up
 ## Environment variables
 
 ```
-PORT=3000
-
 ADMIN_EMAIL=admin@gmail.com
 ADMIN_PASS=xxxxxxxx
 
