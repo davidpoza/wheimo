@@ -1,7 +1,42 @@
 name: Deployment
 on: [push]
 jobs:
-  deploy:
+  deploy-front:
+    if: github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.1.0
+      with:
+        fetch-depth: 2
+    - name: use node
+      uses: actions/setup-node@v1
+      with:
+        node-version: '12.x'
+    - name: build
+      env:
+        FTP_HOST: ${{ secrets.FTP_HOST }}
+        FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+        FTP_USER: ${{ secrets.FTP_USER }}
+        REACT_APP_PUBLIC_VAPID_KEY: ${{ secrets.REACT_APP_PUBLIC_VAPID_KEY }}
+        REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
+        REACT_APP_NOTIFIER_HOST: ${{ secrets.REACT_APP_NOTIFIER_HOST }}
+      run: |
+        echo "FTP_HOST=$FTP_HOST" > .env
+        echo "FTP_PASSWORD=$FTP_PASSWORD" >> .env
+        echo "FTP_USER=$FTP_USER" >> .env
+        echo "REACT_APP_PUBLIC_VAPID_KEY=$REACT_APP_API_KEY" >> .env
+        echo "REACT_APP_API_HOST=$REACT_APP_API_HOST" >> .env
+        echo "REACT_APP_NOTIFIER_HOST=$REACT_APP_NOTIFIER_HOST" >> .env
+        npm i
+        CI=false npm run build
+    - name: FTP-Deploy-Action
+      uses: SamKirkland/FTP-Deploy-Action@3.1.1
+      with:
+        ftp-server: ${{ secrets.FTP_HOST }}
+        ftp-username: ${{ secrets.FTP_USER }}
+        ftp-password: ${{ secrets.FTP_PASSWORD }}
+        local-dir: build/
+  deploy-backend:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
