@@ -11,7 +11,7 @@ jobs:
     - name: use node
       uses: actions/setup-node@v1
       with:
-        node-version: '12.x'
+        node-version: '14.x'
     - name: build
       env:
         FTP_HOST: ${{ secrets.FTP_HOST }}
@@ -27,6 +27,7 @@ jobs:
         echo "REACT_APP_PUBLIC_VAPID_KEY=$REACT_APP_API_KEY" >> .env
         echo "REACT_APP_API_HOST=$REACT_APP_API_HOST" >> .env
         echo "REACT_APP_NOTIFIER_HOST=$REACT_APP_NOTIFIER_HOST" >> .env
+        cp -r api/src/shared front/src/shared
         cd front && npm i
         CI=false npm run build
     - name: FTP-Deploy-Action
