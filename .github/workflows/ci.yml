@@ -27,7 +27,7 @@ jobs:
         echo "REACT_APP_PUBLIC_VAPID_KEY=$REACT_APP_API_KEY" >> .env
         echo "REACT_APP_API_HOST=$REACT_APP_API_HOST" >> .env
         echo "REACT_APP_NOTIFIER_HOST=$REACT_APP_NOTIFIER_HOST" >> .env
-        npm i
+        cd front && npm i
         CI=false npm run build
     - name: FTP-Deploy-Action
       uses: SamKirkland/FTP-Deploy-Action@3.1.1
