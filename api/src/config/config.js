@@ -20,7 +20,7 @@ export default {
     password: 'password',// not used on sqlite
     params: {
       dialect: 'sqlite',
-      storage: './database.sqlite',
+      storage: './data/database.sqlite',
       define: {
         underscored: true
       },

@@ -23,7 +23,7 @@ services:
     restart: always
     volumes:
       - ./api/src:/usr/src/app/api/src
-      - ./api/database.sqlite:/usr/src/app/api/database.sqlite
+      - db-volume:/usr/src/app/api/data
     # env_file:
     #   - ./api/.env
   notifier:
@@ -40,7 +40,7 @@ services:
     image: redis:alpine
     restart: always
     volumes:
-      - ./redis-volume:/data
+      - redis-volume:/data
   redis-admin:
     image: erikdubbelboer/phpredisadmin
     ports:
@@ -53,3 +53,4 @@ services:
 
 volumes:
   redis-volume:
+  db-volume:
