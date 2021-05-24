@@ -9,7 +9,10 @@ import config from '../config/config.js';
 export default ({ app }) => {
   // It shows the real origin IP if behind proxy
   app.enable('trust proxy');
-  app.use(cors());
+  app.use(cors({
+    origin: [config.url, `http://localhost:${config.port}`],
+    optionsSuccessStatus: 200,
+  }));
   app.use(bodyParser.json());
   app.use(config.api.prefix, routes());
   app.use(errors());
