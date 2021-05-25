@@ -44,7 +44,7 @@ export default (app) => {
         return res.status(200).json(user);
       } catch (e) {
         loggerInstance.error('🔥 error: %o', e);
-        return next(e);
+        res.sendStatus(404);
       }
     });
 
