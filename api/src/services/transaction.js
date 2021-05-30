@@ -341,7 +341,7 @@ export default class TransactionService {
     this.applyTags(createdTransactions, userRules);
 
     // update sync count
-    const lastTransactionBalance = createdTransactions[createdTransactions.length - 1].balance;
+    const lastTransactionBalance = createdTransactions[0].balance;
     this.logger.info(`Updating account's balance: ${lastTransactionBalance}`);
     await this.accountService.updateById(accountId, userId, { balance: lastTransactionBalance })
 
