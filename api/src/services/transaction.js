@@ -1,6 +1,7 @@
 import { Container } from 'typedi';
 import pickBy from 'lodash.pickby';
 import CryptoJS from 'crypto-js';
+import md5 from 'md5';
 
 import config from '../config/config.js';
 import mockedImportedTransactions from './importers/mock.js';
@@ -30,6 +31,7 @@ export default class TransactionService {
     if (transaction) {
       return ({
         id: transaction.id,
+        importId: transaction.importId,
         receipt: transaction.receipt,
         emitterName: transaction.emitterName,
         receiverName: transaction.receiverName,
@@ -93,8 +95,10 @@ export default class TransactionService {
     try {
       const account = await this.accountService.findById(accountId, userId, true);
       if (account) {
+        const importId = md5(`${balance}${description}${amount}`);
         let transaction = await this.transactionModel.create(
           {
+            importId,
             accountId,
             amount,
             assCard,
@@ -200,6 +204,15 @@ export default class TransactionService {
     return this.getTemplate(transaction.dataValues);
   }
 
+  async isAlreadyImported(importId) {
+    const transaction = await this.transactionModel.findOne({
+      where: { importId },
+    });
+    if (transaction) {
+      return true;
+    }
+    return false;
+  }
 
   /**
    * It only updates owned transactions->accounts
@@ -247,7 +260,6 @@ export default class TransactionService {
     let balance;
     let transactions;
     let newTransactionsCount;
-    let lastSyncCount;
 
     const account = await this.accountModel.findOne({ where: admin ? { id: accountId } : { id: accountId, userId } });
     if (!account) {
@@ -257,7 +269,6 @@ export default class TransactionService {
     if (config.debug !== true) {
       // get bankId of account
       const { bankId, accessId, accessPassword } = account.dataValues;
-      ({lastSyncCount} = account.dataValues);
 
       let importer;
 
@@ -289,19 +300,17 @@ export default class TransactionService {
       // with mocked data
       transactions = mockedImportedTransactions.transactions;
       balance = mockedImportedTransactions.balance;
-      lastSyncCount = 0;
     }
 
-    // process transactions and get the new ones
-    newTransactionsCount = transactions.length - lastSyncCount;
-    this.logger.info(`There are ${newTransactionsCount} new transactions in account #${accountId}`);
+    this.logger.info(`💸It's been fetched ${transactions.length} transactions in account #${accountId}`);
 
-    if (newTransactionsCount > 0) {
-      const newTransactions = transactions.slice(0, newTransactionsCount);
-
-      // transformation from importer format to entity format in order to save new transactions into database
-      const queryArray = newTransactions.map((t) => {
-        return({
+    const queryArray = [];
+    for (const t of transactions) {
+      const importId = md5(`${t.balance}${t.description}${t.amount}`);
+      const exist = await this.isAlreadyImported(importId);
+      if (!exist) {
+        queryArray.push({
+          importId,
           receipt: t.receipt,
           emitterName: t.emitterName,
           receiverName: t.receiverName,
@@ -316,23 +325,26 @@ export default class TransactionService {
           accountId,
           userId,
         });
-      });
-      const res = await this.transactionModel.bulkCreate(queryArray);
-      if (!res) {
-        throw new Error('error during transaction creation');
       }
-
-      const createdTransactions = res.map((t) => {
-        return (t.dataValues);
-      });
-      // apply tagging rules over all new transactions
-      const userRules = await this.ruleService.findAll(account.dataValues.userId); // get all user rules of transaction owner
-      this.applyTags(createdTransactions, userRules);
-
-      // update sync count
-      this.logger.info(`Updating lastSyncAccount`);
-      await this.updateById(accountId, userId, { balance, lastSyncCount: lastSyncCount + newTransactionsCount });
     }
+    if (queryArray.length === 0) return;
+    const res = await this.transactionModel.bulkCreate(queryArray);
+    if (!res) {
+      throw new Error('error during transaction creation');
+    }
+
+    const createdTransactions = res.map((t) => {
+      return (t.dataValues);
+    });
+    // apply tagging rules over all new transactions
+    const userRules = await this.ruleService.findAll(account.dataValues.userId); // get all user rules of transaction owner
+    this.applyTags(createdTransactions, userRules);
+
+    // update sync count
+    const lastTransactionBalance = createdTransactions[createdTransactions.length - 1].balance;
+    this.logger.info(`Updating account's balance: ${lastTransactionBalance}`);
+    await this.accountService.updateById(accountId, userId, { balance: lastTransactionBalance })
+
   }
 
   /**
