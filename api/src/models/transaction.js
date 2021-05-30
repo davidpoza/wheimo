@@ -4,6 +4,7 @@ export const definition = [
   'transactions',
   {
     id: { type: Sequelize.INTEGER, autoIncrement: true, primaryKey: true },
+    importId: { type: Sequelize.TEXT }, // to differentiate between same transaction imported twice
     receipt: { type: Sequelize.BOOLEAN, defaultValue: false },
     emitterName: { type: Sequelize.TEXT, allowNull: true },
     receiverName: { type: Sequelize.TEXT, allowNull: true },
