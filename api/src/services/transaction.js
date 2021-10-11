@@ -159,7 +159,7 @@ export default class TransactionService {
       'date': dateFilter,
     });
 
-    if (search) {
+    if (searchFilter) {
       searchFilter[this.sequelizeOp.substring] = search;
       filter[this.sequelizeOp.or] = [
         { 'description': searchFilter },
