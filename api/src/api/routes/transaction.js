@@ -88,7 +88,7 @@ export default (app) => {
         amount: Joi.number(),
         assCard: Joi.string(),
         balance: Joi.number(),
-        comments: Joi.string(),
+        comments: Joi.string().allow(''),
         currency: Joi.string(),
         date: Joi.string(),
         description: Joi.string(),
