@@ -179,7 +179,7 @@ export default class TransactionService {
         limit,
         offset,
         where: filter,
-        order: [ ['date', sort === 'asc' ? 'ASC' : 'DESC'] ]
+        order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ]
       });
 
     return transactions.map((t) => {
