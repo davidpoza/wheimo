@@ -151,7 +151,6 @@ export default class TransactionService {
     if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
     if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
     const searchFilter = search ? {} : undefined;
-    if (search) searchFilter[this.sequelizeOp.substring] = search;
 
     let filter = pickBy({ // pickBy (by default) removes undefined keys
       accountId,
@@ -165,6 +164,16 @@ export default class TransactionService {
       { 'emitterName': searchFilter },
       { 'receiverName': searchFilter },
     ];
+
+    if (search) {
+      searchFilter[this.sequelizeOp.substring] = search;
+      filter[this.sequelizeOp.or] = [
+        { 'description': searchFilter },
+        { 'comments': searchFilter },
+        { 'emitterName': searchFilter },
+        { 'receiverName': searchFilter },
+      ];
+    }
 
     const transactions = await this.transactionModel.findAll(
       {
