@@ -71,6 +71,7 @@ export default makeStyles(() => ({
     },
   },
   emitter: {
+    textTransform: 'capitalize',
     marginLeft: '0.6em',
     width: '13em',
     maxWidth: '13em',

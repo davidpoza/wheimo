@@ -60,6 +60,7 @@
     ]
   },
   "devDependencies": {
+    "chokidar": "^3.5.2",
     "eslint": "^7.21.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-import-resolver-webpack": "^0.13.0",

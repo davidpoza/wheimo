@@ -109,8 +109,8 @@ function TransactionGridItem({
           {
             emitterReceiver
               && <span className={classes.emitter}>
-                {emitterReceiver.substr(0, 20)}
-                {emitterReceiver.length > 0 && <>...</> }
+                {emitterReceiver?.substr(0, 26)?.toLowerCase()}
+                {emitterReceiver.length > 26 && <>...</> }
               </span>
           }
           <div className={classes.tags}>
@@ -129,7 +129,9 @@ function TransactionGridItem({
         </div>
         <div className={classes.secondLine}>
           <div className={classes.description}>
-            {description}
+            {description?.toUpperCase()}
+            {(description?.length > 0 && comments) && ' - '}
+            {comments?.split('\n')?.[0]?.toUpperCase()}
           </div>
           <div className={classes.account}>
           {account} | {accountBalance}€

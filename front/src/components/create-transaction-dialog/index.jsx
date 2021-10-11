@@ -208,6 +208,7 @@ function CreateTransactionDialog({
               label="Account"
               value={selectedAccount}
               handleChange={(e) => { setSelectedAccount(e.target.value); }}
+              layout="modal"
             />
           </div>
 
@@ -256,17 +257,6 @@ function CreateTransactionDialog({
             fullWidth
           />
 
-          <TextField
-            className={classes.comments}
-            multiline
-            margin="dense"
-            id="comments"
-            label="Comments"
-            type="text"
-            value={comments}
-            onChange={(e) => { setComments(e.target.value); }}
-            fullWidth
-          />
           <TagsSelect
             label="Tags"
             value={tags}
