@@ -158,8 +158,13 @@ export default class TransactionService {
       '$tags.id$': tags,
       '$account.user_id$': userId,
       'date': dateFilter,
-      'description': searchFilter,
     });
+    filter[this.sequelizeOp.or] = [
+      { 'description': searchFilter },
+      { 'comments': searchFilter },
+      { 'emitterName': searchFilter },
+      { 'receiverName': searchFilter },
+    ];
 
     const transactions = await this.transactionModel.findAll(
       {
