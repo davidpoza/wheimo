@@ -97,7 +97,7 @@ function TransactionFilter({
         value={accountId}
         handleChange={(e) => { setAccountId(e.target.value); }}
       />
-      <TagsSelect limitTags={3} label="Tags" values={tags} className={classes.tags} handleOnChange={ (e, value) => {
+      <TagsSelect limitTags={3} label="Tags" values={tags} handleOnChange={ (e, value) => {
         setTags(value.map((tag) => (tag.id)));
       } } />
       <FormGroup row className={classes.chartsSwitch}>

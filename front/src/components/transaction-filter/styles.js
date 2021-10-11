@@ -18,9 +18,6 @@ export default makeStyles(() => ({
   search: {
 
   },
-  tags: {
-    marginBottom: '8px',
-  },
   chartsSwitch: {
     alignSelf: 'normal',
     '& > label': {
