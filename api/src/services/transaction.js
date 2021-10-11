@@ -158,12 +158,6 @@ export default class TransactionService {
       '$account.user_id$': userId,
       'date': dateFilter,
     });
-    filter[this.sequelizeOp.or] = [
-      { 'description': searchFilter },
-      { 'comments': searchFilter },
-      { 'emitterName': searchFilter },
-      { 'receiverName': searchFilter },
-    ];
 
     if (searchFilter) {
       searchFilter[this.sequelizeOp.substring] = search;
