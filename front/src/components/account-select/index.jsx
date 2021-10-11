@@ -14,7 +14,7 @@ import {
 } from '../../actions/account';
 
 function BankTypeSelect({
-  user, label, value, handleChange, fetchAccounts, accounts,
+  user, label, value, handleChange, fetchAccounts, accounts, layout = 'filter'
 }) {
   const classes = useStyles();
 
@@ -26,7 +26,7 @@ function BankTypeSelect({
     <FormControl>
       <InputLabel id="account-label">{label}</InputLabel>
       <Select
-        className={classes.accountSelector}
+        className={layout === 'filter' ? classes.accountSelector : classes.accountSelectorModal}
         labelId="account-label"
         id="account"
         value={value}

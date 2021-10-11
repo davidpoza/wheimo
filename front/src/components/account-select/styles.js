@@ -6,6 +6,9 @@ export default makeStyles(() => ({
   },
   accountSelector: {
     width: '9em',
+  },
+  accountSelectorModal: {
+    width: '9em',
     marginBottom: '6px',
   },
 }));
