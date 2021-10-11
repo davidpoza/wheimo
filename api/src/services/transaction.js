@@ -165,7 +165,7 @@ export default class TransactionService {
       { 'receiverName': searchFilter },
     ];
 
-    if (search) {
+    if (searchFilter) {
       searchFilter[this.sequelizeOp.substring] = search;
       filter[this.sequelizeOp.or] = [
         { 'description': searchFilter },
