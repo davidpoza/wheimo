@@ -111,8 +111,9 @@ function DetailsDialog({
 
   async function processData() {
     const data = {
-      comments: comments || undefined,
+      comments: comments,
     };
+    console.log(">>", data)
 
     updateTransaction(user.token, id, index, data);
     changeUIIndex(undefined);
