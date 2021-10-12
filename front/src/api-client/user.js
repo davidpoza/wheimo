@@ -19,3 +19,18 @@ export async function login(email, password) {
     throw Error('login failed due to connection problems.');
   }
 }
+
+export async function validateToken(token) {
+  try {
+    const res = await fetch(`${config.API_HOST}/auth/validate?auth=${token}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    throw Error('Token is not valid');
+  }
+}

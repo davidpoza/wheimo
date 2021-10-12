@@ -1,7 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
-
 // own
 import './App.css';
 import PrivateRoute from './hocs/private-route';
@@ -13,8 +12,10 @@ import AccountsView from './components/accounts-view';
 import LoginView from './components/login-view';
 import AppBar from './components/app-bar';
 import store from './store';
+import useValidateUser from 'hooks/useValidateUser';
 
 function App() {
+  useValidateUser();
   return (
     <div className="App">
       <Provider store={store}>
@@ -35,4 +36,4 @@ function App() {
   );
 }
 
-export default App;
+export default App
