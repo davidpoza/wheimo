@@ -1,3 +1,5 @@
+import Config from 'utils/config';
+
 class StateLoader {
   constructor() {
     this.loadState = this.loadState.bind(this);
@@ -7,7 +9,7 @@ class StateLoader {
 
   loadState() {
     try {
-      const serializedState = localStorage.getItem('wheimo_redux_store');
+      const serializedState = localStorage.getItem(Config.LOCALSTORAGE_KEY);
 
       if (serializedState === null) {
         return this.initializeState();
@@ -23,7 +25,7 @@ class StateLoader {
   saveState(state) {
     try {
       const serializedState = JSON.stringify(state);
-      localStorage.setItem('wheimo_redux_store', serializedState);
+      localStorage.setItem(Config.LOCALSTORAGE_KEY, serializedState);
     } catch (err) {
       console.log(err);
     }
