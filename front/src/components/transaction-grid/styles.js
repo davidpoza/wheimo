@@ -1,11 +1,14 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   root: {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
+    [theme.breakpoints.up('lg')]: {
+      margin: '0 20%',
+    },
   },
   pagination: {
     padding: '1em',
