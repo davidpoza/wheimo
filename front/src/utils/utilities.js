@@ -83,3 +83,11 @@ export function calculateSavingSeries(
   }
   return res;
 }
+
+
+export function formatAmount(amount, absolute = true) {
+  return (absolute ? Math.abs(amount) : amount).toLocaleString('es-ES', {
+    style: 'currency',
+    currency: 'EUR',
+  });
+}

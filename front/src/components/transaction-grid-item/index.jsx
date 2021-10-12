@@ -24,6 +24,7 @@ import {
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
 } from '../../actions/ui';
+import { formatAmount } from 'utils/utilities';
 
 function TransactionGridItem({
   account,
@@ -104,7 +105,7 @@ function TransactionGridItem({
             { amount > 0 ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
           </span>
           <span className={classes.amount}>
-            {`${Math.abs(amount)}€`}
+            {`${formatAmount(amount)}`}
           </span>
           {
             emitterReceiver
@@ -134,7 +135,7 @@ function TransactionGridItem({
             {comments?.split('\n')?.[0]?.toUpperCase()}
           </div>
           <div className={classes.account}>
-          {account} | {accountBalance}€
+          {account} | {formatAmount(accountBalance, false)}
           </div>
         </div>
 
