@@ -15,7 +15,6 @@ export default makeStyles(() => ({
     marginRight: '10px',
   },
   summary: {
-    margin: '0 10%',
     borderBottom: '1px solid #ccc',
     '&:hover': {
       backgroundColor: '#f5f5f5',
