@@ -113,7 +113,6 @@ function DetailsDialog({
     const data = {
       comments: comments,
     };
-    console.log(">>", data)
 
     updateTransaction(user.token, id, index, data);
     changeUIIndex(undefined);

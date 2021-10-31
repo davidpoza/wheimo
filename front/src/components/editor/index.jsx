@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField';
 import ReactMarkdown from 'react-markdown';
@@ -12,18 +12,47 @@ export default function Editor({
 }) {
   const [edit, setEdit] = useState(false);
   const classes = useStyles();
+  const textareaRef = useRef();
+
+  const handleKeyDown = useCallback((e) => {
+    if (!edit && e.keyCode===69) {
+      e.preventDefault();
+      setEdit(true);
+    }
+    else if(edit && e.keyCode===13 && e.ctrlKey) {
+      e.preventDefault();
+      setEdit(false);
+    }
+  }, [edit]);
+
+  useEffect(() => {
+    if (edit && textareaRef) {
+      textareaRef.current.focus();
+      textareaRef.current.setSelectionRange(textareaRef.current.value.length,textareaRef.current.value.length);
+    }
+  }, [edit, textareaRef]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown])
 
   function handleDoubleClick() {
     setEdit(!edit);
   }
+
   return (
     <div
       className={classes.root}
+      onKeyDown={handleKeyDown}
       onDoubleClick={handleDoubleClick}
     >
     {
       edit
         ? <TextField
+            inputRef={textareaRef}
             multiline
             margin="dense"
             id="comments"
