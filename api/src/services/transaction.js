@@ -390,22 +390,22 @@ export default class TransactionService {
     let ret = false;
     switch(rule.type) {
       case 'emitterName':
-        ret = transaction.emitterName && transaction.emitterName.match(new RegExp(rule.value, 'i'));
+        ret = transaction?.emitterName?.match(new RegExp(rule.value, 'i'));
         break;
       case 'receiverName':
-        ret = transaction.receiverName.match(new RegExp(rule.value, 'i'));
+        ret = transaction?.receiverName?.match(new RegExp(rule.value, 'i'));
         break;
       case 'description':
-        ret = transaction.description.match(new RegExp(rule.value, 'i'));
+        ret = transaction?.description?.match(new RegExp(rule.value, 'i'));
         break;
       case 'currency':
-        ret = transaction.currency === rule.value;
+        ret = transaction?.currency === rule.value;
         break;
       case 'account':
-        ret = transaction.account === rule.value;
+        ret = transaction?.account === rule.value;
         break;
       case 'bankId':
-        ret = transaction.bankId === rule.value;
+        ret = transaction?.bankId === rule.value;
         break;
       case 'amount': // e.g. lt20;gt10
         const comparisons = rule.value.split(';');
@@ -448,8 +448,10 @@ export default class TransactionService {
   /**
    * @param {Array<Object>} transactions
    * @param {Array<Object} userRules - objects must have tags prop
+   * @return {Array<Number>} transaction ids which have been finally tagged
    */
   applyTags(transactions, userRules) {
+    const transactionsTagged = [];
     const tagRules = {}; // build object with tagId as keys, and rule array as value
     userRules.forEach((rule) => {
       rule.tags.forEach((tag) => {
@@ -466,9 +468,11 @@ export default class TransactionService {
       Object.keys(tagRules).forEach((tagId) => {
         if (this.transactionMeetsRules(transaction, tagRules[tagId])) {
           this.tagTransaction(transaction.id, parseInt(tagId, 10));
+          transactionsTagged.push(transaction.id);
         }
       });
     });
+    return transactionsTagged;
   }
 
   /**

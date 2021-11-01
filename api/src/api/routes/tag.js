@@ -97,4 +97,26 @@ export default (app) => {
       return res.sendStatus(404);
     }
   });
+
+  // applies a tag across all of user transactions
+  route.post('/:id/apply',
+    middlewares.isAuth,
+    async (req, res, next) => {
+      const { id } = req.params
+      const userId = req.user.id;
+      const transactionService = Container.get('transactionService');
+      const tagService = Container.get('tagService');
+      try {
+        const transactions = await transactionService.findAll({ userId });
+        if (!transactions) {
+          return res.sendStatus(404);
+        }
+        const tag = await tagService.findById({ id, userId });
+        const transactionTagged = await transactionService.applyTags(transactions, tag.rules);
+        return res.status(200).json(transactionTagged);
+      } catch (err) {
+        loggerInstance.error('🔥 error: %o', err);
+        return next(err);
+      }
+    });
 };

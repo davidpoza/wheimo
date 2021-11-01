@@ -74,7 +74,10 @@ export default class RuleService {
       id,
       userId,
     });
-    const rule = await this.ruleModel.findOne({ where: filter });
+    const rule = await this.ruleModel.findOne({
+      where: filter,
+      include: { model: this.sequelize.models.tags, as: 'tags' } ,
+    });
     if (!rule) {
       return null;
     }
