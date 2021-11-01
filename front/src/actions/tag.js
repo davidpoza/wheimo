@@ -23,6 +23,10 @@ export const remove = createAsyncAction('DELETE_TAG', async (token, id, index) =
   return (index);
 });
 
+export const apply = createAsyncAction('APPLY_TAG', async (token, id) => {
+  return await tagApi.applyTag(token, id);
+});
+
 export const editDialogOpen = () => ({
   type: types.TAGS_EDIT_DIALOG_OPEN,
 });

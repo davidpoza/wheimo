@@ -19,7 +19,7 @@ function TagsAccordion({
   }, []);
 
   return (
-    <div className={classes.root} style={{ maxHeight: `${ref.current?.offsetHeight}px` }} ref={ref}>
+    <div className={classes.root} style={{ maxHeight: `${ref.current?.offsetHeight - 10}px` }} ref={ref}>
       {
         tags.sort(azOrder).map((tag, index) => (
           <AccordionItem
