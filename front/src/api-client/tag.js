@@ -67,3 +67,31 @@ export async function remove(token, id) {
     throw Error('Error during tag deletion.');
   }
 }
+
+export async function applyTag(token, tagId) {
+  try {
+    return await fetch(`${config.API_HOST}/tags/${tagId}/apply`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (err) {
+    throw Error('Error during tag application.');
+  }
+}
+
+export async function untag(token, tagId) {
+  try {
+    await fetch(`${config.API_HOST}/tags/${tagId}/untag`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  } catch (err) {
+    throw Error('Error during untagging operation.');
+  }
+}

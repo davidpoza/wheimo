@@ -13,11 +13,23 @@ export default makeStyles(() => ({
   icon: {
     color: '#ccc',
     marginRight: '10px',
+    //paddingTop: '4px',
+  },
+  summaryContent: {
+    width: '100%',
   },
   summary: {
     borderBottom: '1px solid #ccc',
     '&:hover': {
       backgroundColor: '#f5f5f5',
     },
+  },
+  button: {
+    padding: '1px',
+  },
+  body: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between'
   },
 }));

@@ -7,6 +7,7 @@ import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import LabelIcon from '@material-ui/icons/Label';
+import Button from '@material-ui/core/Button';
 
 // own
 import useStyles from './styles';
@@ -15,10 +16,13 @@ import {
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
 } from '../../../../actions/ui';
+import {
+  apply as applyAction
+} from '../../../../actions/tag';
 import TagRules from '../tag-rules';
 
 function AccordionItem({
-  name, id, rules, changeId, changePosition, changeIndex, indexInStore,
+  user, name, id, rules, changeId, changePosition, changeIndex, indexInStore, apply,
 }) {
   const classes = useStyles();
 
@@ -39,12 +43,32 @@ function AccordionItem({
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           onContextMenu={handleContextMenu}
-          className={classes.summary}
+          classes={{
+            root: classes.summary,
+            content: classes.summaryContent
+          }}
         >
           <LabelIcon className={classes.icon} />
-          <Typography className={classes.heading}>{name} {
-            rules.length > 0 && <span className={classes.rulesCounter}>{`(${rules.length} rules)`}</span>
-          }</Typography>
+          <div className={classes.body}>
+            <Typography>
+              {name} {
+                rules.length > 0 && <span className={classes.rulesCounter}>{`(${rules.length} rules)`}</span>
+              }
+            </Typography>
+            <Button
+              color="primary"
+              variant="contained"
+              size="small"
+              className={classes.button}
+              onClick={(e) => {
+                e.stopPropagation();
+                apply(user.token, id);
+              }}
+            >
+              Apply
+            </Button>
+          </div>
+
         </AccordionSummary>
         <AccordionDetails>
           <TagRules rules={rules} tagId={id} tagIndex={indexInStore} />
@@ -69,7 +93,7 @@ AccordionItem.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-
+  user: state.user.current,
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -82,6 +106,9 @@ const mapDispatchToProps = (dispatch) => ({
   changeIndex: (index) => {
     dispatch(changeIndexAction(index));
   },
+  apply: (token, tagId) => {
+    dispatch(applyAction(token, tagId));
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AccordionItem);
