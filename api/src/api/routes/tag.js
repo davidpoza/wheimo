@@ -119,4 +119,24 @@ export default (app) => {
         return next(err);
       }
     });
+
+    // removes tag from all user transactions
+  route.post('/:id/untag',
+  middlewares.isAuth,
+  async (req, res, next) => {
+    const { id } = req.params
+    const userId = req.user.id;
+    const transactionService = Container.get('transactionService');
+    try {
+      const transactions = await transactionService.findAll({ userId });
+      if (!transactions) {
+        return res.sendStatus(404);
+      }
+      await transactionService.untagTransactions(transactions, parseInt(id, 10));
+      return res.sendStatus(204);
+    } catch (err) {
+      loggerInstance.error('🔥 error: %o', err);
+      return next(err);
+    }
+  });
 };

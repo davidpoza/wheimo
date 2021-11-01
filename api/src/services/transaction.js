@@ -16,12 +16,15 @@ export default class TransactionService {
     this.accountService = Container.get('accountService');
     this.ruleService = Container.get('ruleService');
     this.AES = Container.get('AES');
+    this.notificationQueue = Container.get('notificationQueue');
     this.resync = this.resync.bind(this);
     this.tagTransaction = this.tagTransaction.bind(this);
     this.transactionMeetsRule = this.transactionMeetsRule.bind(this);
     this.transactionMeetsRules = this.transactionMeetsRules.bind(this);
+    this.transactionMeetsRules = this.transactionMeetsRules.bind(this);
     this.applyTags = this.applyTags.bind(this);
-    this.notificationQueue = Container.get('notificationQueue');
+    this.untagTransaction = this.untagTransaction.bind(this);
+    this.untagTransactions = this.untagTransactions.bind(this);
   }
 
   /**
@@ -368,6 +371,33 @@ export default class TransactionService {
     }
     const existingTags = transaction.tags.map((t) => t.id);
     transaction.setTags([ ...existingTags, tagId ]);
+  }
+
+  /**
+   * untag transaction with specified tag, removing it to existing ones.
+   * @param {*} transactionId
+   * @param {*} tagId
+   */
+  async untagTransaction(transactionId, tagId) {
+    this.logger.info(`> ✅ untagging🏷️tag ${tagId} from transaction ${transactionId}`);
+    const transaction = await this.findById({ id:transactionId, admin: true, entity: true });
+    if (!transaction) {
+      return null;
+    }
+    const existingTags = transaction.tags.map((t) => t.id);
+    transaction.setTags(existingTags.filter((t) => t !== tagId));
+  }
+
+  /**
+   * removes given tag from all specified transactions
+   * @param {*} transactionId
+   * @param {*} tagId
+   */
+   async untagTransactions(transactions, tagId) {
+    this.logger.info(`> ✅ untagging🏷️tag ${tagId} from transactions`);
+    for (const t of transactions) {
+      await this.untagTransaction(t.id, tagId);
+    };
   }
 
   /**
