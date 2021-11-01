@@ -21,6 +21,12 @@ export default class TagService {
           name: rule.name,
           type: rule.type,
           value: rule.value,
+          tags: [
+            {
+              id: tag.id,
+              name: tag.name,
+            }
+          ]
         }))
       });
     }

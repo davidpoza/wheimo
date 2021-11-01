@@ -222,5 +222,5 @@ export default (app) => {
       loggerInstance.error('🔥 error: %o', err);
       return next(err);
     }
-});
+  });
 };
