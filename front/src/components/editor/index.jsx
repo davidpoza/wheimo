@@ -19,10 +19,6 @@ export default function Editor({
       e.preventDefault();
       setEdit(true);
     }
-    else if(edit && e.keyCode===13 && e.ctrlKey) {
-      e.preventDefault();
-      setEdit(false);
-    }
   }, [edit]);
 
   useEffect(() => {

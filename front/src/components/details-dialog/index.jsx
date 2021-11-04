@@ -109,6 +109,16 @@ function DetailsDialog({
     close();
   }
 
+  function handleOnKeyDown(e) {
+    if(e.keyCode===27) { //esc
+      e.preventDefault();
+      handleClose();
+    } else if(e.keyCode===13 && e.ctrlKey) {
+      e.preventDefault();
+      processData();
+    }
+  }
+
   async function processData() {
     const data = {
       comments: comments,
@@ -128,6 +138,7 @@ function DetailsDialog({
       onClose={handleClose}
       aria-labelledby="form-dialog-title"
       PaperComponent={PaperComponent}
+      onKeyDown={handleOnKeyDown}
     >
       <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
         Transaction details
