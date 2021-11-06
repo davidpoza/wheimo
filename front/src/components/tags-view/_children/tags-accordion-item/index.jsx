@@ -17,12 +17,13 @@ import {
   contextMenuChangeIndex as changeIndexAction,
 } from '../../../../actions/ui';
 import {
-  apply as applyAction
+  apply as applyAction,
+  untag as untagAction,
 } from '../../../../actions/tag';
 import TagRules from '../tag-rules';
 
 function AccordionItem({
-  user, name, id, rules, changeId, changePosition, changeIndex, indexInStore, apply,
+  user, name, id, rules, changeId, changePosition, changeIndex, indexInStore, apply, untagAll
 }) {
   const classes = useStyles();
 
@@ -55,18 +56,32 @@ function AccordionItem({
                 rules.length > 0 && <span className={classes.rulesCounter}>{`(${rules.length} rules)`}</span>
               }
             </Typography>
-            <Button
-              color="primary"
-              variant="contained"
-              size="small"
-              className={classes.button}
-              onClick={(e) => {
-                e.stopPropagation();
-                apply(user.token, id);
-              }}
-            >
-              Apply
-            </Button>
+            <div>
+              <Button
+                color="primary"
+                variant="contained"
+                size="small"
+                className={classes.button}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  apply(user.token, id);
+                }}
+              >
+                Apply
+              </Button>
+              <Button
+                color="primary"
+                variant="contained"
+                size="small"
+                className={classes.button}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  untagAll(user.token, id);
+                }}
+              >
+                Untag
+              </Button>
+            </div>
           </div>
 
         </AccordionSummary>
@@ -108,6 +123,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   apply: (token, tagId) => {
     dispatch(applyAction(token, tagId));
+  },
+  untagAll: (token, tagId) => {
+    dispatch(untagAction(token, tagId));
   }
 });
 
