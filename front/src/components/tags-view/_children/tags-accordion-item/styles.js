@@ -26,6 +26,9 @@ export default makeStyles(() => ({
   },
   button: {
     padding: '1px',
+    '&:first-child': {
+      marginRight: '0.5em',
+    },
   },
   body: {
     width: '100%',

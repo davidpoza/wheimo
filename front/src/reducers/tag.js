@@ -1,5 +1,5 @@
 import {
-  fetchAll, create, remove, update, apply
+  fetchAll, create, remove, update, apply, untag,
 } from '../actions/tag';
 import { azOrder } from '../utils/utilities';
 import types from '../actions/types';
@@ -125,6 +125,25 @@ const reducer = (state = initialState, action) => {
         error: false,
       };
     case String(apply.rejected):
+      return {
+        ...state,
+        isLoading: false,
+        error: true,
+      };
+    case String(untag.pending):
+      return {
+        ...state,
+        isLoading: true,
+        error: false,
+        errorMessage: undefined,
+      };
+    case String(untag.fulfilled):
+      return {
+        ...state,
+        isLoading: false,
+        error: false,
+      };
+    case String(untag.rejected):
       return {
         ...state,
         isLoading: false,

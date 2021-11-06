@@ -27,6 +27,11 @@ export const apply = createAsyncAction('APPLY_TAG', async (token, id) => {
   return await tagApi.applyTag(token, id);
 });
 
+export const untag = createAsyncAction('UNTAG_ALL', async (token, id) => {
+  return await tagApi.untag(token, id);
+});
+
+
 export const editDialogOpen = () => ({
   type: types.TAGS_EDIT_DIALOG_OPEN,
 });
