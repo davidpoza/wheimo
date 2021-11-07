@@ -6,8 +6,6 @@ export default makeStyles((theme) => ({
     // flexDirection: 'column',
     flex: 1,
     // alignItems: 'center',
-    [theme.breakpoints.up('lg')]: {
-      margin: '0 20%',
-    },
+
   },
 }));

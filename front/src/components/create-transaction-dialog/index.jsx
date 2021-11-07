@@ -8,7 +8,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import AddIcon from '@material-ui/icons/Add';
-import Fab from '@material-ui/core/Fab';
+import IconButton from '@material-ui/core/IconButton';
 import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
@@ -176,9 +176,9 @@ function CreateTransactionDialog({
 
   return (
     <div>
-      <Fab className={classes.addButton} color="primary" aria-label="add" onClick={handleClickOpen}>
-        <AddIcon />
-      </Fab>
+      <IconButton className={classes.addButton} color="primary" aria-label="add" onClick={handleClickOpen} size="medium">
+        <AddIcon fontSize="inherit" />
+      </IconButton>
       <Dialog open={isOpen} onClose={handleClose} aria-labelledby="form-dialog-title" PaperComponent={PaperComponent}>
         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
           { index !== undefined ? 'Edit transaction' : 'Add manual transaction' }
