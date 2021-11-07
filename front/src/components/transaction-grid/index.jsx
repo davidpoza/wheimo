@@ -16,7 +16,7 @@ import {
 function TransactionGrid({ transactions, page = 1, setPage }) {
   const classes = useStyles();
   const windowSize = useWindowSize();
-  const HEADER_FOOTER_SIZE = 64 + 94 + 64 + 56 + 90; // TODO: this value should be calculated
+  const HEADER_FOOTER_SIZE = 64 + 92 + 64; // TODO: this value should be calculated (header + filters + paginator)
   const ITEM_SIZE = 60; // TODO: this value should be calculated
   const pageSize = windowSize
     ? Math.round((windowSize.height - HEADER_FOOTER_SIZE) / ITEM_SIZE)
