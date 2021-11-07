@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 // own
 import './App.css';
 import PrivateRoute from './hocs/private-route';
-import Navigation from './components/navigation';
 import Content from './components/content';
 import HomeView from './components/home-view';
 import TagsView from './components/tags-view';
@@ -29,7 +28,6 @@ function App() {
               <PrivateRoute path="/accounts" exact component={AccountsView}/>
             </Switch>
           </Content>
-          <Navigation />
         </Router>
       </Provider>
     </div>

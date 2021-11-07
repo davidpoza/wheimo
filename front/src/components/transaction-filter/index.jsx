@@ -13,7 +13,7 @@ import Switch from '@material-ui/core/Switch';
 import TextField from '@material-ui/core/TextField';
 
 // own
-
+import CreateTransationDialog from '../create-transaction-dialog';
 import useStyles from './styles';
 import AccountSelect from '../account-select';
 import TagsSelect from '../tags-select';
@@ -107,6 +107,7 @@ function TransactionFilter({
           label="charts"
         />
       </FormGroup>
+      <CreateTransationDialog />
 </div>
   );
 }

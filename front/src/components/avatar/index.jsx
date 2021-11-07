@@ -1,41 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import get from 'lodash.get';
-
-// material ui
 import Avatar from '@material-ui/core/Avatar';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import PersonIcon from '@material-ui/icons/PersonOutline';
-import ExitIcon from '@material-ui/icons/ExitToApp';
-import Typography from '@material-ui/core/Typography';
 
 // own
+import NavMenu from 'components/menu';
 import usePushNotifications from '../../hooks/use-push-notification';
-import { resetState } from '../../actions/user';
 import config from '../../utils/config';
 import useStyles from './styles';
 
-function MyAvatar({ user, resetUserState }) {
+function MyAvatar({ user }) {
   const { userSubscription } = usePushNotifications(user?.token);
-  console.log('--->', userSubscription);
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    handleClose();
-    resetUserState();
   };
 
   // eslint-disable-next-line max-len
@@ -50,27 +31,7 @@ function MyAvatar({ user, resetUserState }) {
           src={`${config.API_HOST}${url}`}
         />
         <span onClick={handleClick} className={classes.username}>{get(user, 'email')}</span>
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem component={Link} to="/profile" className={classes.menuEmail}>
-            <ListItemIcon>
-              <PersonIcon className={classes.icon} fontSize="small" />
-            </ListItemIcon>
-            <Typography>My profile</Typography>
-          </MenuItem>
-
-          <MenuItem onClick={handleLogout}>
-            <ListItemIcon>
-                <ExitIcon className={classes.icon} fontSize="small" />
-            </ListItemIcon>
-            <Typography>Logout</Typography>
-          </MenuItem>
-        </Menu>
+        <NavMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
       </>
     );
   }
@@ -86,8 +47,4 @@ const mapStateToProps = (state) => ({
   user: state.user.current || null,
 });
 
-const mapDispatchToProps = (dispatch) => ({
-  resetUserState: () => dispatch(resetState()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(MyAvatar);
+export default connect(mapStateToProps)(MyAvatar);

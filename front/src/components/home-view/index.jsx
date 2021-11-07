@@ -11,7 +11,7 @@ import {
 import TransactionGrid from '../transaction-grid';
 import Charts from '../charts';
 import TransactionFilter from '../transaction-filter';
-import CreateTransationDialog from '../create-transaction-dialog';
+
 import DetailsDialog from '../details-dialog';
 import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
@@ -40,7 +40,7 @@ function HomeView({
           ? <Charts />
           : <TransactionGrid transactions={transactions} />
       }
-      <CreateTransationDialog />
+
       <DetailsDialog />
     </div>
   );

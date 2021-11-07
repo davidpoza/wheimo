@@ -22,6 +22,7 @@ export default makeStyles(() => ({
     justifyContent: 'space-between',
   },
   addButton: {
-    maxHeight: '60px',
+    border: '1px solid grey',
+    borderRadius: '8px',
   },
 }));
