@@ -21,8 +21,12 @@ export default makeStyles((theme) => ({
   },
   selectGroup: {
     display: 'flex',
-    alignItems: 'flex-end',
+    flexDirection: 'column',
     justifyContent: 'space-between',
+    [theme.breakpoints.up('lg')]: {
+      alignItems: 'flex-end',
+      flexDirection: 'row',
+    },
   },
   addButton: {
     border: '1px solid grey',
