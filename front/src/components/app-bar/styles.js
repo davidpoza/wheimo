@@ -10,6 +10,7 @@ export default makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     lineHeight: '1',
+    cursor: 'pointer',
   },
   appName: {
     fontSize: '0.5em',

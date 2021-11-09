@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 // material ui
@@ -12,8 +13,9 @@ import Typography from '@material-ui/core/Typography';
 // own
 import Avatar from '../avatar';
 import useStyles from './styles';
+import { openDrawer as openDrawerAction } from '../../actions/ui';
 
-function MyAppBar() {
+function MyAppBar({ openDrawer }) {
   const classes = useStyles();
   const location = useLocation();
 
@@ -31,7 +33,7 @@ function MyAppBar() {
   return (
     <AppBar position="fixed" className={classes.appBar} >
       <Toolbar>
-        <Typography variant="h6" noWrap className={classes.title}>
+        <Typography variant="h6" noWrap className={classes.title} onClick={openDrawer}>
           <span title="Where is my money?" className={classes.appName}>
             whei<span className={classes.appNameColored}>MO?</span>
           </span>
@@ -47,4 +49,8 @@ MyAppBar.propTypes = {
 
 };
 
-export default MyAppBar;
+const mapDispatchToProps = (dispatch) => ({
+  openDrawer: () => dispatch(openDrawerAction()),
+});
+
+export default connect(null, mapDispatchToProps)(MyAppBar);
