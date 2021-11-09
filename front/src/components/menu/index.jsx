@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import Box from '@material-ui/core/Box';
+import Drawer from '@material-ui/core/Drawer';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import PersonIcon from '@material-ui/icons/PersonOutline';
 import ExitIcon from '@material-ui/icons/ExitToApp';
@@ -12,69 +15,80 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import AccountIcon from '@material-ui/icons/AccountBalance';
 import TransactionIcon from '@material-ui/icons/Receipt';
 import ReportIcon from '@material-ui/icons/Assessment';
-import Typography from '@material-ui/core/Typography';
 
 import useStyles from './styles';
 import { resetState } from '../../actions/user';
+import { closeDrawer as closeDrawerAction } from '../../actions/ui';
 
-function NavMenu({ resetUserState, anchorEl, setAnchorEl }) {
+function NavMenu({ resetUserState, drawerOpen, closeDrawer }) {
   const classes = useStyles();
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const handleLogout = () => {
-    handleClose();
+    closeDrawer();
     resetUserState();
   };
 
-  return <Menu
-    id="simple-menu"
-    anchorEl={anchorEl}
-    keepMounted
-    open={Boolean(anchorEl)}
-    onClose={handleClose}
+  const list = (anchor) => (
+    <Box
+      sx={{ width: 400 }}
+      role="presentation"
+    >
+      <List>
+        <ListItem button key='profile' component={Link} to="/profile" onClick={closeDrawer}>
+          <ListItemIcon>
+            <PersonIcon className={classes.icon} fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="My profile" />
+        </ListItem>
+
+        <ListItem button key='transactions' component={Link} to="/" onClick={closeDrawer}>
+          <ListItemIcon>
+            <TransactionIcon className={classes.icon} fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Transactions" />
+        </ListItem>
+
+        <ListItem button key='accounts' component={Link} to="/accounts" onClick={closeDrawer}>
+          <ListItemIcon>
+            <AccountIcon className={classes.icon} fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Accounts" />
+        </ListItem>
+
+        <ListItem button key='tags' component={Link} to="/tags" onClick={closeDrawer}>
+          <ListItemIcon>
+            <TagIcon className={classes.icon} fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Tags & Rules" />
+        </ListItem>
+
+        <ListItem button key='logout' onClick={handleLogout}>
+          <ListItemIcon>
+            <ExitIcon className={classes.icon} fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Logout" />
+        </ListItem>
+      </List>
+    </Box>
+  );
+
+  return <Drawer
+    variant="temporary"
+    anchor="left"
+    open={drawerOpen}
+    onClose={closeDrawer}
   >
-    <MenuItem component={Link} to="/profile" className={classes.menuEmail}>
-      <ListItemIcon>
-        <PersonIcon className={classes.icon} fontSize="small" />
-      </ListItemIcon>
-      <Typography>My profile</Typography>
-    </MenuItem>
-
-    <MenuItem component={Link} to="/" className={classes.menuEmail}>
-      <ListItemIcon>
-        <TransactionIcon className={classes.icon} fontSize="small" />
-      </ListItemIcon>
-      <Typography>Transactions</Typography>
-    </MenuItem>
-
-    <MenuItem component={Link} to="/accounts" className={classes.menuEmail}>
-      <ListItemIcon>
-        <AccountIcon className={classes.icon} fontSize="small" />
-      </ListItemIcon>
-      <Typography>Accounts</Typography>
-    </MenuItem>
-
-    <MenuItem component={Link} to="/tags" className={classes.menuEmail}>
-      <ListItemIcon>
-        <TagIcon className={classes.icon} fontSize="small" />
-      </ListItemIcon>
-      <Typography>Tags & Rules</Typography>
-    </MenuItem>
-
-    <MenuItem onClick={handleLogout}>
-      <ListItemIcon>
-          <ExitIcon className={classes.icon} fontSize="small" />
-      </ListItemIcon>
-      <Typography>Logout</Typography>
-    </MenuItem>
-  </Menu>
+    {list()}
+  </Drawer>
 }
+
+const mapStateToProps = (state) => ({
+  drawerOpen: state.ui.drawerOpen
+});
 
 const mapDispatchToProps = (dispatch) => ({
   resetUserState: () => dispatch(resetState()),
+  closeDrawer: () => dispatch(closeDrawerAction())
 });
 
-export default connect(null, mapDispatchToProps)(NavMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(NavMenu);

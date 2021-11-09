@@ -2,6 +2,7 @@ import types from '../actions/types';
 
 const initialState = {
   theme: 'light',
+  drawerOpen: false,
   contextMenuState: {
     mouseX: null,
     mouseY: null,
@@ -36,6 +37,16 @@ const reducer = (state = initialState, action) => {
           mouseX: action.payload.x,
           mouseY: action.payload.y,
         },
+      };
+    case types.UI_OPEN_DRAWER:
+      return {
+        ...state,
+        drawerOpen: true,
+      };
+    case types.UI_CLOSE_DRAWER:
+      return {
+        ...state,
+        drawerOpen: false,
       };
     default:
       return state;

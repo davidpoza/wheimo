@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import get from 'lodash.get';
@@ -6,17 +6,17 @@ import Avatar from '@material-ui/core/Avatar';
 
 // own
 import NavMenu from 'components/menu';
+import { openDrawer as openDrawerAction } from '../../actions/ui';
 import usePushNotifications from '../../hooks/use-push-notification';
 import config from '../../utils/config';
 import useStyles from './styles';
 
-function MyAvatar({ user }) {
+function MyAvatar({ user, openDrawer }) {
   const { userSubscription } = usePushNotifications(user?.token);
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+    openDrawer();
   };
 
   // eslint-disable-next-line max-len
@@ -31,7 +31,7 @@ function MyAvatar({ user }) {
           src={`${config.API_HOST}${url}`}
         />
         <span onClick={handleClick} className={classes.username}>{get(user, 'email')}</span>
-        <NavMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
+        <NavMenu />
       </>
     );
   }
@@ -47,4 +47,8 @@ const mapStateToProps = (state) => ({
   user: state.user.current || null,
 });
 
-export default connect(mapStateToProps)(MyAvatar);
+const mapDispatchToProps = (dispatch) => ({
+  openDrawer: () => dispatch(openDrawerAction()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyAvatar);

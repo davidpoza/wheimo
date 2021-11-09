@@ -14,3 +14,12 @@ export const contextMenuChangePosition = (x, y) => ({
   type: types.UI_CONTEXT_MENU_CHANGE_POSITION,
   payload: { x, y },
 });
+
+export const openDrawer = () => ({
+  type: types.UI_OPEN_DRAWER,
+});
+
+export const closeDrawer = () => ({
+  type: types.UI_CLOSE_DRAWER,
+});
+
