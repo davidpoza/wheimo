@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { Block } from '@material-ui/icons';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   root: {
     padding: '0 30px',
     boxShadow: 'none',
@@ -20,11 +21,19 @@ export default makeStyles(() => ({
   },
   summary: {
     borderBottom: '1px solid #ccc',
+    padding: 0,
+    [theme.breakpoints.up('lg')]: {
+      padding: '0px 16px',
+    },
     '&:hover': {
       backgroundColor: '#f5f5f5',
     },
   },
   button: {
+    display: 'none',
+    [theme.breakpoints.up('lg')]: {
+      display: 'inline',
+    },
     padding: '1px',
     '&:first-child': {
       marginRight: '0.5em',
