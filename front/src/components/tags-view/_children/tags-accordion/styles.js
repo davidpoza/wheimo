@@ -1,7 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   root: {
+    paddingTop: '40px',
+    [theme.breakpoints.up('lg')]: {
+      paddingTop: '5px',
+    },
     overflowY: 'scroll',
     overflowX: 'hidden',
     flex: 1,

@@ -1,11 +1,14 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: '2em 0.5em',
+    [theme.breakpoints.up('lg')]: {
+      margin: '2em 0.5em',
+    },
+    margin: '2em 1.5em',
   },
   createButton: {
     cursor: 'pointer',
