@@ -20,7 +20,10 @@ export default makeStyles((theme) => ({
     margin: 0,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    [theme.breakpoints.up('lg')]: {
+      justifyContent: 'space-between',
+    }
   },
   resultsCounter: {
     display: 'none',
