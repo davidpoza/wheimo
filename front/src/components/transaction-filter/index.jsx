@@ -93,6 +93,7 @@ function TransactionFilter({
         }}
       />
       <AccountSelect
+        className={classes.accountSelector}
         label="Account"
         value={accountId}
         handleChange={(e) => { setAccountId(e.target.value); }}

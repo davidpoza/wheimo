@@ -11,6 +11,7 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import dayjs from 'dayjs';
 
 // own
+import withIsMobile from 'hocs/with-is-mobile.jsx';
 import Tags from '../tags';
 import useStyles from './styles';
 import {
@@ -27,7 +28,8 @@ import {
 import { formatAmount } from 'utils/utilities';
 
 function TransactionGridItem({
-  account,
+  accountIdentifier,
+  accountDescription,
   accountBalance,
   amount,
   changeId,
@@ -49,10 +51,14 @@ function TransactionGridItem({
   updateFavourite,
   user,
   valueDate,
+  isMobile,
 }) {
   const classes = useStyles();
   const labelId = `checkbox-list-label-${index}`;
   const emitterReceiver = amount > 0 ? emitterName : receiverName;
+  const emitterLimit = isMobile ? 20 : 26;
+  const descriptionLimit = isMobile ? 20 : 26;
+  const commentsLimit = isMobile ? 20 : 26;
 
   function handleContextMenu(e) {
     e.preventDefault();
@@ -81,9 +87,10 @@ function TransactionGridItem({
       className={classes.root}
       onContextMenu={handleContextMenu}
       disableTouchRipple
-      onDoubleClick={() => {
+      onClick={() => {
         handleOpenDetailsDialog();
       }}
+      onTap
     >
       <ListItemIcon className={classes.checkbox}>
         <Checkbox
@@ -101,41 +108,55 @@ function TransactionGridItem({
       </ListItemIcon>
       <div className={classes.content}>
         <div className={classes.firstLine}>
-          <span className={`${classes.icon} ${amount > 0 ? classes.down : classes.up}`}>
-            { amount > 0 ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
-          </span>
-          <span className={classes.amount}>
+          {
+            !isMobile &&
+            <span className={`${classes.icon} ${amount > 0 ? classes.down : classes.up}`}>
+              { amount > 0 ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
+            </span>
+          }
+          <span className={`${classes.amount} ${amount > 0 ? classes.down : classes.up}`}>
             {`${formatAmount(amount)}`}
           </span>
           {
-            emitterReceiver
+            emitterReceiver && !isMobile
               && <span className={classes.emitter}>
-                {emitterReceiver?.substr(0, 26)?.toLowerCase()}
-                {emitterReceiver.length > 26 && <>...</> }
+                {emitterReceiver?.substr(0, emitterLimit)?.toLowerCase()}
+                {emitterReceiver.length > emitterLimit && <>...</> }
               </span>
           }
           <div className={classes.tags}>
             <Tags tags={tags} />
           </div>
           <div className={classes.date}>
-            {dayjs(date).format('dddd DD, MMM YY')}
+            {
+              isMobile
+                ? dayjs(date).format('DD/MM')
+                : dayjs(date).format('dddd DD, MMM YY')
+            }
           </div>
-          <span className={classes.star}>
           {
-            favourite
-              ? <StarIcon className={classes.activeStar} fontSize="small" onClick={toggleFavourite} />
-              : <StarBorderIcon fontSize="small" onClick={toggleFavourite} />
+            !isMobile &&
+              <span className={classes.star}>
+              {
+                favourite
+                  ? <StarIcon className={classes.activeStar} fontSize="small" onClick={toggleFavourite} />
+                  : <StarBorderIcon fontSize="small" onClick={toggleFavourite} />
+              }
+              </span>
           }
-          </span>
         </div>
         <div className={classes.secondLine}>
           <div className={classes.description}>
-            {description?.toUpperCase()}
-            {(description?.length > 0 && comments) && ' - '}
-            {comments?.split('\n')?.[0]?.toUpperCase()}
+            {description?.substr(0, descriptionLimit).toUpperCase() || emitterReceiver?.substr(0, emitterLimit)?.toLowerCase()}
+            {(!isMobile && description?.length > 0 && comments) && ' - '}
+            {!isMobile && comments?.substr(0, commentsLimit).split('\n')?.[0]?.toUpperCase()}
           </div>
           <div className={classes.account}>
-          {account} | {formatAmount(accountBalance, false)}
+          {
+            isMobile
+              ? accountIdentifier
+              : accountDescription
+            } | {formatAmount(accountBalance, false)}
           </div>
         </div>
 
@@ -145,7 +166,8 @@ function TransactionGridItem({
 }
 
 TransactionGridItem.propTypes = {
-  account: PropTypes.string,
+  accountIdentifier: PropTypes.string,
+  accountDescription: PropTypes.string,
   accountBalance: PropTypes.number,
   amount: PropTypes.number,
   changeId: PropTypes.func,
@@ -203,4 +225,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionGridItem);
+export default connect(mapStateToProps, mapDispatchToProps)(withIsMobile(TransactionGridItem));

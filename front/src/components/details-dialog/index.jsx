@@ -144,7 +144,6 @@ function DetailsDialog({
         Transaction details
       </DialogTitle>
       <DialogContent className={classes.root}>
-        <img id="xxx" />
         <Tags tags={tags} />
         <p className={classes.item}>
           <h2 className={classes.h2}>{account} </h2>

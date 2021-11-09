@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   root: {
     fontSize: '0.9em',
     borderTop: '1px solid #ccc',
@@ -8,7 +8,11 @@ export default makeStyles(() => ({
     height: '60px',
   },
   checkbox: {
-    minWidth: '30px',
+    display: 'none',
+    [theme.breakpoints.up('lg')]: {
+      display: 'block',
+      minWidth: '30px',
+    },
   },
   activeStar: {
     color: '#eea300',
@@ -59,9 +63,21 @@ export default makeStyles(() => ({
   },
   up: {
     color: '#f50057',
+    [theme.breakpoints.up('lg')]: {
+      color: 'inherit',
+    },
+    '&>svg': {
+      color: '#f50057',
+    },
   },
   down: {
     color: 'darkcyan',
+    [theme.breakpoints.up('lg')]: {
+      color: 'inherit',
+    },
+    '&>svg': {
+      color: 'darkcyan',
+    },
   },
   star: {
     color: '#ccc',

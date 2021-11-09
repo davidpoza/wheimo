@@ -135,7 +135,8 @@ function EditAccountDialog({
         <TextField
           className={classes.transactionTargetTextField}
           margin="dense"
-          label="Account Name"
+          label="Account Identifier"
+          inputProps={{ maxLength: 6 }}
           type="text"
           value={name}
           onChange={(e) => {

@@ -23,6 +23,10 @@ export default makeStyles((theme) => ({
     justifyContent: 'space-between',
   },
   resultsCounter: {
+    display: 'none',
+    [theme.breakpoints.up('lg')]: {
+      display: 'block',
+    },
     fontSize: '0.9em',
     padding: '1em',
     fontWeight: 300,

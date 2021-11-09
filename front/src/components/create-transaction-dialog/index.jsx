@@ -175,7 +175,7 @@ function CreateTransactionDialog({
   }
 
   return (
-    <div>
+    <div className={classes.root}>
       <IconButton className={classes.addButton} color="primary" aria-label="add" onClick={handleClickOpen} size="medium">
         <AddIcon fontSize="inherit" />
       </IconButton>
