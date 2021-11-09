@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   root: {
     fontSize: '0.9em',
     fontWeight: '300',
@@ -33,6 +33,10 @@ export default makeStyles(() => ({
   },
   item: {
     display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.up('lg')]: {
+      flexDirection: 'row',
+    },
     justifyContent: 'space-between',
     alignItems: 'baseline',
     borderBottom: '1px solid #dedfe0',

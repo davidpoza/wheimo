@@ -6,9 +6,10 @@ import gfm from 'remark-gfm';
 
 // own
 import useStyles from './styles';
+import withIsMobile from 'hocs/with-is-mobile.jsx';
 
-export default function Editor({
-  content, setContent,
+function Editor({
+  content, setContent, isMobile,
 }) {
   const [edit, setEdit] = useState(false);
   const classes = useStyles();
@@ -43,7 +44,8 @@ export default function Editor({
     <div
       className={classes.root}
       onKeyDown={handleKeyDown}
-      onDoubleClick={handleDoubleClick}
+      onDoubleClick={!isMobile && handleDoubleClick}
+      onClick={isMobile && handleDoubleClick}
     >
     {
       edit
@@ -66,6 +68,8 @@ export default function Editor({
     </div>
   );
 }
+
+export default withIsMobile(Editor);
 
 Editor.propTypes = {
   content: PropTypes.string,

@@ -1,8 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   root: {
-
+    display: 'none',
+    [theme.breakpoints.up('lg')]: {
+      display: 'block',
+    },
   },
   comments: {
     marginBottom: '2em',

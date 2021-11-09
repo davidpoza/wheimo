@@ -48,7 +48,8 @@ function TransactionGrid({ transactions, page = 1, setPage }) {
                     {
                       chunk.map((transaction, index) => (
                         <TransactionGridItem
-                          account={transaction.account.name}
+                          accountIdentifier={transaction.account.name}
+                          accountDescription={transaction.account.description}
                           accountBalance={transaction.balance}
                           amount={transaction.amount}
                           checked={transaction.checked || false}
