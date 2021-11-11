@@ -56,9 +56,9 @@ function TransactionGridItem({
   const classes = useStyles();
   const labelId = `checkbox-list-label-${index}`;
   const emitterReceiver = amount > 0 ? emitterName : receiverName;
-  const emitterLimit = isMobile ? 20 : 26;
-  const descriptionLimit = isMobile ? 20 : 26;
-  const commentsLimit = isMobile ? 20 : 26;
+  const emitterLimit = isMobile ? 26 : 26;
+  const descriptionLimit = isMobile ? 26 : 60;
+  const commentsLimit = isMobile ? 26 : 60;
 
   function handleContextMenu(e) {
     e.preventDefault();
@@ -147,7 +147,7 @@ function TransactionGridItem({
         </div>
         <div className={classes.secondLine}>
           <div className={classes.description}>
-            {description?.substr(0, descriptionLimit).toUpperCase() || emitterReceiver?.substr(0, emitterLimit)?.toLowerCase()}
+            {description?.substr(0, descriptionLimit).toUpperCase() || (isMobile && emitterReceiver?.substr(0, emitterLimit)?.toUpperCase())}
             {(!isMobile && description?.length > 0 && comments) && ' - '}
             {!isMobile && comments?.substr(0, commentsLimit).split('\n')?.[0]?.toUpperCase()}
           </div>
