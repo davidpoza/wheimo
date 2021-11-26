@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import List from '@material-ui/core/List';
 import Pagination from '@material-ui/lab/Pagination';
 
 // own
+import { getInnerHeight } from 'utils/utilities';
 import TransactionGridItem from '../transaction-grid-item';
 import useStyles from './styles';
-import useWindowSize from '../../hooks/use-window-size';
 import OperationDropdown from '../operation-dropdown';
 import {
   setPage as setPageAction,
@@ -15,11 +15,10 @@ import {
 
 function TransactionGrid({ transactions, page = 1, setPage }) {
   const classes = useStyles();
-  const windowSize = useWindowSize();
-  const HEADER_FOOTER_SIZE = 64 + 92 + 64; // TODO: this value should be calculated (header + filters + paginator)
-  const ITEM_SIZE = 60; // TODO: this value should be calculated
-  const pageSize = windowSize
-    ? Math.round((windowSize.height - HEADER_FOOTER_SIZE) / ITEM_SIZE)
+  const listRef = useRef();
+  const ITEM_SIZE = 60;
+  const pageSize = listRef?.current
+    ? Math.round(getInnerHeight(listRef.current) / ITEM_SIZE)
     : 0;
 
   function handlePageChange(event, value) {
@@ -32,7 +31,7 @@ function TransactionGrid({ transactions, page = 1, setPage }) {
 
   const pagesCount = Math.floor(transactions.length / pageSize);
   return (
-    <div id="ww" className={classes.root}
+    <div className={classes.root}
       style={{
         justifyContent: transactions.length === 0
           ? 'center'
@@ -44,7 +43,7 @@ function TransactionGrid({ transactions, page = 1, setPage }) {
           && <>
             {
               transactions.length > 0
-                ? <List>
+                ? <List ref={listRef} className={classes.list}>
                     {
                       chunk.map((transaction, index) => (
                         <TransactionGridItem
