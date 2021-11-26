@@ -33,12 +33,15 @@ function MyAppBar({ openDrawer }) {
   return (
     <AppBar position="fixed" className={classes.appBar} >
       <Toolbar>
-        <Typography variant="h6" noWrap className={classes.title} onClick={openDrawer}>
-          <span title="Where is my money?" className={classes.appName}>
-            whei<span className={classes.appNameColored}>MO?</span>
-          </span>
-          {getTitle()}
-        </Typography>
+        <div className={classes.block}>
+          <MenuIcon fontSize="large" onClick={openDrawer} />
+          <Typography variant="h6" noWrap className={classes.title}>
+            <span title="Where is my money?" className={classes.appName}>
+              whei<span className={classes.appNameColored}>MO?</span>
+            </span>
+            {getTitle()}
+          </Typography>
+        </div>
         <Avatar />
       </Toolbar>
     </AppBar>

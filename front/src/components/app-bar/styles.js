@@ -4,13 +4,19 @@ import config from '../../utils/config';
 export default makeStyles((theme) => ({
   appBar: {
   },
-  title: {
+  block: {
+    display: 'flex',
+    flexDirection: 'row',
     flexGrow: 1,
+    '& > svg': {
+      cursor: 'pointer',
+    }
+  },
+  title: {
     textAlign: 'left',
     display: 'flex',
     flexDirection: 'column',
     lineHeight: '1',
-    cursor: 'pointer',
   },
   appName: {
     fontSize: '0.5em',

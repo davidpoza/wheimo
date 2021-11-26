@@ -34,4 +34,7 @@ export default makeStyles((theme) => ({
     padding: '1em',
     fontWeight: 300,
   },
+  list: {
+    height: '100%'
+  }
 }));

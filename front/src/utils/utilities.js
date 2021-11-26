@@ -93,3 +93,8 @@ export function formatAmount(amount, absolute = true) {
     currency: 'EUR',
   });
 }
+
+export function getInnerHeight(element) {
+  const computedStyle = getComputedStyle(element);
+  return element.clientHeight - parseFloat(computedStyle.paddingTop) - parseFloat(computedStyle.paddingBottom);
+}

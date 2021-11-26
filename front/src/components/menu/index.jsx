@@ -30,10 +30,9 @@ function NavMenu({ resetUserState, drawerOpen, closeDrawer }) {
 
   const list = (anchor) => (
     <Box
-      sx={{ width: 400 }}
       role="presentation"
     >
-      <List>
+      <List className={classes.list}>
         <ListItem button key='profile' component={Link} to="/profile" onClick={closeDrawer}>
           <ListItemIcon>
             <PersonIcon className={classes.icon} fontSize="small" />
