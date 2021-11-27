@@ -8,8 +8,12 @@ export default makeStyles((theme) => ({
     cursor: 'pointer',
   },
   username: {
+    display: 'none',
     color: '#fff',
     cursor: 'pointer',
+    [theme.breakpoints.up('md')]: {
+      display: 'inline',
+    },
   },
   icon: {
     color: '#4d4d4d',
