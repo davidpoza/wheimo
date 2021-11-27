@@ -74,7 +74,7 @@ function TransactionGridItem({
   }
 
   function toggleFavourite(e) {
-    e.preventDefault();
+    e.stopPropagation();
     updateFavourite(user.token, id, indexInStore, favourite);
   }
 
