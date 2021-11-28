@@ -3,9 +3,12 @@ import { Block } from '@material-ui/icons';
 
 export default makeStyles((theme) => ({
   root: {
-    padding: '0 30px',
-    boxShadow: 'none',
-    position: 'inherit',
+    display: 'flex',
+    fontSize: '0.9em',
+    borderTop: '1px solid #ccc',
+    padding: '0 30px 0 20px',
+    height: '60px',
+    alignItems: 'center',
   },
   rulesCounter: {
     fontSize: '0.8em',
@@ -42,6 +45,7 @@ export default makeStyles((theme) => ({
   body: {
     width: '100%',
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    textAlign: 'left',
   },
 }));

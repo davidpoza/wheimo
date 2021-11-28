@@ -5,10 +5,7 @@ export default makeStyles((theme) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    [theme.breakpoints.up('lg')]: {
-      margin: '2em 0.5em',
-    },
-    margin: '2em 1.5em',
+    padding: '0 1em',
   },
   createButton: {
     cursor: 'pointer',

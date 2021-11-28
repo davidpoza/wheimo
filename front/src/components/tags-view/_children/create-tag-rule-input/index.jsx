@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { v4 as uuidv4 } from 'uuid';
 import AddBoxIcon from '@material-ui/icons/AddBox';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 // own
 import useStyles from './styles';
@@ -20,13 +20,12 @@ function CreateTagRuleInput({
 }) {
   const classes = useStyles();
 
-  const [name, setName] = useState('');
   const [type, setType] = useState('');
   const [value, setValue] = useState('');
   const [error, setError] = useState(true);
 
   function checkErrors() {
-    if (name === '' || type === '' || value === '') {
+    if (type === '' || value === '') {
       setError(true);
     } else {
       setError(false);
@@ -35,12 +34,12 @@ function CreateTagRuleInput({
 
   useEffect(() => {
     checkErrors();
-  }, [name, type, value]);
+  }, [type, value]);
 
   async function add() {
-    const rule = await ruleApi.create(user.token, { name, type, value });
+    const uuid = uuidv4();
+    const rule = await ruleApi.create(user.token, { name: uuid, type, value });
     updateTag(user.token, tagId, tagIndex, { rules: [...currentRules, rule.id] });
-    setName('');
     setType('');
     setValue('');
   }
@@ -53,63 +52,48 @@ function CreateTagRuleInput({
   }
 
   return (
-    <TableRow className={classes.root}>
-      <TableCell align="left" scope="row">
-        <input
-          className={classes.input}
-          id="tagName"
-          type="text"
-          value={name}
-          placeholder="type a name for a new rule"
-          onChange={(e) => {
-            setName(e.target.value);
-          }}
-        />
-      </TableCell>
-      <TableCell align="right" scope="row">
-        <Select
-          onChange={(e) => { setType(e.target.value); }}
-          variant="outlined"
-          className={classes.typeSelect}
-          value={type}
-        >
-          <MenuItem value="emitterName">Emitter name</MenuItem>
-          <MenuItem value="receiverName">Receiver name</MenuItem>
-          <MenuItem value="description">Description</MenuItem>
-          <MenuItem value="isExpense">It&apos;s an expense</MenuItem>
-          <MenuItem value="amount">Amount</MenuItem>
-          <MenuItem value="card">Card</MenuItem>
-          <MenuItem value="isReceipt">It&apos;s a receipt</MenuItem>
-          <MenuItem value="account">Account</MenuItem>
-          <MenuItem value="currency">Currency</MenuItem>
-          <MenuItem value="bankId">Bank</MenuItem>
-        </Select>
-      </TableCell>
-      <TableCell align="right" scope="row" className={classes.valueCell}>
-        <input
-          className={classes.inputWithSubmit}
-          id="tagName"
-          type="text"
-          value={value}
-          placeholder="type a rule using correct syntax"
-          onChange={(e) => {
-            setValue(e.target.value);
-          }}
-          onKeyUp={onEnterKeyPress}
-        />
-        <IconButton
-          className={classes.createButton}
-          color="primary"
-          title="Create rule"
-          onClick={add}
-          disabled={error}
-        >
-          <AddBoxIcon
-            fontSize="large"
-          />
-        </IconButton>
-      </TableCell>
-    </TableRow>
+    <div className={classes.root}>
+      <Select
+        displayEmpty={true}
+        renderValue={value => value?.length ? Array.isArray(value) ? value.join(', ') : value : 'Select type of rule'}
+        onChange={(e) => { setType(e.target.value); }}
+        variant="outlined"
+        className={classes.typeSelect}
+        value={type}
+      >
+        <MenuItem value="emitterName">Emitter name</MenuItem>
+        <MenuItem value="receiverName">Receiver name</MenuItem>
+        <MenuItem value="description">Description</MenuItem>
+        <MenuItem value="isExpense">It&apos;s an expense</MenuItem>
+        <MenuItem value="amount">Amount</MenuItem>
+        <MenuItem value="card">Card</MenuItem>
+        <MenuItem value="isReceipt">It&apos;s a receipt</MenuItem>
+        <MenuItem value="account">Account</MenuItem>
+        <MenuItem value="currency">Currency</MenuItem>
+        <MenuItem value="bankId">Bank</MenuItem>
+      </Select>
+      <TextField
+        id="tagName"
+        size="small"
+        variant="outlined"
+        value={value}
+        placeholder="Type a rule using correct syntax"
+        onChange={(e) => {
+          setValue(e.target.value);
+        }}
+        onKeyUp={onEnterKeyPress}
+      />
+      <Button
+        variant="outlined"
+        className={classes.createButton}
+        title="Create rule"
+        onClick={add}
+        disabled={error}
+        startIcon={<AddBoxIcon />}
+      >
+        New Rule
+      </Button>
+    </div>
   );
 }
 

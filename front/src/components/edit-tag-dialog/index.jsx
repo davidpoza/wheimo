@@ -11,10 +11,13 @@ import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
 // own
+import TagRules from 'components/tags-view/_children/tag-rules/index.jsx'
 import useStyles from './styles';
 import {
   editDialogOpen as openAction,
   editDialogClose as closeAction,
+  apply as applyAction,
+  untag as untagAction,
   update as updateAction,
 } from '../../actions/tag';
 import {
@@ -40,6 +43,9 @@ function EditTagDialog({
   updateTag,
   changeUIId,
   changeUIIndex,
+  indexInStore,
+  apply,
+  untagAll,
 }) {
   const classes = useStyles();
   const [tagName, setTagName] = useState('');
@@ -88,6 +94,33 @@ function EditTagDialog({
         Edit tag
       </DialogTitle>
       <DialogContent>
+        <div className={classes.opButtons}>
+          <Button
+            color="primary"
+            variant="contained"
+            size="small"
+            className={classes.button}
+            onClick={(e) => {
+              e.stopPropagation();
+              apply(user.token, id);
+            }}
+          >
+            Apply
+          </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            size="small"
+            className={classes.button}
+            onClick={(e) => {
+              e.stopPropagation();
+              untagAll(user.token, id);
+            }}
+          >
+            Untag
+          </Button>
+        </div>
+
         <TextField
           className={classes.transactionTargetTextField}
           margin="dense"
@@ -99,6 +132,8 @@ function EditTagDialog({
           }}
           fullWidth
         />
+        <h2>Rules</h2>
+        <TagRules rules={tags?.[index]?.rules} tagId={id} tagIndex={index} />
       </DialogContent>
 
       <DialogActions>
@@ -153,6 +188,12 @@ const mapDispatchToProps = (dispatch) => ({
   changeUIIndex: (index) => {
     dispatch(changeIndexAction(index));
   },
+  apply: (token, tagId) => {
+    dispatch(applyAction(token, tagId));
+  },
+  untagAll: (token, tagId) => {
+    dispatch(untagAction(token, tagId));
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditTagDialog);
