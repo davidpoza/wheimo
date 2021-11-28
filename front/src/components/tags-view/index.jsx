@@ -7,7 +7,7 @@ import {
   fetchAll as fetchTagsAction,
 } from '../../actions/tag';
 import EditTagDialog from '../edit-tag-dialog';
-import TagsAccordion from './_children/tags-accordion';
+import TagsGrid from './_children/tags-grid';
 import OperationDropdown from '../operation-dropdown';
 import CreateTagInput from './_children/create-tag-input';
 import withLoader from '../../hocs/with-loader';
@@ -24,9 +24,9 @@ function TagsView({
 
   return (
     <div className={classes.root}>
-      <OperationDropdown entity="tag" />
-      <TagsAccordion />
       <CreateTagInput />
+      <OperationDropdown entity="tag" />
+      <TagsGrid />
       <EditTagDialog />
     </div>
   );

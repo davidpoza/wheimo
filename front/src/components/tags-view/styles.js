@@ -8,6 +8,6 @@ export default makeStyles((theme) => ({
       margin: '0 20%',
     },
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
 }));

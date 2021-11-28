@@ -1,5 +1,5 @@
 import {
-  fetchAll, create, remove, update, apply, untag,
+  fetchAll, create, remove, update, apply, untag, setPage,
 } from '../actions/tag';
 import { azOrder } from '../utils/utilities';
 import types from '../actions/types';
@@ -10,6 +10,7 @@ const initialState = {
   editDialogOpen: false,
   error: false,
   errorMessage: undefined,
+  page: 1,
 };
 
 const reducer = (state = initialState, action) => {
@@ -148,6 +149,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         error: true,
+      };
+    case types.TAGS_SET_PAGE:
+      return {
+        ...state,
+        page: action.payload,
       };
     default:
       return state;

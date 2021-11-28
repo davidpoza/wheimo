@@ -11,14 +11,14 @@ import useStyles from './styles';
 import OperationDropdown from '../operation-dropdown';
 import {
   setPage as setPageAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 
 function TransactionGrid({ transactions, page = 1, setPage }) {
   const classes = useStyles();
   const listRef = useRef();
   const ITEM_SIZE = 60;
   const pageSize = listRef?.current
-    ? Math.round(getInnerHeight(listRef.current) / ITEM_SIZE)
+    ? Math.floor(getInnerHeight(listRef.current) / ITEM_SIZE)
     : 0;
 
   function handlePageChange(event, value) {

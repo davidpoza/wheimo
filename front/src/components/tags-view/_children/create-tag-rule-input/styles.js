@@ -9,7 +9,7 @@ const input = {
   width: '100%',
   border: '1px solid #ccc',
   borderRadius: '5px',
-  height: '1.3em',
+  height: '1em',
   '&:focus': {
     outlineColor: '#3f51b5',
   },
@@ -17,26 +17,28 @@ const input = {
 
 export default makeStyles(() => ({
   root: {
-
+    display: 'flex',
+    flexDirection: 'column',
+    marginTop: '1em',
   },
   createButton: {
     cursor: 'pointer',
-    paddingRight: 0,
+    padding: 0,
+    marginTop: '0.5em',
   },
   input,
   inputWithSubmit: {
     ...input,
-    width: '80%',
+    width: '100%',
   },
   valueCell: {
     display: 'flex',
     flexDirection: 'inherit',
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
     alignItems: 'center',
   },
   typeSelect: {
     height: '2.2em',
-    maxWidth: '10em',
-    width: '10em',
+    width: '100%',
   },
 }));

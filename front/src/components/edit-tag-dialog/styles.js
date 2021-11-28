@@ -24,4 +24,11 @@ export default makeStyles(() => ({
   addButton: {
     maxHeight: '60px',
   },
+  opButtons: {
+    display: 'flex',
+    justifyContent: 'end',
+    '& > button': {
+      marginLeft: '5px',
+    }
+  }
 }));

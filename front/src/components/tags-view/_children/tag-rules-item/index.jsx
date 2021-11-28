@@ -28,11 +28,11 @@ function TagRulesItem({
 
   return (
     <TableRow key={name} className={classes.root}>
-      <TableCell align="left" component="th" scope="row">
-        {name}
+      <TableCell align="center" component="th" scope="row" className={classes.indexColumn}>
+        #{name}
       </TableCell>
-      <TableCell align="right">{type}</TableCell>
-      <TableCell align="right">{value}</TableCell>
+      <TableCell align="left">{type}</TableCell>
+      <TableCell align="left">{value}</TableCell>
       <TableCell align="right">
         <IconButton
           className={classes.deleteButton}

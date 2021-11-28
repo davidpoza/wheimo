@@ -39,3 +39,8 @@ export const editDialogOpen = () => ({
 export const editDialogClose = () => ({
   type: types.TAGS_EDIT_DIALOG_CLOSE,
 });
+
+export const setPage = (page) => ({
+  type: types.TAGS_SET_PAGE,
+  payload: page,
+});
