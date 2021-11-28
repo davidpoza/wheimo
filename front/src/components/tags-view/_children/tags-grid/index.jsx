@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import List from '@material-ui/core/List';
@@ -23,7 +23,7 @@ function TagsGrid({
     ? Math.floor(getInnerHeight(listRef.current) / ITEM_SIZE)
     : 0;
     console.log("pageSize>", pageSize)
-    if (listRef?.current) console.log(">", getInnerHeight(listRef?.current))
+
   function handlePageChange(event, value) {
     setPage(value);
   }
@@ -46,7 +46,7 @@ function TagsGrid({
                     chunk.map((tag, index) => (
                       <TagsGridItem
                         id={tag.id}
-                        indexInStore={index}
+                        indexInStore={(page - 1) * pageSize + index}
                         key={tag.id}
                         name={tag.name}
                         rules={tag.rules}
