@@ -2,10 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
   root: {
-    display: 'none',
-    [theme.breakpoints.up('lg')]: {
-      display: 'block',
-    },
+
   },
   comments: {
     marginBottom: '2em',
@@ -29,7 +26,6 @@ export default makeStyles((theme) => ({
     },
   },
   addButton: {
-    border: '1px solid grey',
-    borderRadius: '8px',
+
   },
 }));

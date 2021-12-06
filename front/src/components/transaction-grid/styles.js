@@ -6,9 +6,7 @@ export default makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
-    [theme.breakpoints.up('lg')]: {
-      margin: '0 20%',
-    },
+    width: '100%',
   },
   pagination: {
     padding: '1em',

@@ -21,7 +21,8 @@ function TagsSelect({
 
   return (
     <Autocomplete
-      value={value}
+      key="123"
+      inputValue={value}
       className={classes.root}
       size="small"
       multiple
@@ -33,7 +34,6 @@ function TagsSelect({
       renderInput={(params) => (
         <TextField
           {...params}
-          variant="outlined"
           label={label}
         />
       )}

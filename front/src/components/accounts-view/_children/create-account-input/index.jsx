@@ -60,9 +60,7 @@ function CreateAccountInput({
         onClick={add}
         disabled={error}
       >
-        <AddBoxIcon
-          fontSize="large"
-        />
+        <AddBoxIcon />
       </IconButton>
     </form>
   );

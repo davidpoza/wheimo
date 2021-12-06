@@ -4,13 +4,18 @@ export default makeStyles((theme) => ({
   root: {
     display: 'flex',
     alignItems: 'end',
+    width: '100%',
     justifyContent: 'center',
-    '& > *': {
-      margin: '10px',
-    },
     height: '3em',
     [theme.breakpoints.up('lg')]: {
       height: 'auto',
+    },
+  },
+  drawerRoot: {
+    margin: '1em',
+    width: '200px',
+    [theme.breakpoints.up('lg')]: {
+      width: 'auto',
     },
   },
   dateSelector: {
@@ -24,19 +29,33 @@ export default makeStyles((theme) => ({
     },
   },
   accountSelector: {
-    display: 'none',
-    [theme.breakpoints.up('lg')]: {
-      display: 'block',
-    },
-  },
-  search: {
 
   },
-  chartsSwitch: {
-    display: 'none',
+  search: {
+    margin: '0 1em 1em 1em',
     [theme.breakpoints.up('lg')]: {
-      display: 'block',
+      height: 'auto',
     },
+  },
+  filterButton: {
+
+  },
+  chartButton: {
+
+  },
+  resetFilterButton: {
+    marginTop: '3em',
+    cursor: 'pointer',
+  },
+  limits: {
+    '&>*': {
+      width: '5em'
+    },
+    '& > :first-child': {
+      marginRight: '1em',
+    }
+  },
+  chartsSwitch: {
     alignSelf: 'normal',
     '& > label': {
       margin: 0,
