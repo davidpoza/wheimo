@@ -206,8 +206,8 @@ export default class TransactionService {
           'favourite',
           'balance',
           'account_id',
-          'receiver_name',
-          'emitter_name'
+          'receiverName',
+          'emitterName'
         ],
         limit,
         offset,
