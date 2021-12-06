@@ -33,7 +33,6 @@ function TagsSelect({
       renderInput={(params) => (
         <TextField
           {...params}
-          variant="outlined"
           label={label}
         />
       )}

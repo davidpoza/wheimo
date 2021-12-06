@@ -1,22 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import DayJsUtils from '@date-io/dayjs';
-import dayjs from 'dayjs';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
-import FormGroup from '@material-ui/core/FormGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
+import IconButton from '@material-ui/core/IconButton';
+import FilterList from '@material-ui/icons/FilterList';
+import BarChart from '@material-ui/icons/BarChart';
+import Drawer from '@material-ui/core/Drawer';
 import TextField from '@material-ui/core/TextField';
+import dayjs from 'dayjs';
 
 // own
 import CreateTransationDialog from '../create-transaction-dialog';
+import FiltersOnDrawer from './children/filters-on-drawer';
 import useStyles from './styles';
-import AccountSelect from '../account-select';
-import TagsSelect from '../tags-select';
+
 import {
   toggleCharts as toggleChartsAction,
   setPage as setPageAction,
@@ -26,11 +22,14 @@ function TransactionFilter({
   handleChangeFilter, toggleCharts, setPage, showCharts = false,
 }) {
   const classes = useStyles();
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [accountId, setAccountId] = useState();
+  const [infLimit, setInfLimit] = useState('');
+  const [supLimit, setSupLimit] = useState('');
+  const [tags, setTags] = useState([]);
   const [startDate, setStartDate] = useState(dayjs().subtract(3, 'month').toDate());
   const [endDate, setEndDate] = useState(new Date());
   const [search, setSearch] = useState('');
-  const [accountId, setAccountId] = useState();
-  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     const filter = {};
@@ -52,63 +51,80 @@ function TransactionFilter({
       handleChangeFilter(filter);
       setPage(1);
     }
-  }, [endDate, startDate, accountId, tags, showCharts, search]);
+  }, [endDate, startDate, accountId, tags, showCharts, setPage, search]);
+
+
+  const resetFilters = () => {
+    setStartDate(dayjs().subtract(3, 'month').toDate());
+    setEndDate(dayjs().toDate());
+    setSearch('');
+    setTags([]);
+    setAccountId(undefined);
+    setInfLimit('');
+    setSupLimit('');
+  }
+
+  const toggleDrawer = () => {
+    setFiltersOpen(!filtersOpen);
+  }
 
   return (
     <div className={classes.root}>
-      <MuiPickersUtilsProvider utils={DayJsUtils}>
-        <KeyboardDatePicker
-         className={classes.dateSelector}
-          margin="normal"
-          id="date-picker-dialog"
-          label="Start date"
-          format="DD/MM/YYYY"
-          value={startDate}
-          onChange={(date) => { setStartDate(date); } }
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-        />
-        <KeyboardDatePicker
-          className={classes.dateSelector}
-          margin="normal"
-          id="date-picker-dialog"
-          label="End date"
-          format="DD/MM/YYYY"
-          value={endDate}
-          onChange={(date) => { setEndDate(date); } }
-          KeyboardButtonProps={{
-            'aria-label': 'change date',
-          }}
-        />
-      </MuiPickersUtilsProvider>
-      <TextField
+       <TextField
         className={classes.search}
         id="search"
         label="Search"
         type="text"
         value={search}
+        fullWidth
         onChange={(e) => {
           setSearch(e.target.value);
         }}
       />
-      <AccountSelect
-        className={classes.accountSelector}
-        label="Account"
-        value={accountId}
-        handleChange={(e) => { setAccountId(e.target.value); }}
-      />
-      <TagsSelect limitTags={3} label="Tags" values={tags} handleOnChange={ (e, value) => {
-        setTags(value.map((tag) => (tag.id)));
-      } } />
-      <FormGroup row className={classes.chartsSwitch}>
-        <FormControlLabel
-          control={<Switch checked={showCharts} onChange={toggleCharts} name="incoming" />}
-          labelPlacement="bottom"
-          label="charts"
-        />
-      </FormGroup>
+      <IconButton
+        className={classes.filterButton}
+        color="primary"
+        title="Aplicar filtros"
+        onClick={toggleDrawer}
+      >
+        <FilterList />
+      </IconButton>
+      <IconButton
+        className={classes.filterButton}
+        color="primary"
+        style={ showCharts ? { color: '#f96096' } : {}}
+        title="Mostrar gráfico"
+        onClick={toggleCharts}
+      >
+        <BarChart />
+      </IconButton>
       <CreateTransationDialog />
+      <Drawer
+        anchor="left"
+        open={filtersOpen}
+        onClose={toggleDrawer}
+      >
+        <FiltersOnDrawer
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+          accountId={accountId}
+          setAccountId={setAccountId}
+          tags={tags}
+          setTags={setTags}
+          showCharts={showCharts}
+          toggleCharts={toggleCharts}
+          resetFilters={resetFilters}
+          search={search}
+          setSearch={setSearch}
+          infLimit={infLimit}
+          supLimit={supLimit}
+          setSupLimit={setSupLimit}
+          setInfLimit={setInfLimit}
+        />
+      </Drawer>
+
 </div>
   );
 }
