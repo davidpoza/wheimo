@@ -13,24 +13,25 @@ import TagsSelect from '../../tags-select';
 import useStyles from '../styles';
 
 export default function FiltersOnDrawer({
-  startDate,
-  setStartDate,
-  endDate,
-  setEndDate,
   accountId,
-  setAccountId,
-  tags,
-  setTags,
+  accountIdKey,
+  endDate,
+  infLimit,
   resetFilters,
   search,
-  setSearch,
-  infLimit,
-  supLimit,
+  setAccountId,
+  setEndDate,
   setInfLimit,
-  setSupLimit
+  setSearch,
+  setStartDate,
+  setSupLimit,
+  setTags,
+  startDate,
+  supLimit,
+  tags,
+  tagsKey,
  }) {
   const classes = useStyles();
-
   return (
     <div className={classes.drawerRoot}>
       <h2>Filters</h2>
@@ -72,12 +73,13 @@ export default function FiltersOnDrawer({
       </MuiPickersUtilsProvider>
 
       <AccountSelect
+        key={accountIdKey}
         className={classes.accountSelector}
         label="Account"
         value={accountId}
         handleChange={(e) => { setAccountId(e.target.value); }}
       />
-      <TagsSelect limitTags={3} label="Tags" values={tags} handleOnChange={ (e, value) => {
+      <TagsSelect key={tagsKey} limitTags={3} label="Tags" values={tags} handleOnChange={ (e, value) => {
         setTags(value.map((tag) => (tag.id)));
       } } />
       <div className={classes.limits}>

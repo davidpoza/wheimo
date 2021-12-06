@@ -9,6 +9,8 @@ export default class TransactionService {
   constructor() {
     this.sequelize = Container.get('sequelizeInstance');
     this.sequelizeOp = this.sequelize.Sequelize.Op;
+    this.sequelizeCol = this.sequelize.Sequelize.col;
+    this.sequelizeFn = this.sequelize.Sequelize.fn;
     this.dayjs = Container.get('dayjs');
     this.logger = Container.get('loggerInstance');
     this.transactionModel = this.sequelize.models.transactions;
@@ -149,11 +151,15 @@ export default class TransactionService {
    * @param {string} param.sort - asc/desc sorting by date
    * @param {string} param.search - search term
    */
-  async findAll({ accountId, userId, tags, from, to, limit, offset, sort, search }) {
+  async findAll({ accountId, userId, tags, from, to, limit, offset, sort, search, min, max }) {
     const dateFilter = (from || to) ? {} : undefined;
     if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
     if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
     const searchFilter = search ? {} : undefined;
+    let limitsFilter = (min || max) ? {} : undefined;
+    if (min !== undefined && max !== undefined) limitsFilter[this.sequelizeOp.between] = [parseInt(min, 10), parseInt(max, 10)];
+    else if (min !== undefined && max === undefined) limitsFilter[this.sequelizeOp.gt] = parseInt(min, 10);
+    else if (min === undefined && max !== undefined) limitsFilter[this.sequelizeOp.lt] = parseInt(max, 10);
 
     let filter = pickBy({ // pickBy (by default) removes undefined keys
       accountId,
@@ -161,6 +167,16 @@ export default class TransactionService {
       '$account.user_id$': userId,
       'date': dateFilter,
     });
+
+    if (limitsFilter) {
+      filter[this.sequelizeOp.and] = [
+        this.sequelize.where(
+          this.sequelizeFn('abs', this.sequelizeCol('amount')),
+          limitsFilter,
+        )
+      ]
+    };
+
 
     if (searchFilter) {
       searchFilter[this.sequelizeOp.substring] = search;
@@ -177,7 +193,21 @@ export default class TransactionService {
         include: [
           { model: this.sequelize.models.accounts, as: 'account', duplicating: false },
           { model: this.sequelize.models.tags, as: 'tags', duplicating: false },
-          { model: this.sequelize.models.attachments }
+          { model: this.sequelize.models.attachments },
+        ],
+        attributes: [
+          'amount',
+          'id',
+          'comments',
+          'description',
+          'currency',
+          'date',
+          'value_date',
+          'favourite',
+          'balance',
+          'account_id',
+          'receiver_name',
+          'emitter_name'
         ],
         limit,
         offset,

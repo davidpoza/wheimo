@@ -30,6 +30,8 @@ function TransactionFilter({
   const [startDate, setStartDate] = useState(dayjs().subtract(3, 'month').toDate());
   const [endDate, setEndDate] = useState(new Date());
   const [search, setSearch] = useState('');
+  const [tagsKey, setTagsKey] = useState('TagsSelect'); // ñapa!: to force rerender and reset its local state
+  const [accountIdKey, setAccountIdKey] = useState('AccountId');
 
   useEffect(() => {
     const filter = {};
@@ -46,15 +48,19 @@ function TransactionFilter({
     if (accountId) filter.accountId = accountId;
     if (tags && tags.length > 0) filter.tags = tags;
     if (search && search.length > 0) filter.search = search;
+    if (infLimit) filter.min = infLimit;
+    if (supLimit) filter.max = supLimit;
 
     if (Object.keys(filter).length > 0) {
       handleChangeFilter(filter);
       setPage(1);
     }
-  }, [endDate, startDate, accountId, tags, showCharts, setPage, search]);
+  }, [endDate, startDate, accountId, tags, showCharts, setPage, search, infLimit, supLimit]);
 
 
   const resetFilters = () => {
+    setTagsKey(`${tagsKey}+`);
+    setAccountIdKey(`${accountIdKey}+`);
     setStartDate(dayjs().subtract(3, 'month').toDate());
     setEndDate(dayjs().toDate());
     setSearch('');
@@ -62,6 +68,7 @@ function TransactionFilter({
     setAccountId(undefined);
     setInfLimit('');
     setSupLimit('');
+    handleChangeFilter({});
   }
 
   const toggleDrawer = () => {
@@ -122,6 +129,8 @@ function TransactionFilter({
           supLimit={supLimit}
           setSupLimit={setSupLimit}
           setInfLimit={setInfLimit}
+          tagsKey={tagsKey}
+          accountIdKey={accountIdKey}
         />
       </Drawer>
 

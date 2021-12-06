@@ -21,7 +21,8 @@ function TagsSelect({
 
   return (
     <Autocomplete
-      value={value}
+      key="123"
+      inputValue={value}
       className={classes.root}
       size="small"
       multiple
