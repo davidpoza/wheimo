@@ -12,11 +12,16 @@ export default makeStyles((theme) => ({
     },
   },
   drawerRoot: {
-    margin: '1em',
+    padding: '1em',
     width: '200px',
     [theme.breakpoints.up('lg')]: {
-      width: 'auto',
+      width: '300px',
     },
+  },
+  drawerDocked: {
+    width: 0,
+    padding: 0,
+    margin: 0,
   },
   dateSelector: {
     display: 'block',
@@ -41,10 +46,23 @@ export default makeStyles((theme) => ({
 
   },
   resetFilterButton: {
+    border: '1px solid grey',
+    borderRadius: '5px',
+    padding: '5px',
     marginTop: '3em',
     cursor: 'pointer',
   },
+  closeFilterButton: {
+    color: 'white',
+    border: '1px solid #3f51b5',
+    borderRadius: '5px',
+    backgroundColor: '#3f51b5',
+    padding: '5px',
+    marginTop: '1em',
+    cursor: 'pointer',
+  },
   limits: {
+    textAlign: 'left',
     '&>*': {
       width: '5em'
     },
