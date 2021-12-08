@@ -78,6 +78,7 @@ export default function FiltersOnDrawer({
         label="Account"
         value={accountId}
         handleChange={(e) => { setAccountId(e.target.value); }}
+        fullWidth
       />
       <TagsSelect key={tagsKey} limitTags={3} label="Tags" values={tags} handleOnChange={ (e, value) => {
         setTags(value.map((tag) => (tag.id)));

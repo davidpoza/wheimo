@@ -22,7 +22,7 @@ function TagsSelect({
   return (
     <Autocomplete
       key="123"
-      inputValue={value}
+      value={value}
       className={classes.root}
       size="small"
       multiple

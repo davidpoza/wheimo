@@ -19,10 +19,7 @@ export default makeStyles((theme) => ({
     },
   },
   dateSelector: {
-    display: 'none',
-    [theme.breakpoints.up('lg')]: {
-      display: 'block',
-    },
+    display: 'block',
     width: '7em',
     '& .MuiIconButton-root': {
       padding: '0',

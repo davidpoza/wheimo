@@ -5,10 +5,10 @@ export default makeStyles(() => ({
 
   },
   accountSelector: {
-    width: '9em',
+    width: '100%',
   },
   accountSelectorModal: {
     width: '9em',
-    marginBottom: '6px',
+    marginBottom: '7px',
   },
 }));
