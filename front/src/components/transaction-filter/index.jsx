@@ -122,6 +122,12 @@ function TransactionFilter({
       </IconButton>
       <CreateTransationDialog />
       <Drawer
+        elevation={30}
+        classes={{
+          root: classes.drawerRoot,
+          docked: classes.drawerDocked,
+        }}
+        variant="persistent"
         anchor="left"
         open={filtersOpen}
         onClose={toggleDrawer}
@@ -136,6 +142,7 @@ function TransactionFilter({
           search={search}
           setAccountId={setAccountId}
           setEndDate={setEndDate}
+          setFiltersOpen={setFiltersOpen}
           setInfLimit={setInfLimit}
           setOperationType={setOperationType}
           setSearch={setSearch}

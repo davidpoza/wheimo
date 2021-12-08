@@ -23,6 +23,7 @@ export default function FiltersOnDrawer({
   search,
   setAccountId,
   setEndDate,
+  setFiltersOpen,
   setInfLimit,
   setOperationType,
   setSearch,
@@ -110,6 +111,7 @@ export default function FiltersOnDrawer({
       </div>
       <OperationTypeSelect operationType={operationType} setOperationType={setOperationType} />
       <div className={classes.resetFilterButton} onClick={resetFilters}>Reset filters</div>
+      <div className={classes.closeFilterButton} onClick={() => setFiltersOpen(false)}>Close</div>
     </div>
   );
 }
@@ -124,6 +126,7 @@ FiltersOnDrawer.propTypes = {
   search: PropTypes.string,
   setAccountId: PropTypes.func,
   setEndDate: PropTypes.func,
+  setFiltersOpen: PropTypes.func,
   setInfLimit: PropTypes.func,
   setOperationType: PropTypes.func,
   setSearch: PropTypes.func,
