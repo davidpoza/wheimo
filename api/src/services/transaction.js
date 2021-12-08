@@ -151,15 +151,21 @@ export default class TransactionService {
    * @param {string} param.sort - asc/desc sorting by date
    * @param {string} param.search - search term
    */
-  async findAll({ accountId, userId, tags, from, to, limit, offset, sort, search, min, max }) {
+  async findAll({ accountId, userId, tags, from, to, limit, offset, sort, search, min, max, operationType }) {
     const dateFilter = (from || to) ? {} : undefined;
     if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
     if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
     const searchFilter = search ? {} : undefined;
+
+    let operationTypeFilter = (operationType && operationType !== 'all') ? {} : undefined;
+    if (operationType === 'expense') operationTypeFilter[this.sequelizeOp.lt] = 0;
+    if (operationType === 'income') operationTypeFilter[this.sequelizeOp.gt] = 0;
+
     let limitsFilter = (min || max) ? {} : undefined;
     if (min !== undefined && max !== undefined) limitsFilter[this.sequelizeOp.between] = [parseInt(min, 10), parseInt(max, 10)];
     else if (min !== undefined && max === undefined) limitsFilter[this.sequelizeOp.gt] = parseInt(min, 10);
     else if (min === undefined && max !== undefined) limitsFilter[this.sequelizeOp.lt] = parseInt(max, 10);
+
 
     let filter = pickBy({ // pickBy (by default) removes undefined keys
       accountId,
@@ -177,6 +183,9 @@ export default class TransactionService {
       ]
     };
 
+    if (operationTypeFilter) {
+      filter['amount'] = operationTypeFilter;
+    }
 
     if (searchFilter) {
       searchFilter[this.sequelizeOp.substring] = search;

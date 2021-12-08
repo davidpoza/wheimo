@@ -7,8 +7,9 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers';
-import AccountSelect from '../../account-select';
-import TagsSelect from '../../tags-select';
+import AccountSelect from 'components/account-select';
+import TagsSelect from 'components/tags-select';
+import OperationTypeSelect from 'components/operation-type-select';
 
 import useStyles from '../styles';
 
@@ -17,11 +18,13 @@ export default function FiltersOnDrawer({
   accountIdKey,
   endDate,
   infLimit,
+  operationType,
   resetFilters,
   search,
   setAccountId,
   setEndDate,
   setInfLimit,
+  setOperationType,
   setSearch,
   setStartDate,
   setSupLimit,
@@ -105,15 +108,30 @@ export default function FiltersOnDrawer({
           }}
         />
       </div>
-
+      <OperationTypeSelect operationType={operationType} setOperationType={setOperationType} />
       <div className={classes.resetFilterButton} onClick={resetFilters}>Reset filters</div>
     </div>
   );
 }
 
 FiltersOnDrawer.propTypes = {
-  handleChangeFilter: PropTypes.func,
-  setPage: PropTypes.func,
-  showCharts: PropTypes.bool,
-  toggleCharts: PropTypes.func
+  accountId: PropTypes.string,
+  accountIdKey: PropTypes.string,
+  endDate: PropTypes.string,
+  infLimit: PropTypes.string,
+  operationType: PropTypes.string,
+  resetFilters: PropTypes.func,
+  search: PropTypes.string,
+  setAccountId: PropTypes.func,
+  setEndDate: PropTypes.func,
+  setInfLimit: PropTypes.func,
+  setOperationType: PropTypes.func,
+  setSearch: PropTypes.func,
+  setStartDate: PropTypes.func,
+  setSupLimit: PropTypes.func,
+  setTags: PropTypes.func,
+  startDate: PropTypes.string,
+  supLimit: PropTypes.string,
+  tags: PropTypes.array,
+  tagsKey: PropTypes.string,
 }

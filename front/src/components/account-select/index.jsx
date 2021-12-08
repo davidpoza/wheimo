@@ -13,7 +13,7 @@ import {
   fetchAll as fetchAccountsAction,
 } from '../../actions/account';
 
-function BankTypeSelect({
+function AccountSelect({
   user, label, value, handleChange, fetchAccounts, accounts, layout = 'filter', className, ...rest
 }) {
   const classes = useStyles();
@@ -23,7 +23,7 @@ function BankTypeSelect({
   }, [user]);
 
   return (
-    <FormControl className={className} {...rest}>
+    <FormControl className={classes} {...rest}>
       <InputLabel id="account-label">{label}</InputLabel>
       <Select
         className={layout === 'filter' ? classes.accountSelector : classes.accountSelectorModal}
@@ -44,7 +44,7 @@ function BankTypeSelect({
   );
 }
 
-BankTypeSelect.propTypes = {
+AccountSelect.propTypes = {
   user: PropTypes.object,
   label: PropTypes.string,
   value: PropTypes.number,
@@ -67,4 +67,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BankTypeSelect);
+export default connect(mapStateToProps, mapDispatchToProps)(AccountSelect);

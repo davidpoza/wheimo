@@ -23,6 +23,7 @@ function TransactionFilter({
 }) {
   const classes = useStyles();
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [operationType, setOperationType] = useState('all');
   const [accountId, setAccountId] = useState();
   const [infLimit, setInfLimit] = useState('');
   const [supLimit, setSupLimit] = useState('');
@@ -50,12 +51,25 @@ function TransactionFilter({
     if (search && search.length > 0) filter.search = search;
     if (infLimit) filter.min = infLimit;
     if (supLimit) filter.max = supLimit;
+    if (operationType !== 'all') filter.operationType = operationType;
 
     if (Object.keys(filter).length > 0) {
       handleChangeFilter(filter);
       setPage(1);
     }
-  }, [endDate, startDate, accountId, tags, showCharts, setPage, search, infLimit, supLimit]);
+  }, [
+    endDate,
+    startDate,
+    accountId,
+    tags,
+    showCharts,
+    setPage,
+    search,
+    infLimit,
+    supLimit,
+    operationType,
+    setOperationType,
+  ]);
 
 
   const resetFilters = () => {
@@ -68,6 +82,7 @@ function TransactionFilter({
     setAccountId(undefined);
     setInfLimit('');
     setSupLimit('');
+    setOperationType('all');
     handleChangeFilter({});
   }
 
@@ -112,25 +127,27 @@ function TransactionFilter({
         onClose={toggleDrawer}
       >
         <FiltersOnDrawer
-          startDate={startDate}
-          setStartDate={setStartDate}
-          endDate={endDate}
-          setEndDate={setEndDate}
           accountId={accountId}
-          setAccountId={setAccountId}
-          tags={tags}
-          setTags={setTags}
-          showCharts={showCharts}
-          toggleCharts={toggleCharts}
+          accountIdKey={accountIdKey}
+          endDate={endDate}
+          infLimit={infLimit}
+          operationType={operationType}
           resetFilters={resetFilters}
           search={search}
-          setSearch={setSearch}
-          infLimit={infLimit}
-          supLimit={supLimit}
-          setSupLimit={setSupLimit}
+          setAccountId={setAccountId}
+          setEndDate={setEndDate}
           setInfLimit={setInfLimit}
+          setOperationType={setOperationType}
+          setSearch={setSearch}
+          setStartDate={setStartDate}
+          setSupLimit={setSupLimit}
+          setTags={setTags}
+          showCharts={showCharts}
+          startDate={startDate}
+          supLimit={supLimit}
+          tags={tags}
           tagsKey={tagsKey}
-          accountIdKey={accountIdKey}
+          toggleCharts={toggleCharts}
         />
       </Drawer>
 
