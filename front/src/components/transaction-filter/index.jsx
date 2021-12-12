@@ -84,6 +84,7 @@ function TransactionFilter({
     setSupLimit('');
     setOperationType('all');
     handleChangeFilter({});
+    setPage(1);
   }
 
   const toggleDrawer = () => {
