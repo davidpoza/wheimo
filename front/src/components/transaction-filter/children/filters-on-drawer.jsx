@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import DayJsUtils from '@date-io/dayjs';
 import TextField from '@material-ui/core/TextField';
+import Checkbox from '@material-ui/core/Checkbox';
+import FormGroup from '@material-ui/core/FormGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 import {
   MuiPickersUtilsProvider,
@@ -34,6 +37,8 @@ export default function FiltersOnDrawer({
   supLimit,
   tags,
   tagsKey,
+  isFav,
+  setIsFav
  }) {
   const classes = useStyles();
   return (
@@ -110,6 +115,10 @@ export default function FiltersOnDrawer({
         />
       </div>
       <OperationTypeSelect operationType={operationType} setOperationType={setOperationType} />
+      <FormGroup className={classes.isFavCheckbox}>
+        <FormControlLabel control={<Checkbox checked={isFav} onChange={() => { setIsFav(!isFav); }} name="isFav" />} label="Is marked as favourite" />
+      </FormGroup>
+
       <div className={classes.resetFilterButton} onClick={resetFilters}>Reset filters</div>
       <div className={classes.closeFilterButton} onClick={() => setFiltersOpen(false)}>Close</div>
     </div>
