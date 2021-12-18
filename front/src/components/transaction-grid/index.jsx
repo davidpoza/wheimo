@@ -23,7 +23,7 @@ function TransactionGrid({ transactions, page = 1, setPage }) {
     if (listRef?.current) {
       setPageSize(Math.floor(getInnerHeight(listRef?.current) / ITEM_SIZE));
     }
-  }, [listRef]);
+  }, []);
 
   function handlePageChange(event, value) {
     setPage(value);
