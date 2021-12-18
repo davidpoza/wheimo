@@ -51,6 +51,7 @@ export default makeStyles((theme) => ({
     padding: '5px',
     marginTop: '3em',
     cursor: 'pointer',
+    textAlign: 'center'
   },
   closeFilterButton: {
     color: 'white',
@@ -60,6 +61,7 @@ export default makeStyles((theme) => ({
     padding: '5px',
     marginTop: '1em',
     cursor: 'pointer',
+    textAlign: 'center'
   },
   limits: {
     textAlign: 'left',
