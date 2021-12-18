@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -21,7 +21,6 @@ function TagsSelect({
 
   return (
     <Autocomplete
-      key="123"
       value={value}
       className={classes.root}
       size="small"

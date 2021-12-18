@@ -36,9 +36,9 @@ export default function FiltersOnDrawer({
   startDate,
   supLimit,
   tags,
-  tagsKey,
   isFav,
-  setIsFav
+  setIsFav,
+  setTagIds
  }) {
   const classes = useStyles();
   return (
@@ -89,9 +89,15 @@ export default function FiltersOnDrawer({
         handleChange={(e) => { setAccountId(e.target.value); }}
         fullWidth
       />
-      <TagsSelect key={tagsKey} limitTags={3} label="Tags" values={tags} handleOnChange={ (e, value) => {
-        setTags(value.map((tag) => (tag.id)));
-      } } />
+      <TagsSelect
+        limitTags={3}
+        label="Tags"
+        value={tags}
+        handleOnChange={ (e, value) => {
+          setTags(value);
+          setTagIds(value.map((tag) => (tag.id)));
+        } }
+      />
       <div className={classes.limits}>
         <TextField
           size="small"

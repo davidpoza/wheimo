@@ -28,10 +28,10 @@ function TransactionFilter({
   const [infLimit, setInfLimit] = useState('');
   const [supLimit, setSupLimit] = useState('');
   const [tags, setTags] = useState([]);
+  const [tagIds, setTagIds] = useState([]);
   const [startDate, setStartDate] = useState(dayjs().subtract(3, 'month').toDate());
   const [endDate, setEndDate] = useState(new Date());
   const [search, setSearch] = useState('');
-  const [tagsKey, setTagsKey] = useState('TagsSelect'); // ñapa!: to force rerender and reset its local state
   const [accountIdKey, setAccountIdKey] = useState('AccountId');
   const [isFav, setIsFav] = useState(false);
 
@@ -48,7 +48,7 @@ function TransactionFilter({
       filter.to = strEndDate;
     }
     if (accountId) filter.accountId = accountId;
-    if (tags && tags.length > 0) filter.tags = tags;
+    if (tagIds && tagIds.length > 0) filter.tags = tagIds;
     if (search && search.length > 0) filter.search = search;
     if (infLimit) filter.min = infLimit;
     if (supLimit) filter.max = supLimit;
@@ -63,7 +63,7 @@ function TransactionFilter({
     endDate,
     startDate,
     accountId,
-    tags,
+    tagIds,
     showCharts,
     setPage,
     search,
@@ -77,12 +77,12 @@ function TransactionFilter({
 
 
   const resetFilters = () => {
-    setTagsKey(`${tagsKey}+`);
     setAccountIdKey(`${accountIdKey}+`);
     setStartDate(dayjs().subtract(3, 'month').toDate());
     setEndDate(dayjs().toDate());
     setSearch('');
     setTags([]);
+    setTagIds([]);
     setAccountId(undefined);
     setInfLimit('');
     setSupLimit('');
@@ -127,12 +127,6 @@ function TransactionFilter({
       </IconButton>
       <CreateTransationDialog />
       <Drawer
-        elevation={30}
-        classes={{
-          root: classes.drawerRoot,
-          docked: classes.drawerDocked,
-        }}
-        variant="persistent"
         anchor="left"
         open={filtersOpen}
         onClose={toggleDrawer}
@@ -154,11 +148,12 @@ function TransactionFilter({
           setStartDate={setStartDate}
           setSupLimit={setSupLimit}
           setTags={setTags}
+          setTagIds={setTagIds}
           showCharts={showCharts}
           startDate={startDate}
           supLimit={supLimit}
           tags={tags}
-          tagsKey={tagsKey}
+          tagIds={tagIds}
           toggleCharts={toggleCharts}
           isFav={isFav}
           setIsFav={setIsFav}
