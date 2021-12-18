@@ -4,10 +4,10 @@ import * as attachmentApi from '../api-client/attachment';
 import types from './types';
 
 export const fetchAll = createAsyncAction('TRANSACTIONS', async (token, {
-  offset, limit, from, to, accountId, tags, sort, search, min, max, operationType,
+  offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav
 }) => {
   const res = await transactionApi.fetchAll(token, {
-    offset, limit, from, to, accountId, tags, sort, search, min, max, operationType,
+    offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav
   });
   return res;
 });

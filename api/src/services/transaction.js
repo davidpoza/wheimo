@@ -151,7 +151,7 @@ export default class TransactionService {
    * @param {string} param.sort - asc/desc sorting by date
    * @param {string} param.search - search term
    */
-  async findAll({ accountId, userId, tags, from, to, limit, offset, sort, search, min, max, operationType }) {
+  async findAll({ accountId, userId, tags, from, to, limit, offset, sort, search, min, max, operationType, isFav }) {
     const dateFilter = (from || to) ? {} : undefined;
     if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
     if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
@@ -166,12 +166,12 @@ export default class TransactionService {
     else if (min !== undefined && max === undefined) limitsFilter[this.sequelizeOp.gt] = parseInt(min, 10);
     else if (min === undefined && max !== undefined) limitsFilter[this.sequelizeOp.lt] = parseInt(max, 10);
 
-
     let filter = pickBy({ // pickBy (by default) removes undefined keys
       accountId,
       '$tags.id$': tags,
       '$account.user_id$': userId,
       'date': dateFilter,
+      'favourite': isFav === '1' && '1'
     });
 
     if (limitsFilter) {
@@ -180,7 +180,7 @@ export default class TransactionService {
           this.sequelizeFn('abs', this.sequelizeCol('amount')),
           limitsFilter,
         )
-      ]
+      ];
     };
 
     if (operationTypeFilter) {

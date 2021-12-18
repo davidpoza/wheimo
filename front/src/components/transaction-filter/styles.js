@@ -76,4 +76,7 @@ export default makeStyles((theme) => ({
       margin: 0,
     },
   },
+  isFavCheckbox: {
+    paddingTop: '1em'
+  }
 }));

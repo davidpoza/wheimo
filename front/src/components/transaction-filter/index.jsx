@@ -33,6 +33,7 @@ function TransactionFilter({
   const [search, setSearch] = useState('');
   const [tagsKey, setTagsKey] = useState('TagsSelect'); // ñapa!: to force rerender and reset its local state
   const [accountIdKey, setAccountIdKey] = useState('AccountId');
+  const [isFav, setIsFav] = useState(false);
 
   useEffect(() => {
     const filter = {};
@@ -52,6 +53,7 @@ function TransactionFilter({
     if (infLimit) filter.min = infLimit;
     if (supLimit) filter.max = supLimit;
     if (operationType !== 'all') filter.operationType = operationType;
+    if (isFav) filter.isFav = 1;
 
     if (Object.keys(filter).length > 0) {
       handleChangeFilter(filter);
@@ -69,6 +71,8 @@ function TransactionFilter({
     supLimit,
     operationType,
     setOperationType,
+    isFav,
+    setIsFav
   ]);
 
 
@@ -156,6 +160,8 @@ function TransactionFilter({
           tags={tags}
           tagsKey={tagsKey}
           toggleCharts={toggleCharts}
+          isFav={isFav}
+          setIsFav={setIsFav}
         />
       </Drawer>
 
