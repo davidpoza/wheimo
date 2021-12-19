@@ -25,6 +25,8 @@ function MyAppBar({ openDrawer }) {
         return 'Tags & Rules';
       case '/accounts':
         return 'Accounts';
+      case '/heatmap':
+        return 'Expenses heatmap';
       default:
         return 'Transactions';
     }
