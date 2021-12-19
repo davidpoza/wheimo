@@ -12,6 +12,7 @@ import PersonIcon from '@material-ui/icons/PersonOutline';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import TagIcon from '@material-ui/icons/LocalOffer';
 import SettingsIcon from '@material-ui/icons/Settings';
+import DateRangeIcon from '@material-ui/icons/DateRange';
 import AccountIcon from '@material-ui/icons/AccountBalance';
 import TransactionIcon from '@material-ui/icons/Receipt';
 import ReportIcon from '@material-ui/icons/Assessment';
@@ -45,6 +46,13 @@ function NavMenu({ resetUserState, drawerOpen, closeDrawer }) {
             <TransactionIcon className={classes.icon} fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Transactions" />
+        </ListItem>
+
+        <ListItem button key='heatmap' component={Link} to="/heatmap" onClick={closeDrawer}>
+          <ListItemIcon>
+            <DateRangeIcon className={classes.icon} fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Heatmap" />
         </ListItem>
 
         <ListItem button key='accounts' component={Link} to="/accounts" onClick={closeDrawer}>

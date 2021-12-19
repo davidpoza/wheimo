@@ -11,6 +11,7 @@
     "@material-ui/pickers": "^3.2.10",
     "@nivo/bar": "^0.62.0",
     "@nivo/core": "^0.62.0",
+    "@nivo/heatmap": "^0.62.0",
     "@nivo/line": "^0.62.0",
     "@nivo/pie": "^0.62.0",
     "@testing-library/jest-dom": "^5.11.9",

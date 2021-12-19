@@ -35,24 +35,24 @@ export default class TransactionService {
   getTemplate(transaction) {
     if (transaction) {
       return ({
+        account: transaction.account,
+        accountId: transaction.accountId,
+        amount: transaction.amount,
+        assCard: transaction.assCard,
+        balance: transaction.balance,
+        comments: transaction.comments,
+        createdAt: transaction.createdAt,
+        currency: transaction.currency,
+        date: transaction.date,
+        description: transaction.description,
+        emitterName: transaction.emitterName,
+        favourite: transaction.favourite,
         id: transaction.id,
         importId: transaction.importId,
         receipt: transaction.receipt,
-        emitterName: transaction.emitterName,
         receiverName: transaction.receiverName,
-        assCard: transaction.assCard,
-        description: transaction.description,
-        comments: transaction.comments,
-        amount: transaction.amount,
-        currency: transaction.currency,
-        date: transaction.date,
-        valueDate: transaction.valueDate,
-        favourite: transaction.favourite,
-        balance: transaction.balance,
-        accountId: transaction.accountId,
-        createdAt: transaction.createdAt,
         updatedAt: transaction.updatedAt,
-        account: transaction.account,
+        valueDate: transaction.valueDate,
         attachments: transaction.attachments
           ? transaction.attachments.map(attachment => ({
             id: attachment.id,
@@ -600,5 +600,37 @@ export default class TransactionService {
     });
 
     return tags;
+  }
+
+  async getExpensesCalendar({ userId, year }) {
+    const transactions = await this.transactionModel.findAll(
+      {
+        include: [
+          { model: this.sequelize.models.accounts, as: 'account', duplicating: false },
+        ],
+        attributes: [
+          [this.sequelizeFn('SUM', this.sequelizeCol('transactions.amount')), 'totalAmount'],
+          [this.sequelizeFn('DATE', this.sequelizeCol('transactions.value_date')), 'day']
+        ],
+        where: {
+          '$account.user_id$': userId,
+          amount: {
+            [this.sequelizeOp.lt]: 0
+          },
+          date: {
+            [this.sequelizeOp.gte]: new Date(year, 1, 1),
+            [this.sequelizeOp.lte]: new Date(year, 12, 31),
+          }
+        },
+        group: [this.sequelizeCol('day')],
+        order: [ ['createdAt', 'ASC'] ]
+      });
+
+    return transactions.map((t) => {
+      return ({
+        day: t?.dataValues?.day,
+        totalAmount: t?.dataValues?.totalAmount,
+      });
+    });
   }
 };
