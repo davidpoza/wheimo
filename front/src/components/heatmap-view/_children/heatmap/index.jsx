@@ -1,6 +1,7 @@
 import React from 'react';
-import { ResponsiveHeatMap } from '@nivo/heatmap';
-
+// import { ResponsiveHeatMap } from '@nivo/heatmap';
+import ReactTooltip from 'react-tooltip';
+import CalendarHeatmap from 'react-calendar-heatmap';
 
 export default function Heatmap({ rawData, month, year }) {
   const dow2Text = (d, lang) => {
@@ -73,48 +74,46 @@ export default function Heatmap({ rawData, month, year }) {
     'week5',
   ];
 
-  return (<ResponsiveHeatMap
-    colors={colors}
-    data={buildArray({ rawData, month })}
-    keys={keys}
-    indexBy="dayOfTheWeek" // 0: lunes, 1: martes...
-    margin={{ top: 0, right: 0, bottom: 0, left: 0 }}
-    // forceSquare={true}
-    axisTop={{ orient: 'top', tickSize: 5, tickPadding: 5, tickRotation: -90, legend: '', legendOffset: 36 }}
-    axisRight={null}
-    axisBottom={null}
-    axisLeft={{
-      orient: 'left',
-      tickSize: 5,
-      tickPadding: 5,
-      tickRotation: 0,
-      legend: 'Day of week',
-      legendPosition: 'middle',
-      legendOffset: -50
-    }}
-    cellOpacity={1}
-    cellBorderColor={{ from: 'color', modifiers: [ [ 'darker', 0.4 ] ] }}
-    labelTextColor={{ from: 'color', modifiers: [ [ 'darker', 1.8 ] ] }}
-    defs={[
-      {
-        id: 'lines',
-        type: 'patternLines',
-        background: 'inherit',
-        color: 'rgba(0, 0, 0, 0.1)',
-        rotation: -45,
-        lineWidth: 4,
-        spacing: 7
+
+  return (<>
+    <CalendarHeatmap
+      horizontal={false}
+      gutterSize={1}
+      startDate={new Date('2021-01-01')}
+      endDate={new Date('2021-12-31')}
+      values={rawData.map(e => {
+        return ({
+          date: e.day,
+          count: Math.round(Math.abs(e.totalAmount))
+        });
+      })}
+      // titleForValue={(value) => value?.count ? `${value?.count}€` : ''}
+      tooltipDataAttrs={(value) => ({'data-tip': value?.count ? `${value.count}€` : undefined })}
+      classForValue={(value) => {
+        if (!value) {
+          return 'color-empty';
+        } else if (value.count > 0 && value.count <= 20) {
+          return 'color-scale-1';
+        } else if (value.count > 20 && value.count <= 50) {
+          return 'color-scale-2';
+        }
+        return 'color-scale-3';
+      }}
+      showWeekdayLabels
+      weekdayLabels={
+        [
+          'Mon',
+          'Tue',
+          'Wed',
+          'Thr',
+          'Fri',
+          'Sat',
+          'Sun'
+        ]
       }
-    ]}
-    fill={[ { id: 'lines' } ]}
-    animate={true}
-    motionConfig="wobbly"
-    motionStiffness={80}
-    motionDamping={9}
-    hoverTarget="cell"
-    cellHoverOthersOpacity={0.75}
-    height={200}
-/>);
+    />
+  <ReactTooltip />
+  </>);
 }
 
 Heatmap.propTypes = {
