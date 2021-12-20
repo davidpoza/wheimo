@@ -24,18 +24,9 @@ function HeatmapView({
   }, [year, setRawData, user]);
 
   return (
-    <Grid container justify="center" alignItems="center" className={classes.root}>
-      {
-        [1,2,3,4,5,6,7,8,9,10,11,12].map((m) => {
-          return(
-            <Grid item xs={12} sm={3} className={classes.heatMap}>
-              <h2>{translations('months')[m-1]}</h2>
-              <Heatmap rawData={rawData} month={m} year={year} />
-            </Grid>
-          );
-        })
-      }
-    </Grid>
+    <div className={classes.root}>
+      <Heatmap rawData={rawData}  />
+    </div>
   );
 }
 

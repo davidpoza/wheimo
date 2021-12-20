@@ -18,3 +18,11 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.react-calendar-heatmap .color-empty { fill: #8cc665; }
+.react-calendar-heatmap .color-scale-1 { fill: #d6e685; }
+.react-calendar-heatmap .color-scale-2 { fill: #dab40f; }
+.react-calendar-heatmap .color-scale-3 { fill: #fd0f23; }
+.react-calendar-heatmap-weekday-label, .react-calendar-heatmap-month-label {
+  font-size: 0.3em
+}
