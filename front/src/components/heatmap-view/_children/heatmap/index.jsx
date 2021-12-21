@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 // import { ResponsiveHeatMap } from '@nivo/heatmap';
 import ReactTooltip from 'react-tooltip';
 import CalendarHeatmap from 'react-calendar-heatmap';
 
 export default function Heatmap({ rawData, month, year }) {
+  useEffect(() => {
+    ReactTooltip.rebuild();
+  }, [rawData]);
   const dow2Text = (d, lang) => {
     switch (d) {
       case 0:
