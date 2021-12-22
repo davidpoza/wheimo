@@ -69,15 +69,6 @@ export default function Heatmap({ rawData, month, year }) {
     });
   };
 
-  const keys = [
-    'week1',
-    'week2',
-    'week3',
-    'week4',
-    'week5',
-  ];
-
-
   return (<>
     <CalendarHeatmap
       horizontal={false}

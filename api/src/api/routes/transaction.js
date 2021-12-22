@@ -177,7 +177,7 @@ export default (app) => {
           }
           return res.status(200).json(transaction);
         }
-        const transactions =  transactionService.findAll({
+        const transactions = await transactionService.findAll({
           accountId, userId, tags: tagsArray, from, to, min, max, limit, offset, sort, search, operationType, isFav
         });
         return res.status(200).json(transactions);
