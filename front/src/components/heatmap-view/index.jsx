@@ -2,9 +2,12 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import dayjs from 'dayjs';
 import { connect } from 'react-redux';
-import withIsMobile from 'hocs/with-is-mobile.jsx';
+import IconButton from '@material-ui/core/IconButton';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 // own
+import withIsMobile from 'hocs/with-is-mobile.jsx';
 import Heatmap from './_children/heatmap';
 import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
@@ -23,11 +26,33 @@ function HeatmapView({
     (async () => {
       if (user?.token) setRawData(await fetchAll(user?.token, { from, to }));
     })();
-  }, [setRawData, user]);
+  }, [setRawData, user, from, to]);
+
+  const moveBack = () => {
+    setFrom(dayjs(from, 'YYYY-MM-DD').subtract(timeWindow, 'months').format('YYYY-MM-DD'));
+    setTo(dayjs(to, 'YYYY-MM-DD').subtract(timeWindow, 'months').format('YYYY-MM-DD'));
+  };
+
+  const moveForward = () => {
+    setFrom(dayjs(from, 'YYYY-MM-DD').add(timeWindow, 'months').format('YYYY-MM-DD'));
+    setTo(dayjs(to, 'YYYY-MM-DD').add(timeWindow, 'months').format('YYYY-MM-DD'));
+  };
 
   return (
     <div className={classes.root}>
-      <Heatmap isMobile={isMobile} from={from} to={to} rawData={rawData}  />
+
+      <div className={classes.buttons} >
+        <IconButton aria-label="back" className={classes.margin} size="small" onClick={moveBack}>
+          <ArrowBackIcon fontSize="inherit" />
+        </IconButton>
+        <span>{dayjs(from, 'YYYY-MM-DD').format('YYYY')}</span>
+        <IconButton aria-label="forward" className={classes.margin} size="small" onClick={moveForward}>
+          <ArrowForwardIcon fontSize="inherit" />
+        </IconButton>
+      </div>
+      <div className={classes.map}>
+        <Heatmap isMobile={isMobile} from={from} to={to} rawData={rawData}  />
+      </div>
     </div>
   );
 }

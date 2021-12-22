@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
   root: {
-    width: '140px',
+    width: '200px',
 
     marginLeft: 'auto',
     marginRight: 'auto',
@@ -13,5 +13,15 @@ export default makeStyles((theme) => ({
 
     }
   },
+  buttons: {
+
+  },
+  map: {
+    paddingLeft: '40px',
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: 0,
+
+    }
+  }
 
 }));
