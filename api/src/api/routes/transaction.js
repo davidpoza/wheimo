@@ -166,7 +166,7 @@ export default (app) => {
     async (req, res, next) => {
       const { id } = req.params
       const userId = req.user.id;
-      const { accountId, tags, limit, sort, offset, from, to, search, min, max, operationType, isFav, year } = req.query;
+      const { accountId, tags, limit, sort, offset, from, to, search, min, max, operationType, isFav } = req.query;
       const tagsArray = tags ? tags.split(',').map((id) => parseInt(id, 10)) : undefined;
       const transactionService = Container.get('transactionService');
       try {
@@ -177,9 +177,7 @@ export default (app) => {
           }
           return res.status(200).json(transaction);
         }
-        const transactions = year
-          ? await transactionService.getExpensesCalendar({ year: parseInt(year, 10), userId })
-          : await transactionService.findAll({
+        const transactions = await transactionService.findAll({
           accountId, userId, tags: tagsArray, from, to, min, max, limit, offset, sort, search, operationType, isFav
         });
         return res.status(200).json(transactions);

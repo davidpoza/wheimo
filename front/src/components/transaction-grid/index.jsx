@@ -30,7 +30,7 @@ function TransactionGrid({ transactions, page = 1, setPage }) {
   }
 
   const chunk = (transactions && pageSize)
-    ? transactions.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize)
+    ? transactions?.slice((page - 1) * pageSize, (page - 1) * pageSize + pageSize)
     : [];
 
   const pagesCount = Math.floor(transactions.length / pageSize);

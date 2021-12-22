@@ -602,7 +602,7 @@ export default class TransactionService {
     return tags;
   }
 
-  async getExpensesCalendar({ userId, year }) {
+  async getExpensesCalendar({ userId, from, to }) {
     const transactions = await this.transactionModel.findAll(
       {
         include: [
@@ -618,8 +618,8 @@ export default class TransactionService {
             [this.sequelizeOp.lt]: 0
           },
           date: {
-            [this.sequelizeOp.gte]: new Date(year, 1, 1),
-            [this.sequelizeOp.lte]: new Date(year, 12, 31),
+            [this.sequelizeOp.gte]: from ? this.dayjs(from, 'YYYY-MM-DD').toDate() : new Date(new Date().getFullYear(), 0, 1),
+            [this.sequelizeOp.lte]: to ? this.dayjs(to, 'YYYY-MM-DD').toDate() : new Date(),
           }
         },
         group: [this.sequelizeCol('day')],
