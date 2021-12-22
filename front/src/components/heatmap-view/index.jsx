@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import dayjs from 'dayjs';
 import { connect } from 'react-redux';
-
+import withIsMobile from 'hocs/with-is-mobile.jsx';
 
 // own
 import Heatmap from './_children/heatmap';
@@ -10,22 +11,23 @@ import useStyles from './styles';
 import { fetchAll } from 'api-client/heatmap';
 
 function HeatmapView({
-  user,
+  user, isMobile
 }) {
   const classes = useStyles();
-  const [from, setFrom] = useState();
-  const [to, setTo] = useState();
+  const [timeWindow, setTimeWindow] = useState(isMobile ? 6 : 12); // in months, 6 in mobile
+  const [from, setFrom] = useState(dayjs().subtract(timeWindow, 'months').format('YYYY-MM-DD'));
+  const [to, setTo] = useState(dayjs().format('YYYY-MM-DD'));
   const [rawData, setRawData] = useState([]);
 
   useEffect(() => {
     (async () => {
-      if (user?.token) setRawData(await fetchAll(user?.token, {  }));
+      if (user?.token) setRawData(await fetchAll(user?.token, { from, to }));
     })();
   }, [setRawData, user]);
 
   return (
     <div className={classes.root}>
-      <Heatmap rawData={rawData}  />
+      <Heatmap isMobile={isMobile} from={from} to={to} rawData={rawData}  />
     </div>
   );
 }
@@ -37,4 +39,4 @@ const mapStateToProps = (state) => ({
   errorMessage: state.transaction.errorMessage,
 });
 
-export default connect(mapStateToProps)(withLoader(HeatmapView));
+export default connect(mapStateToProps)(withIsMobile(withLoader(HeatmapView)));
