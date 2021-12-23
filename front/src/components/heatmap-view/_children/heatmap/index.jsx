@@ -31,12 +31,13 @@ export default function Heatmap({ rawData, isMobile, from, to }) {
           endDate={new Date(to)}
           values={rawData.map(e => {
             return ({
-              date: e.day,
+              realDate: e.day,
+              date: dayjs(e.day, 'YYYY-MM-DD').subtract(1, 'day').format('YYYY-MM-DD'), // workaround to start week on monday
               count: Math.round(Math.abs(e.totalAmount))
             });
           })}
           tooltipDataAttrs={(value) => ({
-            'data-tip': value?.count ? `${dayjs(value.date, 'YYYY-MM-DD').format('DD/MM/YYYY')} ${value.count}€` : undefined
+            'data-tip': value?.count ? `${dayjs(value.realDate, 'YYYY-MM-DD').format('DD/MM/YYYY')} ${value.count}€` : undefined
           })}
           classForValue={calculateColor}
           showWeekdayLabels
