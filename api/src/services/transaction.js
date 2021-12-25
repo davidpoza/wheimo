@@ -2,7 +2,9 @@ import { Container } from 'typedi';
 import pickBy from 'lodash.pickby';
 import CryptoJS from 'crypto-js';
 import md5 from 'md5';
+import dayjs from 'dayjs';
 
+import { leftPadding } from '../shared/utilities.js';
 import config from '../config/config.js';
 import mockedImportedTransactions from './importers/mock.js';
 export default class TransactionService {
@@ -27,6 +29,8 @@ export default class TransactionService {
     this.applyTags = this.applyTags.bind(this);
     this.untagTransaction = this.untagTransaction.bind(this);
     this.untagTransactions = this.untagTransactions.bind(this);
+    this.getExpensesCalendar = this.getExpensesCalendar.bind(this);
+    this.calculateStatistics = this.calculateStatistics.bind(this);
   }
 
   /**
@@ -602,6 +606,13 @@ export default class TransactionService {
     return tags;
   }
 
+  /**
+   *
+   * @param {Number} param.userId
+   * @param {String} param.from - format YYYY-MM-DD
+   * @param {String} param.to - format YYYY-MM-DD
+   * @returns
+   */
   async getExpensesCalendar({ userId, from, to }) {
     const transactions = await this.transactionModel.findAll(
       {
@@ -631,6 +642,66 @@ export default class TransactionService {
         day: t?.dataValues?.day,
         totalAmount: t?.dataValues?.totalAmount,
       });
+    }).sort((a, b) => {
+      return dayjs(a.day, 'YYYY-MM-DD').diff(dayjs(b.day, 'YYYY-MM-DD'))
     });
+  }
+
+  /**
+   * It calculates statistics either for the selected range or the current month
+   * @param {Number} param.userId
+   * @param {String} param.from - format YYYY-MM-DD
+   * @param {String} param.to - format YYYY-MM-DD
+   * @returns
+   */
+  async calculateStatistics({ userId, from, to }) {
+    const monthFirstDay = `${dayjs().format('YYYY')}-${dayjs().format('MM')}-01`;
+    const monthLastDay = `${dayjs().format('YYYY')}-${dayjs().format('MM')}-${leftPadding(dayjs().daysInMonth(), 2)}`;
+    const data = await this.getExpensesCalendar({ userId, from: from || monthFirstDay, to: to || monthLastDay });
+    const ret = {
+      mostExpensiveAmount: 0,
+      mostExpensiveDay: undefined,
+      leastExpensiveAmount: 99999,
+      leastExpensiveDay: undefined,
+      totalExpenses: 0,
+      mostExpensiveMonth: undefined,
+      leastExpensiveMonth: undefined,
+      mostExpensiveMonthAmount: 0,
+      leastExpensiveMonthAmount: 0,
+      longestRow: 0,
+      longestRowStart: undefined,
+      longestRowEnd: undefined,
+    };
+    let prevDate = undefined;
+    const monthAmounts = new Array(12).fill(0);
+    let currentRow = 0;
+
+    data.forEach((d) => {
+      if (Math.abs(d.totalAmount) > ret.mostExpensiveAmount) {
+        ret.mostExpensiveAmount = Math.abs(d.totalAmount);
+        ret.mostExpensiveDay = d.day;
+      }
+      if (Math.abs(d.totalAmount) < ret.leastExpensiveAmount) {
+        ret.leastExpensiveAmount = Math.abs(d.totalAmount);
+        ret.leastExpensiveDay = d.day;
+      }
+      ret.totalExpenses += Math.abs(d.totalAmount);
+      monthAmounts[parseInt(dayjs(d.day, 'YYYY-MM-DD').format('M'), 10)-1] += Math.abs(d.totalAmount);
+
+      if (prevDate) {
+        currentRow = Math.abs(dayjs(d.day).diff(prevDate, 'days'));
+        if (currentRow > ret.longestRow) {
+          ret.longestRow = currentRow;
+          ret.longestRowEnd = d.day;
+          ret.longestRowStart = prevDate;
+        }
+      }
+      prevDate = d.day;
+    });
+    ret.mostExpensiveMonthAmount = Math.max(...monthAmounts);
+    ret.leastExpensiveMonthAmount = Math.min(...monthAmounts);
+    ret.mostExpensiveMonth = monthAmounts.indexOf(ret.mostExpensiveMonthAmount) + 1;
+    ret.leastExpensiveMonth = monthAmounts.indexOf(ret.leastExpensiveMonthAmount) + 1;
+    return ret;
   }
 };

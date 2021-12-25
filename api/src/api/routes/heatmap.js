@@ -25,4 +25,19 @@ export default (app) => {
       return next(err);
     }
   });
+
+  route.get('/calculate-statistics',
+    middlewares.isAuth,
+    async (req, res, next) => {
+    const { from, to } = req.query;
+    const userId = req.user.id;
+    const transactionService = Container.get('transactionService');
+    try {
+      const result = await transactionService.calculateStatistics({ userId, from, to });
+      return res.status(200).json(result);
+    } catch (err) {
+      loggerInstance.error('🔥 error: %o', err);
+      return next(err);
+    }
+  });
 };
