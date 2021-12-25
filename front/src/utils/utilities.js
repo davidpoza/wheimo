@@ -145,3 +145,8 @@ export function displaceDate(d0, possibleDates, direction = 'inc', keepYear = fa
 }
 
 
+export function leftPadding(num, size) {
+  num = num.toString();
+  while (num.length < size) num = "0" + num;
+  return num;
+}

@@ -32,3 +32,25 @@ export async function fetchAll(token, {
     throw Error('Error during heatmap fetch.');
   }
 }
+
+export async function calculateStatistics(token, { from, to }) {
+  try {
+    let url = `${config.API_HOST}/heatmaps/calculate-statistics`;
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        from,
+        to
+      }),
+    });
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    throw Error('Error during heatmap fetch.');
+  }
+}

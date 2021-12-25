@@ -11,8 +11,8 @@ import withIsMobile from 'hocs/with-is-mobile.jsx';
 import Heatmap from './_children/heatmap';
 import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
-import { fetchAll } from 'api-client/heatmap';
-
+import { fetchAll, calculateStatistics } from 'api-client/heatmap';
+import Statistics from './_children/statistics';
 
 function HeatmapView({
   user, isMobile
@@ -20,6 +20,7 @@ function HeatmapView({
   const classes = useStyles();
   const [index, setIndex] = useState();
   const [rawData, setRawData] = useState([]);
+  const [statistics, setStatistics] = useState({});
 
 
   const calculateDateRangeList = (isMob) => {
@@ -58,7 +59,10 @@ function HeatmapView({
 
   useEffect(() => {
     (async () => {
-      if (user?.token) setRawData(await fetchAll(user?.token, { from, to }));
+      if (user?.token && from && to) {
+        setRawData(await fetchAll(user?.token, { from, to }));
+        setStatistics(await calculateStatistics(user?.token, { from, to }));
+      }
     })();
   }, [setRawData, user, index, from, to]);
 
@@ -85,8 +89,13 @@ function HeatmapView({
           <ArrowForwardIcon fontSize="inherit" />
         </IconButton>
       </div>
-      <div className={classes.map}>
-        <Heatmap isMobile={isMobile} from={from} to={to} rawData={rawData}  />
+      <div className={classes.info}>
+        <div className={classes.map}>
+          <Heatmap isMobile={isMobile} from={from} to={to} rawData={rawData}  />
+        </div>
+        <div className={classes.list}>
+          <Statistics data={statistics} />
+        </div>
       </div>
     </div>
   );
