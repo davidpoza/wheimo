@@ -676,6 +676,18 @@ export default class TransactionService {
     const monthAmounts = new Array(12).fill(0);
     let currentRow = 0;
 
+    if (!data?.[0]?.day !== from) {
+      data.unshift({
+        day: from,
+        totalAmount: 0,
+      });
+    }
+    if (!data?.[data.length-1]?.day !== to) {
+      data.push({
+        day: to,
+        totalAmount: 0,
+      });
+    }
     data.forEach((d) => {
       if (Math.abs(d.totalAmount) > ret.mostExpensiveAmount) {
         ret.mostExpensiveAmount = Math.abs(d.totalAmount);

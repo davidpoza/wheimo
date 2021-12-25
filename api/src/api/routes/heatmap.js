@@ -26,10 +26,16 @@ export default (app) => {
     }
   });
 
-  route.get('/calculate-statistics',
+  route.post('/calculate-statistics',
     middlewares.isAuth,
+    celebrate({
+      body: Joi.object({
+        from: Joi.string().required(),
+        to: Joi.string().required(),
+      }),
+    }),
     async (req, res, next) => {
-    const { from, to } = req.query;
+    const { from, to } = req.body;
     const userId = req.user.id;
     const transactionService = Container.get('transactionService');
     try {
