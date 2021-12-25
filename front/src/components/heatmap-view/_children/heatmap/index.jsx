@@ -21,21 +21,25 @@ export default function Heatmap({ rawData, isMobile, from, to }) {
     return 'color-scale-3';
   };
 
+  /**
+   * realDate is used in tooltip, and is the real date, but date if one day before just to make weeks start on monday
+   */
+  const mapper = e => {
+    return ({
+      realDate: e.day,
+      date: dayjs(e.day, 'YYYY-MM-DD').subtract(1, 'day').format('YYYY-MM-DD'), // workaround to start week on monday
+      count: Math.round(Math.abs(e.totalAmount))
+    });
+  };
 
   return ( from && to
     ? <>
         <CalendarHeatmap
           horizontal={isMobile ? false : true}
           gutterSize={1}
-          startDate={new Date(from)}
-          endDate={new Date(to)}
-          values={rawData.map(e => {
-            return ({
-              realDate: e.day,
-              date: dayjs(e.day, 'YYYY-MM-DD').subtract(1, 'day').format('YYYY-MM-DD'), // workaround to start week on monday
-              count: Math.round(Math.abs(e.totalAmount))
-            });
-          })}
+          startDate={dayjs(from, 'YYYY-MM-DD').subtract(2, 'day').format('YYYY-MM-DD')}
+          endDate={dayjs(to, 'YYYY-MM-DD').subtract(1, 'day').format('YYYY-MM-DD')}
+          values={rawData.map(mapper)}
           tooltipDataAttrs={(value) => ({
             'data-tip': value?.count ? `${dayjs(value.realDate, 'YYYY-MM-DD').format('DD/MM/YYYY')} ${value.count}€` : undefined
           })}

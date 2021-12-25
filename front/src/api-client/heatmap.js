@@ -5,7 +5,6 @@ export async function fetchAll(token, {
   from, to
 }) {
   try {
-    console.log("llamada", from, to, token)
     let url = `${config.API_HOST}/heatmaps`;
     const params = [];
     if (from) params.push(`from=${from}`);

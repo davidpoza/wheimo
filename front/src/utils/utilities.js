@@ -98,3 +98,50 @@ export function getInnerHeight(element) {
   const computedStyle = getComputedStyle(element);
   return element.clientHeight - parseFloat(computedStyle.paddingTop) - parseFloat(computedStyle.paddingBottom);
 }
+
+/**
+ * Adapt de given date to the nearest one from posibleDates array. Keeping the same year
+ * @param {String} date - as dayjs obj
+ * @param {Array<String>} posibleDates array of dates with format DD-MM
+ * @returns {Object} dayjs
+ */
+export function nearestDay(d0, possibleDates = []) {
+  const year = parseInt(d0.format('YYYY'), 10);
+  let differenceWithSelectedDate = 366;
+  let selectedDate;
+  possibleDates.forEach((d) => {
+    const currDate = dayjs(`${d}-${year}`, 'DD-MM-YYYY');
+    const currDiff = Math.abs(d0.diff(currDate, 'days'));
+    if (currDiff < differenceWithSelectedDate){
+      differenceWithSelectedDate = currDiff;
+      selectedDate = currDate;
+    }
+  })
+  return selectedDate;
+}
+
+export function mod(n, m) {
+  return ((n % m) + m) % m;
+}
+
+/**
+ * Given a date, calculate the next date given an array of possibleDates
+ * @param {String} date - as dayjs obj
+ * @param {Array<String>} posibleDates array of dates with format DD-MM
+ * @returns {Object} dayjs
+ */
+export function displaceDate(d0, possibleDates, direction = 'inc', keepYear = false) {
+  const year = d0.format('YYYY');
+  const lookForIt = d0.format('DD-MM');
+  const selectedIndex = direction === 'inc'
+    ? possibleDates.indexOf(lookForIt) + 1
+    : possibleDates.indexOf(lookForIt) - 1;
+  if (selectedIndex < 0) {
+    return dayjs(`${possibleDates[mod(selectedIndex, possibleDates.length)]}-${keepYear ? year : year-1 }`, 'DD-MM-YYYY');
+  } else if (selectedIndex >= possibleDates.length) {
+    return dayjs(`${possibleDates[mod(selectedIndex, possibleDates.length)]}-${keepYear ? year : year+1 }`, 'DD-MM-YYYY');
+  }
+  return dayjs(`${possibleDates[selectedIndex]}-${year}`, 'DD-MM-YYYY');
+}
+
+
