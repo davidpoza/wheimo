@@ -2,16 +2,16 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
   root: {
-    // width: '200px',
-
+    width: '100%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
     // marginLeft: 'auto',
     // marginRight: 'auto',
     // padding: '0',
     [theme.breakpoints.up('md')]: {
       width: '800px',
       padding: '5% 10%',
-      marginLeft: 'auto',
-      marginRight: 'auto',
+
     }
   },
   buttons: {
@@ -50,5 +50,10 @@ export default makeStyles((theme) => ({
     [theme.breakpoints.up('md')]: {
       minWidth: '100%',
     }
+  },
+  tagList: {
+    overflow: 'auto',
+    maxHeight: 300,
+    marginTop: '2em'
   }
 }));

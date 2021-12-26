@@ -14,11 +14,12 @@ export default (app) => {
   route.get('/',
     middlewares.isAuth,
     async (req, res, next) => {
-    const { from, to, 'group-by': groupBy } = req.query;
+    const { from, to, 'group-by': groupBy, tags } = req.query;
+    const tagsArray = tags ? tags.split(',').map((id) => parseInt(id, 10)) : undefined;
     const userId = req.user.id;
     const transactionService = Container.get('transactionService');
     try {
-      const transactions = await transactionService.getExpensesCalendar({ userId, from, to, groupBy });
+      const transactions = await transactionService.getExpensesCalendar({ userId, from, to, groupBy, tags: tagsArray });
       return res.status(200).json(transactions);
     } catch (err) {
       loggerInstance.error('🔥 error: %o', err);

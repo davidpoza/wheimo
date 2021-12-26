@@ -3,53 +3,45 @@ import { ResponsiveBar } from '@nivo/bar'
 import dayjs from 'dayjs';
 
 
-export default function BarChart({ rawData, isMobile, from, to }) {
-  const calculateColor = (value) => {
-    if (!value) {
-      return 'color-empty';
-    } else if (value.count > 0 && value.count <= 20) {
-      return 'color-scale-1';
-    } else if (value.count > 20 && value.count <= 50) {
-      return 'color-scale-2';
-    }
-    return 'color-scale-3';
-  };
+export default function BarChart({ rawData, from, to, tags }) {
 
   const mapper = obj => {
     const ret = [];
-    let year;
+    ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'].forEach(e => {
+      ret.push({
+        month: dayjs(e, 'MM').format('MMM'),
+      });
+    })
+
     Object.keys(obj)?.forEach((tag) => {
       return obj?.[tag]?.forEach(e => {
-        if (!year) year = e.month.split('-')[0];
-        ret.push({
-          month: e.month,
-          [`${tag}`]: Math.abs(e.totalAmount).toFixed(2),
-        });
+        const month = dayjs(e.month, 'YYYY-MM').format('MMM');
+        const found = ret.findIndex(e => e.month === month);
+        if (found !== -1) {
+          ret[found] = {
+            ...ret[found],
+            [`${tag}`]: +Math.abs(e.totalAmount).toFixed(0),
+          };
+        }
       });
     });
-    if (year) {
-      Object.keys(obj)?.forEach((tag) => {
-        ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '11'].forEach(m => {
-          if (!ret[`${year}-${m}`]) ret.push({ month: `${year}-${m}`, [`${tag}`]: 0 });
-        });
-      });
-    }
+
     console.log(ret)
     return ret
-      .sort((a, b) => dayjs(a.month, 'YYYY-MM').diff(dayjs(b.month, 'YYYY-MM')))
-      .map(e => ({
-        ...e,
-        month: dayjs(e.month, 'YYYY-MM').format('MMM'),
-      }));
+      .sort((a, b) => dayjs(a.month, 'MMM').diff(dayjs(b.month, 'MMM')))
   };
-
+  const data = mapper(rawData);
   return ( from && to
     ? <ResponsiveBar
-        keys={['all']}
+        keys={tags}
         indexBy="month"
         groupMode="grouped"
-        colors={{ scheme: 'nivo' }}
-        data={mapper(rawData)}
+        colors={{ scheme: 'set3' }}
+        borderColor={{ from: 'color', modifiers: [ [ 'darker', 1.1 ] ] }}
+        borderWidth={1}
+        colorBy="index"
+        data={data}
+        innerPadding={3}
         margin={{ top: 50, right: 40, bottom: 50, left: 60 }}
         axisTop={null}
         axisRight={null}
