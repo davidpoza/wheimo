@@ -6,11 +6,10 @@ import { connect } from 'react-redux';
 import YearSelector from 'shared/year-selector';
 import useYearSelector from 'shared/year-selector/useYearSelector';
 import withIsMobile from 'hocs/with-is-mobile.jsx';
-import Heatmap from './_children/heatmap';
+import Heatmap from './_children/bar-chart';
 import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
-import { fetchAll, calculateStatistics } from 'api-client/total';
-import Statistics from './_children/statistics';
+import { fetchAll } from 'api-client/total';
 
 const calculateDateRangeList = (isMob) => {
   const years = [...Array(10).keys()].map(y => y + 2020);
@@ -44,11 +43,9 @@ function ChartView({
 }) {
   const classes = useStyles();
   const [rawData, setRawData] = useState([]);
-  const [statistics, setStatistics] = useState({});
   const callback = useCallback(async ({ token, from, to }) => {
-    setRawData(await fetchAll(token, { from, to }));
-    setStatistics(await calculateStatistics(token, { from, to }));
-  }, [setRawData, setStatistics]);
+    setRawData(await fetchAll(token, { from, to, groupBy: 'month' }));
+  }, [setRawData]);
 
   const {
     from,
@@ -70,10 +67,7 @@ function ChartView({
       </div>
       <div className={classes.info}>
         <div className={classes.map}>
-          <Heatmap isMobile={isMobile} from={from} to={to} rawData={rawData} />
-        </div>
-        <div className={classes.list}>
-          <Statistics data={statistics} />
+          <Heatmap isMobile={isMobile} from={from} to={to} rawData={{ 'all': rawData }} />
         </div>
       </div>
     </div>

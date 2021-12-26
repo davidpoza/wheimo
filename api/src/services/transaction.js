@@ -13,6 +13,7 @@ export default class TransactionService {
     this.sequelizeOp = this.sequelize.Sequelize.Op;
     this.sequelizeCol = this.sequelize.Sequelize.col;
     this.sequelizeFn = this.sequelize.Sequelize.fn;
+    this.sequelizeLt = this.sequelize.Sequelize.literal;
     this.dayjs = Container.get('dayjs');
     this.logger = Container.get('loggerInstance');
     this.transactionModel = this.sequelize.models.transactions;
@@ -613,7 +614,7 @@ export default class TransactionService {
    * @param {String} param.to - format YYYY-MM-DD
    * @returns
    */
-  async getExpensesCalendar({ userId, from, to }) {
+  async getExpensesCalendar({ userId, from, to, groupBy = 'day' }) {
     const transactions = await this.transactionModel.findAll(
       {
         include: [
@@ -621,7 +622,8 @@ export default class TransactionService {
         ],
         attributes: [
           [this.sequelizeFn('SUM', this.sequelizeCol('transactions.amount')), 'totalAmount'],
-          [this.sequelizeFn('DATE', this.sequelizeCol('transactions.value_date')), 'day']
+          [this.sequelizeFn('DATE', this.sequelizeCol('transactions.value_date')), 'day'],
+          [this.sequelizeFn('STRFTIME', "%Y-%m", this.sequelizeCol('transactions.value_date')), 'month'],
         ],
         where: {
           '$account.user_id$': userId,
@@ -633,17 +635,19 @@ export default class TransactionService {
             [this.sequelizeOp.lte]: to ? this.dayjs(to, 'YYYY-MM-DD').toDate() : new Date(),
           }
         },
-        group: [this.sequelizeCol('day')],
+        group: groupBy === 'day' ? [this.sequelizeCol('day')] : [this.sequelizeCol('month')],
         order: [ ['createdAt', 'ASC'] ]
       });
 
     return transactions.map((t) => {
       return ({
-        day: t?.dataValues?.day,
+        day: groupBy === 'day' ? t?.dataValues?.day : undefined,
+        month: groupBy === 'month' ? t?.dataValues?.month : undefined,
         totalAmount: t?.dataValues?.totalAmount,
       });
     }).sort((a, b) => {
-      return dayjs(a.day, 'YYYY-MM-DD').diff(dayjs(b.day, 'YYYY-MM-DD'))
+      if (groupBy === 'day') return dayjs(a.day, 'YYYY-MM-DD').diff(dayjs(b.day, 'YYYY-MM-DD'));
+      return dayjs(a.month, 'YYYY-MM').diff(dayjs(b.month, 'YYYY-MM'));
     });
   }
 

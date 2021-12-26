@@ -14,11 +14,11 @@ export default (app) => {
   route.get('/',
     middlewares.isAuth,
     async (req, res, next) => {
-    const { from, to } = req.query;
+    const { from, to, 'group-by': groupBy } = req.query;
     const userId = req.user.id;
     const transactionService = Container.get('transactionService');
     try {
-      const transactions = await transactionService.getExpensesCalendar({ userId, from, to });
+      const transactions = await transactionService.getExpensesCalendar({ userId, from, to, groupBy });
       return res.status(200).json(transactions);
     } catch (err) {
       loggerInstance.error('🔥 error: %o', err);
@@ -31,7 +31,7 @@ export default (app) => {
     celebrate({
       body: Joi.object({
         from: Joi.string().required(),
-        to: Joi.string().required(),
+        to: Joi.string().required()
       }),
     }),
     async (req, res, next) => {

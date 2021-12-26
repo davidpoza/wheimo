@@ -18,15 +18,14 @@ export default makeStyles((theme) => ({
 
   },
   info: {
-    display: 'flex',
-    [theme.breakpoints.up('md')]: {
-      display: 'block',
-    }
+
   },
   map: {
-    width: '300px',
-    maxWidth: '300px',
-    paddingLeft: '40px',
+    height: '400px',
+    width: '95%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+
     [theme.breakpoints.up('md')]: {
       width: '100%',
       maxWidth: '100%',
