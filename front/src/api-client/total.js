@@ -2,7 +2,7 @@
 import config from '../utils/config';
 
 export async function fetchAll(token, {
-  from, to, groupBy
+  from, to, groupBy, tags,
 }) {
   try {
     let url = `${config.API_HOST}/totals`;
@@ -10,6 +10,7 @@ export async function fetchAll(token, {
     if (from) params.push(`from=${from}`);
     if (to) params.push(`to=${to}`);
     if (groupBy) params.push(`group-by=${groupBy}`);
+    if (tags) params.push(`tags=${tags}`);
 
     params.forEach((param, index) => {
       if (index === 0) {

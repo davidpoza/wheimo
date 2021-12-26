@@ -6,33 +6,22 @@ import { connect } from 'react-redux';
 import YearSelector from 'shared/year-selector';
 import useYearSelector from 'shared/year-selector/useYearSelector';
 import withIsMobile from 'hocs/with-is-mobile.jsx';
-import Heatmap from './_children/bar-chart';
+import BarChart from './_children/bar-chart';
 import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
 import { fetchAll } from 'api-client/total';
+import TagList from 'components/chart-view/_children/tag-list';
+import useTags from './_children/tag-list/use-tags';
 
 const calculateDateRangeList = (isMob) => {
   const years = [...Array(10).keys()].map(y => y + 2020);
   const ret = [];
   years.forEach((y) => {
-    if (isMob) {
-      ret.push({
-        year: y,
-        from: `${y}-01-01`,
-        to: `${y}-06-30`,
-      });
-      ret.push({
-        year: y,
-        from: `${y}-07-01`,
-        to: `${y}-12-31`,
-      });
-    } else {
-      ret.push({
-        year: y,
-        from: `${y}-01-01`,
-        to: `${y}-12-31`,
-      });
-    }
+    ret.push({
+      year: y,
+      from: `${y}-01-01`,
+      to: `${y}-12-31`,
+    });
   })
   return (ret);
 };
@@ -42,10 +31,21 @@ function ChartView({
   user, isMobile
 }) {
   const classes = useStyles();
+
   const [rawData, setRawData] = useState([]);
-  const callback = useCallback(async ({ token, from, to }) => {
-    setRawData(await fetchAll(token, { from, to, groupBy: 'month' }));
-  }, [setRawData]);
+  const callback = useCallback(async ({ token, from, to, tag }) => {
+    if (tag) {
+      if (!rawData[tag.name]) setRawData({
+        ...rawData,
+        [tag.name]: await fetchAll(token, { from, to, groupBy: 'month', tags: tag.id })
+      });
+    } else {
+      if (!rawData.all) setRawData({
+        ...rawData,
+        all: await fetchAll(token, { from, to, groupBy: 'month' })
+      });
+    }
+  }, [setRawData, rawData]);
 
   const {
     from,
@@ -53,6 +53,7 @@ function ChartView({
     moveBack,
     moveForward
   } = useYearSelector({ user, calculateDateRangeList, isMobile, callback });
+  const { tags, checked, handleToggle } = useTags({ user, callback, from, to });
 
   return (
     <div className={classes.root}>
@@ -67,8 +68,21 @@ function ChartView({
       </div>
       <div className={classes.info}>
         <div className={classes.map}>
-          <Heatmap isMobile={isMobile} from={from} to={to} rawData={{ 'all': rawData }} />
+          <BarChart
+            tags={['all', ...(checked || [])]}
+            from={from}
+            to={to}
+            rawData={rawData}
+          />
         </div>
+        <TagList
+          tags={tags}
+          from={from}
+          to={to}
+          callback={callback}
+          checked={checked}
+          handleToggle={handleToggle}
+        />
       </div>
     </div>
   );

@@ -614,18 +614,20 @@ export default class TransactionService {
    * @param {String} param.to - format YYYY-MM-DD
    * @returns
    */
-  async getExpensesCalendar({ userId, from, to, groupBy = 'day' }) {
+  async getExpensesCalendar({ userId, from, to, groupBy = 'day', tags }) {
     const transactions = await this.transactionModel.findAll(
       {
         include: [
           { model: this.sequelize.models.accounts, as: 'account', duplicating: false },
+          { model: this.sequelize.models.tags, as: 'tags', duplicating: false },
         ],
         attributes: [
           [this.sequelizeFn('SUM', this.sequelizeCol('transactions.amount')), 'totalAmount'],
           [this.sequelizeFn('DATE', this.sequelizeCol('transactions.value_date')), 'day'],
           [this.sequelizeFn('STRFTIME', "%Y-%m", this.sequelizeCol('transactions.value_date')), 'month'],
         ],
-        where: {
+        where: pickBy({
+          '$tags.id$': tags || undefined,
           '$account.user_id$': userId,
           amount: {
             [this.sequelizeOp.lt]: 0
@@ -634,7 +636,7 @@ export default class TransactionService {
             [this.sequelizeOp.gte]: from ? this.dayjs(from, 'YYYY-MM-DD').toDate() : new Date(new Date().getFullYear(), 0, 1),
             [this.sequelizeOp.lte]: to ? this.dayjs(to, 'YYYY-MM-DD').toDate() : new Date(),
           }
-        },
+        }),
         group: groupBy === 'day' ? [this.sequelizeCol('day')] : [this.sequelizeCol('month')],
         order: [ ['createdAt', 'ASC'] ]
       });
