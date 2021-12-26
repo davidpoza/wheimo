@@ -39,7 +39,7 @@ const calculateDateRangeList = (isMob) => {
 };
 
 
-function HeatmapView({
+function ChartView({
   user, isMobile
 }) {
   const classes = useStyles();
@@ -87,4 +87,4 @@ const mapStateToProps = (state) => ({
   errorMessage: state.transaction.errorMessage,
 });
 
-export default connect(mapStateToProps)(withIsMobile(withLoader(HeatmapView)));
+export default connect(mapStateToProps)(withIsMobile(withLoader(ChartView)));
