@@ -11,7 +11,7 @@ import withIsMobile from 'hocs/with-is-mobile.jsx';
 import Heatmap from './_children/heatmap';
 import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
-import { fetchAll, calculateStatistics } from 'api-client/heatmap';
+import { fetchAll, calculateStatistics } from 'api-client/total';
 import Statistics from './_children/statistics';
 
 function HeatmapView({

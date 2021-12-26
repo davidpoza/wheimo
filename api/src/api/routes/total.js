@@ -9,7 +9,7 @@ const route = Router();
 export default (app) => {
   const loggerInstance = Container.get('loggerInstance');
 
-  app.use('/heatmaps', route);
+  app.use('/totals', route);
 
   route.get('/',
     middlewares.isAuth,

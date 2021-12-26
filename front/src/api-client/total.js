@@ -5,7 +5,7 @@ export async function fetchAll(token, {
   from, to
 }) {
   try {
-    let url = `${config.API_HOST}/heatmaps`;
+    let url = `${config.API_HOST}/totals`;
     const params = [];
     if (from) params.push(`from=${from}`);
     if (to) params.push(`to=${to}`);
@@ -35,7 +35,7 @@ export async function fetchAll(token, {
 
 export async function calculateStatistics(token, { from, to }) {
   try {
-    let url = `${config.API_HOST}/heatmaps/calculate-statistics`;
+    let url = `${config.API_HOST}/totals/calculate-statistics`;
 
     const res = await fetch(url, {
       method: 'POST',
