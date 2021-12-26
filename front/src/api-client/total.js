@@ -2,13 +2,14 @@
 import config from '../utils/config';
 
 export async function fetchAll(token, {
-  from, to
+  from, to, groupBy
 }) {
   try {
-    let url = `${config.API_HOST}/heatmaps`;
+    let url = `${config.API_HOST}/totals`;
     const params = [];
     if (from) params.push(`from=${from}`);
     if (to) params.push(`to=${to}`);
+    if (groupBy) params.push(`group-by=${groupBy}`);
 
     params.forEach((param, index) => {
       if (index === 0) {
@@ -35,7 +36,7 @@ export async function fetchAll(token, {
 
 export async function calculateStatistics(token, { from, to }) {
   try {
-    let url = `${config.API_HOST}/heatmaps/calculate-statistics`;
+    let url = `${config.API_HOST}/totals/calculate-statistics`;
 
     const res = await fetch(url, {
       method: 'POST',

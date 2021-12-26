@@ -9,6 +9,7 @@ import HomeView from './components/home-view';
 import TagsView from './components/tags-view';
 import AccountsView from './components/accounts-view';
 import HeatmapView from './components/heatmap-view';
+import ChartView from './components/chart-view';
 import LoginView from './components/login-view';
 import AppBar from './components/app-bar';
 import store from './store';
@@ -28,6 +29,7 @@ function App() {
               <PrivateRoute path="/tags" exact component={TagsView}/>
               <PrivateRoute path="/accounts" exact component={AccountsView}/>
               <PrivateRoute path="/heatmap" exact component={HeatmapView}/>
+              <PrivateRoute path="/charts" exact component={ChartView}/>
             </Switch>
           </Content>
         </Router>

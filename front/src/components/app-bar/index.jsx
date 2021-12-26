@@ -27,6 +27,8 @@ function MyAppBar({ openDrawer }) {
         return 'Accounts';
       case '/heatmap':
         return 'Expenses heatmap';
+      case '/charts':
+        return 'Charts by category';
       default:
         return 'Transactions';
     }

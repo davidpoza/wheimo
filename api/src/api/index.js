@@ -10,7 +10,7 @@ import rule from './routes/rule.js';
 import recurrent from './routes/recurrent.js';
 import budget from './routes/budget.js';
 import attachment from './routes/attachment.js';
-import heatmap from './routes/heatmap.js';
+import total from './routes/total.js';
 
 export default () => {
   const app = Router();
@@ -23,6 +23,6 @@ export default () => {
   recurrent(app);
   budget(app);
   attachment(app);
-  heatmap(app);
+  total(app);
   return app
 }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -16,6 +16,7 @@ import DateRangeIcon from '@material-ui/icons/DateRange';
 import AccountIcon from '@material-ui/icons/AccountBalance';
 import TransactionIcon from '@material-ui/icons/Receipt';
 import ReportIcon from '@material-ui/icons/Assessment';
+import BarChart from '@material-ui/icons/BarChart';
 
 import useStyles from './styles';
 import { resetState } from '../../actions/user';
@@ -48,11 +49,22 @@ function NavMenu({ resetUserState, drawerOpen, closeDrawer }) {
           <ListItemText primary="Transactions" />
         </ListItem>
 
-        <ListItem button key='heatmap' component={Link} to="/heatmap" onClick={closeDrawer}>
-          <ListItemIcon>
-            <DateRangeIcon className={classes.icon} fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Heatmap" />
+        <ListItem>
+          <List component="div" disablePadding>
+            <ListItem button key='heatmap' component={Link} to="/heatmap" onClick={closeDrawer}>
+              <ListItemIcon>
+                <DateRangeIcon className={classes.icon} fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Heatmap" />
+            </ListItem>
+
+            <ListItem button key='chart' component={Link} to="/charts" onClick={closeDrawer}>
+              <ListItemIcon>
+                <BarChart className={classes.icon} fontSize="small" />
+              </ListItemIcon>
+              <ListItemText primary="Charts" />
+            </ListItem>
+          </List>
         </ListItem>
 
         <ListItem button key='accounts' component={Link} to="/accounts" onClick={closeDrawer}>
