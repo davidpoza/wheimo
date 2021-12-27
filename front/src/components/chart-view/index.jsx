@@ -32,7 +32,7 @@ function ChartView({
 }) {
   const classes = useStyles();
 
-  const [rawData, setRawData] = useState([]);
+  const [rawData, setRawData] = useState({});
   const callback = useCallback(async ({ token, from, to, tag }) => {
     if (tag) {
       if (!rawData[tag.name]) setRawData({
@@ -40,50 +40,55 @@ function ChartView({
         [tag.name]: await fetchAll(token, { from, to, groupBy: 'month', tags: tag.id })
       });
     } else {
-      if (!rawData.all) setRawData({
+      if (!rawData.All) setRawData({
         ...rawData,
-        all: await fetchAll(token, { from, to, groupBy: 'month' })
+        All: await fetchAll(token, { from, to, groupBy: 'month' })
       });
     }
   }, [setRawData, rawData]);
+
+  const yearChangedCallback = useCallback(async ({ token, from, to }) => {
+
+      setRawData({
+        All: await fetchAll(token, { from, to, groupBy: 'month' })
+      });
+
+  }, [setRawData]);
 
   const {
     from,
     to,
     moveBack,
     moveForward
-  } = useYearSelector({ user, calculateDateRangeList, isMobile, callback });
+  } = useYearSelector({ user, calculateDateRangeList, isMobile, callback: yearChangedCallback });
   const { tags, checked, handleToggle } = useTags({ user, callback, from, to });
 
   return (
     <div className={classes.root}>
       <div className={classes.buttons}>
         <YearSelector
-          calculateDateRangeList={calculateDateRangeList}
-          callback={callback}
           from={from}
           moveBack={moveBack}
           moveForward={moveForward}
         />
       </div>
-      <div className={classes.info}>
-        <div className={classes.map}>
-          <BarChart
-            tags={['all', ...(checked || [])]}
-            from={from}
-            to={to}
-            rawData={rawData}
-          />
-        </div>
-        <TagList
-          tags={tags}
+      <div className={classes.map}>
+        <BarChart
+          tags={checked}
           from={from}
           to={to}
-          callback={callback}
-          checked={checked}
-          handleToggle={handleToggle}
+          rawData={rawData}
         />
       </div>
+
+      <TagList
+        tags={tags}
+        from={from}
+        to={to}
+        callback={callback}
+        checked={checked}
+        handleToggle={handleToggle}
+      />
     </div>
   );
 }
