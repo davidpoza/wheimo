@@ -66,24 +66,23 @@ function ChartView({
           moveForward={moveForward}
         />
       </div>
-      <div className={classes.info}>
-        <div className={classes.map}>
-          <BarChart
-            tags={checked}
-            from={from}
-            to={to}
-            rawData={rawData}
-          />
-        </div>
-        <TagList
-          tags={tags}
+      <div className={classes.map}>
+        <BarChart
+          tags={checked}
           from={from}
           to={to}
-          callback={callback}
-          checked={checked}
-          handleToggle={handleToggle}
+          rawData={rawData}
         />
       </div>
+
+      <TagList
+        tags={tags}
+        from={from}
+        to={to}
+        callback={callback}
+        checked={checked}
+        handleToggle={handleToggle}
+      />
     </div>
   );
 }

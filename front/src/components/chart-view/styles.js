@@ -2,23 +2,16 @@ import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
   root: {
+    display: 'flex',
+    flex: '1 1 1px',
+    flexDirection: 'column',
     width: '100%',
     marginLeft: 'auto',
     marginRight: 'auto',
-    // marginLeft: 'auto',
-    // marginRight: 'auto',
-    // padding: '0',
     [theme.breakpoints.up('md')]: {
       width: '800px',
       padding: '5% 10%',
-
     }
-  },
-  buttons: {
-
-  },
-  info: {
-
   },
   map: {
     height: '400px',
@@ -52,8 +45,10 @@ export default makeStyles((theme) => ({
     }
   },
   tagList: {
-    overflow: 'auto',
-    maxHeight: 300,
-    marginTop: '2em'
+    overflowY: 'auto',
+    marginTop: '2em',
+    flex: '1 1 1px',
+
+
   }
 }));
