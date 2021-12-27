@@ -32,7 +32,7 @@ function ChartView({
 }) {
   const classes = useStyles();
 
-  const [rawData, setRawData] = useState([]);
+  const [rawData, setRawData] = useState({});
   const callback = useCallback(async ({ token, from, to, tag }) => {
     if (tag) {
       if (!rawData[tag.name]) setRawData({
@@ -47,20 +47,26 @@ function ChartView({
     }
   }, [setRawData, rawData]);
 
+  const yearChangedCallback = useCallback(async ({ token, from, to }) => {
+
+      setRawData({
+        All: await fetchAll(token, { from, to, groupBy: 'month' })
+      });
+
+  }, [setRawData]);
+
   const {
     from,
     to,
     moveBack,
     moveForward
-  } = useYearSelector({ user, calculateDateRangeList, isMobile, callback });
+  } = useYearSelector({ user, calculateDateRangeList, isMobile, callback: yearChangedCallback });
   const { tags, checked, handleToggle } = useTags({ user, callback, from, to });
 
   return (
     <div className={classes.root}>
       <div className={classes.buttons}>
         <YearSelector
-          calculateDateRangeList={calculateDateRangeList}
-          callback={callback}
           from={from}
           moveBack={moveBack}
           moveForward={moveForward}
