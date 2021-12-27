@@ -40,9 +40,9 @@ function ChartView({
         [tag.name]: await fetchAll(token, { from, to, groupBy: 'month', tags: tag.id })
       });
     } else {
-      if (!rawData.all) setRawData({
+      if (!rawData.All) setRawData({
         ...rawData,
-        all: await fetchAll(token, { from, to, groupBy: 'month' })
+        All: await fetchAll(token, { from, to, groupBy: 'month' })
       });
     }
   }, [setRawData, rawData]);
@@ -69,7 +69,7 @@ function ChartView({
       <div className={classes.info}>
         <div className={classes.map}>
           <BarChart
-            tags={['all', ...(checked || [])]}
+            tags={checked}
             from={from}
             to={to}
             rawData={rawData}
