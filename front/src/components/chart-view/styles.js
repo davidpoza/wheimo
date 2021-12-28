@@ -48,9 +48,9 @@ export default makeStyles((theme) => ({
   },
   tagList: {
     overflowY: 'auto',
-    marginTop: '2em',
     flex: '1 1 1px',
-
-
-  }
+    marginTop: '2em',
+    // marginBottom: '1em',
+    boxShadow: 'inset 0px -20px 13px -3px #ccc'
+  },
 }));
