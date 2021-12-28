@@ -116,15 +116,6 @@ function TransactionFilter({
       >
         <FilterList />
       </IconButton>
-      <IconButton
-        className={classes.filterButton}
-        color="primary"
-        style={ showCharts ? { color: '#f96096' } : {}}
-        title="Mostrar gráfico"
-        onClick={toggleCharts}
-      >
-        <BarChart />
-      </IconButton>
       <CreateTransationDialog />
       <Drawer
         anchor="left"

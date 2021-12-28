@@ -4,8 +4,8 @@ export default makeStyles((theme) => ({
   root: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    padding: '0 1em',
+    justifyContent: 'space-between',
+    padding: '0 10px 0 14px',
   },
   createButton: {
     cursor: 'pointer',
@@ -16,7 +16,7 @@ export default makeStyles((theme) => ({
     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
     fontWeight: 300,
     padding: '0.8em',
-    width: '80%',
+    width: '92%',
     border: '1px solid #ccc',
     borderRadius: '5px',
     '&:focus': {

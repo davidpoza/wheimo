@@ -9,8 +9,10 @@ export default makeStyles((theme) => ({
     marginLeft: 'auto',
     marginRight: 'auto',
     [theme.breakpoints.up('md')]: {
-      width: '800px',
-      padding: '5% 10%',
+      marginLeft: '20%',
+      marginRight: '20%',
+      width: 'auto',
+      padding: '5% 0',
     }
   },
   map: {
