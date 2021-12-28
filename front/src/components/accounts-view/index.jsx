@@ -24,9 +24,9 @@ function AccountsView({
 
   return (
     <div className={classes.root}>
+      <CreateAccountInput />
       <OperationDropdown entity="account" />
       <AccountsList />
-      <CreateAccountInput />
       <EditAccountDialog />
     </div>
   );
