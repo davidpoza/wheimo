@@ -166,8 +166,7 @@ export async function applyTags(token, id) {
         Authorization: `Bearer ${token}`,
       },
     });
-    const result = await res.json();
-    if (isErrorCode(res.status)) throw new Error(result?.message);
+    if (isErrorCode(res.status)) throw new Error();
     return (id);
   } catch (err) {
     throw Error('Error during tags application.');
