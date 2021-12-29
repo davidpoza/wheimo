@@ -121,7 +121,7 @@ function DetailsDialog({
 
   async function processData() {
     const data = {
-      comments: comments,
+      comments: comments || undefined,
     };
 
     updateTransaction(user.token, id, index, data);

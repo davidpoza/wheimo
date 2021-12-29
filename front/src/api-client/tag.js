@@ -64,8 +64,7 @@ export async function remove(token, id) {
         Authorization: `Bearer ${token}`,
       },
     });
-    const result = await res.json();
-    if (isErrorCode(res.status)) throw new Error(result?.message);
+    if (isErrorCode(res.status)) throw new Error();
     return (id);
   } catch (err) {
     throw Error('Error during tag deletion.');
@@ -81,9 +80,8 @@ export async function applyTag(token, tagId) {
         Authorization: `Bearer ${token}`,
       },
     });
-    const result = await res.json();
-    if (isErrorCode(res.status)) throw new Error(result?.message);
-    return result;
+    if (isErrorCode(res.status)) throw new Error();
+    return tagId;
   } catch (err) {
     throw Error('Error during tag application.');
   }
@@ -98,9 +96,8 @@ export async function untag(token, tagId) {
         Authorization: `Bearer ${token}`,
       },
     });
-    const result = await res.json();
-    if (isErrorCode(res.status)) throw new Error(result?.message);
-    return result;
+    if (isErrorCode(res.status)) throw new Error();
+    return tagId;
   } catch (err) {
     throw Error('Error during untagging operation.');
   }

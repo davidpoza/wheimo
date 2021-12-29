@@ -64,7 +64,6 @@ export async function remove(token, id) {
         Authorization: `Bearer ${token}`,
       },
     });
-    const result = await res.json();
     if (isErrorCode(res.status)) throw new Error(result?.message);
     return (id);
   } catch (err) {
