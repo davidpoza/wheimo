@@ -64,7 +64,7 @@ export async function remove(token, id) {
         Authorization: `Bearer ${token}`,
       },
     });
-    if (isErrorCode(res.status)) throw new Error(result?.message);
+    if (isErrorCode(res.status)) throw new Error();
     return (id);
   } catch (err) {
     throw Error('Error during rule deletion.');
