@@ -50,8 +50,9 @@ function TransactionGrid({ transactions, page = 1, setPage }) {
               transactions.length > 0
                 ? <List ref={listRef} className={classes.list}>
                     {
-                      chunk.map((transaction, index) => (
-                        <TransactionGridItem
+                      chunk.map((transaction, index) => {
+                        console.log(transaction)
+                        return <TransactionGridItem
                           accountIdentifier={transaction.account.name}
                           accountDescription={transaction.account.description}
                           accountBalance={transaction.balance}
@@ -70,7 +71,7 @@ function TransactionGrid({ transactions, page = 1, setPage }) {
                           tags={transaction.tags}
                           valueDate={transaction.valueDate}
                         />
-                      ))
+                      })
                     }
                   </List>
                 : <div>

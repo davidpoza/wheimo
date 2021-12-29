@@ -1,4 +1,5 @@
 // own
+import { isErrorCode } from 'utils/utilities';
 import config from '../utils/config';
 
 export async function update(token, id, data) {
@@ -12,7 +13,7 @@ export async function update(token, id, data) {
       body: JSON.stringify(data),
     });
     const result = await res.json();
-
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return (result);
   } catch (err) {
     throw Error('Error during attachment update.');
@@ -21,13 +22,15 @@ export async function update(token, id, data) {
 
 export async function remove(token, id) {
   try {
-    await fetch(`${config.API_HOST}/attachments/${id}`, {
+    const res = await fetch(`${config.API_HOST}/attachments/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
+    const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return (id);
   } catch (err) {
     throw Error('Error during attachment deletion.');

@@ -1,5 +1,6 @@
 // own
 import config from '../utils/config';
+import { isErrorCode } from 'utils/utilities';
 
 export async function fetchAll(token, {
   offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav
@@ -37,6 +38,7 @@ export async function fetchAll(token, {
       },
     });
     const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return result;
   } catch (err) {
     throw Error('Error during transactions fetch.');
@@ -53,7 +55,9 @@ export async function fetchOne(token, id) {
         Authorization: `Bearer ${token}`,
       },
     });
+
     const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return result;
   } catch (err) {
     throw Error('Error during transaction fetch.');
@@ -87,6 +91,7 @@ export async function fetchExpensesByTag(token, {
       },
     });
     const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return result;
   } catch (err) {
     throw Error('Error during expenses by tags fetch.');
@@ -107,7 +112,7 @@ export async function create(token, data) {
       body: JSON.stringify(adaptedData),
     });
     const result = await res.json();
-
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return (result);
   } catch (err) {
     throw Error('Error during transaction creation.');
@@ -130,7 +135,7 @@ export async function update(token, id, data) {
       body: JSON.stringify(adaptedData),
     });
     const result = await res.json();
-
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return (result);
   } catch (err) {
     throw Error('Error during transaction update.');
@@ -154,13 +159,15 @@ export async function remove(token, id) {
 
 export async function applyTags(token, id) {
   try {
-    await fetch(`${config.API_HOST}/transactions/${id}/apply-tags`, {
+    const res = await fetch(`${config.API_HOST}/transactions/${id}/apply-tags`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
+    const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return (id);
   } catch (err) {
     throw Error('Error during tags application.');
@@ -175,14 +182,16 @@ export async function applyTags(token, id) {
  */
 export async function addAttachment(token, formData) {
   try {
-    const att = await fetch(`${config.API_HOST}/attachments`, {
+    const res = await fetch(`${config.API_HOST}/attachments`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
       },
       body: formData,
     });
-    return (await att.json());
+    const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
+    return (result);
   } catch (err) {
     throw Error('Error adding attachment.');
   }
