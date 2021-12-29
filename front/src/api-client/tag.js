@@ -1,4 +1,5 @@
-// own
+//
+import { isErrorCode } from 'utils/utilities';
 import config from '../utils/config';
 
 export async function fetchAll(token) {
@@ -11,6 +12,7 @@ export async function fetchAll(token) {
       },
     });
     const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return result;
   } catch (err) {
     throw Error('Error during tags fetch.');
@@ -28,7 +30,7 @@ export async function create(token, data) {
       body: JSON.stringify(data),
     });
     const result = await res.json();
-
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return (result);
   } catch (err) {
     throw Error('Error during tag creation.');
@@ -46,7 +48,7 @@ export async function update(token, id, data) {
       body: JSON.stringify(data),
     });
     const result = await res.json();
-
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return (result);
   } catch (err) {
     throw Error('Error during tag update.');
@@ -55,13 +57,15 @@ export async function update(token, id, data) {
 
 export async function remove(token, id) {
   try {
-    await fetch(`${config.API_HOST}/tags/${id}`, {
+    const res = await fetch(`${config.API_HOST}/tags/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
+    const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return (id);
   } catch (err) {
     throw Error('Error during tag deletion.');
@@ -70,13 +74,16 @@ export async function remove(token, id) {
 
 export async function applyTag(token, tagId) {
   try {
-    return await fetch(`${config.API_HOST}/tags/${tagId}/apply`, {
+    const res = await fetch(`${config.API_HOST}/tags/${tagId}/apply`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
+    const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
+    return result;
   } catch (err) {
     throw Error('Error during tag application.');
   }
@@ -84,13 +91,16 @@ export async function applyTag(token, tagId) {
 
 export async function untag(token, tagId) {
   try {
-    await fetch(`${config.API_HOST}/tags/${tagId}/untag`, {
+    const res = await fetch(`${config.API_HOST}/tags/${tagId}/untag`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
     });
+    const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
+    return result;
   } catch (err) {
     throw Error('Error during untagging operation.');
   }

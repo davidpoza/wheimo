@@ -150,3 +150,7 @@ export function leftPadding(num, size) {
   while (num.length < size) num = "0" + num;
   return num;
 }
+
+export function isErrorCode(statusCode) {
+  return ![200, 201].includes(statusCode);
+}

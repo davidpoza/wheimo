@@ -1,5 +1,6 @@
 // own
 import config from '../utils/config';
+import { isErrorCode } from 'utils/utilities';
 
 export async function login(email, password) {
   try {
@@ -14,6 +15,7 @@ export async function login(email, password) {
       }),
     });
     const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return result;
   } catch (err) {
     throw Error('login failed due to connection problems.');
@@ -29,6 +31,7 @@ export async function validateToken(token) {
       },
     });
     const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return result;
   } catch (err) {
     throw Error('Token is not valid');

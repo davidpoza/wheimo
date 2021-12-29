@@ -1,5 +1,6 @@
 // own
 import config from '../utils/config';
+import { isErrorCode } from 'utils/utilities';
 
 export async function fetchAll(token, {
   from, to, groupBy, tags,
@@ -29,6 +30,7 @@ export async function fetchAll(token, {
       },
     });
     const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return result;
   } catch (err) {
     throw Error('Error during heatmap fetch.');
@@ -51,6 +53,7 @@ export async function calculateStatistics(token, { from, to }) {
       }),
     });
     const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
     return result;
   } catch (err) {
     throw Error('Error during heatmap fetch.');
