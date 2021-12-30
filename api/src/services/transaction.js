@@ -618,12 +618,13 @@ export default class TransactionService {
     let operationTypeFilter = (operationType && operationType !== 'all') ? {} : undefined;
     if (operationType === 'expense') operationTypeFilter[this.sequelizeOp.lt] = 0;
     if (operationType === 'income') operationTypeFilter[this.sequelizeOp.gt] = 0;
+
     const transactions = await this.transactionModel.findAll(
       {
         include: [
           { model: this.sequelize.models.accounts, as: 'account', duplicating: false },
-          { model: this.sequelize.models.tags, as: 'tags', duplicating: false },
-        ],
+          tags ? { model: this.sequelize.models.tags, as: 'tags', duplicating: false } : undefined,
+        ].filter(e => e),
         attributes: [
           [this.sequelizeFn('SUM', this.sequelizeCol('transactions.amount')), 'totalAmount'],
           [this.sequelizeFn('DATE', this.sequelizeCol('transactions.value_date')), 'day'],
@@ -632,9 +633,6 @@ export default class TransactionService {
         where: pickBy({
           '$tags.id$': tags || undefined,
           '$account.user_id$': userId,
-          amount: {
-            [this.sequelizeOp.lt]: 0
-          },
           date: {
             [this.sequelizeOp.gte]: from ? this.dayjs(from, 'YYYY-MM-DD').toDate() : new Date(new Date().getFullYear(), 0, 1),
             [this.sequelizeOp.lte]: to ? this.dayjs(to, 'YYYY-MM-DD').toDate() : new Date(),
