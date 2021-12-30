@@ -19,7 +19,7 @@ export default (app) => {
     const userId = req.user.id;
     const transactionService = Container.get('transactionService');
     try {
-      const transactions = await transactionService.getExpensesCalendar({ userId, from, to, groupBy, tags: tagsArray });
+      const transactions = await transactionService.getTransactionsCalendar({ userId, from, to, groupBy, tags: tagsArray });
       return res.status(200).json(transactions);
     } catch (err) {
       loggerInstance.error('🔥 error: %o', err);
