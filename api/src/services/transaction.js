@@ -30,7 +30,7 @@ export default class TransactionService {
     this.applyTags = this.applyTags.bind(this);
     this.untagTransaction = this.untagTransaction.bind(this);
     this.untagTransactions = this.untagTransactions.bind(this);
-    this.getExpensesCalendar = this.getExpensesCalendar.bind(this);
+    this.getTransactionsCalendar = this.getTransactionsCalendar.bind(this);
     this.calculateStatistics = this.calculateStatistics.bind(this);
   }
 
@@ -614,7 +614,10 @@ export default class TransactionService {
    * @param {String} param.to - format YYYY-MM-DD
    * @returns
    */
-  async getExpensesCalendar({ userId, from, to, groupBy = 'day', tags }) {
+  async getTransactionsCalendar({ userId, from, to, groupBy = 'day', tags, operationType = 'expense' }) {
+    let operationTypeFilter = (operationType && operationType !== 'all') ? {} : undefined;
+    if (operationType === 'expense') operationTypeFilter[this.sequelizeOp.lt] = 0;
+    if (operationType === 'income') operationTypeFilter[this.sequelizeOp.gt] = 0;
     const transactions = await this.transactionModel.findAll(
       {
         include: [
@@ -635,7 +638,8 @@ export default class TransactionService {
           date: {
             [this.sequelizeOp.gte]: from ? this.dayjs(from, 'YYYY-MM-DD').toDate() : new Date(new Date().getFullYear(), 0, 1),
             [this.sequelizeOp.lte]: to ? this.dayjs(to, 'YYYY-MM-DD').toDate() : new Date(),
-          }
+          },
+          amount: operationTypeFilter,
         }),
         group: groupBy === 'day' ? [this.sequelizeCol('day')] : [this.sequelizeCol('month')],
         order: [ ['createdAt', 'ASC'] ]
@@ -663,7 +667,7 @@ export default class TransactionService {
   async calculateStatistics({ userId, from, to }) {
     const monthFirstDay = `${dayjs().format('YYYY')}-${dayjs().format('MM')}-01`;
     const monthLastDay = `${dayjs().format('YYYY')}-${dayjs().format('MM')}-${leftPadding(dayjs().daysInMonth(), 2)}`;
-    const data = await this.getExpensesCalendar({ userId, from: from || monthFirstDay, to: to || monthLastDay });
+    const data = await this.getTransactionsCalendar({ userId, from: from || monthFirstDay, to: to || monthLastDay });
     const ret = {
       mostExpensiveAmount: 0,
       mostExpensiveDay: undefined,
