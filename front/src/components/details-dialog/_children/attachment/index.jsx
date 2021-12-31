@@ -8,6 +8,7 @@ import Lightbox from 'react-awesome-lightbox';
 import 'react-awesome-lightbox/build/style.css';
 
 // own
+import withIsMobile from 'hocs/with-is-mobile.jsx';
 import useStyles from './styles';
 import config from '../../../../utils/config';
 import Modal from '../../../modal';
@@ -63,7 +64,7 @@ EditableInput.propTypes = {
 };
 
 function Attachments({
-  user, files, transactionId, removeAttachment, updateAttachment,
+  user, files, transactionId, removeAttachment, updateAttachment, isMobile
 }) {
   const [showLightbox, setShowLightbox] = useState(false);
   const clickedImage = useRef(null);
@@ -102,7 +103,11 @@ function Attachments({
            <MimeIcon id={file.id} type={file.type} setShowLightbox={setShowLightbox} clickedImage={clickedImage} />
            <EditableInput id={file.id} initialValue={file.description} handleOnBlur={handleChangeDescription} />
            <a className={classes.link} title="download attachment" href={getFileUrl(file)}> 📎</a>
-           <span className={classes.createdAt}>{dayjs(file.createdAt).format('dddd DD MMM YYYY - HH:mm')}</span>
+           <span className={classes.createdAt}>{
+             isMobile
+               ? dayjs(file.createdAt).format('DD/MM/YY HH:mm')
+               : dayjs(file.createdAt).format('dddd DD MMM YYYY - HH:mm')
+           }</span>
            <button
              className={classes.trash}
              title="delete attachment"
@@ -152,4 +157,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Attachments);
+export default connect(mapStateToProps, mapDispatchToProps)(withIsMobile(Attachments));

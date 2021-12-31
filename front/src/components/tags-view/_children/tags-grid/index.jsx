@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import List from '@material-ui/core/List';
@@ -8,7 +8,6 @@ import Pagination from '@material-ui/lab/Pagination';
 import { getInnerHeight } from 'utils/utilities';
 import TagsGridItem from '../tags-grid-item';
 import useStyles from './styles';
-import { azOrder } from '../../../../utils/utilities';
 import {
   setPage as setPageAction,
 } from 'actions/tag';
@@ -18,11 +17,14 @@ function TagsGrid({
 }) {
   const classes = useStyles();
   const listRef = useRef();
+  const [pageSize, setPageSize] = useState(0);
   const ITEM_SIZE = 60;
-  const pageSize = listRef?.current
-    ? Math.floor(getInnerHeight(listRef.current) / ITEM_SIZE)
-    : 0;
-    console.log("pageSize>", pageSize)
+
+  useEffect(() => {
+    if (listRef?.current) {
+      setPageSize(Math.floor(getInnerHeight(listRef?.current) / ITEM_SIZE));
+    }
+  }, [tags]);
 
   function handlePageChange(event, value) {
     setPage(value);
