@@ -8,7 +8,7 @@ export default function useYearSelector({ user, calculateDateRangeList, isMobile
   const { from, to } = rangesList?.[index] || {};
 
   useEffect(() => {
-    setIndex(rangesList.findIndex(r => r.year === currentYear && dayjs(r.to).diff(dayjs()) >= 0)); // we choose the range with is not passed yet
+    setIndex(rangesList.findIndex(r => r.year === currentYear && Math.abs(dayjs(r.to).diff(dayjs())) >= 0)); // we choose the range with is not passed yet
   }, [currentYear, rangesList]);
 
   useEffect(() => {
