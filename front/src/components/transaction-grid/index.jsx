@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import List from '@material-ui/core/List';
@@ -23,7 +23,7 @@ function TransactionGrid({ transactions, page = 1, setPage }) {
     if (listRef?.current) {
       setPageSize(Math.floor(getInnerHeight(listRef?.current) / ITEM_SIZE));
     }
-  }, []);
+  }, [transactions]);
 
   function handlePageChange(event, value) {
     setPage(value);
@@ -34,7 +34,7 @@ function TransactionGrid({ transactions, page = 1, setPage }) {
     : [];
 
   const pagesCount = Math.floor(transactions.length / pageSize);
-  console.log(">>", page)
+
   return (
     <div className={classes.root}
       style={{
