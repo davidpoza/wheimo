@@ -1,12 +1,15 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   root: {
     fontSize: '0.9em',
     fontWeight: '300',
   },
   list: {
-    paddingLeft: '1em',
+    paddingLeft: '0em',
+    [theme.breakpoints.up('md')]: {
+      paddingLeft: '1em',
+    },
   },
   item: {
     display: 'flex',
@@ -18,6 +21,7 @@ export default makeStyles(() => ({
     cursor: 'pointer',
   },
   createdAt: {
+    textAlign: 'center',
     fontSize: '0.9em',
     color: 'grey',
     marginLeft: '1em',
@@ -33,6 +37,10 @@ export default makeStyles(() => ({
     cursor: 'pointer',
   },
   description: {
+    maxWidth: '10em',
+    [theme.breakpoints.up('md')]: {
+      maxWidth: 'none',
+    },
     padding: '1px',
     border: 'none',
     borderRadius: '0px !important',
