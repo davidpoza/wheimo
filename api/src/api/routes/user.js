@@ -46,16 +46,18 @@ export default (app) => {
         name: Joi.string(),
         email: Joi.string().email(),
         active: Joi.bool(),
-        level: Joi.string()
+        level: Joi.string(),
+        theme: Joi.string(),
+        lang: Joi.string(),
       }),
     }),
     async (req, res, next) => {
       const userService = Container.get('userService');
       const { id } = req.params;
-      const { email, name, active, level } = req.body;
+      const { email, name, active, level, theme, lang } = req.body;
       try {
         const user = await userService.updateById(id,
-          { email, name, active, level }
+          { email, name, active, level, theme, lang }
         );
         if (!user) {
           res.sendStatus(404);
@@ -70,7 +72,7 @@ export default (app) => {
   route.get('/:id?',
     middlewares.isAuth,
     async (req, res, next) => {
-    const { id } = req.params
+    const { id } = req.params;
     const userService = Container.get('userService');
     try {
       if (id) {

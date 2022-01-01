@@ -13,12 +13,15 @@ export default class UserService {
   getTemplate(user) {
     if (user) {
       return ({
+        id: user.id,
         email: user.email,
         name: user.name,
         email: user.email,
         active: user.active,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
+        lang: user.lang,
+        theme: user.theme,
       });
     }
     return null;

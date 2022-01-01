@@ -37,3 +37,21 @@ export async function validateToken(token) {
     throw Error('Token is not valid');
   }
 }
+
+export async function updateUser(token, userId, { name, theme, lang, email }) {
+  try {
+    const res = await fetch(`${config.API_HOST}/users/${userId}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ name, theme, lang, email }),
+    });
+    const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
+    return result;
+  } catch (err) {
+    throw Error('Token is not valid');
+  }
+}
