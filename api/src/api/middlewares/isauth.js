@@ -9,7 +9,7 @@ import config from '../../config/config.js';
  */
 export default (req, res, next) => {
   if (!req.headers.authorization && !req.query.auth) {
-      return res.sendStatus(403);
+    return res.sendStatus(403);
   }
   let token = req.headers.authorization?.split(' ')[1];
   if (!token) {

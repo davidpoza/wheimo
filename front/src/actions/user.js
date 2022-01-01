@@ -10,3 +10,16 @@ export const getAuth = createAsyncAction('AUTH', async (email, password) => {
 export const resetState = () => ({
   type: types.USER_RESET_STATE,
 });
+
+export const settingsDialogOpen = () => ({
+  type: types.USER_SETTINGS_DIALOG_OPEN,
+});
+
+export const settingsDialogClose = () => ({
+  type: types.USER_SETTINGS_DIALOG_CLOSE,
+});
+
+export const updateUser = createAsyncAction('UPDATE', async (token, userId, { name, theme, lang, email  }) => {
+  const res = await userApi.updateUser(token, userId, { name, theme, lang, email  });
+  return res;
+});

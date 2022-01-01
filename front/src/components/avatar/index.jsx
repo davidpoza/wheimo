@@ -6,17 +6,21 @@ import Avatar from '@material-ui/core/Avatar';
 
 // own
 import NavMenu from 'components/menu';
-import { openDrawer as openDrawerAction } from '../../actions/ui';
+import SettingsDialog from 'components/settings-dialog';
+import {
+  settingsDialogOpen as openAction,
+  settingsDialogClose as closeAction,
+} from '../../actions/user';
 import usePushNotifications from '../../hooks/use-push-notification';
 import config from '../../utils/config';
 import useStyles from './styles';
 
-function MyAvatar({ user, openDrawer }) {
+function MyAvatar({ user, openSettingsDialog }) {
   const { userSubscription } = usePushNotifications(user?.token);
   const classes = useStyles();
 
   const handleClick = (event) => {
-    openDrawer();
+    openSettingsDialog();
   };
 
   // eslint-disable-next-line max-len
@@ -32,6 +36,7 @@ function MyAvatar({ user, openDrawer }) {
         />
         <span onClick={handleClick} className={classes.username}>{get(user, 'email')}</span>
         <NavMenu />
+        <SettingsDialog />
       </>
     );
   }
@@ -48,7 +53,12 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  openDrawer: () => dispatch(openDrawerAction()),
+  openSettingsDialog: () => {
+    dispatch(openAction());
+  },
+  close: () => {
+    dispatch(closeAction());
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyAvatar);
