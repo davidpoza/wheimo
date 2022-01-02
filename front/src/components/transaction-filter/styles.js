@@ -3,12 +3,12 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
   root: {
     display: 'flex',
-    alignItems: 'end',
+    alignItems: 'center',
     width: '100%',
     justifyContent: 'center',
     height: '3em',
     [theme.breakpoints.up('lg')]: {
-      height: 'auto',
+      height: '5em',
     },
   },
   drawerRoot: {
@@ -34,7 +34,7 @@ export default makeStyles((theme) => ({
 
   },
   search: {
-    margin: '0 1em 1em 1em',
+    margin: '0 1em 0 1em',
     [theme.breakpoints.up('lg')]: {
       height: 'auto',
     },

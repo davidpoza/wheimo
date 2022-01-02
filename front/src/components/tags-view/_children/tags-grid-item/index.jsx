@@ -17,7 +17,7 @@ import {
 } from '../../../../actions/tag';
 
 function TagsGridItem({
-  user, name, id, rules, changeId, changePosition, changeIndex, indexInStore, apply, untagAll
+  user, name, id, index, rules, changeId, changePosition, changeIndex, indexInStore, apply, untagAll
 }) {
   const classes = useStyles();
 
@@ -33,12 +33,18 @@ function TagsGridItem({
   }
 
   return (
-    <div className={classes.root} onContextMenu={handleContextMenu}>
+    <div
+      className={classes.root}
+      style={{borderTop: index === 0 ? 'none' : 'auto'}}
+      onContextMenu={handleContextMenu}
+    >
       <LabelIcon className={classes.icon} />
       <Typography>
-        {name} {
-          rules.length > 0 && <span className={classes.rulesCounter}>{`(${rules.length} rules)`}</span>
-        }
+        {name}{' '}
+        {rules.length > 0 && (
+          <span
+            className={classes.rulesCounter}>{`(${rules.length} rules)`}</span>
+        )}
       </Typography>
     </div>
   );

@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 export default makeStyles((theme) => ({
   root: {
     width: 'auto',
-    borderBottom: '1px solid #ccc',
+    borderTop: theme.palette.type === 'dark' ? '1px solid #424242' : '1px solid #ccc',
     cursor: 'pointer',
     '&:hover': {
       backgroundColor: theme.palette.type === 'dark' ? '#424242' : '#f5f5f5',

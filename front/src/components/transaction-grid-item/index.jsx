@@ -85,6 +85,7 @@ function TransactionGridItem({
       dense
       button
       className={classes.root}
+      style={{ borderTop: index === 0 ? 'none' : 'auto' }}
       onContextMenu={handleContextMenu}
       disableTouchRipple
       onClick={() => {
