@@ -20,13 +20,13 @@ export default {
     password: 'password',// not used on sqlite
     params: {
       dialect: 'sqlite',
-      storage: './data/database.sqlite',
+      storage: './data/db/database.sqlite',
       define: {
         underscored: true
       },
     }
   },
-  uploadDir: process.env.UPLOAD_DIR || '/tmp',
+  uploadDir: './data/images',
   uploadMaxSize: parseInt(process.env.UPLOAD_MAX_SIZE, 10) || 10,
   uploadMaxResolution: parseInt(process.env.UPLOAD_MAX_RESOLUTION, 10) || 1920,
   api: {
