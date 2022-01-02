@@ -51,7 +51,6 @@ function TransactionGrid({ transactions, page = 1, setPage }) {
                 ? <List ref={listRef} className={classes.list}>
                     {
                       chunk.map((transaction, index) => {
-                        console.log(transaction)
                         return <TransactionGridItem
                           accountIdentifier={transaction.account.name}
                           accountDescription={transaction.account.description}

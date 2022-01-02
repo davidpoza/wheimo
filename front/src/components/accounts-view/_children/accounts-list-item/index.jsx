@@ -18,6 +18,7 @@ import {
 
 function AccountsListItem({
   name,
+  index,
   id,
   balance,
   description,
@@ -64,7 +65,11 @@ function AccountsListItem({
 
   return (
     <>
-      <ListItem className={classes.root} onContextMenu={handleContextMenu}>
+      <ListItem
+        className={classes.root}
+        style={{borderTop: index === 0 ? 'none' : 'auto'}}
+        onContextMenu={handleContextMenu}
+      >
         <ListItemIcon>
           <AccountBalanceIcon />
         </ListItemIcon>
@@ -76,8 +81,7 @@ function AccountsListItem({
                 component="span"
                 variant="body2"
                 className={classes.inline}
-                color="textPrimary"
-              >
+                color="textPrimary">
                 {description}
               </Typography>
             </React.Fragment>
@@ -85,21 +89,27 @@ function AccountsListItem({
         />
         <div>
           <div className={classes.number}>
-            { formatBankId(bankId) }
-            { !['Wallet', 'Piggy Bank'].includes(formatBankId(bankId))
-              && <span>
-                : <span onClick={selectAndCopy} ref={numberRef}>{number}</span>
+            {formatBankId(bankId)}
+            {!['Wallet', 'Piggy Bank'].includes(formatBankId(bankId)) && (
+              <span>
+                :{' '}
+                <span onClick={selectAndCopy} ref={numberRef}>
+                  {number}
                 </span>
-            }
-            {
-              formatBankId(bankId) === 'Piggy Bank'
-                && <LinearProgress
+              </span>
+            )}
+            {formatBankId(bankId) === 'Piggy Bank' && (
+              <LinearProgress
                 className={classes.savingProgress}
-                variant="determinate" value={(balance * 100) / savingTargetAmount}
+                variant="determinate"
+                value={(balance * 100) / savingTargetAmount}
               />
-            }
+            )}
           </div>
-          <div className={`${classes.balance} ${balance > 0 ? classes.positiveBalance : classes.negativeBalance}`}>
+          <div
+            className={`${classes.balance} ${
+              balance > 0 ? classes.positiveBalance : classes.negativeBalance
+            }`}>
             {balance}€
           </div>
         </div>

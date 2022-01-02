@@ -9,7 +9,7 @@ export default makeStyles((theme) => ({
     width: '100%',
   },
   pagination: {
-    padding: '1em',
+    padding: '0.3em',
     '&>ul': {
       justifyContent: 'flex-end',
     },
@@ -33,6 +33,8 @@ export default makeStyles((theme) => ({
     fontWeight: 300,
   },
   list: {
-    height: '100%'
+    height: '100%',
+    paddingTop: 0,
+    paddingBottom: 0,
   }
 }));

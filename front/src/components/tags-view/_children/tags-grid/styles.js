@@ -8,7 +8,7 @@ export default makeStyles((theme) => ({
     justifyContent: 'space-between',
   },
   pagination: {
-    padding: '1em',
+    padding: '0.3em',
     '&>ul': {
       justifyContent: 'flex-end',
     },

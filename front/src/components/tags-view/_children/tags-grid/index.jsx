@@ -47,6 +47,7 @@ function TagsGrid({
                   {
                     chunk.map((tag, index) => (
                       <TagsGridItem
+                        index={index}
                         id={tag.id}
                         indexInStore={(page - 1) * pageSize + index}
                         key={tag.id}

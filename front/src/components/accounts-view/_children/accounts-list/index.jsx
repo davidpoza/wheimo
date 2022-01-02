@@ -23,6 +23,7 @@ function AccountsList({
         accounts.sort(azOrder).map((account, index) => (
           <AccountsListItem
             id={account.id}
+            index={index}
             indexInStore={index}
             key={account.id}
             name={account.name}

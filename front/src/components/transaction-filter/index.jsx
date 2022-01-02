@@ -9,6 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import dayjs from 'dayjs';
 
 // own
+import withIsMobile from 'hocs/with-is-mobile.jsx';
 import CreateTransationDialog from '../create-transaction-dialog';
 import FiltersOnDrawer from './children/filters-on-drawer';
 import useStyles from './styles';
@@ -19,7 +20,7 @@ import {
 } from '../../actions/transaction';
 
 function TransactionFilter({
-  handleChangeFilter, toggleCharts, setPage, showCharts = false,
+  handleChangeFilter, toggleCharts, setPage, showCharts = false, isMobile,
 }) {
   const classes = useStyles();
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -98,12 +99,14 @@ function TransactionFilter({
   return (
     <div className={classes.root}>
        <TextField
+        size={ isMobile ? "small" : 'medium' }
         className={classes.search}
         id="search"
-        label="Search"
+        placeholder="Search"
         type="text"
         value={search}
         fullWidth
+        variant="outlined"
         onChange={(e) => {
           setSearch(e.target.value);
         }}
@@ -175,4 +178,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TransactionFilter);
+export default connect(mapStateToProps, mapDispatchToProps)(withIsMobile(TransactionFilter));
