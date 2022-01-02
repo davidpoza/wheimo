@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import IconButton from '@material-ui/core/IconButton';
+import TextField from '@material-ui/core/TextField';
 
 // own
 import useStyles from './styles';
@@ -42,7 +43,7 @@ function CreateAccountInput({
 
   return (
     <form noValidate onSubmit={onFormSubmit} className={classes.root}>
-      <input
+      <TextField
         className={classes.input}
         id="tagName"
         type="text"
@@ -52,6 +53,8 @@ function CreateAccountInput({
         onChange={(e) => {
           setAccountName(e.target.value);
         }}
+        fullWidth
+        variant="outlined"
       />
       <IconButton
         className={classes.createButton}

@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import FilterList from '@material-ui/icons/FilterList';
-import BarChart from '@material-ui/icons/BarChart';
 import Drawer from '@material-ui/core/Drawer';
 import TextField from '@material-ui/core/TextField';
 import dayjs from 'dayjs';
