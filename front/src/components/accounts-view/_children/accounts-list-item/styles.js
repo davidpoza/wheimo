@@ -1,12 +1,12 @@
 import { makeStyles } from '@material-ui/core/styles';
 
-export default makeStyles(() => ({
+export default makeStyles((theme) => ({
   root: {
     width: 'auto',
     borderBottom: '1px solid #ccc',
     cursor: 'pointer',
     '&:hover': {
-      backgroundColor: '#f5f5f5',
+      backgroundColor: theme.palette.type === 'dark' ? '#424242' : '#f5f5f5',
     },
   },
   rulesCounter: {

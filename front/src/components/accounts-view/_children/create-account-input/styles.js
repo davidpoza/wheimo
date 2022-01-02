@@ -17,7 +17,9 @@ export default makeStyles((theme) => ({
     fontWeight: 300,
     padding: '0.8em',
     width: '92%',
-    border: '1px solid #ccc',
+    color: theme.palette.type === 'dark' ? '#f5f5f5' : '#424242',
+    backgroundColor: theme.palette.type === 'dark' ? '#424242' : '#f5f5f5',
+    border: theme.palette.type === 'dark' ? '1px solid #272121' : '1px solid #ccc',
     borderRadius: '5px',
     '&:focus': {
       outlineColor: '#3f51b5',

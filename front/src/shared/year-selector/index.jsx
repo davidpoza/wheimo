@@ -18,12 +18,12 @@ import useStyles from './styles';
 function YearSelector({ from, moveBack, moveForward }) {
   const classes = useStyles();
 
-  return (<div className={classes.buttons} >
-    <IconButton aria-label="back" className={classes.margin} size="small" onClick={moveBack}>
+  return (<div>
+    <IconButton aria-label="back" className={classes.button} size="small" onClick={moveBack}>
       <ArrowBackIcon fontSize="inherit" />
     </IconButton>
     <span>{from ? dayjs(from, 'YYYY-MM-DD').format('YYYY') : 'loading...'}</span>
-    <IconButton aria-label="forward" className={classes.margin} size="small" onClick={moveForward}>
+    <IconButton aria-label="forward" className={classes.button} size="small" onClick={moveForward}>
       <ArrowForwardIcon fontSize="inherit" />
     </IconButton>
   </div>);

@@ -26,3 +26,7 @@ code {
 .react-calendar-heatmap-weekday-label, .react-calendar-heatmap-month-label {
   font-size: 0.5em
 }
+
+text {
+  fill: #fff;
+}

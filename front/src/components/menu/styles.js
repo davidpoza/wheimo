@@ -15,6 +15,7 @@ export default makeStyles((theme) => ({
     cursor: 'pointer',
   },
   icon: {
-    color: '#4d4d4d',
+    color: theme.palette.type === 'dark' ? '#fff' : '#4d4d4d',
+
   },
 }));

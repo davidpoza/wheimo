@@ -3,7 +3,7 @@ import { ResponsiveBar } from '@nivo/bar'
 import dayjs from 'dayjs';
 
 
-export default function BarChart({ rawData, from, to, tags }) {
+export default function BarChart({ rawData, from, to, tags, darkMode }) {
 
   const mapper = obj => {
     const ret = [];
@@ -33,6 +33,9 @@ export default function BarChart({ rawData, from, to, tags }) {
   const data = mapper(rawData);
   return ( from && to
     ? <ResponsiveBar
+        theme={{
+          textColor: darkMode ? '#fff' : '#000',
+        }}
         keys={tags}
         indexBy="month"
         groupMode="grouped"
