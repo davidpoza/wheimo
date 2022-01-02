@@ -50,7 +50,7 @@ function SettingsDialog({
   useEffect(() => {
     setName(user.name);
     setEmail(user.email);
-    setTheme(user.theme);
+    setTheme(user?.theme);
     setLang(user.lang);
   }, [user]);
 

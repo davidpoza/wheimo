@@ -62,8 +62,8 @@ const theme = createMuiTheme({
 function App({ user }) {
   useValidateUser();
   return (
-    <div className="App" style={user.theme === 'dark' ? { backgroundColor: '#121212', color: '#fff' } : {}}>
-        <ThemeProvider theme={user.theme === 'dark' ? theme : undefined}>
+    <div className="App" style={user?.theme === 'dark' ? { backgroundColor: '#121212', color: '#fff' } : {}}>
+        <ThemeProvider theme={user?.theme === 'dark' ? theme : undefined}>
           <Router>
             <Content>
               <AppBar />
