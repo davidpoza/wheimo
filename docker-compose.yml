@@ -23,7 +23,8 @@ services:
     restart: always
     volumes:
       - ./api/src:/usr/src/app/api/src
-      - db-volume:/usr/src/app/api/data
+      - db-volume:/usr/src/app/api/data/db
+      - attachments-volume:/usr/src/app/api/data/images
     # env_file:
     #   - ./api/.env
   notifier:
@@ -54,3 +55,4 @@ services:
 volumes:
   redis-volume:
   db-volume:
+  attachments-volume:
