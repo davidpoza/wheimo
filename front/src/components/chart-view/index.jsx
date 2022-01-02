@@ -78,6 +78,7 @@ function ChartView({
           from={from}
           to={to}
           rawData={rawData}
+          darkMode={user.theme === 'dark'}
         />
       </div>
 

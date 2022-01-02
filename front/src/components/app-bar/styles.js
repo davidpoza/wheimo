@@ -3,6 +3,7 @@ import config from '../../utils/config';
 
 export default makeStyles((theme) => ({
   appBar: {
+    backgroundColor: theme.palette.type === 'dark' ? '#303f9f' : '#3f51b5'
   },
   block: {
     display: 'flex',

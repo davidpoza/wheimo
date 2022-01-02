@@ -37,6 +37,8 @@ export default makeStyles((theme) => ({
     cursor: 'pointer',
   },
   description: {
+    color: theme.palette.type === 'dark' ? '#f0f8ff' : '#424242',
+    backgroundColor: theme.palette.type === 'dark' ? '#424242' : '#f0f8ff',
     maxWidth: '10em',
     [theme.breakpoints.up('md')]: {
       maxWidth: 'none',

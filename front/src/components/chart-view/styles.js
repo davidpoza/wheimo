@@ -25,7 +25,11 @@ export default makeStyles((theme) => ({
       width: '100%',
       maxWidth: '100%',
       paddingLeft: 0,
-    }
+    },
+
+      fill: '#fff !important'
+
+
   },
   item: {
     '&>span': {
