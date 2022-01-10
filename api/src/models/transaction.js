@@ -16,6 +16,7 @@ export const definition = [
     date: { type: Sequelize.DATE },
     valueDate: { type: Sequelize.DATE },
     favourite: { type: Sequelize.BOOLEAN, defaultValue: false },
+    draft: { type: Sequelize.BOOLEAN, defaultValue: false },
     balance: { type: Sequelize.FLOAT, defaultValue: 0.0 },
     createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.NOW },
     updatedAt: { type: Sequelize.DATE },
