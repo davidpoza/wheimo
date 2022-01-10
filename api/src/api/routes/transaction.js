@@ -25,6 +25,7 @@ export default (app) => {
         description: Joi.string().allow(null, ''),
         emitterName: Joi.string().allow(null, ''),
         receipt: Joi.boolean(),
+        draft: Joi.boolean(),
         receiverName: Joi.string().allow(null, ''),
         tags: Joi.array().items(Joi.number()),
         valueDate: Joi.string().required(),
@@ -43,6 +44,7 @@ export default (app) => {
         description,
         emitterName,
         receipt,
+        draft,
         receiverName,
         tags,
         valueDate,
@@ -61,6 +63,7 @@ export default (app) => {
             description,
             emitterName,
             receipt,
+            draft,
             receiverName,
             tags,
             userId,
@@ -95,6 +98,7 @@ export default (app) => {
         emitterName: Joi.string(),
         favourite: Joi.boolean(),
         receipt: Joi.boolean(),
+        draft: Joi.boolean(),
         receiverName: Joi.string(),
         tags: Joi.array().items(Joi.number()),
         valueDate: Joi.string(),
@@ -114,6 +118,7 @@ export default (app) => {
         description,
         emitterName,
         favourite,
+        draft,
         receiverName,
         tags,
         valueDate,
@@ -130,6 +135,7 @@ export default (app) => {
             description,
             emitterName,
             favourite,
+            draft,
             receiverName,
             tags,
             valueDate,
@@ -166,7 +172,7 @@ export default (app) => {
     async (req, res, next) => {
       const { id } = req.params
       const userId = req.user.id;
-      const { accountId, tags, limit, sort, offset, from, to, search, min, max, operationType, isFav } = req.query;
+      const { accountId, tags, limit, sort, offset, from, to, search, min, max, operationType, isFav, isDraft } = req.query;
       const tagsArray = tags ? tags.split(',').map((id) => parseInt(id, 10)) : undefined;
       const transactionService = Container.get('transactionService');
       try {

@@ -9,19 +9,19 @@ import config from '../config/config.js';
 import mockedImportedTransactions from './importers/mock.js';
 export default class TransactionService {
   constructor() {
-    this.sequelize = Container.get('sequelizeInstance');
+    this.sequelize = Container.get("sequelizeInstance");
     this.sequelizeOp = this.sequelize.Sequelize.Op;
     this.sequelizeCol = this.sequelize.Sequelize.col;
     this.sequelizeFn = this.sequelize.Sequelize.fn;
     this.sequelizeLt = this.sequelize.Sequelize.literal;
-    this.dayjs = Container.get('dayjs');
-    this.logger = Container.get('loggerInstance');
+    this.dayjs = Container.get("dayjs");
+    this.logger = Container.get("loggerInstance");
     this.transactionModel = this.sequelize.models.transactions;
     this.accountModel = this.sequelize.models.accounts;
-    this.accountService = Container.get('accountService');
-    this.ruleService = Container.get('ruleService');
-    this.AES = Container.get('AES');
-    this.notificationQueue = Container.get('notificationQueue');
+    this.accountService = Container.get("accountService");
+    this.ruleService = Container.get("ruleService");
+    this.AES = Container.get("AES");
+    this.notificationQueue = Container.get("notificationQueue");
     this.resync = this.resync.bind(this);
     this.tagTransaction = this.tagTransaction.bind(this);
     this.transactionMeetsRule = this.transactionMeetsRule.bind(this);
@@ -39,7 +39,7 @@ export default class TransactionService {
    */
   getTemplate(transaction) {
     if (transaction) {
-      return ({
+      return {
         account: transaction.account,
         accountId: transaction.accountId,
         amount: transaction.amount,
@@ -55,36 +55,37 @@ export default class TransactionService {
         id: transaction.id,
         importId: transaction.importId,
         receipt: transaction.receipt,
+        draft: transaction.draft,
         receiverName: transaction.receiverName,
         updatedAt: transaction.updatedAt,
         valueDate: transaction.valueDate,
         attachments: transaction.attachments
-          ? transaction.attachments.map(attachment => ({
-            id: attachment.id,
-            filename: attachment.filename,
-            description: attachment.description,
-            type: attachment.type,
-            createdAt: attachment.createdAt
-          }))
+          ? transaction.attachments.map((attachment) => ({
+              id: attachment.id,
+              filename: attachment.filename,
+              description: attachment.description,
+              type: attachment.type,
+              createdAt: attachment.createdAt,
+            }))
           : [],
         tags: transaction.tags
-          ? transaction.tags.map(tag => ({
-            id: tag.id,
-            name: tag.name
-          }))
+          ? transaction.tags.map((tag) => ({
+              id: tag.id,
+              name: tag.name,
+            }))
           : [],
-      });
+      };
     }
     return null;
   }
 
   /**
-    * It only creates transactions for owned accounts.
-    * If balance is passed then doesn't update account, it's understood to be an old (passed) transaction
-    * @param {Object} param
-    * @param {string} param.date - date in format YYYY-MM-DD
-    * @param {string} param.valueDate - value date in format YYYY-MM-DD
-    */
+   * It only creates transactions for owned accounts.
+   * If balance is passed then doesn't update account, it's understood to be an old (passed) transaction
+   * @param {Object} param
+   * @param {string} param.date - date in format YYYY-MM-DD
+   * @param {string} param.valueDate - value date in format YYYY-MM-DD
+   */
   async create({
     accountId,
     amount,
@@ -96,6 +97,7 @@ export default class TransactionService {
     description,
     emitterName,
     receipt,
+    draft,
     receiverName,
     tags,
     userId,
@@ -103,38 +105,51 @@ export default class TransactionService {
   }) {
     let assTags;
     try {
-      const account = await this.accountService.findById(accountId, userId, true);
+      const account = await this.accountService.findById(
+        accountId,
+        userId,
+        true
+      );
       if (account) {
         const importId = md5(`${balance}${description}${amount}`);
-        let transaction = await this.transactionModel.create(
-          {
-            importId,
-            accountId,
-            amount,
-            assCard,
-            balance: balance ? balance : account.balance + amount,
-            comments,
-            currency,
-            date: this.dayjs(date, 'YYYY-MM-DD').toDate(),
-            description,
-            emitterName,
-            receipt,
-            receiverName,
-            valueDate: this.dayjs(valueDate, 'YYYY-MM-DD').toDate(),
-          });
+        let transaction = await this.transactionModel.create({
+          importId,
+          accountId,
+          amount,
+          assCard,
+          balance: balance ? balance : account.balance + amount,
+          comments,
+          currency,
+          date: this.dayjs(date, "YYYY-MM-DD").toDate(),
+          description,
+          emitterName,
+          receipt,
+          draft,
+          receiverName,
+          valueDate: this.dayjs(valueDate, "YYYY-MM-DD").toDate(),
+        });
         // associates tags
         if (tags) {
           assTags = await transaction.setTags(tags);
-          transaction = await this.findById({ id: transaction.dataValues.id, userId });
+          transaction = await this.findById({
+            id: transaction.dataValues.id,
+            userId,
+          });
         } else {
           transaction = { ...transaction.dataValues, tags: [] };
         }
         if (!balance) {
-          await this.accountService.updateById(accountId, userId, { balance: account.balance + amount });
+          await this.accountService.updateById(accountId, userId, {
+            balance: account.balance + amount,
+          });
         }
-        const msg = this.notificationQueue.createJob({ title: 'new transaction', content: `transaction of ${amount}€. ${description || ''}`, userId });
+        const msg = this.notificationQueue.createJob({
+          title: "new transaction",
+          content: `transaction of ${amount}€. ${description || ""}`,
+          userId,
+        });
         msg.save();
-        return (this.getTemplate(transaction));
+        return this.getTemplate(transaction);
       }
       return null;
     } catch (err) {
@@ -156,78 +171,113 @@ export default class TransactionService {
    * @param {string} param.sort - asc/desc sorting by date
    * @param {string} param.search - search term
    */
-  async findAll({ accountId, userId, tags, from, to, limit, offset, sort, search, min, max, operationType, isFav }) {
-    const dateFilter = (from || to) ? {} : undefined;
-    if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
-    if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
+  async findAll({
+    accountId,
+    userId,
+    tags,
+    from,
+    to,
+    limit,
+    offset,
+    sort,
+    search,
+    min,
+    max,
+    operationType,
+    isFav,
+    isDraft,
+  }) {
+    const dateFilter = from || to ? {} : undefined;
+    if (from)
+      dateFilter[this.sequelizeOp.gte] = this.dayjs(
+        from,
+        "YYYY-MM-DD"
+      ).toDate();
+    if (to)
+      dateFilter[this.sequelizeOp.lte] = this.dayjs(to, "YYYY-MM-DD").toDate();
     const searchFilter = search ? {} : undefined;
 
-    let operationTypeFilter = (operationType && operationType !== 'all') ? {} : undefined;
-    if (operationType === 'expense') operationTypeFilter[this.sequelizeOp.lt] = 0;
-    if (operationType === 'income') operationTypeFilter[this.sequelizeOp.gt] = 0;
+    let operationTypeFilter =
+      operationType && operationType !== "all" ? {} : undefined;
+    if (operationType === "expense")
+      operationTypeFilter[this.sequelizeOp.lt] = 0;
+    if (operationType === "income")
+      operationTypeFilter[this.sequelizeOp.gt] = 0;
 
-    let limitsFilter = (min || max) ? {} : undefined;
-    if (min !== undefined && max !== undefined) limitsFilter[this.sequelizeOp.between] = [parseInt(min, 10), parseInt(max, 10)];
-    else if (min !== undefined && max === undefined) limitsFilter[this.sequelizeOp.gt] = parseInt(min, 10);
-    else if (min === undefined && max !== undefined) limitsFilter[this.sequelizeOp.lt] = parseInt(max, 10);
+    let limitsFilter = min || max ? {} : undefined;
+    if (min !== undefined && max !== undefined)
+      limitsFilter[this.sequelizeOp.between] = [
+        parseInt(min, 10),
+        parseInt(max, 10),
+      ];
+    else if (min !== undefined && max === undefined)
+      limitsFilter[this.sequelizeOp.gt] = parseInt(min, 10);
+    else if (min === undefined && max !== undefined)
+      limitsFilter[this.sequelizeOp.lt] = parseInt(max, 10);
 
-    let filter = pickBy({ // pickBy (by default) removes undefined keys
+    let filter = pickBy({
+      // pickBy (by default) removes undefined keys
       accountId,
-      '$tags.id$': tags,
-      '$account.user_id$': userId,
-      'date': dateFilter,
-      'favourite': isFav === '1' && '1'
+      "$tags.id$": tags,
+      "$account.user_id$": userId,
+      date: dateFilter,
+      favourite: isFav === "1" && "1",
+      draft: isDraft === "1" && "1",
     });
 
     if (limitsFilter) {
       filter[this.sequelizeOp.and] = [
         this.sequelize.where(
-          this.sequelizeFn('abs', this.sequelizeCol('amount')),
-          limitsFilter,
-        )
+          this.sequelizeFn("abs", this.sequelizeCol("amount")),
+          limitsFilter
+        ),
       ];
-    };
+    }
 
     if (operationTypeFilter) {
-      filter['amount'] = operationTypeFilter;
+      filter["amount"] = operationTypeFilter;
     }
 
     if (searchFilter) {
       searchFilter[this.sequelizeOp.substring] = search;
       filter[this.sequelizeOp.or] = [
-        { 'description': searchFilter },
-        { 'comments': searchFilter },
-        { 'emitterName': searchFilter },
-        { 'receiverName': searchFilter },
+        { description: searchFilter },
+        { comments: searchFilter },
+        { emitterName: searchFilter },
+        { receiverName: searchFilter },
       ];
     }
 
-    const transactions = await this.transactionModel.findAll(
-      {
-        include: [
-          { model: this.sequelize.models.accounts, as: 'account', duplicating: false },
-          { model: this.sequelize.models.tags, as: 'tags', duplicating: false },
-          { model: this.sequelize.models.attachments },
-        ],
-        attributes: [
-          'amount',
-          'id',
-          'comments',
-          'description',
-          'currency',
-          'date',
-          'value_date',
-          'favourite',
-          'balance',
-          'account_id',
-          'receiverName',
-          'emitterName'
-        ],
-        limit,
-        offset,
-        where: filter,
-        order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ]
-      });
+    const transactions = await this.transactionModel.findAll({
+      include: [
+        {
+          model: this.sequelize.models.accounts,
+          as: "account",
+          duplicating: false,
+        },
+        { model: this.sequelize.models.tags, as: "tags", duplicating: false },
+        { model: this.sequelize.models.attachments },
+      ],
+      attributes: [
+        "amount",
+        "id",
+        "comments",
+        "description",
+        "currency",
+        "date",
+        "value_date",
+        "favourite",
+        "balance",
+        "account_id",
+        "receiverName",
+        "emitterName",
+        "draft",
+      ],
+      limit,
+      offset,
+      where: filter,
+      order: [["createdAt", sort === "asc" ? "ASC" : "DESC"]],
+    });
 
     return transactions.map((t) => {
       return this.getTemplate(t);
@@ -238,17 +288,18 @@ export default class TransactionService {
    * It only selects owned transactions->accounts
    */
   async findById({ id, userId, entity = false, admin = false }) {
-    const filter = pickBy({ // pickBy (by default) removes undefined keys
+    const filter = pickBy({
+      // pickBy (by default) removes undefined keys
       id,
-      '$account.user_id$': admin ? undefined : userId,
+      "$account.user_id$": admin ? undefined : userId,
     });
     const transaction = await this.transactionModel.findOne({
       where: filter,
       include: [
         { model: this.sequelize.models.tags },
         { model: this.sequelize.models.accounts },
-        { model: this.sequelize.models.attachments }
-      ]
+        { model: this.sequelize.models.attachments },
+      ],
     });
     if (!transaction) {
       return null;
@@ -275,7 +326,9 @@ export default class TransactionService {
   async updateById(id, userId, values) {
     let transaction = this.findById({ id, userId });
     if (transaction) {
-      const affectedRows = await this.transactionModel.update(values, { where: { id } });
+      const affectedRows = await this.transactionModel.update(values, {
+        where: { id },
+      });
       if (affectedRows === 0) {
         return null;
       }
@@ -295,11 +348,11 @@ export default class TransactionService {
    * It only deletes owned transactions->accounts
    */
   async deleteById(id, userId) {
-     const transaction = await this.findById({ id, userId, entity: true });
+    const transaction = await this.findById({ id, userId, entity: true });
     if (transaction) {
       const affectedRows = await transaction.destroy();
       if (affectedRows === 0) {
-        throw new Error('Transaction does not exist');
+        throw new Error("Transaction does not exist");
       }
       return transaction;
     }
@@ -311,14 +364,22 @@ export default class TransactionService {
    * @param {Object} param
    * @param {boolean} param.admin - if true then userId is not needed
    */
-  async resync({ accountId, userId, from, admin, settings: { contract, product } = {} }) {
+  async resync({
+    accountId,
+    userId,
+    from,
+    admin,
+    settings: { contract, product } = {},
+  }) {
     let balance;
     let transactions;
     let newTransactionsCount;
 
-    const account = await this.accountModel.findOne({ where: admin ? { id: accountId } : { id: accountId, userId } });
+    const account = await this.accountModel.findOne({
+      where: admin ? { id: accountId } : { id: accountId, userId },
+    });
     if (!account) {
-      throw new Error('Account does not exist');
+      throw new Error("Account does not exist");
     }
 
     if (config.debug !== true) {
@@ -329,26 +390,31 @@ export default class TransactionService {
 
       // select importer
       switch (bankId) {
-        case 'opbk':
-          importer = Container.get('OpenbankImporter');
-        break;
+        case "opbk":
+          importer = Container.get("OpenbankImporter");
+          break;
         default:
-          throw new Error('Wrong bankId');
+          throw new Error("Wrong bankId");
       }
 
       // login
-      const descryptedPassword = this.AES.decrypt(accessPassword, config.aesPassphrase).toString(CryptoJS.enc.Utf8);
+      const descryptedPassword = this.AES.decrypt(
+        accessPassword,
+        config.aesPassphrase
+      ).toString(CryptoJS.enc.Utf8);
       const token = await importer.login(accessId, descryptedPassword);
-      this.logger.info('Login into bank account successfully');
+      this.logger.info("Login into bank account successfully");
       if (!token) {
-        const forbidden = new Error('Forbidden: login into bank account failed');
-        forbidden.name = 'forbidden';
+        const forbidden = new Error(
+          "Forbidden: login into bank account failed"
+        );
+        forbidden.name = "forbidden";
         throw forbidden;
       }
 
       // fetch transactions
-      const { balance: fetchedBalance, transactions: fetchedTransactions } = await importer
-        .fetchTransactions(token, from, contract, product);
+      const { balance: fetchedBalance, transactions: fetchedTransactions } =
+        await importer.fetchTransactions(token, from, contract, product);
       transactions = fetchedTransactions;
       balance = fetchedBalance;
     } else {
@@ -357,7 +423,9 @@ export default class TransactionService {
       balance = mockedImportedTransactions.balance;
     }
 
-    this.logger.info(`💸It's been fetched ${transactions.length} transactions in account #${accountId}`);
+    this.logger.info(
+      `💸It's been fetched ${transactions.length} transactions in account #${accountId}`
+    );
 
     const queryArray = [];
     for (const t of transactions) {
@@ -385,11 +453,11 @@ export default class TransactionService {
     if (queryArray.length === 0) return;
     const res = await this.transactionModel.bulkCreate(queryArray);
     if (!res) {
-      throw new Error('error during transaction creation');
+      throw new Error("error during transaction creation");
     }
 
     const createdTransactions = res.map((t) => {
-      return (t.dataValues);
+      return t.dataValues;
     });
     // apply tagging rules over all new transactions
     const userRules = await this.ruleService.findAll(account.dataValues.userId); // get all user rules of transaction owner
@@ -398,8 +466,9 @@ export default class TransactionService {
     // update sync count
     const lastTransactionBalance = createdTransactions[0].balance;
     this.logger.info(`Updating account's balance: ${lastTransactionBalance}`);
-    await this.accountService.updateById(accountId, userId, { balance: lastTransactionBalance })
-
+    await this.accountService.updateById(accountId, userId, {
+      balance: lastTransactionBalance,
+    });
   }
 
   /**
@@ -408,13 +477,19 @@ export default class TransactionService {
    * @param {*} tagId
    */
   async tagTransaction(transactionId, tagId) {
-    this.logger.info(`> ✅ tagging🏷️transaction ${transactionId} with tag ${tagId}`);
-    const transaction = await this.findById({ id:transactionId, admin: true, entity: true });
+    this.logger.info(
+      `> ✅ tagging🏷️transaction ${transactionId} with tag ${tagId}`
+    );
+    const transaction = await this.findById({
+      id: transactionId,
+      admin: true,
+      entity: true,
+    });
     if (!transaction) {
       return null;
     }
     const existingTags = transaction.tags.map((t) => t.id);
-    transaction.setTags([ ...existingTags, tagId ]);
+    transaction.setTags([...existingTags, tagId]);
   }
 
   /**
@@ -423,8 +498,14 @@ export default class TransactionService {
    * @param {*} tagId
    */
   async untagTransaction(transactionId, tagId) {
-    this.logger.info(`> ✅ untagging🏷️tag ${tagId} from transaction ${transactionId}`);
-    const transaction = await this.findById({ id:transactionId, admin: true, entity: true });
+    this.logger.info(
+      `> ✅ untagging🏷️tag ${tagId} from transaction ${transactionId}`
+    );
+    const transaction = await this.findById({
+      id: transactionId,
+      admin: true,
+      entity: true,
+    });
     if (!transaction) {
       return null;
     }
@@ -437,11 +518,11 @@ export default class TransactionService {
    * @param {*} transactionId
    * @param {*} tagId
    */
-   async untagTransactions(transactions, tagId) {
+  async untagTransactions(transactions, tagId) {
     this.logger.info(`> ✅ untagging🏷️tag ${tagId} from transactions`);
     for (const t of transactions) {
       await this.untagTransaction(t.id, tagId);
-    };
+    }
   }
 
   /**
@@ -462,61 +543,74 @@ export default class TransactionService {
    */
   transactionMeetsRule(transaction, rule) {
     let ret = false;
-    switch(rule.type) {
-      case 'emitterName':
-        ret = transaction?.emitterName?.match(new RegExp(rule.value, 'i'));
+    switch (rule.type) {
+      case "emitterName":
+        ret = transaction?.emitterName?.match(new RegExp(rule.value, "i"));
         break;
-      case 'receiverName':
-        ret = transaction?.receiverName?.match(new RegExp(rule.value, 'i'));
+      case "receiverName":
+        ret = transaction?.receiverName?.match(new RegExp(rule.value, "i"));
         break;
-      case 'description':
-        ret = transaction?.description?.match(new RegExp(rule.value, 'i'));
+      case "description":
+        ret = transaction?.description?.match(new RegExp(rule.value, "i"));
         break;
-      case 'currency':
+      case "currency":
         ret = transaction?.currency === rule.value;
         break;
-      case 'account':
+      case "account":
         ret = transaction?.account === rule.value;
         break;
-      case 'bankId':
+      case "bankId":
         ret = transaction?.bankId === rule.value;
         break;
-      case 'amount': // e.g. lt20;gt10
-        const comparisons = rule.value.split(';');
-        ret = comparisons.map((comp) => {
-          const matches = comp.match(/(gt|gte|lt|lte|eq)(\d*)/);
-          const op = matches[1];
-          const ruleAmount = parseFloat(matches[2]);
-          const transactionAmount = Math.abs(transaction.amount);
-          if (op === 'lt') {
-            return transactionAmount < ruleAmount;
-          } else if (op === 'gt') {
-            return transactionAmount > ruleAmount;
-          } else if (op === 'lte') {
-            return transactionAmount <= ruleAmount;
-          } else if (op === 'gte') {
-            return transactionAmount >= ruleAmount;
-          } else if (op === 'eq') {
-            return transactionAmount === ruleAmount;
-          }
-        }).every((c) => c);
+      case "amount": // e.g. lt20;gt10
+        const comparisons = rule.value.split(";");
+        ret = comparisons
+          .map((comp) => {
+            const matches = comp.match(/(gt|gte|lt|lte|eq)(\d*)/);
+            const op = matches[1];
+            const ruleAmount = parseFloat(matches[2]);
+            const transactionAmount = Math.abs(transaction.amount);
+            if (op === "lt") {
+              return transactionAmount < ruleAmount;
+            } else if (op === "gt") {
+              return transactionAmount > ruleAmount;
+            } else if (op === "lte") {
+              return transactionAmount <= ruleAmount;
+            } else if (op === "gte") {
+              return transactionAmount >= ruleAmount;
+            } else if (op === "eq") {
+              return transactionAmount === ruleAmount;
+            }
+          })
+          .every((c) => c);
         break;
-      case 'card':
-        ret = transaction.addCard.match(new RegExp(rule.value, 'i'));
+      case "card":
+        ret = transaction.addCard.match(new RegExp(rule.value, "i"));
         break;
-      case 'isReceipt': // 'true', 'false'
-        ret = rule.value === 'true' ? transaction.receipt : !transaction.receipt;
+      case "isReceipt": // 'true', 'false'
+        ret =
+          rule.value === "true" ? transaction.receipt : !transaction.receipt;
         break;
-      case 'isExpense': // 'true', 'false'
-        ret = rule.value === 'true' ? parseFloat(transaction.amount) < 0 : parseFloat(transaction.amount) > 0;
+      case "isExpense": // 'true', 'false'
+        ret =
+          rule.value === "true"
+            ? parseFloat(transaction.amount) < 0
+            : parseFloat(transaction.amount) > 0;
         break;
     }
-    this.logger.info(`> ${ret ? '✅' : '❌'} transaction ${transaction.id} ${ret ? 'meets' : 'doesnt meet'} rule ${rule.id} of type ${rule.type} with value ${rule.value}`);
+    this.logger.info(
+      `> ${ret ? "✅" : "❌"} transaction ${transaction.id} ${
+        ret ? "meets" : "doesnt meet"
+      } rule ${rule.id} of type ${rule.type} with value ${rule.value}`
+    );
     return ret;
   }
 
   transactionMeetsRules(transaction, rules) {
-    return rules.reduce((acc, curr) => (acc && this.transactionMeetsRule(transaction, curr)), true);
+    return rules.reduce(
+      (acc, curr) => acc && this.transactionMeetsRule(transaction, curr),
+      true
+    );
   }
 
   /**
@@ -560,36 +654,46 @@ export default class TransactionService {
       if (transaction.amount > 0) {
         income += transaction.amount;
       } else {
-        expenses += (-1) * transaction.amount;
+        expenses += -1 * transaction.amount;
       }
     });
-    return ({
-      income, expenses
-    });
+    return {
+      income,
+      expenses,
+    };
   }
 
   async calculateExpensesByTags({ accountId, userId, from, to }) {
-    const dateFilter = (from || to) ? {} : undefined;
-    if (from) dateFilter[this.sequelizeOp.gte] = this.dayjs(from, 'YYYY-MM-DD').toDate();
-    if (to) dateFilter[this.sequelizeOp.lte] = this.dayjs(to, 'YYYY-MM-DD').toDate();
+    const dateFilter = from || to ? {} : undefined;
+    if (from)
+      dateFilter[this.sequelizeOp.gte] = this.dayjs(
+        from,
+        "YYYY-MM-DD"
+      ).toDate();
+    if (to)
+      dateFilter[this.sequelizeOp.lte] = this.dayjs(to, "YYYY-MM-DD").toDate();
 
-    let filter = pickBy({ // pickBy (by default) removes undefined keys
+    let filter = pickBy({
+      // pickBy (by default) removes undefined keys
       accountId,
-      '$account.user_id$': userId,
-      'date': dateFilter,
-      'amount': { [this.sequelizeOp.lt]: 0 },
+      "$account.user_id$": userId,
+      date: dateFilter,
+      amount: { [this.sequelizeOp.lt]: 0 },
     });
     const tags = {
-      '-1': { name: 'non-tagged', amount: 0 },
+      "-1": { name: "non-tagged", amount: 0 },
     };
-    const transactions = await this.transactionModel.findAll(
-      {
-        include: [
-          { model: this.sequelize.models.accounts, as: 'account', duplicating: false },
-          { model: this.sequelize.models.tags, as: 'tags', duplicating: false }
-        ],
-        where: filter,
-      });
+    const transactions = await this.transactionModel.findAll({
+      include: [
+        {
+          model: this.sequelize.models.accounts,
+          as: "account",
+          duplicating: false,
+        },
+        { model: this.sequelize.models.tags, as: "tags", duplicating: false },
+      ],
+      where: filter,
+    });
 
     transactions.forEach((transaction) => {
       transaction.tags.forEach((tag) => {
@@ -614,45 +718,90 @@ export default class TransactionService {
    * @param {String} param.to - format YYYY-MM-DD
    * @returns
    */
-  async getTransactionsCalendar({ userId, from, to, groupBy = 'day', tags, operationType = 'expense' }) {
-    let operationTypeFilter = (operationType && operationType !== 'all') ? {} : undefined;
-    if (operationType === 'expense') operationTypeFilter[this.sequelizeOp.lt] = 0;
-    if (operationType === 'income') operationTypeFilter[this.sequelizeOp.gt] = 0;
+  async getTransactionsCalendar({
+    userId,
+    from,
+    to,
+    groupBy = "day",
+    tags,
+    operationType = "expense",
+  }) {
+    let operationTypeFilter =
+      operationType && operationType !== "all" ? {} : undefined;
+    if (operationType === "expense")
+      operationTypeFilter[this.sequelizeOp.lt] = 0;
+    if (operationType === "income")
+      operationTypeFilter[this.sequelizeOp.gt] = 0;
 
-    const transactions = await this.transactionModel.findAll(
-      {
-        include: [
-          { model: this.sequelize.models.accounts, as: 'account', duplicating: false },
-          tags ? { model: this.sequelize.models.tags, as: 'tags', duplicating: false } : undefined,
-        ].filter(e => e),
-        attributes: [
-          [this.sequelizeFn('SUM', this.sequelizeCol('transactions.amount')), 'totalAmount'],
-          [this.sequelizeFn('DATE', this.sequelizeCol('transactions.value_date')), 'day'],
-          [this.sequelizeFn('STRFTIME', "%Y-%m", this.sequelizeCol('transactions.value_date')), 'month'],
+    const transactions = await this.transactionModel.findAll({
+      include: [
+        {
+          model: this.sequelize.models.accounts,
+          as: "account",
+          duplicating: false,
+        },
+        tags
+          ? {
+              model: this.sequelize.models.tags,
+              as: "tags",
+              duplicating: false,
+            }
+          : undefined,
+      ].filter((e) => e),
+      attributes: [
+        [
+          this.sequelizeFn("SUM", this.sequelizeCol("transactions.amount")),
+          "totalAmount",
         ],
-        where: pickBy({
-          '$tags.id$': tags || undefined,
-          '$account.user_id$': userId,
-          date: {
-            [this.sequelizeOp.gte]: from ? this.dayjs(from, 'YYYY-MM-DD').toDate() : new Date(new Date().getFullYear(), 0, 1),
-            [this.sequelizeOp.lte]: to ? this.dayjs(to, 'YYYY-MM-DD').toDate() : new Date(),
-          },
-          amount: operationTypeFilter,
-        }),
-        group: groupBy === 'day' ? [this.sequelizeCol('day')] : [this.sequelizeCol('month')],
-        order: [ ['createdAt', 'ASC'] ]
-      });
-
-    return transactions.map((t) => {
-      return ({
-        day: groupBy === 'day' ? t?.dataValues?.day : undefined,
-        month: groupBy === 'month' ? t?.dataValues?.month : undefined,
-        totalAmount: t?.dataValues?.totalAmount,
-      });
-    }).sort((a, b) => {
-      if (groupBy === 'day') return dayjs(a.day, 'YYYY-MM-DD').diff(dayjs(b.day, 'YYYY-MM-DD'));
-      return dayjs(a.month, 'YYYY-MM').diff(dayjs(b.month, 'YYYY-MM'));
+        [
+          this.sequelizeFn(
+            "DATE",
+            this.sequelizeCol("transactions.value_date")
+          ),
+          "day",
+        ],
+        [
+          this.sequelizeFn(
+            "STRFTIME",
+            "%Y-%m",
+            this.sequelizeCol("transactions.value_date")
+          ),
+          "month",
+        ],
+      ],
+      where: pickBy({
+        "$tags.id$": tags || undefined,
+        "$account.user_id$": userId,
+        date: {
+          [this.sequelizeOp.gte]: from
+            ? this.dayjs(from, "YYYY-MM-DD").toDate()
+            : new Date(new Date().getFullYear(), 0, 1),
+          [this.sequelizeOp.lte]: to
+            ? this.dayjs(to, "YYYY-MM-DD").toDate()
+            : new Date(),
+        },
+        amount: operationTypeFilter,
+      }),
+      group:
+        groupBy === "day"
+          ? [this.sequelizeCol("day")]
+          : [this.sequelizeCol("month")],
+      order: [["createdAt", "ASC"]],
     });
+
+    return transactions
+      .map((t) => {
+        return {
+          day: groupBy === "day" ? t?.dataValues?.day : undefined,
+          month: groupBy === "month" ? t?.dataValues?.month : undefined,
+          totalAmount: t?.dataValues?.totalAmount,
+        };
+      })
+      .sort((a, b) => {
+        if (groupBy === "day")
+          return dayjs(a.day, "YYYY-MM-DD").diff(dayjs(b.day, "YYYY-MM-DD"));
+        return dayjs(a.month, "YYYY-MM").diff(dayjs(b.month, "YYYY-MM"));
+      });
   }
 
   /**
@@ -663,9 +812,17 @@ export default class TransactionService {
    * @returns
    */
   async calculateStatistics({ userId, from, to }) {
-    const monthFirstDay = `${dayjs().format('YYYY')}-${dayjs().format('MM')}-01`;
-    const monthLastDay = `${dayjs().format('YYYY')}-${dayjs().format('MM')}-${leftPadding(dayjs().daysInMonth(), 2)}`;
-    const data = await this.getTransactionsCalendar({ userId, from: from || monthFirstDay, to: to || monthLastDay });
+    const monthFirstDay = `${dayjs().format("YYYY")}-${dayjs().format(
+      "MM"
+    )}-01`;
+    const monthLastDay = `${dayjs().format("YYYY")}-${dayjs().format(
+      "MM"
+    )}-${leftPadding(dayjs().daysInMonth(), 2)}`;
+    const data = await this.getTransactionsCalendar({
+      userId,
+      from: from || monthFirstDay,
+      to: to || monthLastDay,
+    });
     const ret = {
       mostExpensiveAmount: 0,
       mostExpensiveDay: undefined,
@@ -690,7 +847,7 @@ export default class TransactionService {
         totalAmount: 0,
       });
     }
-    if (!data?.[data.length-1]?.day !== to) {
+    if (!data?.[data.length - 1]?.day !== to) {
       data.push({
         day: to,
         totalAmount: 0,
@@ -706,10 +863,11 @@ export default class TransactionService {
         ret.leastExpensiveDay = d.day;
       }
       ret.totalExpenses += Math.abs(d.totalAmount);
-      monthAmounts[parseInt(dayjs(d.day, 'YYYY-MM-DD').format('M'), 10)-1] += Math.abs(d.totalAmount);
+      monthAmounts[parseInt(dayjs(d.day, "YYYY-MM-DD").format("M"), 10) - 1] +=
+        Math.abs(d.totalAmount);
 
       if (prevDate) {
-        currentRow = Math.abs(dayjs(d.day).diff(prevDate, 'days'));
+        currentRow = Math.abs(dayjs(d.day).diff(prevDate, "days"));
         if (currentRow > ret.longestRow) {
           ret.longestRow = currentRow;
           ret.longestRowEnd = d.day;
@@ -720,8 +878,10 @@ export default class TransactionService {
     });
     ret.mostExpensiveMonthAmount = Math.max(...monthAmounts);
     ret.leastExpensiveMonthAmount = Math.min(...monthAmounts);
-    ret.mostExpensiveMonth = monthAmounts.indexOf(ret.mostExpensiveMonthAmount) + 1;
-    ret.leastExpensiveMonth = monthAmounts.indexOf(ret.leastExpensiveMonthAmount) + 1;
+    ret.mostExpensiveMonth =
+      monthAmounts.indexOf(ret.mostExpensiveMonthAmount) + 1;
+    ret.leastExpensiveMonth =
+      monthAmounts.indexOf(ret.leastExpensiveMonthAmount) + 1;
     return ret;
   }
 };
