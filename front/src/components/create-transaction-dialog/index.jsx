@@ -58,6 +58,7 @@ function CreateTransactionDialog({
 }) {
   const classes = useStyles();
   const [incoming, setIncoming] = useState(false);
+  const [draft, setDraft] = useState(false);
   const [receipt, setReceipt] = useState(false);
   const [amount, setAmount] = useState(0.0);
   const [description, setDescription] = useState('');
@@ -89,6 +90,7 @@ function CreateTransactionDialog({
       setSelectedAccount(transactions[index].accountId);
       setTags(transactions[index].tags);
       setSelectedDate(new Date(transactions[index].date));
+      setDraft(transactions[index].draft);
     }
   }
 
@@ -162,6 +164,7 @@ function CreateTransactionDialog({
       currency: 'EUR',
       date: dayjs(selectedDate).format('YYYY-MM-DD'),
       valueDate: dayjs(selectedDate).format('YYYY-MM-DD'),
+      draft,
     };
 
     if (index !== undefined) {
@@ -184,6 +187,12 @@ function CreateTransactionDialog({
           { index !== undefined ? 'Edit transaction' : 'Add manual transaction' }
         </DialogTitle>
         <DialogContent>
+          <FormGroup row>
+            <FormControlLabel
+              control={<Checkbox checked={draft} onChange={() => { setDraft(!draft); }} name="draft" />}
+              label="draft"
+            />
+          </FormGroup>
           <FormGroup row>
             <FormControlLabel
               control={<Checkbox checked={receipt} onChange={() => { setReceipt(!receipt); }} name="receipt" />}

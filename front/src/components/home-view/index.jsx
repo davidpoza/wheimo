@@ -17,14 +17,14 @@ import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
 
 function HomeView({
-  user, transactions = [], fetchAllTransactions, showCharts, fetchExpenses,
+  user, transactions = [], fetchAllTransactions, showCharts, fetchExpenses, onlyDrafts
 }) {
   const classes = useStyles();
 
   useEffect(() => {
-    fetchAllTransactions(user.token, { from: dayjs().subtract(3, 'month').format('YYYY-MM-DD'), sort: 'desc' });
+    fetchAllTransactions(user.token, { from: dayjs().subtract(3, 'month').format('YYYY-MM-DD'), isDraft: onlyDrafts, sort: 'desc' });
     fetchExpenses(user.token, { from: dayjs().subtract(3, 'month').format('YYYY-MM-DD') });
-  }, []);
+  }, [onlyDrafts]);
 
   function handleChangeFilter(filter) {
     // TODO: call fetch action depending on filters selected
@@ -49,6 +49,7 @@ function HomeView({
 HomeView.propTypes = {
   user: PropTypes.object,
   showCharts: PropTypes.bool,
+  onlyDrafts: PropTypes.bool,
   transactions: PropTypes.array,
   fetchAllTransactions: PropTypes.func,
   fetchExpenses: PropTypes.func,

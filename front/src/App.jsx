@@ -74,6 +74,7 @@ function App({ user }) {
                 <PrivateRoute path="/accounts" exact component={AccountsView}/>
                 <PrivateRoute path="/heatmap" exact component={HeatmapView}/>
                 <PrivateRoute path="/charts" exact component={ChartView}/>
+                <PrivateRoute path="/drafts" exact onlyDrafts component={HomeView}/>
               </Switch>
             </Content>
           </Router>
