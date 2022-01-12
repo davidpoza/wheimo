@@ -110,6 +110,11 @@ export default class TransactionService {
         userId,
         true
       );
+
+      let newBalance = account.balance;
+      if (balance) newBlance = balance;
+      if (!draft && !balance) newBlance += amount;
+
       if (account) {
         const importId = md5(`${balance}${description}${amount}`);
         let transaction = await this.transactionModel.create({
@@ -117,7 +122,7 @@ export default class TransactionService {
           accountId,
           amount,
           assCard,
-          balance: balance ? balance : account.balance + amount,
+          balance: newBalance,
           comments,
           currency,
           date: this.dayjs(date, "YYYY-MM-DD").toDate(),
@@ -138,9 +143,9 @@ export default class TransactionService {
         } else {
           transaction = { ...transaction.dataValues, tags: [] };
         }
-        if (!balance) {
+        if (!balance && !draft) {
           await this.accountService.updateById(accountId, userId, {
-            balance: account.balance + amount,
+            balance: newBalance,
           });
         }
         const msg = this.notificationQueue.createJob({

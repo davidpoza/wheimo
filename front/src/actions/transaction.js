@@ -12,10 +12,12 @@ export const fetchAll = createAsyncAction('TRANSACTIONS', async (token, {
   return res;
 });
 
-export const create = createAsyncAction('CREATE_TRANSACTION', async (token, data) => {
+// refresh parameter allow us to avoid refreshing redux state, without avoid api call
+export const create = createAsyncAction('CREATE_TRANSACTION', async (token, data, refresh) => {
   let res = await transactionApi.create(token, data);
   await transactionApi.applyTags(token, res.id);
   res = await transactionApi.fetchOne(token, res.id); // after applying tags we need refetch entity
+  res.refresh = refresh;
   return res;
 });
 

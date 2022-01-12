@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
@@ -69,6 +70,7 @@ function CreateTransactionDialog({
   const [tags, setTags] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [hasErrors, setHasErrors] = useState(true);
+  const location = useLocation();
 
   function amountSignCorrection(val) {
     if (incoming) {
@@ -170,7 +172,7 @@ function CreateTransactionDialog({
     if (index !== undefined) {
       updateTransaction(user.token, id, index, data);
     } else {
-      createTransaction(user.token, data);
+      createTransaction(user.token, data, draft && location.pathname === '/drafts');
     }
     clearForm();
     close();
@@ -311,8 +313,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  createTransaction: (token, data) => {
-    dispatch(createAction(token, data))
+  createTransaction: (token, data, refresh) => {
+    dispatch(createAction(token, data, refresh))
       .catch((error) => {
         console.log(error.message);
       });
