@@ -222,7 +222,7 @@ export default class TransactionService {
       "$account.user_id$": userId,
       date: dateFilter,
       favourite: isFav === "1" && "1",
-      draft: isDraft === "1" && "1",
+      draft: isDraft ? "1" : "0",
     });
 
     if (limitsFilter) {
