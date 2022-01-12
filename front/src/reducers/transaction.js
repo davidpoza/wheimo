@@ -76,7 +76,7 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        fetchedTransactions: [action.payload, ...state.fetchedTransactions],
+        fetchedTransactions: action.payload.refresh ? [action.payload, ...state.fetchedTransactions] : state.fetchedTransactions,
         error: false,
       };
     case String(create.rejected):
