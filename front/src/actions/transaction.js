@@ -49,6 +49,14 @@ export const createEditDialogClose = () => ({
   type: types.TRANSACTIONS_CREATE_EDIT_DIALOG_CLOSE,
 });
 
+export const mergeDialogOpen = () => ({
+  type: types.TRANSACTIONS_MERGE_DIALOG_OPEN,
+});
+
+export const mergeDialogClose = () => ({
+  type: types.TRANSACTIONS_MERGE_DIALOG_CLOSE,
+});
+
 export const toggleChecked = (index) => ({
   type: types.TRANSACTIONS_TOGGLE_CHECKBOX,
   payload: index,

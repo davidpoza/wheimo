@@ -11,6 +11,7 @@ const initialState = {
   expensesByTag: {},
   createEditDialogOpen: false,
   detailsDialogOpen: false,
+  mergeDialogOpen: false,
   showCharts: false,
   error: false,
   errorMessage: undefined,
@@ -139,6 +140,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         createEditDialogOpen: false,
+      };
+    case types.TRANSACTIONS_MERGE_DIALOG_OPEN:
+      return {
+        ...state,
+        mergeDialogOpen: true,
+      };
+    case types.TRANSACTIONS_MERGE_DIALOG_CLOSE:
+      return {
+        ...state,
+        mergeDialogOpen: false,
       };
     case types.TRANSACTIONS_DETAILS_DIALOG_OPEN:
       return {

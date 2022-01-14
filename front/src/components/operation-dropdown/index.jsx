@@ -9,6 +9,8 @@ import useStyles from './styles';
 import {
   remove as removeTransactionAction,
   createEditDialogOpen as openTransactionDialogAction,
+  mergeDialogClose as mergeDialogCloseAction,
+  mergeDialogOpen as mergeDialogOpenAction,
 } from '../../actions/transaction';
 import {
   remove as removeTagAction,
@@ -37,6 +39,8 @@ function OperationDropdown({
   openTransactionDialog,
   openAccountDialog,
   openTagDialog,
+  openMergeDialog,
+  closeMergeDialog,
 }) {
   const classes = useStyles();
 
@@ -85,6 +89,16 @@ function OperationDropdown({
     }
   }
 
+  function handleMerge() {
+    changePosition(null, null);
+    switch (entity) {
+      case 'transaction':
+        openMergeDialog();
+        break;
+      default: return;
+    }
+  }
+
   return (
     <Menu
       keepMounted
@@ -98,7 +112,7 @@ function OperationDropdown({
           : undefined
       }
     >
-      <MenuItem className={classes.item} onClick={close}>Duplicate</MenuItem>
+      <MenuItem className={classes.item} onClick={handleMerge}>Merge into</MenuItem>
       <MenuItem className={classes.item} onClick={handleEdit}>Edit</MenuItem>
       <MenuItem className={classes.item} onClick={handleRemove}>Delete</MenuItem>
     </Menu>
@@ -106,18 +120,20 @@ function OperationDropdown({
 }
 
 OperationDropdown.propTypes = {
-  entity: PropTypes.string,
-  contextMenuState: PropTypes.object,
-  user: PropTypes.object,
-  removeTransaction: PropTypes.func,
-  removeAccount: PropTypes.func,
-  removeTag: PropTypes.func,
-  changePosition: PropTypes.func,
   changeId: PropTypes.func,
   changeIndex: PropTypes.func,
-  openTransactionDialog: PropTypes.func,
+  changePosition: PropTypes.func,
+  closeMergeDialog: PropTypes.func,
+  contextMenuState: PropTypes.object,
+  entity: PropTypes.string,
   openAccountDialog: PropTypes.func,
+  openMergeDialog: PropTypes.func,
   openTagDialog: PropTypes.func,
+  openTransactionDialog: PropTypes.func,
+  removeAccount: PropTypes.func,
+  removeTag: PropTypes.func,
+  removeTransaction: PropTypes.func,
+  user: PropTypes.object,
 };
 
 const mapStateToProps = (state) => ({
@@ -158,6 +174,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   openTransactionDialog: () => {
     dispatch(openTransactionDialogAction());
+  },
+  openMergeDialog: () => {
+    dispatch(mergeDialogOpenAction());
+  },
+  closeMergeDialog: () => {
+    dispatch(mergeDialogCloseAction());
   },
   openTagDialog: () => {
     dispatch(openEditTagDialogAction());
