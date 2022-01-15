@@ -13,6 +13,7 @@ import Charts from '../charts';
 import TransactionFilter from '../transaction-filter';
 
 import DetailsDialog from '../details-dialog';
+import MergeDialog from '../merge-dialog';
 import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
 
@@ -42,6 +43,7 @@ function HomeView({
       }
 
       <DetailsDialog />
+      <MergeDialog />
     </div>
   );
 }
