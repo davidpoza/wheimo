@@ -17,20 +17,16 @@ import dayjs from 'dayjs';
 
 
 // own
-import { fetchAll } from 'api-client/transaction';
+import { fetchAll, update } from 'api-client/transaction';
 import useStyles from './styles';
 import {
-  addAttachment as addAttachmentAction,
-  create as createAction,
   mergeDialogOpen as openAction,
   mergeDialogClose as closeAction,
-  update as updateAction,
 } from '../../actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
   contextMenuChangeId as changeIdAction,
 } from '../../actions/ui';
-import Tags from '../tags';
 
 function PaperComponent(props) {
   return (
@@ -41,19 +37,19 @@ function PaperComponent(props) {
 }
 
 function MergeDialog({
+  id,
+  transactions,
   changeUIId,
   changeUIIndex,
   close,
-  id,
-  index,
   isOpen,
-  transactions,
-  updateTransaction,
   user,
 }) {
   const classes = useStyles();
   const [lastTransactions, setLastTransactions] = useState([]);
-
+  const [targetTransactionId, setTargetTransactionId] = useState('');
+  const currentTransaction = transactions && transactions.find(t => t.id === id);
+console.log(">>", currentTransaction)
   useEffect(() => {
     (async () => {
       try {
@@ -63,38 +59,36 @@ function MergeDialog({
 
       }
     })();
-  }, []);
-
-
+  }, [user.token]);
 
   function handleClose() {
     changeUIId(undefined);
     changeUIIndex(undefined);
+    setTargetTransactionId('');
     close();
   }
 
-  function handleOnKeyDown(e) {
+  async function handleOnKeyDown(e) {
     if(e.keyCode===27) { //esc
       e.preventDefault();
       handleClose();
-    } else if(e.keyCode===13 && e.ctrlKey) {
+    } else if(e.keyCode===13) {
       e.preventDefault();
-      processData();
+      await processData();
     }
   }
 
   async function processData() {
-    // const data = {
-    //   comments: comments || undefined,
-    // };
-
-    // updateTransaction(user.token, id, index, data);
+    await update(user.token, targetTransactionId, {
+      comments: currentTransaction.comments,
+      tags: currentTransaction.tags
+    });
     changeUIIndex(undefined);
-    // clearForm();
     close();
   }
 
   function printTransactionIdentifier(t) {
+    if (!t) return '';
     let ret = `${dayjs(t.date).format('DD-MM-YYYY')} | ${t.amount}€`;
     if (t.description) {
       ret += ` | ${t.description.substr(0,20)}...`;
@@ -104,6 +98,10 @@ function MergeDialog({
       ret += ` | ${t.receiverName.substr(0,20)}...`;
     }
     return ret;
+  }
+
+  function handleOnChange(e) {
+    setTargetTransactionId(e.target.value);
   }
 
   return (
@@ -121,15 +119,14 @@ function MergeDialog({
       </DialogTitle>
       <DialogContent className={classes.root}>
         <FormControl className={classes.formControl} style={{minWidth: '100%' }}>
-          <InputLabel id="demo-mutiple-name-label">Select the transaction you want to merge into</InputLabel>
+          <InputLabel id="target-transation-id-label">Select the transaction you want to merge into</InputLabel>
           <Select
             autoWidth
-            labelId="demo-mutiple-name-label"
-            id="demo-mutiple-name"
-            value={lastTransactions}
-            // onChange={handleChange}
+            labelId="target-transation-id-label"
+            id="target-transation-id-select"
+            value={targetTransactionId}
+            onChange={handleOnChange}
             input={<Input/>}
-            // MenuProps={MenuProps}
           >
             {lastTransactions.map((t) => (
               <MenuItem key={t.id} value={t.id}>
@@ -174,23 +171,12 @@ const mapStateToProps = (state) => ({
   id: state.ui.contextMenuState.id,
   index: state.ui.contextMenuState.index,
   isOpen: state.transaction.mergeDialogOpen,
+  transactions: state.transaction.fetchedTransactions,
   isUploadingAttachment: state.transaction.isUploadingAttachment,
   user: state.user.current,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  createTransaction: (token, data) => {
-    dispatch(createAction(token, data))
-      .catch((error) => {
-        console.log(error.message);
-      });
-  },
-  updateTransaction: (token, id, index, data) => {
-    dispatch(updateAction(token, id, index, data))
-      .catch((error) => {
-        console.log(error.message);
-      });
-  },
   open: () => {
     dispatch(openAction());
   },
@@ -202,9 +188,6 @@ const mapDispatchToProps = (dispatch) => ({
   },
   changeUIIndex: (index) => {
     dispatch(changeIndexAction(index));
-  },
-  addAttachment: (token, formData) => {
-    dispatch(addAttachmentAction(token, formData));
   },
 });
 
