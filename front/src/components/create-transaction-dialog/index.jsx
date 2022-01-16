@@ -159,7 +159,7 @@ function CreateTransactionDialog({
       emitterName: emitterName || undefined,
       receiverName: receiverName || undefined,
       amount,
-      description: description !== undefined && description,
+      description: description !== undefined ? description : undefined,
       comments: comments || undefined,
       tags,
       accountId: selectedAccount,
