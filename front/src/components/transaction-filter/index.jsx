@@ -19,7 +19,7 @@ import {
 } from '../../actions/transaction';
 
 function TransactionFilter({
-  handleChangeFilter, toggleCharts, setPage, showCharts = false, isMobile,
+  handleChangeFilter, toggleCharts, setPage, showCharts = false, isMobile, onlyDrafts,
 }) {
   const classes = useStyles();
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -54,6 +54,7 @@ function TransactionFilter({
     if (supLimit) filter.max = supLimit;
     if (operationType !== 'all') filter.operationType = operationType;
     if (isFav) filter.isFav = 1;
+    if (onlyDrafts) filter.isDraft = 1;
 
     if (Object.keys(filter).length > 0) {
       handleChangeFilter(filter);
@@ -159,6 +160,7 @@ function TransactionFilter({
 
 TransactionFilter.propTypes = {
   showCharts: PropTypes.bool,
+  onlyDrafts: PropTypes.bool,
   handleChangeFilter: PropTypes.func,
   toggleCharts: PropTypes.func,
   setPage: PropTypes.func,
