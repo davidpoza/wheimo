@@ -22,5 +22,10 @@
     "showAllTypes": "Mostrar todas",
     "showExpensesType": "Mostrar solo gastos",
     "showIncomesType": "Mostrar solo ingresos"
+  },
+  "opMenu": {
+    "merge": "Copiar a",
+    "edit": "Modificar",
+    "delete": "Borrar"
   }
 }
