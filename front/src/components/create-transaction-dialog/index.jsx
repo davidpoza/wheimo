@@ -62,7 +62,7 @@ function CreateTransactionDialog({
   const [draft, setDraft] = useState(false);
   const [receipt, setReceipt] = useState(false);
   const [amount, setAmount] = useState(0.0);
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState(undefined);
   const [comments, setComments] = useState('');
   const [emitterName, setEmitterName] = useState('');
   const [receiverName, setReceiverName] = useState('');
@@ -100,7 +100,7 @@ function CreateTransactionDialog({
     setIncoming(false);
     setReceipt(false);
     setAmount(0.0);
-    setDescription('');
+    setDescription(undefined);
     setComments('');
     setEmitterName('');
     setReceiverName('');
@@ -159,7 +159,7 @@ function CreateTransactionDialog({
       emitterName: emitterName || undefined,
       receiverName: receiverName || undefined,
       amount,
-      description: description || undefined,
+      description: description !== undefined && description,
       comments: comments || undefined,
       tags,
       accountId: selectedAccount,
