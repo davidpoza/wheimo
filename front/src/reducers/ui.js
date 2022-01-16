@@ -1,7 +1,6 @@
 import types from '../actions/types';
 
 const initialState = {
-  theme: 'light',
   drawerOpen: false,
   contextMenuState: {
     mouseX: null,

@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -6,8 +7,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 
 // own
+import i18n from 'utils/i18n';
 import useStyles from './styles';
-function OperationTypeSelect({ operationType, setOperationType }) {
+function OperationTypeSelect({ operationType, setOperationType, lng }) {
   const classes = useStyles();
 
   const handleOnChange = (e) => {
@@ -17,7 +19,7 @@ function OperationTypeSelect({ operationType, setOperationType }) {
 
   return (
     <FormControl className={classes.root} fullWidth>
-      <InputLabel id="operation-type-label">Operation type</InputLabel>
+      <InputLabel id="operation-type-label">{i18n.t('filters.opType', { lng })}</InputLabel>
       <Select
         className={classes.selector}
         labelId="account-label"
@@ -25,9 +27,9 @@ function OperationTypeSelect({ operationType, setOperationType }) {
         value={operationType}
         onChange={handleOnChange}
       >
-        <MenuItem key="all" value="all">Show all</MenuItem>
-        <MenuItem key="expense" value="expense">Show only expenses</MenuItem>
-        <MenuItem key="income" value="income">Show only incomes</MenuItem>
+        <MenuItem key="all" value="all">{i18n.t('filters.showAllTypes', { lng })}</MenuItem>
+        <MenuItem key="expense" value="expense">{i18n.t('filters.showExpensesType', { lng })}</MenuItem>
+        <MenuItem key="income" value="income">{i18n.t('filters.showIncomesType', { lng })}</MenuItem>
       </Select>
     </FormControl>
   );
@@ -35,7 +37,12 @@ function OperationTypeSelect({ operationType, setOperationType }) {
 
 OperationTypeSelect.propTypes = {
   operationType: PropTypes.string,
-  setOperationType: PropTypes.func
+  setOperationType: PropTypes.func,
 };
 
-export default OperationTypeSelect;
+const mapStateToProps = (state) => ({
+  lng: state.user?.current?.lang,
+});
+
+
+export default connect(mapStateToProps)(OperationTypeSelect);

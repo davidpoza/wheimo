@@ -16,6 +16,6 @@ export default makeStyles((theme) => ({
   },
   icon: {
     color: theme.palette.type === 'dark' ? '#fff' : '#4d4d4d',
-
+    minWidth: '30px',
   },
 }));

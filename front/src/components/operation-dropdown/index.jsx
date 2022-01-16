@@ -5,6 +5,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
 // own
+import i18n from 'utils/i18n';
 import useStyles from './styles';
 import {
   remove as removeTransactionAction,
@@ -27,6 +28,7 @@ import {
 } from '../../actions/ui';
 
 function OperationDropdown({
+  lng,
   entity = 'transaction',
   removeTransaction,
   removeTag,
@@ -112,9 +114,9 @@ function OperationDropdown({
           : undefined
       }
     >
-      <MenuItem className={classes.item} onClick={handleMerge}>Merge into</MenuItem>
-      <MenuItem className={classes.item} onClick={handleEdit}>Edit</MenuItem>
-      <MenuItem className={classes.item} onClick={handleRemove}>Delete</MenuItem>
+      <MenuItem className={classes.item} onClick={handleMerge}>{i18n.t('opMenu.merge', { lng })}</MenuItem>
+      <MenuItem className={classes.item} onClick={handleEdit}>{i18n.t('opMenu.edit', { lng })}</MenuItem>
+      <MenuItem className={classes.item} onClick={handleRemove}>{i18n.t('opMenu.delete', { lng })}</MenuItem>
     </Menu>
   );
 }
@@ -140,6 +142,7 @@ const mapStateToProps = (state) => ({
   loading: state.transaction.isLoading,
   contextMenuState: state.ui.contextMenuState,
   user: state.user.current,
+  lng: state.user?.current?.lang,
   error: state.user.error,
   errorMessage: state.user.errorMessage,
 });

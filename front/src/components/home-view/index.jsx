@@ -35,7 +35,7 @@ function HomeView({
 
   return (
     <div id="tt" className={classes.root}>
-      <TransactionFilter handleChangeFilter={handleChangeFilter} />
+      <TransactionFilter onlyDrafts={onlyDrafts} handleChangeFilter={handleChangeFilter} />
       {
         showCharts
           ? <Charts />

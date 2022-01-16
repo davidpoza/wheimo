@@ -1,0 +1,26 @@
+{
+  "menu": {
+    "transactions": "Movimientos",
+    "drafts": "Borradores",
+    "heatmap": "Gráf. anual",
+    "charts": "Gráf. mensual",
+    "accounts": "Cuentas",
+    "tags": "Etiquetas y reglas",
+    "logout": "Salir"
+  },
+  "filters": {
+    "title": "Filtros",
+    "byText": "Contiene texto",
+    "startDate": "Desde fecha",
+    "endDate": "Hasta fecha",
+    "account": "Cuenta",
+    "tags": "Contiene etiquetas",
+    "minAmount": "Min. €",
+    "maxAmount": "Max. €",
+    "isFavorite": "Está marcado como favorito",
+    "opType": "Tipo de operación",
+    "showAllTypes": "Mostrar todas",
+    "showExpensesType": "Mostrar solo gastos",
+    "showIncomesType": "Mostrar solo ingresos"
+  }
+}
