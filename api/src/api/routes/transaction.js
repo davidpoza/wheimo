@@ -94,7 +94,7 @@ export default (app) => {
         comments: Joi.string().allow(''),
         currency: Joi.string(),
         date: Joi.string(),
-        description: Joi.string().allow(''),
+        description: Joi.string().allow('').optional(),
         emitterName: Joi.string(),
         favourite: Joi.boolean(),
         receipt: Joi.boolean(),
