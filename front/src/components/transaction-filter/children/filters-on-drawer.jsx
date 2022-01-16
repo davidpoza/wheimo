@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import DayJsUtils from '@date-io/dayjs';
 import TextField from '@material-ui/core/TextField';
@@ -13,14 +14,17 @@ import {
 import AccountSelect from 'components/account-select';
 import TagsSelect from 'components/tags-select';
 import OperationTypeSelect from 'components/operation-type-select';
+import i18n from 'utils/i18n';
 
 import useStyles from '../styles';
 
-export default function FiltersOnDrawer({
+function FiltersOnDrawer({
   accountId,
   accountIdKey,
   endDate,
   infLimit,
+  isFav,
+  lng,
   operationType,
   resetFilters,
   search,
@@ -28,25 +32,24 @@ export default function FiltersOnDrawer({
   setEndDate,
   setFiltersOpen,
   setInfLimit,
+  setIsFav,
   setOperationType,
   setSearch,
   setStartDate,
   setSupLimit,
+  setTagIds,
   setTags,
   startDate,
   supLimit,
   tags,
-  isFav,
-  setIsFav,
-  setTagIds
  }) {
   const classes = useStyles();
   return (
     <div className={classes.drawerRoot}>
-      <h2>Filters</h2>
+      <h2>{i18n.t('filters.title', {lng})}</h2>
       <TextField
         id="search"
-        label="Search"
+        label={i18n.t('filters.byText', {lng})}
         type="text"
         value={search}
         fullWidth
@@ -59,10 +62,12 @@ export default function FiltersOnDrawer({
           className={classes.dateSelector}
           margin="normal"
           id="date-picker-dialog"
-          label="Start date"
+          label={i18n.t('filters.startDate', {lng})}
           format="DD/MM/YYYY"
           value={startDate}
-          onChange={(date) => { setStartDate(date); } }
+          onChange={(date) => {
+            setStartDate(date);
+          }}
           KeyboardButtonProps={{
             'aria-label': 'change date',
           }}
@@ -71,10 +76,12 @@ export default function FiltersOnDrawer({
           className={classes.dateSelector}
           margin="normal"
           id="date-picker-dialog"
-          label="End date"
+          label={i18n.t('filters.endDate', {lng})}
           format="DD/MM/YYYY"
           value={endDate}
-          onChange={(date) => { setEndDate(date); } }
+          onChange={(date) => {
+            setEndDate(date);
+          }}
           KeyboardButtonProps={{
             'aria-label': 'change date',
           }}
@@ -84,25 +91,27 @@ export default function FiltersOnDrawer({
       <AccountSelect
         key={accountIdKey}
         className={classes.accountSelector}
-        label="Account"
+        label={i18n.t('filters.account', {lng})}
         value={accountId}
-        handleChange={(e) => { setAccountId(e.target.value); }}
+        handleChange={(e) => {
+          setAccountId(e.target.value);
+        }}
         fullWidth
       />
       <TagsSelect
         limitTags={3}
-        label="Tags"
+        label={i18n.t('filters.tags', {lng})}
         value={tags}
-        handleOnChange={ (e, value) => {
+        handleOnChange={(e, value) => {
           setTags(value);
-          setTagIds(value.map((tag) => (tag.id)));
-        } }
+          setTagIds(value.map((tag) => tag.id));
+        }}
       />
       <div className={classes.limits}>
         <TextField
           size="small"
           id="min"
-          label="Min"
+          label={i18n.t('filters.minAmount', {lng})}
           type="number"
           value={infLimit}
           onChange={(e) => {
@@ -112,7 +121,7 @@ export default function FiltersOnDrawer({
         <TextField
           size="small"
           id="max"
-          label="Max"
+          label={i18n.t('filters.maxAmount', {lng})}
           type="number"
           value={supLimit}
           onChange={(e) => {
@@ -120,16 +129,43 @@ export default function FiltersOnDrawer({
           }}
         />
       </div>
-      <OperationTypeSelect operationType={operationType} setOperationType={setOperationType} />
+      <OperationTypeSelect
+        operationType={operationType}
+        setOperationType={setOperationType}
+      />
       <FormGroup className={classes.isFavCheckbox}>
-        <FormControlLabel control={<Checkbox checked={isFav} onChange={() => { setIsFav(!isFav); }} name="isFav" />} label="Is marked as favourite" />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isFav}
+              onChange={() => {
+                setIsFav(!isFav);
+              }}
+              name="isFav"
+            />
+          }
+          label={i18n.t('filters.isFavorite', { lng })}
+        />
       </FormGroup>
 
-      <div className={classes.resetFilterButton} onClick={resetFilters}>Reset filters</div>
-      <div className={classes.closeFilterButton} onClick={() => setFiltersOpen(false)}>Close</div>
+      <div className={classes.resetFilterButton} onClick={resetFilters}>
+        Reset filters
+      </div>
+      <div
+        className={classes.closeFilterButton}
+        onClick={() => setFiltersOpen(false)}>
+        Close
+      </div>
     </div>
   );
 }
+
+
+const mapStateToProps = (state) => ({
+  lng: state.user?.current?.lang,
+});
+
+export default connect(mapStateToProps)(FiltersOnDrawer);
 
 FiltersOnDrawer.propTypes = {
   accountId: PropTypes.string,

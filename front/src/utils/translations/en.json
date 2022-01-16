@@ -1,0 +1,31 @@
+{
+  "menu": {
+    "transactions": "Transactions",
+    "drafts": "Drafts",
+    "heatmap": "Heatmap",
+    "charts": "Charts",
+    "accounts": "Accounts",
+    "tags": "Tags & Rules",
+    "logout": "Logout"
+  },
+  "filters": {
+    "title": "Filters",
+    "byText": "contains text",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "account": "Account",
+    "tags": "Tags",
+    "minAmount": "Min. €",
+    "maxAmount": "Max. €",
+    "isFavorite": "Is marked as favorite",
+    "opType": "Operation type",
+    "showAllTypes": "Show all types",
+    "showExpensesType": "Show only expenses",
+    "showIncomesType": "Show onlye incomes"
+  },
+  "opMenu": {
+    "merge": "Merge into",
+    "edit": "Edit",
+    "delete": "Delete"
+  }
+}

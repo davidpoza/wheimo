@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -11,19 +11,18 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import PersonIcon from '@material-ui/icons/PersonOutline';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import TagIcon from '@material-ui/icons/LocalOffer';
-import SettingsIcon from '@material-ui/icons/Settings';
 import CreateIcon from '@material-ui/icons/Create';
 import DateRangeIcon from '@material-ui/icons/DateRange';
 import AccountIcon from '@material-ui/icons/AccountBalance';
 import TransactionIcon from '@material-ui/icons/Receipt';
-import ReportIcon from '@material-ui/icons/Assessment';
 import BarChart from '@material-ui/icons/BarChart';
 
+import i18n from 'utils/i18n';
 import useStyles from './styles';
 import { resetState } from '../../actions/user';
 import { closeDrawer as closeDrawerAction } from '../../actions/ui';
 
-function NavMenu({ resetUserState, drawerOpen, closeDrawer }) {
+function NavMenu({ resetUserState, drawerOpen, closeDrawer, lng }) {
   const classes = useStyles();
 
   const handleLogout = () => {
@@ -36,64 +35,57 @@ function NavMenu({ resetUserState, drawerOpen, closeDrawer }) {
       role="presentation"
     >
       <List className={classes.list}>
-        <ListItem button key='profile' component={Link} to="/profile" onClick={closeDrawer}>
-          <ListItemIcon>
-            <PersonIcon className={classes.icon} fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="My profile" />
-        </ListItem>
-
         <ListItem button key='transactions' component={Link} to="/" onClick={closeDrawer}>
-          <ListItemIcon>
-            <TransactionIcon className={classes.icon} fontSize="small" />
+          <ListItemIcon className={classes.icon}>
+            <TransactionIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText primary="Transactions" />
+          <ListItemText primary={i18n.t('menu.transactions', { lng })} />
         </ListItem>
 
         <ListItem>
           <List component="div" disablePadding>
             <ListItem button key='drafts' component={Link} to="/drafts" onClick={closeDrawer}>
-              <ListItemIcon>
-                <CreateIcon className={classes.icon} fontSize="small" />
+              <ListItemIcon className={classes.icon}>
+                <CreateIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText primary="Drafts" />
+              <ListItemText primary={i18n.t('menu.drafts', { lng })} />
             </ListItem>
 
             <ListItem button key='heatmap' component={Link} to="/heatmap" onClick={closeDrawer}>
-              <ListItemIcon>
-                <DateRangeIcon className={classes.icon} fontSize="small" />
+              <ListItemIcon className={classes.icon}>
+                <DateRangeIcon fontSize="small" />
               </ListItemIcon>
-              <ListItemText primary="Heatmap" />
+              <ListItemText primary={i18n.t('menu.heatmap', { lng })} />
             </ListItem>
 
             <ListItem button key='chart' component={Link} to="/charts" onClick={closeDrawer}>
-              <ListItemIcon>
-                <BarChart className={classes.icon} fontSize="small" />
+              <ListItemIcon className={classes.icon}>
+                <BarChart fontSize="small" />
               </ListItemIcon>
-              <ListItemText primary="Charts" />
+              <ListItemText primary={i18n.t('menu.charts', { lng })} />
             </ListItem>
           </List>
         </ListItem>
 
         <ListItem button key='accounts' component={Link} to="/accounts" onClick={closeDrawer}>
-          <ListItemIcon>
-            <AccountIcon className={classes.icon} fontSize="small" />
+          <ListItemIcon className={classes.icon}>
+            <AccountIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText primary="Accounts" />
+          <ListItemText primary={i18n.t('menu.accounts', { lng })} />
         </ListItem>
 
         <ListItem button key='tags' component={Link} to="/tags" onClick={closeDrawer}>
-          <ListItemIcon>
-            <TagIcon className={classes.icon} fontSize="small" />
+          <ListItemIcon className={classes.icon}>
+            <TagIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText primary="Tags & Rules" />
+          <ListItemText primary={i18n.t('menu.tags', { lng })} />
         </ListItem>
 
         <ListItem button key='logout' onClick={handleLogout}>
-          <ListItemIcon>
-            <ExitIcon className={classes.icon} fontSize="small" />
+          <ListItemIcon className={classes.icon}>
+            <ExitIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText primary="Logout" />
+          <ListItemText primary={i18n.t('menu.logout', { lng })} />
         </ListItem>
       </List>
     </Box>
@@ -110,7 +102,8 @@ function NavMenu({ resetUserState, drawerOpen, closeDrawer }) {
 }
 
 const mapStateToProps = (state) => ({
-  drawerOpen: state.ui.drawerOpen
+  drawerOpen: state.ui.drawerOpen,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({
