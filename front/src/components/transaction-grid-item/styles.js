@@ -4,7 +4,7 @@ export default makeStyles((theme) => ({
   root: {
     fontSize: '0.9em',
     borderTop: theme.palette.type === 'dark' ? '1px solid #424242' : '1px solid #ccc',
-    padding: '0 30px 0 20px',
+    padding: '0 20px 0 20px',
     height: '60px',
   },
   checkbox: {
