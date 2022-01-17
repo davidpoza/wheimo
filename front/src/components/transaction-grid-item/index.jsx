@@ -85,14 +85,13 @@ function TransactionGridItem({
       dense
       button
       className={classes.root}
-      style={{ borderTop: index === 0 ? 'none' : 'auto' }}
+      style={{borderTop: index === 0 ? 'none' : 'auto'}}
       onContextMenu={handleContextMenu}
       disableTouchRipple
       onClick={() => {
         handleOpenDetailsDialog();
       }}
-      onTap
-    >
+      onTap>
       <ListItemIcon className={classes.checkbox}>
         <Checkbox
           edge="start"
@@ -104,63 +103,76 @@ function TransactionGridItem({
           tabIndex={-1}
           disableRipple
           className={classes.checkbox}
-          inputProps={{ 'aria-labelledby': labelId }}
+          inputProps={{'aria-labelledby': labelId}}
         />
       </ListItemIcon>
       <div className={classes.content}>
         <div className={classes.firstLine}>
-          {
-            !isMobile &&
-            <span className={`${classes.icon} ${amount > 0 ? classes.down : classes.up}`}>
-              { amount > 0 ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
+          {!isMobile && (
+            <span
+              className={`${classes.icon} ${
+                amount > 0 ? classes.down : classes.up
+              }`}>
+              {amount > 0 ? <ExpandMoreIcon /> : <ExpandLessIcon />}
             </span>
-          }
-          <span className={`${classes.amount} ${amount > 0 ? classes.down : classes.up}`}>
+          )}
+          <span
+            className={`${classes.amount} ${
+              amount > 0 ? classes.down : classes.up
+            }`}>
             {`${formatAmount(amount)}`}
           </span>
-          {
-            emitterReceiver && !isMobile
-              && <span className={classes.emitter}>
-                {emitterReceiver?.substr(0, emitterLimit)?.toLowerCase()}
-                {emitterReceiver.length > emitterLimit && <>...</> }
-              </span>
-          }
+          {emitterReceiver && !isMobile && (
+            <span className={classes.emitter}>
+              {emitterReceiver?.substr(0, emitterLimit)?.toLowerCase()}
+              {emitterReceiver.length > emitterLimit && <>...</>}
+            </span>
+          )}
           <div className={classes.tags}>
             <Tags tags={tags} />
           </div>
           <div className={classes.date}>
-            {
-              isMobile
-                ? dayjs(date).format('DD/MM')
-                : dayjs(date).format('dddd DD, MMM YY')
-            }
+            {isMobile
+              ? dayjs(date).format('DD/MM')
+              : dayjs(date).format('dddd DD, MMM YY')}
           </div>
-          {
-            !isMobile &&
-              <span className={classes.star}>
-              {
-                favourite
-                  ? <StarIcon className={classes.activeStar} fontSize="small" onClick={toggleFavourite} />
-                  : <StarBorderIcon fontSize="small" onClick={toggleFavourite} />
-              }
-              </span>
-          }
+          {!isMobile && (
+            <span className={classes.star}>
+              {favourite ? (
+                <StarIcon
+                  className={classes.activeStar}
+                  fontSize="small"
+                  onClick={toggleFavourite}
+                />
+              ) : (
+                <StarBorderIcon fontSize="small" onClick={toggleFavourite} />
+              )}
+            </span>
+          )}
         </div>
         <div className={classes.secondLine}>
           <div className={classes.description}>
-            {description?.substr(0, descriptionLimit).toUpperCase() || (isMobile && emitterReceiver?.substr(0, emitterLimit)?.toUpperCase())}
-            {(!isMobile && description?.length > 0 && comments) && ' - '}
-            {!isMobile && comments?.substr(0, commentsLimit).split('\n')?.[0]?.toUpperCase()}
+            {
+              description?.substr(0, descriptionLimit).toUpperCase() ||
+                (isMobile &&
+                  (emitterReceiver?.substr(0, emitterLimit)?.toUpperCase() ||
+                    comments
+                      ?.substr(0, commentsLimit)
+                      .split('\n')?.[0]
+                      ?.toUpperCase()))
+            }
+            {!isMobile && description?.length > 0 && comments && ' - '}
+            {!isMobile &&
+              comments
+                ?.substr(0, commentsLimit)
+                .split('\n')?.[0]
+                ?.toUpperCase()}
           </div>
           <div className={classes.account}>
-          {
-            isMobile
-              ? accountIdentifier
-              : accountDescription
-            } | {formatAmount(accountBalance, false)}
+            {isMobile ? accountIdentifier : accountDescription} |{' '}
+            {formatAmount(accountBalance, false)}
           </div>
         </div>
-
       </div>
     </ListItem>
   );
