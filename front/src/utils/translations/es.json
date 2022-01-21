@@ -8,6 +8,10 @@
     "tags": "Etiquetas y reglas",
     "logout": "Salir"
   },
+  "searchBar": {
+    "applyFilters": "Aplicar filtros",
+    "searchPlaceholder": "Buscar movimientos"
+  },
   "filters": {
     "title": "Filtros",
     "byText": "Contiene texto",
@@ -28,5 +32,65 @@
     "edit": "Modificar",
     "delete": "Borrar",
     "copyLink": "Copiar enlace"
+  },
+  "transactionDetails": {
+    "title": "Detalle de movimiento",
+    "date": "Fecha",
+    "description": "Descripción",
+    "notes": "Notas",
+    "attachments": "Documentos adjuntos",
+    "attachFile": "Adjuntar fichero",
+    "save": "Guardar",
+    "add": "Añadir",
+    "cancel": "Cancelar"
+  },
+  "createTransaction": {
+    "editTitle": "Modificar movimiento",
+    "addTitle": "Añadir movimiento manualmente",
+    "receipt": "Recibo",
+    "draft": "Borrador",
+    "incomig": "Es un ingreso",
+    "outgoing": "Es un gasto",
+    "account": "Cuenta",
+    "date": "Fecha",
+    "amount": "Importe",
+    "description": "Descripción",
+    "tags": "Etiquetas",
+    "save": "Guardar cambios",
+    "add": "Añadir",
+    "cancel": "Cancelar",
+    "emitter": "Emisor",
+    "receiver": "Receptor"
+  },
+  "userSettings": {
+    "title": "Configuración de usuario",
+    "email": "Email",
+    "name": "Nombre",
+    "language": "Idioma",
+    "theme": "Tema visual",
+    "save": "Guardar",
+    "cancel": "Cancelar"
+  },
+  "screensTitles": {
+    "tagsAndRules": "Etiquetas y reglas",
+    "accounts": "Cuentas",
+    "heatmap": "Vista de gastos anual",
+    "charts": "Vista de gastos mensuales por categoría",
+    "transactions": "Movimientos",
+    "drafts": "Movimientos en borrador"
+  },
+  "results": {
+    "notFound": "No se han encontrado resultados",
+    "found": "resultados encontrados"
+  },
+  "attachments": {
+    "delete": "Borrar fichero adjunto",
+    "download": "Descargar/visualizar fichero adjunto"
+  },
+  "mergeDialog": {
+    "title": "Copiar datos del movimiento en otro",
+    "label": "Indica movimiento donde pegar los datos",
+    "cancel": "Cancelar",
+    "proceed": "Pegar"
   }
 }

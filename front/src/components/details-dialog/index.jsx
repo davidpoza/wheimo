@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import IconButton from '@material-ui/core/IconButton';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import i18n from 'utils/i18n';
 
 // own
 import useStyles from './styles';
@@ -43,15 +44,14 @@ function DetailsDialog({
   changeUIId,
   changeUIIndex,
   close,
-  createTransaction,
   id,
   index,
   isOpen,
   isUploadingAttachment,
-  open,
   transactions,
   updateTransaction,
   user,
+  lng,
 }) {
   const classes = useStyles();
   const [comments, setComments] = useState('');
@@ -107,6 +107,12 @@ function DetailsDialog({
     changeUIId(undefined);
     changeUIIndex(undefined);
     close();
+    const getUrl = window.location;
+    const homeUrl = `${getUrl.protocol}//${getUrl.host}/`;
+    if (window.location.href !== homeUrl) {
+      // eslint-disable-next-line
+      history.replaceState('', '', homeUrl);
+    }
   }
 
   function handleOnKeyDown(e) {
@@ -141,7 +147,7 @@ function DetailsDialog({
       onKeyDown={handleOnKeyDown}
     >
       <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-        Transaction details
+        {i18n.t('transactionDetails.title', { lng })} {`#${id}`}
       </DialogTitle>
       <DialogContent className={classes.root}>
         <Tags tags={tags} />
@@ -150,22 +156,22 @@ function DetailsDialog({
           <span>{amount}€</span>
         </p>
         <p className={classes.item}>
-          <h2 className={classes.h2}>Date: </h2>
+          <h2 className={classes.h2}>{i18n.t('transactionDetails.date', { lng })}</h2>
           <span>{dayjs(date).format('dddd DD MMM YYYY')}</span>
         </p>
         <p className={classes.item}>
-          <h2 className={classes.h2}>Description: </h2>
+          <h2 className={classes.h2}>{i18n.t('transactionDetails.description', { lng })}</h2>
           <span>{description}</span>
         </p>
         <p className={classes.item}>
-          <h2 className={classes.h2}>Notes:</h2>
+          <h2 className={classes.h2}>{i18n.t('transactionDetails.notes', { lng })}</h2>
         </p>
         <Editor content={comments} setContent={ (_content) => { setComments(_content); }} />
         {
           ((attachments && attachments.length > 0) || (isUploadingAttachment))
             && <>
               <p className={classes.item}>
-                <h2 className={classes.h2}>Attachments: </h2>
+                <h2 className={classes.h2}>{i18n.t('transactionDetails.attachments', { lng })}</h2>
               </p>
               {
                 isUploadingAttachment
@@ -187,15 +193,19 @@ function DetailsDialog({
           />
           <label htmlFor="icon-button-file">
             <IconButton color="primary" aria-label="Attach" component="span" className={classes.attachmentButton}>
-              <AttachFileIcon /> ATTACH FILE
+              <AttachFileIcon /> {i18n.t('transactionDetails.attachFile', { lng })}
             </IconButton>
           </label>
         </span>
         <Button onClick={handleClose} color="primary">
-          Cancel
+          {i18n.t('transactionDetails.cancel', { lng })}
         </Button>
         <Button onClick={processData} color="primary">
-          { index !== undefined ? 'Save changes' : 'Add' }
+          {
+            index !== undefined
+              ? i18n.t('transactionDetails.save', { lng })
+              : i18n.t('transactionDetails.add', { lng })
+          }
         </Button>
       </DialogActions>
     </Dialog>
@@ -226,6 +236,7 @@ const mapStateToProps = (state) => ({
   isUploadingAttachment: state.transaction.isUploadingAttachment,
   transactions: state.transaction.fetchedTransactions,
   user: state.user.current,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({
