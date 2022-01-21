@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
@@ -18,6 +17,7 @@ import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import DayJsUtils from '@date-io/dayjs';
 import dayjs from 'dayjs';
+import i18n from 'utils/i18n';
 import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
@@ -56,6 +56,7 @@ function CreateTransactionDialog({
   createTransaction,
   updateTransaction,
   changeUIIndex,
+  lng,
 }) {
   const classes = useStyles();
   const [incoming, setIncoming] = useState(false);
@@ -70,7 +71,6 @@ function CreateTransactionDialog({
   const [tags, setTags] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [hasErrors, setHasErrors] = useState(true);
-  const location = useLocation();
 
   function amountSignCorrection(val) {
     if (incoming) {
@@ -108,6 +108,7 @@ function CreateTransactionDialog({
     setTags([]);
     setSelectedDate(new Date());
     setHasErrors(true);
+    setDraft(false);
   }
 
   useEffect(() => {
@@ -172,7 +173,7 @@ function CreateTransactionDialog({
     if (index !== undefined) {
       updateTransaction(user.token, id, index, data);
     } else {
-      createTransaction(user.token, data, draft && location.pathname === '/drafts');
+      createTransaction(user.token, data, true);
     }
     clearForm();
     close();
@@ -186,19 +187,19 @@ function CreateTransactionDialog({
       </IconButton>
       <Dialog open={isOpen} onClose={handleClose} aria-labelledby="form-dialog-title" PaperComponent={PaperComponent}>
         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-          { index !== undefined ? 'Edit transaction' : 'Add manual transaction' }
+          { index !== undefined ? i18n.t('createTransaction.editTitle', { lng }) : i18n.t('createTransaction.addTitle', { lng }) }
         </DialogTitle>
         <DialogContent>
           <FormGroup row>
             <FormControlLabel
               control={<Checkbox checked={draft} onChange={() => { setDraft(!draft); }} name="draft" />}
-              label="draft"
+              label={i18n.t('createTransaction.draft', { lng })}
             />
           </FormGroup>
           <FormGroup row>
             <FormControlLabel
               control={<Checkbox checked={receipt} onChange={() => { setReceipt(!receipt); }} name="receipt" />}
-              label={receipt ? 'It\'s a receipt' : 'It\'s not a receipt'}
+              label={i18n.t('createTransaction.receipt', { lng })}
             />
           </FormGroup>
           <div className={classes.selectGroup}>
@@ -206,7 +207,7 @@ function CreateTransactionDialog({
               <KeyboardDatePicker
                 margin="normal"
                 id="date-picker-dialog"
-                label="Transaction date"
+                label={i18n.t('createTransaction.date', { lng })}
                 format="DD/MM/YYYY"
                 value={selectedDate}
                 onChange={handleDateChange}
@@ -216,7 +217,7 @@ function CreateTransactionDialog({
               />
             </MuiPickersUtilsProvider>
             <AccountSelect
-              label="Account"
+              label={i18n.t('createTransaction.account', { lng })}
               value={selectedAccount}
               handleChange={(e) => { setSelectedAccount(e.target.value); }}
               layout="modal"
@@ -226,7 +227,7 @@ function CreateTransactionDialog({
           <FormGroup row className={classes.transactionTargetSwitch}>
             <FormControlLabel
               control={<Switch checked={incoming} onChange={handleIncomingSwitch} name="incoming" />}
-              label={incoming ? 'It\'s an incoming transaction' : 'It\'s an outgoing transaction'}
+              label={incoming ? i18n.t('createTransaction.incomig', { lng }) : i18n.t('createTransaction.outgoing', { lng })}
             />
           </FormGroup>
 
@@ -234,7 +235,7 @@ function CreateTransactionDialog({
             className={classes.transactionTargetTextField}
             margin="dense"
             id={incoming ? 'emitterName' : 'receiverName'}
-            label={incoming ? 'Emitter' : 'Receiver'}
+            label={incoming ? i18n.t('createTransaction.emitter', { lng }) : i18n.t('createTransaction.receiver', { lng })}
             type="text"
             value={incoming ? emitterName : receiverName}
             onChange={(e) => {
@@ -251,7 +252,7 @@ function CreateTransactionDialog({
             required
             margin="dense"
             id="amount"
-            label="Amount"
+            label={i18n.t('createTransaction.amount', { lng })}
             type="number"
             value={amount}
             onChange={handleAmountChange}
@@ -261,7 +262,7 @@ function CreateTransactionDialog({
           <TextField
             margin="dense"
             id="description"
-            label="Description"
+            label={i18n.t('createTransaction.description', { lng })}
             type="text"
             value={description}
             onChange={(e) => { setDescription(e.target.value); }}
@@ -269,7 +270,7 @@ function CreateTransactionDialog({
           />
 
           <TagsSelect
-            label="Tags"
+            label={i18n.t('createTransaction.tags', { lng })}
             value={tags}
             handleOnChange={ (e, value) => {
               setTags(value);
@@ -279,10 +280,14 @@ function CreateTransactionDialog({
 
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            Cancel
+            {i18n.t('createTransaction.cancel', { lng })}
           </Button>
           <Button disabled={hasErrors} onClick={processData} color="primary">
-            { index !== undefined ? 'Save changes' : 'Add' }
+            {
+              index !== undefined
+                ? i18n.t('createTransaction.save', { lng })
+                : i18n.t('createTransaction.add', { lng })
+            }
           </Button>
         </DialogActions>
       </Dialog>
@@ -310,6 +315,7 @@ const mapStateToProps = (state) => ({
   id: state.ui.contextMenuState.id,
   index: state.ui.contextMenuState.index,
   transactions: state.transaction.fetchedTransactions,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({

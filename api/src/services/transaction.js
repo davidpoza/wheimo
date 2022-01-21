@@ -112,8 +112,8 @@ export default class TransactionService {
       );
 
       let newBalance = account.balance;
-      if (balance) newBlance = balance;
-      if (!draft && !balance) newBlance += amount;
+      if (balance) newBalance = balance;
+      if (!draft && !balance) newBalance += amount;
 
       if (account) {
         const importId = md5(`${balance}${description}${amount}`);

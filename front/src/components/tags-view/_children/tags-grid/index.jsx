@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import List from '@material-ui/core/List';
 import Pagination from '@material-ui/lab/Pagination';
+import i18n from 'utils/i18n';
 
 // own
 import { getInnerHeight } from 'utils/utilities';
@@ -13,7 +14,7 @@ import {
 } from 'actions/tag';
 
 function TagsGrid({
-  user, tags = [], page = 1, setPage,
+  user, tags = [], page = 1, setPage, lng
 }) {
   const classes = useStyles();
   const listRef = useRef();
@@ -58,12 +59,12 @@ function TagsGrid({
                   }
                 </List>
               : <div>
-                  No results found
+                  {i18n.t('results.notFound', { lng })}
                 </div>
           }
           <div className={classes.bottomBar}>
             <div className={classes.resultsCounter}>
-              { tags.length !== 0 && `${tags.length} results found`}
+              { tags.length !== 0 && `${tags.length} ${i18n.t('results.found', { lng })}`}
             </div>
             <Pagination
               className={classes.pagination}
@@ -91,6 +92,7 @@ const mapStateToProps = (state) => ({
   loading: state.transaction.isLoading,
   error: state.transaction.error,
   errorMessage: state.transaction.errorMessage,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({

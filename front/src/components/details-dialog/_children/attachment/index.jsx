@@ -6,6 +6,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import dayjs from 'dayjs';
 import Lightbox from 'react-awesome-lightbox';
 import 'react-awesome-lightbox/build/style.css';
+import i18n from 'utils/i18n';
 
 // own
 import withIsMobile from 'hocs/with-is-mobile.jsx';
@@ -64,7 +65,7 @@ EditableInput.propTypes = {
 };
 
 function Attachments({
-  user, files, transactionId, removeAttachment, updateAttachment, isMobile
+  user, files, transactionId, removeAttachment, updateAttachment, isMobile, lng
 }) {
   const [showLightbox, setShowLightbox] = useState(false);
   const clickedImage = useRef(null);
@@ -102,7 +103,7 @@ function Attachments({
           <li key={file.id} className={classes.item}>
            <MimeIcon id={file.id} type={file.type} setShowLightbox={setShowLightbox} clickedImage={clickedImage} />
            <EditableInput id={file.id} initialValue={file.description} handleOnBlur={handleChangeDescription} />
-           <a className={classes.link} title="download attachment" href={getFileUrl(file)}> 📎</a>
+           <a className={classes.link} title={i18n.t('attachments.download', { lng })} href={getFileUrl(file)}> 📎</a>
            <span className={classes.createdAt}>{
              isMobile
                ? dayjs(file.createdAt).format('DD/MM/YY HH:mm')
@@ -110,7 +111,7 @@ function Attachments({
            }</span>
            <button
              className={classes.trash}
-             title="delete attachment"
+             title={i18n.t('attachments.delete', { lng })}
              onClick={() => handleRemoveAttachment(file.id)}>
                🗑
            </button>
@@ -143,6 +144,7 @@ Attachments.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.current,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({

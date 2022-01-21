@@ -20,6 +20,7 @@ jobs:
         REACT_APP_PUBLIC_VAPID_KEY: ${{ secrets.REACT_APP_PUBLIC_VAPID_KEY }}
         REACT_APP_API_HOST: ${{ secrets.REACT_APP_API_HOST }}
         REACT_APP_NOTIFIER_HOST: ${{ secrets.REACT_APP_NOTIFIER_HOST }}
+        REACT_APP_URL: ${{ secrets.REACT_APP_URL }}
       run: |
         echo "FTP_HOST=$FTP_HOST" > .env
         echo "FTP_PASSWORD=$FTP_PASSWORD" >> .env
@@ -27,6 +28,7 @@ jobs:
         echo "REACT_APP_PUBLIC_VAPID_KEY=$REACT_APP_API_KEY" >> .env
         echo "REACT_APP_API_HOST=$REACT_APP_API_HOST" >> .env
         echo "REACT_APP_NOTIFIER_HOST=$REACT_APP_NOTIFIER_HOST" >> .env
+        echo "REACT_APP_URL=$REACT_APP_URL" >> .env
         cp -r api/src/shared front/src/shared
         cd front && npm i
         CI=false npm run build && git reset --hard

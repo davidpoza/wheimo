@@ -14,7 +14,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import dayjs from 'dayjs';
-
+import i18n from 'utils/i18n';
 
 // own
 import { fetchAll, update } from 'api-client/transaction';
@@ -44,12 +44,13 @@ function MergeDialog({
   close,
   isOpen,
   user,
+  lng
 }) {
   const classes = useStyles();
   const [lastTransactions, setLastTransactions] = useState([]);
   const [targetTransactionId, setTargetTransactionId] = useState('');
   const currentTransaction = transactions && transactions.find(t => t.id === id);
-console.log(">>", currentTransaction)
+
   useEffect(() => {
     (async () => {
       try {
@@ -115,11 +116,11 @@ console.log(">>", currentTransaction)
       onKeyDown={handleOnKeyDown}
     >
       <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-        Merge transaction into another
+        {i18n.t('mergeDialog.title', { lng })}
       </DialogTitle>
       <DialogContent className={classes.root}>
         <FormControl className={classes.formControl} style={{minWidth: '100%' }}>
-          <InputLabel id="target-transation-id-label">Select the transaction you want to merge into</InputLabel>
+          <InputLabel id="target-transation-id-label">{i18n.t('mergeDialog.label', { lng })}</InputLabel>
           <Select
             autoWidth
             labelId="target-transation-id-label"
@@ -140,10 +141,10 @@ console.log(">>", currentTransaction)
 
       <DialogActions>
         <Button onClick={handleClose} color="primary">
-          Cancel
+          {i18n.t('mergeDialog.cancel', { lng })}
         </Button>
         <Button onClick={processData} color="primary">
-          Save Changes
+          {i18n.t('mergeDialog.proceed', { lng })}
         </Button>
       </DialogActions>
     </Dialog>
@@ -174,6 +175,7 @@ const mapStateToProps = (state) => ({
   transactions: state.transaction.fetchedTransactions,
   isUploadingAttachment: state.transaction.isUploadingAttachment,
   user: state.user.current,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({

@@ -1,8 +1,9 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import List from '@material-ui/core/List';
 import Pagination from '@material-ui/lab/Pagination';
+import i18n from 'utils/i18n';
 
 // own
 import { getInnerHeight } from 'utils/utilities';
@@ -13,7 +14,7 @@ import {
   setPage as setPageAction,
 } from 'actions/transaction';
 
-function TransactionGrid({ transactions, page = 1, setPage }) {
+function TransactionGrid({ transactions, page = 1, setPage, lng }) {
   const classes = useStyles();
   const listRef = useRef();
   const [pageSize, setPageSize] = useState(0);
@@ -74,12 +75,12 @@ function TransactionGrid({ transactions, page = 1, setPage }) {
                     }
                   </List>
                 : <div>
-                    No results found
+                    {i18n.t('results.notFound', { lng })}
                   </div>
             }
             <div className={classes.bottomBar}>
               <div className={classes.resultsCounter}>
-                { transactions.length !== 0 && `${transactions.length} results found`}
+                { transactions.length !== 0 && `${transactions.length} ${i18n.t('results.found', { lng })}`}
               </div>
               <Pagination
                 className={classes.pagination}
@@ -103,6 +104,7 @@ TransactionGrid.propTypes = {
 
 const mapStateToProps = (state) => ({
   page: state.transaction.page,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({

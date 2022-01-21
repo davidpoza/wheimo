@@ -13,6 +13,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import i18n from 'utils/i18n';
 
 // own
 import useStyles from './styles';
@@ -34,7 +35,8 @@ function SettingsDialog({
   isOpen,
   close,
   user,
-  updateUser
+  updateUser,
+  lng,
 }) {
   const classes = useStyles();
   const [name, setName] = useState();
@@ -70,14 +72,14 @@ function SettingsDialog({
       PaperComponent={PaperComponent}
     >
       <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-        User settings
+        {i18n.t('userSettings.title', { lng })}
       </DialogTitle>
       <DialogContent>
 
         <TextField
           className={classes.transactionTargetTextField}
           margin="dense"
-          label="Name"
+          label={i18n.t('userSettings.name', { lng })}
           type="text"
           value={name}
           onChange={(e) => {
@@ -90,7 +92,7 @@ function SettingsDialog({
           className={classes.transactionTargetTextField}
           disabled
           margin="dense"
-          label="Email"
+          label={i18n.t('userSettings.email', { lng })}
           type="text"
           value={email}
           onChange={(e) => {
@@ -100,7 +102,7 @@ function SettingsDialog({
         />
 
         <FormControl className={classes.select}>
-          <InputLabel id="language-select-label">Language</InputLabel>
+          <InputLabel id="language-select-label">{i18n.t('userSettings.language', { lng })}</InputLabel>
           <Select
             className={classes.select}
             labelId="language-select-label"
@@ -119,7 +121,7 @@ function SettingsDialog({
         </FormControl>
 
         <FormControl className={classes.select}>
-          <InputLabel id="language-select-label">Theme</InputLabel>
+          <InputLabel id="language-select-label">{i18n.t('userSettings.theme', { lng })}</InputLabel>
           <Select
             labelId="theme-select-label"
             id="theme"
@@ -140,10 +142,10 @@ function SettingsDialog({
 
       <DialogActions>
         <Button onClick={handleClose} color="primary">
-          Cancel
+          {i18n.t('userSettings.cancel', { lng })}
         </Button>
         <Button color="primary" onClick={processData}>
-          Save
+          {i18n.t('userSettings.save', { lng })}
         </Button>
       </DialogActions>
     </Dialog>
@@ -159,6 +161,7 @@ SettingsDialog.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.user.current,
   isOpen: state.user.settingsDialogOpen,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({
