@@ -8,6 +8,10 @@
     "tags": "Tags & Rules",
     "logout": "Logout"
   },
+  "searchBar": {
+    "applyFilters": "Apply filters",
+    "searchPlaceholder": "Search transactions"
+  },
   "filters": {
     "title": "Filters",
     "byText": "contains text",
@@ -28,5 +32,65 @@
     "edit": "Edit",
     "delete": "Delete",
     "copyLink": "Copy link"
+  },
+  "transactionDetails": {
+    "title": "Transaction detail",
+    "date": "Date",
+    "description": "Description",
+    "notes": "Notes",
+    "attachments": "Attachments",
+    "attachFile": "Attach file",
+    "save": "Save",
+    "add": "Add",
+    "cancel": "Cancel"
+  },
+  "createTransaction": {
+    "editTitle": "Edit transaction",
+    "addTitle": "Add manual transaction",
+    "receipt": "Receipt",
+    "draft": "Draft",
+    "incomig": "It's an incoming transaction",
+    "outgoing": "It's an ongoing transaction",
+    "account": "Account",
+    "date": "Transaction date",
+    "amount": "Amount",
+    "description": "Description",
+    "tags": "Tags",
+    "save": "Save changes",
+    "add": "Add",
+    "cancel": "Cancel",
+    "emitter": "Emitter",
+    "receiver": "Receiver"
+  },
+  "userSettings": {
+    "title": "User settings",
+    "email": "Email",
+    "name": "Name",
+    "language": "Language",
+    "theme": "Theme",
+    "save": "Save",
+    "cancel": "Cancel"
+  },
+  "screensTitles": {
+    "tagsAndRules": "Tags & Rules",
+    "accounts": "Accounts",
+    "heatmap": "Expenses heatmap",
+    "charts": "Charts by category",
+    "transactions": "Transactions",
+    "drafts": "Drafts"
+  },
+  "results": {
+    "notFound": "No results found",
+    "found": "results found"
+  },
+  "attachments": {
+    "delete": "Delete attachment",
+    "download": "Download/view attachment"
+  },
+   "mergeDialog": {
+    "title": "Merge transaction into another",
+    "label": "Select the transaction you want to merge into",
+    "cancel": "Cancel",
+    "proceed": "Merge"
   }
 }

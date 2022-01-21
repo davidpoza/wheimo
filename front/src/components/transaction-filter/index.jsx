@@ -6,6 +6,7 @@ import FilterList from '@material-ui/icons/FilterList';
 import Drawer from '@material-ui/core/Drawer';
 import TextField from '@material-ui/core/TextField';
 import dayjs from 'dayjs';
+import i18n from 'utils/i18n';
 
 // own
 import withIsMobile from 'hocs/with-is-mobile.jsx';
@@ -19,7 +20,7 @@ import {
 } from '../../actions/transaction';
 
 function TransactionFilter({
-  handleChangeFilter, toggleCharts, setPage, showCharts = false, isMobile, onlyDrafts,
+  handleChangeFilter, toggleCharts, setPage, showCharts = false, isMobile, onlyDrafts, lng,
 }) {
   const classes = useStyles();
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -102,7 +103,7 @@ function TransactionFilter({
         size={ isMobile ? "small" : 'medium' }
         className={classes.search}
         id="search"
-        placeholder="Search"
+        placeholder={i18n.t('searchBar.searchPlaceholder', { lng })}
         type="text"
         value={search}
         fullWidth
@@ -114,7 +115,7 @@ function TransactionFilter({
       <IconButton
         className={classes.filterButton}
         color="primary"
-        title="Aplicar filtros"
+        title={i18n.t('searchBar.applyFilters', { lng })}
         onClick={toggleDrawer}
       >
         <FilterList />
@@ -168,6 +169,7 @@ TransactionFilter.propTypes = {
 
 const mapStateToProps = (state) => ({
   showCharts: state.transaction.showCharts,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({

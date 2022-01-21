@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { useLocation } from 'react-router-dom';
+import i18n from 'utils/i18n';
 
 // material ui
 import AppBar from '@material-ui/core/AppBar';
-import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -15,22 +15,24 @@ import Avatar from '../avatar';
 import useStyles from './styles';
 import { openDrawer as openDrawerAction } from '../../actions/ui';
 
-function MyAppBar({ openDrawer }) {
+function MyAppBar({ openDrawer, lng }) {
   const classes = useStyles();
   const location = useLocation();
 
   function getTitle() {
     switch (location.pathname) {
       case '/tags':
-        return 'Tags & Rules';
+        return i18n.t('screensTitles.tagsAndRules', { lng });
       case '/accounts':
-        return 'Accounts';
+        return i18n.t('screensTitles.accounts', { lng });
       case '/heatmap':
-        return 'Expenses heatmap';
+        return i18n.t('screensTitles.heatmap', { lng });
       case '/charts':
-        return 'Charts by category';
+        return i18n.t('screensTitles.charts', { lng });
+      case '/drafts':
+        return i18n.t('screensTitles.drafts', { lng });
       default:
-        return 'Transactions';
+        return i18n.t('screensTitles.transactions', { lng });
     }
   }
 
@@ -56,8 +58,13 @@ MyAppBar.propTypes = {
 
 };
 
+const mapStateToProps = (state) => ({
+  lng: state.user?.current?.lang,
+});
+
+
 const mapDispatchToProps = (dispatch) => ({
   openDrawer: () => dispatch(openDrawerAction()),
 });
 
-export default connect(null, mapDispatchToProps)(MyAppBar);
+export default connect(mapStateToProps, mapDispatchToProps)(MyAppBar);

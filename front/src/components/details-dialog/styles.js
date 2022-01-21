@@ -47,6 +47,8 @@ export default makeStyles((theme) => ({
   attachmentButton: {
     fontSize: '1em',
     marginRight: 'auto',
+    textTransform: 'uppercase',
+    fontSize: '0.875rem',
   },
   uploading: {
     marginLeft: '1.2em',
