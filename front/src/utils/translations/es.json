@@ -26,6 +26,7 @@
   "opMenu": {
     "merge": "Copiar a",
     "edit": "Modificar",
-    "delete": "Borrar"
+    "delete": "Borrar",
+    "copyLink": "Copiar enlace"
   }
 }

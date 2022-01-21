@@ -108,6 +108,7 @@ function CreateTransactionDialog({
     setTags([]);
     setSelectedDate(new Date());
     setHasErrors(true);
+    setDraft(false);
   }
 
   useEffect(() => {
@@ -172,7 +173,7 @@ function CreateTransactionDialog({
     if (index !== undefined) {
       updateTransaction(user.token, id, index, data);
     } else {
-      createTransaction(user.token, data, draft && location.pathname === '/drafts');
+      createTransaction(user.token, data, true);
     }
     clearForm();
     close();

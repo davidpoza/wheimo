@@ -26,6 +26,7 @@
   "opMenu": {
     "merge": "Merge into",
     "edit": "Edit",
-    "delete": "Delete"
+    "delete": "Delete",
+    "copyLink": "Copy link"
   }
 }

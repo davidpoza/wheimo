@@ -49,7 +49,7 @@ function MergeDialog({
   const [lastTransactions, setLastTransactions] = useState([]);
   const [targetTransactionId, setTargetTransactionId] = useState('');
   const currentTransaction = transactions && transactions.find(t => t.id === id);
-console.log(">>", currentTransaction)
+
   useEffect(() => {
     (async () => {
       try {
