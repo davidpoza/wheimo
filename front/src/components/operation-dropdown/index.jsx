@@ -60,7 +60,7 @@ function OperationDropdown({
   }
 
   async function handleCopyLink() {
-    await copyToClipboard(`[#${contextMenuState.id}](${config.APP_HOST}transactions/${contextMenuState.id})`);
+    await copyToClipboard(`[#${contextMenuState.id}](${config.APP_HOST}/transactions/${contextMenuState.id})`);
     close();
   }
 
