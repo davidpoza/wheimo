@@ -69,6 +69,7 @@ jobs:
           PRIVATE_VAPID_KEY: ${{ secrets.PRIVATE_VAPID_KEY }}
           REACT_APP_PUBLIC_VAPID_KEY: ${{ secrets.REACT_APP_PUBLIC_VAPID_KEY }}
           WEB_PUSH_EMAIL: ${{ secrets.WEB_PUSH_EMAIL }}
+          REACT_APP_URL: ${{ secrets.REACT_APP_URL }}
         with:
           debug: true
           host: ${{ secrets.SSH_HOST }}
@@ -77,7 +78,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           timeout: '180s'
           key: ${{ secrets.SSH_KEY }}
-          envs: ADMIN_EMAIL,ADMIN_PASS,JWT_SECRET,BCRYPT_ROUNDS,JWT_LIFETIME,JWT_ALGORITHM,AES_PASSPHRASE,RESYNC_FREQ,UPLOAD_DIR,UPLOAD_MAX_SIZE,UPLOAD_MAX_RESOLUTION,PRIVATE_VAPID_KEY,REACT_APP_PUBLIC_VAPID_KEY,WEB_PUSH_EMAIL
+          envs: ADMIN_EMAIL,ADMIN_PASS,JWT_SECRET,BCRYPT_ROUNDS,JWT_LIFETIME,JWT_ALGORITHM,AES_PASSPHRASE,RESYNC_FREQ,UPLOAD_DIR,UPLOAD_MAX_SIZE,UPLOAD_MAX_RESOLUTION,PRIVATE_VAPID_KEY,REACT_APP_PUBLIC_VAPID_KEY,WEB_PUSH_EMAIL,REACT_APP_URL
           script: |
             pwd
             cd  wheimo
@@ -96,6 +97,7 @@ jobs:
             echo "UPLOAD_MAX_RESOLUTION=$UPLOAD_MAX_RESOLUTION" >> .env
             echo "PRIVATE_VAPID_KEY=$PRIVATE_VAPID_KEY" >> .env
             echo "REACT_APP_PUBLIC_VAPID_KEY=$REACT_APP_PUBLIC_VAPID_KEY" >> .env
+            echo "REACT_APP_URL=$REACT_APP_URL" >> .env
             echo "WEB_PUSH_EMAIL=$WEB_PUSH_EMAIL" >> .env
             git fetch
             git reset --hard origin/master
