@@ -70,6 +70,7 @@ function App({ user }) {
               <Switch>
                 <Route path="/login" exact component={LoginView} />
                 <PrivateRoute path="/" exact component={HomeView}/>
+                <PrivateRoute path="/transactions/:id" exact component={HomeView}/>
                 <PrivateRoute path="/tags" exact component={TagsView}/>
                 <PrivateRoute path="/accounts" exact component={AccountsView}/>
                 <PrivateRoute path="/heatmap" exact component={HeatmapView}/>

@@ -154,3 +154,7 @@ export function leftPadding(num, size) {
 export function isErrorCode(statusCode) {
   return ![200, 201, 204].includes(statusCode);
 }
+
+export async function copyToClipboard(text) {
+  await navigator.clipboard.writeText(text);
+}

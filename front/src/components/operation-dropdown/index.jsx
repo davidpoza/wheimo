@@ -26,6 +26,8 @@ import {
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
 } from '../../actions/ui';
+import { copyToClipboard } from 'utils/utilities';
+import config from 'utils/config';
 
 function OperationDropdown({
   lng,
@@ -55,6 +57,11 @@ function OperationDropdown({
     changePosition(null, null);
     changeId(undefined);
     changeIndex(undefined);
+  }
+
+  async function handleCopyLink() {
+    await copyToClipboard(`[#${contextMenuState.id}](${config.APP_HOST}transactions/${contextMenuState.id})`);
+    close();
   }
 
   function handleRemove() {
@@ -114,6 +121,7 @@ function OperationDropdown({
           : undefined
       }
     >
+      <MenuItem className={classes.item} onClick={handleCopyLink}>{i18n.t('opMenu.copyLink', { lng })}</MenuItem>
       <MenuItem className={classes.item} onClick={handleMerge}>{i18n.t('opMenu.merge', { lng })}</MenuItem>
       <MenuItem className={classes.item} onClick={handleEdit}>{i18n.t('opMenu.edit', { lng })}</MenuItem>
       <MenuItem className={classes.item} onClick={handleRemove}>{i18n.t('opMenu.delete', { lng })}</MenuItem>

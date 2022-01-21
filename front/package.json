@@ -37,6 +37,7 @@
     "redux-promise-middleware-actions": "^3.0.1",
     "redux-thunk": "^2.3.0",
     "remark-gfm": "^1.0.0",
+    "remove-markdown": "^0.3.0",
     "uuid": "^8.3.2",
     "web-vitals": "^1.1.0"
   },

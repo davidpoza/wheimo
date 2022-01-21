@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import removeMd from 'remove-markdown';
 import PropTypes from 'prop-types';
 import ListItem from '@material-ui/core/ListItem';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -163,7 +164,7 @@ function TransactionGridItem({
             }
             {!isMobile && description?.length > 0 && comments && ' - '}
             {!isMobile &&
-              comments
+              removeMd(comments || '')
                 ?.substr(0, commentsLimit)
                 .split('\n')?.[0]
                 ?.toUpperCase()}

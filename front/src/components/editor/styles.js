@@ -11,6 +11,16 @@ export default makeStyles((theme) => ({
 
     padding: '1em',
     flex: 1,
+
+    '& a:link': {
+      color: 'darkcyan',
+    },
+    '& a:visited': {
+      color: 'darkcyan !important',
+    },
+    '& a:hover': {
+      fontWeight: 'bold',
+    }
   },
   empty: {
     width: '100%',

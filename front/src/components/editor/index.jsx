@@ -50,7 +50,7 @@ function Editor({
     {
       edit
         ? <TextField
-        color="primary"
+            color="primary"
             className={classes.editor}
             inputRef={textareaRef}
             multiline
