@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-// import { ResponsiveHeatMap } from '@nivo/heatmap';
 import ReactTooltip from 'react-tooltip';
 import dayjs from 'dayjs';
 import CalendarHeatmap from 'react-calendar-heatmap';
+import i18n from 'utils/i18n';
+import { connect } from 'react-redux';
 
-export default function Heatmap({ rawData, isMobile, from, to }) {
+function Heatmap({ rawData, isMobile, from, to, lng }) {
   useEffect(() => {
     ReactTooltip.rebuild();
   }, [rawData]);
@@ -45,15 +46,31 @@ export default function Heatmap({ rawData, isMobile, from, to }) {
           })}
           classForValue={calculateColor}
           showWeekdayLabels
+          monthLabels={
+            [
+              i18n.t('time.monthsShort.jan', {lng}),
+              i18n.t('time.monthsShort.feb', {lng}),
+              i18n.t('time.monthsShort.mar', {lng}),
+              i18n.t('time.monthsShort.apr', {lng}),
+              i18n.t('time.monthsShort.may', {lng}),
+              i18n.t('time.monthsShort.jun', {lng}),
+              i18n.t('time.monthsShort.jul', {lng}),
+              i18n.t('time.monthsShort.aug', {lng}),
+              i18n.t('time.monthsShort.sep', {lng}),
+              i18n.t('time.monthsShort.oct', {lng}),
+              i18n.t('time.monthsShort.nov', {lng}),
+              i18n.t('time.monthsShort.dec', {lng}),
+            ]
+          }
           weekdayLabels={
             [
-              'Mon',
-              'Tue',
-              'Wed',
-              'Thr',
-              'Fri',
-              'Sat',
-              'Sun'
+              i18n.t('time.weekdaysShort.mon', {lng}),
+              i18n.t('time.weekdaysShort.tue', {lng}),
+              i18n.t('time.weekdaysShort.wed', {lng}),
+              i18n.t('time.weekdaysShort.thu', {lng}),
+              i18n.t('time.weekdaysShort.fri', {lng}),
+              i18n.t('time.weekdaysShort.sat', {lng}),
+              i18n.t('time.weekdaysShort.san', {lng})
             ]
           }
         />
@@ -66,3 +83,9 @@ export default function Heatmap({ rawData, isMobile, from, to }) {
 Heatmap.propTypes = {
 
 };
+
+const mapStateToProps = (state) => ({
+  lng: state.user?.current?.lang,
+});
+
+export default connect(mapStateToProps)(Heatmap);
