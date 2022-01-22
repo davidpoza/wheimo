@@ -74,8 +74,8 @@
   "screensTitles": {
     "tagsAndRules": "Tags & Rules",
     "accounts": "Accounts",
-    "heatmap": "Expenses heatmap",
-    "charts": "Charts by category",
+    "heatmap": "Year view",
+    "charts": "Monthly breakdown",
     "transactions": "Transactions",
     "drafts": "Drafts"
   },
