@@ -45,6 +45,9 @@ export default makeStyles((theme) => ({
       padding: 0,
       marginTop: '1em',
       marginRight: '2em',
+      [theme.breakpoints.up('md')]: {
+        marginRight: 0
+      }
     },
     fontSize: '0.8em',
     minWidth: '50%',

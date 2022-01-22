@@ -74,8 +74,8 @@
   "screensTitles": {
     "tagsAndRules": "Etiquetas y reglas",
     "accounts": "Cuentas",
-    "heatmap": "Vista de gastos anual",
-    "charts": "Vista de gastos mensuales por categoría",
+    "heatmap": "Gastos anuales",
+    "charts": "Gastos mensuales",
     "transactions": "Movimientos",
     "drafts": "Movimientos en borrador"
   },
@@ -89,8 +89,61 @@
   },
   "mergeDialog": {
     "title": "Copiar datos del movimiento en otro",
-    "label": "Indica movimiento donde pegar los datos",
+    "label": "Movimiento donde pegar los datos",
     "cancel": "Cancelar",
     "proceed": "Pegar"
+  },
+  "statistics": {
+    "mostExpensiveDay": "Día más caro",
+    "leastExpensiveDay": "Día más barato",
+    "mostExpensiveMonth": "Mes más caro",
+    "leastExpensiveMonth": "Mes más barato",
+    "maxDaysInRow": "Máximo número de días seguidos sin gastar nada",
+    "with": "con",
+    "itWasThe": "Fue el",
+    "itWas": "Fue",
+    "from": "De",
+    "to": "a",
+    "expended": "gastados",
+    "aTotalOf": "un total de {{days}} días"
+  },
+  "time": {
+    "weekdaysShort": {
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mie",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sab",
+      "san": "Dom"
+    },
+    "monthsShort": {
+      "jan": "Ene",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Abr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Ago",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dic"
+    },
+    "monthsByIndex": {
+      "0": "Enero",
+      "1": "Febrero",
+      "2": "Marzo",
+      "3": "Abril",
+      "4": "Mayo",
+      "5": "Junio",
+      "6": "Julio",
+      "7": "Agosto",
+      "8": "Septiembre",
+      "9": "Octubre",
+      "10": "Noviembre",
+      "11": "Diciembre"
+    }
   }
 }

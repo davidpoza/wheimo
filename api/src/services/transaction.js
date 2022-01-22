@@ -846,13 +846,13 @@ export default class TransactionService {
     const monthAmounts = new Array(12).fill(0);
     let currentRow = 0;
 
-    if (!data?.[0]?.day !== from) {
+    if (data?.[0]?.day !== from) {
       data.unshift({
         day: from,
         totalAmount: 0,
       });
     }
-    if (!data?.[data.length - 1]?.day !== to) {
+    if (data?.[data.length - 1]?.day !== to) {
       data.push({
         day: to,
         totalAmount: 0,
@@ -881,6 +881,7 @@ export default class TransactionService {
       }
       prevDate = d.day;
     });
+
     ret.mostExpensiveMonthAmount = Math.max(...monthAmounts);
     ret.leastExpensiveMonthAmount = Math.min(...monthAmounts);
     ret.mostExpensiveMonth =
