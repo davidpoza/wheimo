@@ -852,7 +852,7 @@ export default class TransactionService {
         totalAmount: 0,
       });
     }
-    if (!data?.[data.length - 1]?.day !== to) {
+    if (!data?.[data.length - 1]?.day !== to && dayjs(to).isBefore(dayjs())) {
       data.push({
         day: to,
         totalAmount: 0,
@@ -884,9 +884,9 @@ export default class TransactionService {
     ret.mostExpensiveMonthAmount = Math.max(...monthAmounts);
     ret.leastExpensiveMonthAmount = Math.min(...monthAmounts);
     ret.mostExpensiveMonth =
-      monthAmounts.indexOf(ret.mostExpensiveMonthAmount) + 1;
+      monthAmounts.indexOf(ret.mostExpensiveMonthAmount);
     ret.leastExpensiveMonth =
-      monthAmounts.indexOf(ret.leastExpensiveMonthAmount) + 1;
+      monthAmounts.indexOf(ret.leastExpensiveMonthAmount);
     return ret;
   }
 };
