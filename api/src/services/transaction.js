@@ -872,11 +872,14 @@ export default class TransactionService {
         Math.abs(d.totalAmount);
 
       if (prevDate) {
-        currentRow = Math.abs(dayjs(d.day).diff(prevDate, "days"));
-        if (currentRow > ret.longestRow) {
-          ret.longestRow = currentRow;
-          ret.longestRowEnd = d.day;
-          ret.longestRowStart = prevDate;
+        // only if it's a past date range, or if today is within the range, and therefore we only count days in a rows until today date
+        if (dayjs(to).isBefore(dayjs) || dayjs(d.day).isBefore(dayjs())) {
+          currentRow = Math.abs(dayjs(d.day).diff(prevDate, "days"));
+          if (currentRow > ret.longestRow) {
+            ret.longestRow = currentRow;
+            ret.longestRowEnd = d.day;
+            ret.longestRowStart = prevDate;
+          }
         }
       }
       prevDate = d.day;
