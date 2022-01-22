@@ -117,14 +117,29 @@ function OperationDropdown({
       onContextMenu={handleContextMenu}
       anchorPosition={
         contextMenuState.mouseY !== null && contextMenuState.mouseX !== null
-          ? { top: contextMenuState.mouseY, left: contextMenuState.mouseX }
+          ? {top: contextMenuState.mouseY, left: contextMenuState.mouseX}
           : undefined
+      }>
+      {
+        entity === 'transaction' && (
+          <MenuItem className={classes.item} onClick={handleCopyLink}>
+            {i18n.t('opMenu.copyLink', {lng})}
+          </MenuItem>
+        )
       }
-    >
-      <MenuItem className={classes.item} onClick={handleCopyLink}>{i18n.t('opMenu.copyLink', { lng })}</MenuItem>
-      <MenuItem className={classes.item} onClick={handleMerge}>{i18n.t('opMenu.merge', { lng })}</MenuItem>
-      <MenuItem className={classes.item} onClick={handleEdit}>{i18n.t('opMenu.edit', { lng })}</MenuItem>
-      <MenuItem className={classes.item} onClick={handleRemove}>{i18n.t('opMenu.delete', { lng })}</MenuItem>
+      {
+        entity === 'transaction' && (
+          <MenuItem className={classes.item} onClick={handleMerge}>
+            {i18n.t('opMenu.merge', {lng})}
+          </MenuItem>
+        )
+      }
+      <MenuItem className={classes.item} onClick={handleEdit}>
+        {i18n.t('opMenu.edit', {lng})}
+      </MenuItem>
+      <MenuItem className={classes.item} onClick={handleRemove}>
+        {i18n.t('opMenu.delete', {lng})}
+      </MenuItem>
     </Menu>
   );
 }
