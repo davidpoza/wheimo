@@ -74,8 +74,8 @@
   "screensTitles": {
     "tagsAndRules": "Etiquetas y reglas",
     "accounts": "Cuentas",
-    "heatmap": "Vista de gastos anual",
-    "charts": "Vista de gastos mensuales por categoría",
+    "heatmap": "Gastos anuales",
+    "charts": "Gastos mensuales",
     "transactions": "Movimientos",
     "drafts": "Movimientos en borrador"
   },
