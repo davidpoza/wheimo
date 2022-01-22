@@ -55,7 +55,9 @@ export default makeStyles((theme) => ({
     flex: '1 1 1px',
     marginTop: '2em',
     // marginBottom: '1em',
-    boxShadow: 'inset 0px -20px 13px -3px #ccc',
+    boxShadow: theme.palette.type === 'dark'
+      ? 'inset 0px -20px 13px -3px #181818'
+      : 'inset 0px -20px 13px -3px #ccc',
     [theme.breakpoints.up('md')]: {
       boxShadow: 'none'
     }
