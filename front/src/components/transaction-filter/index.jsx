@@ -7,6 +7,8 @@ import Drawer from '@material-ui/core/Drawer';
 import TextField from '@material-ui/core/TextField';
 import dayjs from 'dayjs';
 import i18n from 'utils/i18n';
+import InputAdornment from "@material-ui/core/InputAdornment";
+import SearchIcon from "@material-ui/icons/Search";
 
 // own
 import withIsMobile from 'hocs/with-is-mobile.jsx';
@@ -110,6 +112,9 @@ function TransactionFilter({
         variant="outlined"
         onChange={(e) => {
           setSearch(e.target.value);
+        }}
+        InputProps={{
+          type: 'search'
         }}
       />
       <IconButton
