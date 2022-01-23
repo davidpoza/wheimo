@@ -89,7 +89,7 @@ function CreateTransactionDialog({
       setComments(transactions[index].comments);
       setEmitterName(transactions[index].emitterName);
       setReceiverName(transactions[index].receiverName);
-      setSelectedAccount(transactions[index].accountId);
+      setSelectedAccount(transactions[index].account.id);
       setTags(transactions[index].tags);
       setSelectedDate(new Date(transactions[index].date));
       setDraft(transactions[index].draft);

@@ -7,6 +7,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import i18n from 'utils/i18n';
 
 // own
 import useStyles from './styles';
@@ -16,7 +17,7 @@ import {
 import * as ruleApi from '../../../../api-client/rule';
 
 function CreateTagRuleInput({
-  user, updateTag, currentRules, tagId, tagIndex,
+  user, updateTag, currentRules, tagId, tagIndex, lng,
 }) {
   const classes = useStyles();
 
@@ -55,29 +56,36 @@ function CreateTagRuleInput({
     <div className={classes.root}>
       <Select
         displayEmpty={true}
-        renderValue={value => value?.length ? Array.isArray(value) ? value.join(', ') : value : 'Select type of rule'}
-        onChange={(e) => { setType(e.target.value); }}
+        renderValue={(value) =>
+          value?.length
+            ? Array.isArray(value)
+              ? value.join(', ')
+              : value
+            : i18n.t('editTag.ruleTypeSelectPlaceholder', {lng})
+        }
+        onChange={(e) => {
+          setType(e.target.value);
+        }}
         variant="outlined"
         className={classes.typeSelect}
-        value={type}
-      >
-        <MenuItem value="emitterName">Emitter name</MenuItem>
-        <MenuItem value="receiverName">Receiver name</MenuItem>
-        <MenuItem value="description">Description</MenuItem>
-        <MenuItem value="isExpense">It&apos;s an expense</MenuItem>
-        <MenuItem value="amount">Amount</MenuItem>
-        <MenuItem value="card">Card</MenuItem>
-        <MenuItem value="isReceipt">It&apos;s a receipt</MenuItem>
-        <MenuItem value="account">Account</MenuItem>
-        <MenuItem value="currency">Currency</MenuItem>
-        <MenuItem value="bankId">Bank</MenuItem>
+        value={type}>
+        <MenuItem value="emitterName">{i18n.t('editTag.types.emitterName', {lng})}</MenuItem>
+        <MenuItem value="receiverName">{i18n.t('editTag.types.receiverName', {lng})}</MenuItem>
+        <MenuItem value="description">{i18n.t('editTag.types.description', {lng})}</MenuItem>
+        <MenuItem value="isExpense">{i18n.t('editTag.types.isExpense', {lng})}</MenuItem>
+        <MenuItem value="amount">{i18n.t('editTag.types.amount', {lng})}</MenuItem>
+        <MenuItem value="card">{i18n.t('editTag.types.card', {lng})}</MenuItem>
+        <MenuItem value="isReceipt">{i18n.t('editTag.types.isReceipt', {lng})}</MenuItem>
+        <MenuItem value="account">{i18n.t('editTag.types.account', {lng})}</MenuItem>
+        <MenuItem value="currency">{i18n.t('editTag.types.currency', {lng})}</MenuItem>
+        <MenuItem value="bankId">{i18n.t('editTag.types.bankId', {lng})}</MenuItem>
       </Select>
       <TextField
         id="tagName"
         size="small"
         variant="outlined"
         value={value}
-        placeholder="Type a rule using correct syntax"
+        placeholder={i18n.t('editTag.ruleValueSelectPlaceholder', {lng})}
         onChange={(e) => {
           setValue(e.target.value);
         }}
@@ -86,12 +94,11 @@ function CreateTagRuleInput({
       <Button
         variant="outlined"
         className={classes.createButton}
-        title="Create rule"
         onClick={add}
         disabled={error}
         startIcon={<AddBoxIcon />}
       >
-        New Rule
+        {i18n.t('editTag.newRule', {lng})}
       </Button>
     </div>
   );
@@ -111,6 +118,7 @@ const mapStateToProps = (state) => ({
   loading: state.transaction.isLoading,
   error: state.transaction.error,
   errorMessage: state.transaction.errorMessage,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({

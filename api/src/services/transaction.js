@@ -876,8 +876,8 @@ export default class TransactionService {
         if (dayjs(to).isBefore(dayjs) || dayjs(d.day).isBefore(dayjs())) {
           currentRow = Math.abs(dayjs(d.day).diff(prevDate, "days"));
           if (currentRow > ret.longestRow) {
-            ret.longestRow = currentRow;
-            ret.longestRowEnd = d.day;
+            ret.longestRow = currentRow - 1;
+            ret.longestRowEnd = dayjs(d.day).subtract(1, 'hour');
             ret.longestRowStart = prevDate;
           }
         }

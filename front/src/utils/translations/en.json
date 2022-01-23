@@ -145,5 +145,35 @@
       "10": "November",
       "11": "December"
     }
+  },
+  "tags": {
+    "placeholder": "Type a new tag",
+    "rules": "rules"
+  },
+  "editTag": {
+    "title": "Edit tag",
+    "tagName": "Tag name",
+    "apply": "Apply",
+    "untag": "Untag",
+    "rules": "Rules",
+    "save": "Save",
+    "cancel": "Cancel",
+    "ruletype": "Type",
+    "ruleValue": "Value",
+    "ruleTypeSelectPlaceholder": "Select type of rule",
+    "ruleValueSelectPlaceholder": "Type a rule using correct syntax",
+    "types": {
+      "emitterName": "Emitter name",
+      "receiverName": "Receiver name",
+      "description": "Description",
+      "isExpense": "It's a expense",
+      "amount": "Amount",
+      "card": "Card",
+      "isReceipt": "It's a receipt",
+      "account": "Account",
+      "currency": "Currency",
+      "bankId": "Bank identifier"
+    },
+    "newRule": "Create new rule"
   }
 }
