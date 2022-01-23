@@ -145,5 +145,35 @@
       "10": "Noviembre",
       "11": "Diciembre"
     }
+  },
+  "tags": {
+    "placeholder": "Escribe la nueva etiqueta",
+    "rules": "reglas"
+  },
+  "editTag": {
+    "title": "Modificar etiqueta",
+    "tagName": "Nombre para la etiqueta",
+    "apply": "Aplicar",
+    "untag": "Desetiquetar",
+    "rules": "Reglas",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "ruletype": "Tipo",
+    "ruleValue": "Valor",
+    "ruleTypeSelectPlaceholder": "Selecciona el tipo de regla",
+    "ruleValueSelectPlaceholder": "Escribe la regla usando la sintáxis correcta",
+    "types": {
+      "emitterName": "Emisor",
+      "receiverName": "Receptor",
+      "description": "Descripción",
+      "isExpense": "Es un gasto",
+      "amount": "Cantidad",
+      "card": "Número de tarjeta",
+      "isReceipt": "Es un recibo",
+      "account": "Cuenta",
+      "currency": "Moneda",
+      "bankId": "Identificador de entidad bancaria"
+    },
+    "newRule": "Crear nueva regla"
   }
 }

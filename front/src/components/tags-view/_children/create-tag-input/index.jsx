@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
+import i18n from 'utils/i18n';
 
 // own
 import useStyles from './styles';
@@ -12,7 +13,7 @@ import {
 } from '../../../../actions/tag';
 
 function CreateTagInput({
-  user, tags = [], create,
+  user, tags = [], create, lng,
 }) {
   const classes = useStyles();
 
@@ -49,7 +50,7 @@ function CreateTagInput({
         type="text"
         value={tagName}
         autoFocus={true}
-        placeholder="Type a new tag"
+        placeholder={i18n.t('tags.placeholder', { lng })}
         onChange={(e) => {
           setTagName(e.target.value);
         }}
@@ -83,6 +84,7 @@ const mapStateToProps = (state) => ({
   loading: state.transaction.isLoading,
   error: state.transaction.error,
   errorMessage: state.transaction.errorMessage,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({
