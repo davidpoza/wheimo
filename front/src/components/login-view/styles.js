@@ -5,10 +5,11 @@ export default makeStyles((theme) => ({
     textAlign: 'center',
     marginBottom: '20vh',
     padding: '1rem',
+    backgroundColor: theme.palette.type === 'dark' ? 'white' : 'none',
     [theme.breakpoints.up('lg')]: {
       border: '1px solid #ccc',
       borderRadius: '5px',
-    }
+    },
   },
   title: {
     fontSize: '3rem',
