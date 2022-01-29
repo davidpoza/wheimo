@@ -7,8 +7,7 @@ import Drawer from '@material-ui/core/Drawer';
 import TextField from '@material-ui/core/TextField';
 import dayjs from 'dayjs';
 import i18n from 'utils/i18n';
-import InputAdornment from "@material-ui/core/InputAdornment";
-import SearchIcon from "@material-ui/icons/Search";
+
 
 // own
 import withIsMobile from 'hocs/with-is-mobile.jsx';
@@ -37,6 +36,7 @@ function TransactionFilter({
   const [search, setSearch] = useState('');
   const [accountIdKey, setAccountIdKey] = useState('AccountId');
   const [isFav, setIsFav] = useState(false);
+  const [hasAttachments, setHasAttachments] = useState(false);
 
   useEffect(() => {
     const filter = {};
@@ -57,6 +57,7 @@ function TransactionFilter({
     if (supLimit) filter.max = supLimit;
     if (operationType !== 'all') filter.operationType = operationType;
     if (isFav) filter.isFav = 1;
+    if (hasAttachments) filter.hasAttachments = 1;
     if (onlyDrafts) filter.isDraft = 1;
 
     if (Object.keys(filter).length > 0) {
@@ -76,7 +77,8 @@ function TransactionFilter({
     operationType,
     setOperationType,
     isFav,
-    setIsFav
+    setIsFav,
+    hasAttachments
   ]);
 
 
@@ -157,6 +159,8 @@ function TransactionFilter({
           toggleCharts={toggleCharts}
           isFav={isFav}
           setIsFav={setIsFav}
+          hasAttachments={hasAttachments}
+          setHasAttachments={setHasAttachments}
         />
       </Drawer>
 
