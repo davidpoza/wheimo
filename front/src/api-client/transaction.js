@@ -3,7 +3,7 @@ import config from '../utils/config';
 import { isErrorCode } from 'utils/utilities';
 
 export async function fetchAll(token, {
-  offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav, isDraft
+  offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav, isDraft, hasAttachments
 }) {
   try {
     let url = `${config.API_HOST}/transactions`;
@@ -21,6 +21,7 @@ export async function fetchAll(token, {
     if (operationType) params.push(`operationType=${operationType}`);
     if (isFav) params.push('isFav=1');
     if (isDraft) params.push('isDraft=1');
+    if (hasAttachments) params.push('hasAttachments=1');
 
     params.forEach((param, index) => {
       if (index === 0) {

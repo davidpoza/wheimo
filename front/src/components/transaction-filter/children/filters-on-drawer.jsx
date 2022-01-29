@@ -22,6 +22,7 @@ function FiltersOnDrawer({
   accountId,
   accountIdKey,
   endDate,
+  hasAttachments,
   infLimit,
   isFav,
   lng,
@@ -31,6 +32,7 @@ function FiltersOnDrawer({
   setAccountId,
   setEndDate,
   setFiltersOpen,
+  setHasAttachments,
   setInfLimit,
   setIsFav,
   setOperationType,
@@ -148,6 +150,21 @@ function FiltersOnDrawer({
         />
       </FormGroup>
 
+      <FormGroup className={classes.hasAttachments}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={hasAttachments}
+              onChange={() => {
+                setHasAttachments(!hasAttachments);
+              }}
+              name="isFav"
+            />
+          }
+          label={i18n.t('filters.hasAttachments', { lng })}
+        />
+      </FormGroup>
+
       <div className={classes.resetFilterButton} onClick={resetFilters}>
         Reset filters
       </div>
@@ -188,4 +205,6 @@ FiltersOnDrawer.propTypes = {
   supLimit: PropTypes.string,
   tags: PropTypes.array,
   tagsKey: PropTypes.string,
+  hasAttachments: PropTypes.string,
+  setHasAttachments: PropTypes.func,
 }

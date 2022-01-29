@@ -22,6 +22,7 @@
     "minAmount": "Min. €",
     "maxAmount": "Max. €",
     "isFavorite": "Está marcado como favorito",
+    "hasAttachments": "Tiene adjuntos",
     "opType": "Tipo de operación",
     "showAllTypes": "Mostrar todas",
     "showExpensesType": "Mostrar solo gastos",
