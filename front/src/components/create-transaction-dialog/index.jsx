@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -71,6 +72,7 @@ function CreateTransactionDialog({
   const [tags, setTags] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [hasErrors, setHasErrors] = useState(true);
+  const location = useLocation();
 
   function amountSignCorrection(val) {
     if (incoming) {
@@ -97,6 +99,7 @@ function CreateTransactionDialog({
   }
 
   function clearForm() {
+    console.log("****LIMPIANDO")
     setIncoming(false);
     setReceipt(false);
     setAmount(0.0);
@@ -173,7 +176,8 @@ function CreateTransactionDialog({
     if (index !== undefined) {
       updateTransaction(user.token, id, index, data);
     } else {
-      createTransaction(user.token, data, true);
+
+      createTransaction(user.token, data, (location.pathname === '/drafts' && draft) || (location.pathname === '/' && !draft));
     }
     clearForm();
     close();
