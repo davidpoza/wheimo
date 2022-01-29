@@ -249,25 +249,30 @@ function CreateTransactionDialog({
             />
           </FormGroup>
 
-          <TextField
-            className={classes.transactionTargetTextField}
-            margin="dense"
-            id={incoming ? 'emitterName' : 'receiverName'}
-            label={incoming ? i18n.t('createTransaction.emitter', { lng }) : i18n.t('createTransaction.receiver', { lng })}
-            type="text"
-            value={incoming ? emitterName : receiverName}
-            onChange={(e) => {
-              if (incoming) {
-                setEmitterName(e.target.value);
-              } else {
-                setReceiverName(e.target.value);
-              }
-            }}
-            fullWidth
-          />
+          {
+            !draft
+              && <TextField
+                className={classes.transactionTargetTextField}
+                margin="dense"
+                id={incoming ? 'emitterName' : 'receiverName'}
+                label={incoming ? i18n.t('createTransaction.emitter', { lng }) : i18n.t('createTransaction.receiver', { lng })}
+                type="text"
+                value={incoming ? emitterName : receiverName}
+                onChange={(e) => {
+                  if (incoming) {
+                    setEmitterName(e.target.value);
+                  } else {
+                    setReceiverName(e.target.value);
+                  }
+                }}
+                fullWidth
+              />
+          }
+
 
           <TextField
             required
+            className={classes.amount}
             margin="dense"
             id="amount"
             label={i18n.t('createTransaction.amount', { lng })}
@@ -277,15 +282,18 @@ function CreateTransactionDialog({
             fullWidth
           />
 
-          <TextField
-            margin="dense"
-            id="description"
-            label={i18n.t('createTransaction.description', { lng })}
-            type="text"
-            value={description}
-            onChange={(e) => { setDescription(e.target.value); }}
-            fullWidth
-          />
+          {
+            !draft
+              && <TextField
+              margin="dense"
+              id="description"
+              label={i18n.t('createTransaction.description', { lng })}
+              type="text"
+              value={description}
+              onChange={(e) => { setDescription(e.target.value); }}
+              fullWidth
+            />
+          }
 
           <TagsSelect
             label={i18n.t('createTransaction.tags', { lng })}
