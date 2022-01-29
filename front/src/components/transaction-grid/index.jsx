@@ -70,6 +70,7 @@ function TransactionGrid({ transactions, page = 1, setPage, lng }) {
                           receiverName={transaction.receiverName}
                           tags={transaction.tags}
                           valueDate={transaction.valueDate}
+                          attachments={transaction.attachments}
                         />
                       })
                     }

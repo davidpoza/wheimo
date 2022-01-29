@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -13,6 +14,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Checkbox from '@material-ui/core/Checkbox';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import DayJsUtils from '@date-io/dayjs';
@@ -32,6 +34,7 @@ import {
   update as updateAction,
   createEditDialogOpen as openAction,
   createEditDialogClose as closeAction,
+  detailsDialogOpen as openDetailsAction,
 } from '../../actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
@@ -57,6 +60,7 @@ function CreateTransactionDialog({
   updateTransaction,
   changeUIIndex,
   lng,
+  openDetails,
 }) {
   const classes = useStyles();
   const [incoming, setIncoming] = useState(false);
@@ -71,6 +75,7 @@ function CreateTransactionDialog({
   const [tags, setTags] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [hasErrors, setHasErrors] = useState(true);
+  const location = useLocation();
 
   function amountSignCorrection(val) {
     if (incoming) {
@@ -97,6 +102,7 @@ function CreateTransactionDialog({
   }
 
   function clearForm() {
+    console.log("****LIMPIANDO")
     setIncoming(false);
     setReceipt(false);
     setAmount(0.0);
@@ -138,6 +144,11 @@ function CreateTransactionDialog({
     open();
   }
 
+  function handleViewDetails() {
+    close();
+    openDetails();
+  }
+
   function handleClose() {
     clearForm();
     close();
@@ -173,7 +184,8 @@ function CreateTransactionDialog({
     if (index !== undefined) {
       updateTransaction(user.token, id, index, data);
     } else {
-      createTransaction(user.token, data, true);
+
+      createTransaction(user.token, data, (location.pathname === '/drafts' && draft) || (location.pathname === '/' && !draft));
     }
     clearForm();
     close();
@@ -187,8 +199,14 @@ function CreateTransactionDialog({
       </IconButton>
       <Dialog open={isOpen} onClose={handleClose} aria-labelledby="form-dialog-title" PaperComponent={PaperComponent}>
         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-          { index !== undefined ? i18n.t('createTransaction.editTitle', { lng }) : i18n.t('createTransaction.addTitle', { lng }) }
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            { index !== undefined ? i18n.t('createTransaction.editTitle', { lng }) : i18n.t('createTransaction.addTitle', { lng }) }
+            <Button onClick={handleViewDetails} color="primary">
+              <VisibilityIcon />
+            </Button>
+          </div>
         </DialogTitle>
+
         <DialogContent>
           <FormGroup row>
             <FormControlLabel
@@ -231,25 +249,30 @@ function CreateTransactionDialog({
             />
           </FormGroup>
 
-          <TextField
-            className={classes.transactionTargetTextField}
-            margin="dense"
-            id={incoming ? 'emitterName' : 'receiverName'}
-            label={incoming ? i18n.t('createTransaction.emitter', { lng }) : i18n.t('createTransaction.receiver', { lng })}
-            type="text"
-            value={incoming ? emitterName : receiverName}
-            onChange={(e) => {
-              if (incoming) {
-                setEmitterName(e.target.value);
-              } else {
-                setReceiverName(e.target.value);
-              }
-            }}
-            fullWidth
-          />
+          {
+            !draft
+              && <TextField
+                className={classes.transactionTargetTextField}
+                margin="dense"
+                id={incoming ? 'emitterName' : 'receiverName'}
+                label={incoming ? i18n.t('createTransaction.emitter', { lng }) : i18n.t('createTransaction.receiver', { lng })}
+                type="text"
+                value={incoming ? emitterName : receiverName}
+                onChange={(e) => {
+                  if (incoming) {
+                    setEmitterName(e.target.value);
+                  } else {
+                    setReceiverName(e.target.value);
+                  }
+                }}
+                fullWidth
+              />
+          }
+
 
           <TextField
             required
+            className={classes.amount}
             margin="dense"
             id="amount"
             label={i18n.t('createTransaction.amount', { lng })}
@@ -259,15 +282,18 @@ function CreateTransactionDialog({
             fullWidth
           />
 
-          <TextField
-            margin="dense"
-            id="description"
-            label={i18n.t('createTransaction.description', { lng })}
-            type="text"
-            value={description}
-            onChange={(e) => { setDescription(e.target.value); }}
-            fullWidth
-          />
+          {
+            !draft
+              && <TextField
+              margin="dense"
+              id="description"
+              label={i18n.t('createTransaction.description', { lng })}
+              type="text"
+              value={description}
+              onChange={(e) => { setDescription(e.target.value); }}
+              fullWidth
+            />
+          }
 
           <TagsSelect
             label={i18n.t('createTransaction.tags', { lng })}
@@ -339,6 +365,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   changeUIIndex: (index) => {
     dispatch(changeIndexAction(index));
+  },
+  openDetails: () => {
+    dispatch(openDetailsAction());
   },
 });
 

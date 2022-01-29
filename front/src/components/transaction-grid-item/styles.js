@@ -38,8 +38,10 @@ export default makeStyles((theme) => ({
     height: '1em',
     fontWeight: '100',
   },
-  date: {
+  attachments: {
     marginLeft: 'auto',
+  },
+  date: {
     fontWeight: '100',
     fontSize: '0.9em',
   },

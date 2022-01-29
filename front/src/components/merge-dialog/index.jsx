@@ -22,6 +22,7 @@ import useStyles from './styles';
 import {
   mergeDialogOpen as openAction,
   mergeDialogClose as closeAction,
+  remove as removeTransactionAction,
 } from '../../actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
@@ -38,13 +39,15 @@ function PaperComponent(props) {
 
 function MergeDialog({
   id,
+  index,
   transactions,
   changeUIId,
   changeUIIndex,
   close,
   isOpen,
   user,
-  lng
+  lng,
+  removeTransaction,
 }) {
   const classes = useStyles();
   const [lastTransactions, setLastTransactions] = useState([]);
@@ -81,9 +84,10 @@ function MergeDialog({
 
   async function processData() {
     await update(user.token, targetTransactionId, {
-      comments: currentTransaction.comments,
+      comments: currentTransaction.comments || '',
       tags: currentTransaction.tags
     });
+    removeTransaction(user.token, id, index);
     changeUIIndex(undefined);
     close();
   }
@@ -190,6 +194,12 @@ const mapDispatchToProps = (dispatch) => ({
   },
   changeUIIndex: (index) => {
     dispatch(changeIndexAction(index));
+  },
+  removeTransaction: (token, id, index) => {
+    dispatch(removeTransactionAction(token, id, index))
+      .catch((error) => {
+        console.log(error.message);
+      });
   },
 });
 

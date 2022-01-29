@@ -48,7 +48,7 @@ export default function BarChart({ rawData, from, to, tags, darkMode }) {
         data={data}
         innerPadding={3}
         padding={0.2}
-        margin={{ top: 50, right: 40, bottom: 50, left: 60 }}
+        margin={{ top: 10, right: 40, bottom: 50, left: 60 }}
         axisTop={null}
         axisRight={null}
         axisBottom={{
