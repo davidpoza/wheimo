@@ -166,12 +166,13 @@ function FiltersOnDrawer({
       </FormGroup>
 
       <div className={classes.resetFilterButton} onClick={resetFilters}>
-        Reset filters
+        {i18n.t('filters.reset', { lng })}
       </div>
       <div
         className={classes.closeFilterButton}
-        onClick={() => setFiltersOpen(false)}>
-        Close
+        onClick={() => setFiltersOpen(false)}
+      >
+        {i18n.t('filters.close', { lng })}
       </div>
     </div>
   );
