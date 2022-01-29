@@ -14,6 +14,7 @@ import FormGroup from '@material-ui/core/FormGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import Checkbox from '@material-ui/core/Checkbox';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import DayJsUtils from '@date-io/dayjs';
@@ -33,6 +34,7 @@ import {
   update as updateAction,
   createEditDialogOpen as openAction,
   createEditDialogClose as closeAction,
+  detailsDialogOpen as openDetailsAction,
 } from '../../actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
@@ -58,6 +60,7 @@ function CreateTransactionDialog({
   updateTransaction,
   changeUIIndex,
   lng,
+  openDetails,
 }) {
   const classes = useStyles();
   const [incoming, setIncoming] = useState(false);
@@ -141,6 +144,11 @@ function CreateTransactionDialog({
     open();
   }
 
+  function handleViewDetails() {
+    close();
+    openDetails();
+  }
+
   function handleClose() {
     clearForm();
     close();
@@ -191,8 +199,14 @@ function CreateTransactionDialog({
       </IconButton>
       <Dialog open={isOpen} onClose={handleClose} aria-labelledby="form-dialog-title" PaperComponent={PaperComponent}>
         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-          { index !== undefined ? i18n.t('createTransaction.editTitle', { lng }) : i18n.t('createTransaction.addTitle', { lng }) }
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            { index !== undefined ? i18n.t('createTransaction.editTitle', { lng }) : i18n.t('createTransaction.addTitle', { lng }) }
+            <Button onClick={handleViewDetails} color="primary">
+              <VisibilityIcon />
+            </Button>
+          </div>
         </DialogTitle>
+
         <DialogContent>
           <FormGroup row>
             <FormControlLabel
@@ -343,6 +357,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   changeUIIndex: (index) => {
     dispatch(changeIndexAction(index));
+  },
+  openDetails: () => {
+    dispatch(openDetailsAction());
   },
 });
 

@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import IconButton from '@material-ui/core/IconButton';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import CreateIcon from '@material-ui/icons/Create';
 import i18n from 'utils/i18n';
 
 // own
@@ -23,6 +24,7 @@ import {
   detailsDialogClose as closeAction,
   detailsDialogOpen as openAction,
   update as updateAction,
+  createEditDialogOpen as openTransactionDialogAction,
 } from '../../actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
@@ -50,6 +52,7 @@ function DetailsDialog({
   isUploadingAttachment,
   transactions,
   updateTransaction,
+  openTransactionDialog,
   user,
   lng,
 }) {
@@ -115,6 +118,11 @@ function DetailsDialog({
     }
   }
 
+  function handleEdit() {
+    close();
+    openTransactionDialog();
+  }
+
   function handleOnKeyDown(e) {
     if(e.keyCode===27) { //esc
       e.preventDefault();
@@ -147,7 +155,12 @@ function DetailsDialog({
       onKeyDown={handleOnKeyDown}
     >
       <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-        {i18n.t('transactionDetails.title', { lng })} {`#${id}`}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          {i18n.t('transactionDetails.title', { lng })} {`#${id}`}
+          <Button onClick={handleEdit} color="primary">
+            <CreateIcon />
+          </Button>
+        </div>
       </DialogTitle>
       <DialogContent className={classes.root}>
         <Tags tags={tags} />
@@ -266,6 +279,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   addAttachment: (token, formData) => {
     dispatch(addAttachmentAction(token, formData));
+  },
+  openTransactionDialog: () => {
+    dispatch(openTransactionDialogAction());
   },
 });
 
