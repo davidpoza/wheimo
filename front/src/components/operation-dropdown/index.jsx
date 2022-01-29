@@ -45,6 +45,7 @@ function OperationDropdown({
   openTagDialog,
   openMergeDialog,
   closeMergeDialog,
+  transactions,
 }) {
   const classes = useStyles();
 
@@ -60,7 +61,14 @@ function OperationDropdown({
   }
 
   async function handleCopyLink() {
-    await copyToClipboard(`[#${contextMenuState.id}](${config.APP_HOST}/transactions/${contextMenuState.id})`);
+    if (contextMenuState.index !== undefined && contextMenuState.id !== undefined) {
+      const t = transactions[contextMenuState.index];
+      let text = '';
+      if (t.description) text =  `${t.description.substr(0,30)}...`;
+      else if(t.emitterName) text = `${t.emitterName.substr(0,30)}...`;
+      else if(t.receiverName) text = `${t.receiverName.substr(0,30)}...`;
+      await copyToClipboard(`[#${contextMenuState.id} ${text} ${t.amount}€](${config.APP_HOST}/transactions/${contextMenuState.id})`);
+    }
     close();
   }
 
@@ -117,19 +125,35 @@ function OperationDropdown({
       onContextMenu={handleContextMenu}
       anchorPosition={
         contextMenuState.mouseY !== null && contextMenuState.mouseX !== null
-          ? { top: contextMenuState.mouseY, left: contextMenuState.mouseX }
+          ? {top: contextMenuState.mouseY, left: contextMenuState.mouseX}
           : undefined
+      }>
+      {
+        entity === 'transaction' && (
+          <MenuItem className={classes.item} onClick={handleCopyLink}>
+            {i18n.t('opMenu.copyLink', {lng})}
+          </MenuItem>
+        )
       }
-    >
-      <MenuItem className={classes.item} onClick={handleCopyLink}>{i18n.t('opMenu.copyLink', { lng })}</MenuItem>
-      <MenuItem className={classes.item} onClick={handleMerge}>{i18n.t('opMenu.merge', { lng })}</MenuItem>
-      <MenuItem className={classes.item} onClick={handleEdit}>{i18n.t('opMenu.edit', { lng })}</MenuItem>
-      <MenuItem className={classes.item} onClick={handleRemove}>{i18n.t('opMenu.delete', { lng })}</MenuItem>
+      {
+        entity === 'transaction' && (
+          <MenuItem className={classes.item} onClick={handleMerge}>
+            {i18n.t('opMenu.merge', {lng})}
+          </MenuItem>
+        )
+      }
+      <MenuItem className={classes.item} onClick={handleEdit}>
+        {i18n.t('opMenu.edit', {lng})}
+      </MenuItem>
+      <MenuItem className={classes.item} onClick={handleRemove}>
+        {i18n.t('opMenu.delete', {lng})}
+      </MenuItem>
     </Menu>
   );
 }
 
 OperationDropdown.propTypes = {
+  transactions: PropTypes.array,
   changeId: PropTypes.func,
   changeIndex: PropTypes.func,
   changePosition: PropTypes.func,
@@ -148,6 +172,7 @@ OperationDropdown.propTypes = {
 
 const mapStateToProps = (state) => ({
   loading: state.transaction.isLoading,
+  transactions: state.transaction.fetchedTransactions,
   contextMenuState: state.ui.contextMenuState,
   user: state.user.current,
   lng: state.user?.current?.lang,

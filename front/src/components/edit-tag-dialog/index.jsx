@@ -9,6 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import i18n from 'utils/i18n';
 
 // own
 import TagRules from 'components/tags-view/_children/tag-rules/index.jsx'
@@ -46,6 +47,7 @@ function EditTagDialog({
   indexInStore,
   apply,
   untagAll,
+  lng
 }) {
   const classes = useStyles();
   const [tagName, setTagName] = useState('');
@@ -91,7 +93,7 @@ function EditTagDialog({
       PaperComponent={PaperComponent}
     >
       <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-        Edit tag
+        {i18n.t('editTag.title', { lng })}
       </DialogTitle>
       <DialogContent>
         <div className={classes.opButtons}>
@@ -105,7 +107,7 @@ function EditTagDialog({
               apply(user.token, id);
             }}
           >
-            Apply
+            {i18n.t('editTag.apply', { lng })}
           </Button>
           <Button
             color="primary"
@@ -117,14 +119,14 @@ function EditTagDialog({
               untagAll(user.token, id);
             }}
           >
-            Untag
+            {i18n.t('editTag.untag', { lng })}
           </Button>
         </div>
 
         <TextField
           className={classes.transactionTargetTextField}
           margin="dense"
-          label="Tag Name"
+          label={i18n.t('editTag.tagName', {lng})}
           type="text"
           value={tagName}
           onChange={(e) => {
@@ -132,16 +134,16 @@ function EditTagDialog({
           }}
           fullWidth
         />
-        <h2>Rules</h2>
+        <h2>{i18n.t('editTag.rules', { lng })}</h2>
         <TagRules rules={tags?.[index]?.rules} tagId={id} tagIndex={index} />
       </DialogContent>
 
       <DialogActions>
         <Button onClick={handleClose} color="primary">
-          Cancel
+          {i18n.t('editTag.cancel', { lng })}
         </Button>
         <Button color="primary" onClick={processData}>
-          Save
+          {i18n.t('editTag.save', { lng })}
         </Button>
       </DialogActions>
     </Dialog>
@@ -167,6 +169,7 @@ const mapStateToProps = (state) => ({
   id: state.ui.contextMenuState.id,
   index: state.ui.contextMenuState.index,
   tags: state.tag.fetchedTags,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({

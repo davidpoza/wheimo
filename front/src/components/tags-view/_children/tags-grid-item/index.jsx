@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import LabelIcon from '@material-ui/icons/Label';
+import i18n from 'utils/i18n';
 
 // own
 import useStyles from './styles';
@@ -17,13 +18,22 @@ import {
 } from '../../../../actions/tag';
 
 function TagsGridItem({
-  user, name, id, index, rules, changeId, changePosition, changeIndex, indexInStore, apply, untagAll
+  user,
+  name,
+  id,
+  index,
+  rules,
+  changeId,
+  changePosition,
+  changeIndex,
+  indexInStore,
+  apply,
+  untagAll,
+  lng,
 }) {
   const classes = useStyles();
 
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, []);
 
   function handleContextMenu(e) {
     e.preventDefault();
@@ -36,14 +46,13 @@ function TagsGridItem({
     <div
       className={classes.root}
       style={{borderTop: index === 0 ? 'none' : 'auto'}}
-      onContextMenu={handleContextMenu}
-    >
+      onContextMenu={handleContextMenu}>
       <LabelIcon className={classes.icon} />
       <Typography>
         {name}{' '}
         {rules.length > 0 && (
           <span
-            className={classes.rulesCounter}>{`(${rules.length} rules)`}</span>
+            className={classes.rulesCounter}>{`(${rules.length} ${i18n.t('tags.rules', { lng })})`}</span>
         )}
       </Typography>
     </div>
@@ -66,6 +75,7 @@ TagsGridItem.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.current,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({

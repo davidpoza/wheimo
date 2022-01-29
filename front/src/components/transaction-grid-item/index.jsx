@@ -9,6 +9,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
 import dayjs from 'dayjs';
 
 // own
@@ -53,6 +54,7 @@ function TransactionGridItem({
   user,
   valueDate,
   isMobile,
+  attachments,
 }) {
   const classes = useStyles();
   const labelId = `checkbox-list-label-${index}`;
@@ -132,6 +134,11 @@ function TransactionGridItem({
           <div className={classes.tags}>
             <Tags tags={tags} />
           </div>
+          {
+            <div className={classes.attachments}>
+              { attachments.length > 0 && <AttachFileIcon fontSize="small" /> }
+            </div>
+          }
           <div className={classes.date}>
             {isMobile
               ? dayjs(date).format('DD/MM')
@@ -203,6 +210,7 @@ TransactionGridItem.propTypes = {
   updateFavourite: PropTypes.func,
   user: PropTypes.object,
   valueDate: PropTypes.string,
+  attachments: PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({

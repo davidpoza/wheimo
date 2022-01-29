@@ -7,6 +7,8 @@ import dayjs from 'dayjs';
 import { leftPadding } from '../shared/utilities.js';
 import config from '../config/config.js';
 import mockedImportedTransactions from './importers/mock.js';
+import AttachmentService from './attachment.js';
+
 export default class TransactionService {
   constructor() {
     this.sequelize = Container.get("sequelizeInstance");
@@ -329,7 +331,9 @@ export default class TransactionService {
    * It only updates owned transactions->accounts
    */
   async updateById(id, userId, values) {
-    let transaction = this.findById({ id, userId });
+    const attService = new AttachmentService();
+    let transaction = await this.findById({ id, userId });
+
     if (transaction) {
       const affectedRows = await this.transactionModel.update(values, {
         where: { id },
@@ -342,6 +346,13 @@ export default class TransactionService {
       if (transaction && values.tags) {
         await transaction.setTags(values.tags);
         transaction = await this.findById({ id });
+      }
+      if (transaction && values.attachments) {
+        for (const attachmentId of values.attachments) {
+          await attService.updateById(attachmentId, userId, {
+            transactionId: id
+          });
+        }
       }
 
       return this.getTemplate(transaction);
@@ -872,11 +883,14 @@ export default class TransactionService {
         Math.abs(d.totalAmount);
 
       if (prevDate) {
-        currentRow = Math.abs(dayjs(d.day).diff(prevDate, "days"));
-        if (currentRow > ret.longestRow) {
-          ret.longestRow = currentRow;
-          ret.longestRowEnd = d.day;
-          ret.longestRowStart = prevDate;
+        // only if it's a past date range, or if today is within the range, and therefore we only count days in a rows until today date
+        if (dayjs(to).isBefore(dayjs) || dayjs(d.day).isBefore(dayjs())) {
+          currentRow = Math.abs(dayjs(d.day).diff(prevDate, "days"));
+          if (currentRow > ret.longestRow) {
+            ret.longestRow = currentRow - 1;
+            ret.longestRowEnd = dayjs(d.day).subtract(1, 'hour');
+            ret.longestRowStart = prevDate;
+          }
         }
       }
       prevDate = d.day;

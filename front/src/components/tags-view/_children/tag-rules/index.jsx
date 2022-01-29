@@ -8,6 +8,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import i18n from 'utils/i18n';
 
 // own
 import useStyles from './styles';
@@ -16,7 +17,7 @@ import TagRulesItem from '../tag-rules-item';
 import CreateTagRuleInput from '../create-tag-rule-input';
 
 function TagRules({
-  rules, tagId, tagIndex,
+  rules, tagId, tagIndex, lng,
 }) {
   const classes = useStyles();
 
@@ -31,8 +32,8 @@ function TagRules({
           <TableHead>
             <TableRow>
               <TableCell align="left" className={classes.tableHead}></TableCell>
-              <TableCell align="left" className={classes.tableHead}>Type</TableCell>
-              <TableCell align="left" className={classes.tableHead}>Value</TableCell>
+              <TableCell align="left" className={classes.tableHead}>{i18n.t('editTag.ruletype', { lng })}</TableCell>
+              <TableCell align="left" className={classes.tableHead}>{i18n.t('editTag.ruleValue', { lng })}</TableCell>
               <TableCell align="right" className={classes.tableHead}></TableCell>
             </TableRow>
           </TableHead>
@@ -65,7 +66,7 @@ TagRules.propTypes = {
 
 const mapStateToProps = (state) => ({
   user: state.user.current,
-
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({

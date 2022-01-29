@@ -12,7 +12,6 @@ export default makeStyles((theme) => ({
       marginLeft: '20%',
       marginRight: '20%',
       width: 'auto',
-      padding: '5% 0',
     }
   },
   map: {
