@@ -7,6 +7,8 @@ import dayjs from 'dayjs';
 import { leftPadding } from '../shared/utilities.js';
 import config from '../config/config.js';
 import mockedImportedTransactions from './importers/mock.js';
+import AttachmentService from './attachment.js';
+
 export default class TransactionService {
   constructor() {
     this.sequelize = Container.get("sequelizeInstance");
@@ -329,7 +331,9 @@ export default class TransactionService {
    * It only updates owned transactions->accounts
    */
   async updateById(id, userId, values) {
-    let transaction = this.findById({ id, userId });
+    const attService = new AttachmentService();
+    let transaction = await this.findById({ id, userId });
+
     if (transaction) {
       const affectedRows = await this.transactionModel.update(values, {
         where: { id },
@@ -342,6 +346,13 @@ export default class TransactionService {
       if (transaction && values.tags) {
         await transaction.setTags(values.tags);
         transaction = await this.findById({ id });
+      }
+      if (transaction && values.attachments) {
+        for (const attachmentId of values.attachments) {
+          await attService.updateById(attachmentId, userId, {
+            transactionId: id
+          });
+        }
       }
 
       return this.getTemplate(transaction);
