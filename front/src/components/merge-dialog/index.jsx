@@ -85,7 +85,8 @@ function MergeDialog({
   async function processData() {
     await update(user.token, targetTransactionId, {
       comments: currentTransaction.comments || '',
-      tags: currentTransaction.tags
+      tags: currentTransaction.tags,
+      attachments: currentTransaction?.attachments?.map(a => a.id),
     });
     removeTransaction(user.token, id, index);
     changeUIIndex(undefined);
