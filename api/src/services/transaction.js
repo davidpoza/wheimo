@@ -61,6 +61,7 @@ export default class TransactionService {
         receiverName: transaction.receiverName,
         updatedAt: transaction.updatedAt,
         valueDate: transaction.valueDate,
+        attachmentCount: transaction.dataValues && transaction.dataValues.attachmentCount,
         attachments: transaction.attachments
           ? transaction.attachments.map((attachment) => ({
               id: attachment.id,
@@ -193,6 +194,7 @@ export default class TransactionService {
     operationType,
     isFav,
     isDraft,
+    hasAttachments,
   }) {
     const dateFilter = from || to ? {} : undefined;
     if (from)
@@ -235,7 +237,7 @@ export default class TransactionService {
     if (limitsFilter) {
       filter[this.sequelizeOp.and] = [
         this.sequelize.where(
-          this.sequelizeFn("abs", this.sequelizeCol("amount")),
+          this.sequelizeFn("ABS", this.sequelizeCol("amount")),
           limitsFilter
         ),
       ];
@@ -263,27 +265,38 @@ export default class TransactionService {
           duplicating: false,
         },
         { model: this.sequelize.models.tags, as: "tags", duplicating: false },
-        { model: this.sequelize.models.attachments },
+        { model: this.sequelize.models.attachments, as: "attachments", duplicating: false },
       ],
-      attributes: [
-        "amount",
-        "id",
-        "comments",
-        "description",
-        "currency",
-        "date",
-        "value_date",
-        "favourite",
-        "balance",
-        "account_id",
-        "receiverName",
-        "emitterName",
-        "draft",
-      ],
+      attributes: {
+        include: [
+          "amount",
+          "id",
+          "comments",
+          "description",
+          "currency",
+          "date",
+          "value_date",
+          "favourite",
+          "balance",
+          "account_id",
+          "receiverName",
+          "emitterName",
+          "draft",
+          hasAttachments && [this.sequelizeFn("COUNT", this.sequelizeCol("attachments.id")), "attachmentCount"]
+        ].filter(e => e)
+      },
       limit,
       offset,
       where: filter,
       order: [["createdAt", sort === "asc" ? "ASC" : "DESC"]],
+      ...(hasAttachments && {
+        group: ['attachments.id'],
+        having: {
+          attachmentCount : {
+            [this.sequelizeOp.gt]: 0
+          }
+        },
+      })
     });
 
     return transactions.map((t) => {
