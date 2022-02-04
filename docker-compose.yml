@@ -25,8 +25,8 @@ services:
       - ./api/src:/usr/src/app/api/src
       - db-volume:/usr/src/app/api/data/db
       - attachments-volume:/usr/src/app/api/data/images
-    # env_file:
-    #   - ./api/.env
+    env_file:
+      - .env
   notifier:
     build:
       context: ./

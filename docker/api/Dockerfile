@@ -24,7 +24,6 @@ RUN chmod +x start.sh
 # USER node
 RUN npm i
 
-
 EXPOSE 3000
 
 CMD [ "./start.sh" ]
