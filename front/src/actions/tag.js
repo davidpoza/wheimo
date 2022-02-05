@@ -2,8 +2,8 @@ import { createAsyncAction } from 'redux-promise-middleware-actions';
 import * as tagApi from '../api-client/tag';
 import types from './types';
 
-export const fetchAll = createAsyncAction('TAGS', async (token) => {
-  const res = await tagApi.fetchAll(token);
+export const fetchAll = createAsyncAction('TAGS', async (token, { orderBy, sort }) => {
+  const res = await tagApi.fetchAll(token, { orderBy, sort });
   return res;
 });
 
