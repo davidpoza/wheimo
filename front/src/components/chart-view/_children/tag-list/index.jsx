@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -11,7 +11,6 @@ import useStyles from '../../styles';
 
 function TagList({ user, from, to, callback, tags, checked, handleToggle }) {
   const classes = useStyles();
-
 
   return <List className={classes.tagList}>
     {
