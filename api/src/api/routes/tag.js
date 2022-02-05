@@ -64,7 +64,7 @@ export default (app) => {
     middlewares.isAuth,
     async (req, res, next) => {
     const { id } = req.params;
-    const { limit, sort, offset } = req.query;
+    const { limit, sort, offset, orderBy } = req.query;
     const userId = req.user.id;
     const tagService = Container.get('tagService');
     try {
@@ -75,7 +75,7 @@ export default (app) => {
         }
         return res.status(200).json(tag);
       }
-      const tags = await tagService.findAll({ userId, limit, offset, sort });
+      const tags = await tagService.findAll({ userId, limit, offset, sort, orderBy });
       return res.status(200).json(tags);
     } catch (err) {
       loggerInstance.error('🔥 error: %o', err);

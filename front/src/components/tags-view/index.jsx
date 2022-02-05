@@ -46,7 +46,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   fetchTags: (token) => {
-    dispatch(fetchTagsAction(token))
+    dispatch(fetchTagsAction(token, { orderBy: 'name', sort: 'asc' }))
       .catch((error) => {
         console.log(error.message);
       });

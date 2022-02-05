@@ -34,12 +34,24 @@ export default class TransactionService {
     this.untagTransactions = this.untagTransactions.bind(this);
     this.getTransactionsCalendar = this.getTransactionsCalendar.bind(this);
     this.calculateStatistics = this.calculateStatistics.bind(this);
+    this.getTemplate = this.getTemplate.bind(this);
+    this.create = this.create.bind(this);
+    this.findById = this.findById.bind(this);
+    this.findAll = this.findAll.bind(this);
+    this.isAlreadyImported = this.isAlreadyImported.bind(this);
+    this.updateById = this.updateById.bind(this);
+    this.deleteById = this.deleteById.bind(this);
+    this.calculateExpensesByTags = this.calculateExpensesByTags.bind(this);
   }
 
   /**
    * @param {Object} transaction
    */
-  getTemplate(transaction) {
+  async getTemplate(transaction, toQueryTags = false) {
+    if (toQueryTags) {
+      const t = await this.findById({ id: transaction.id });
+      transaction.tags = t.tags;
+    }
     if (transaction) {
       return {
         account: transaction.account,
@@ -157,7 +169,7 @@ export default class TransactionService {
           userId,
         });
         msg.save();
-        return this.getTemplate(transaction);
+        return await this.getTemplate(transaction);
       }
       return null;
     } catch (err) {
@@ -299,9 +311,9 @@ export default class TransactionService {
       })
     });
 
-    return transactions.map((t) => {
-      return this.getTemplate(t);
-    });
+    return Promise.all(transactions.map(async (t) => {
+      return await this.getTemplate(t, tags !== undefined);
+    }));
   }
 
   /**
@@ -327,7 +339,7 @@ export default class TransactionService {
     if (entity) {
       return transaction;
     }
-    return this.getTemplate(transaction.dataValues);
+    return await this.getTemplate(transaction.dataValues);
   }
 
   async isAlreadyImported(importId) {
@@ -368,7 +380,7 @@ export default class TransactionService {
         }
       }
 
-      return this.getTemplate(transaction);
+      return await this.getTemplate(transaction);
     }
     return null;
   }
