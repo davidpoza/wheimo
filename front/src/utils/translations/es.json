@@ -178,5 +178,9 @@
       "bankId": "Identificador de entidad bancaria"
     },
     "newRule": "Crear nueva regla"
+  },
+  "successMessages": {
+    "transactionMerged": "Operación realizada con éxito",
+    "applyTags": "Tags aplicados con éxito"
   }
 }

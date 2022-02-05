@@ -26,6 +26,9 @@ const actions = [
   // ACCOUNt
   'ACCOUNTS_EDIT_DIALOG_OPEN',
   'ACCOUNTS_EDIT_DIALOG_CLOSE',
+  'MESSAGES_SHOW_SUCCESS_MSG',
+  'MESSAGES_SHOW_ERROR_MSG',
+  'MESSAGES_HIDE_ALL'
 ];
 
 const actionTypes = {};

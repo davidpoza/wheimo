@@ -178,5 +178,9 @@
       "bankId": "Bank identifier"
     },
     "newRule": "Create new rule"
+  },
+  "successMessages": {
+    "transactionMerged": "Transaction moved successfully",
+    "applyTags": "Tags applied successfully"
   }
 }

@@ -28,6 +28,9 @@ import {
   contextMenuChangeIndex as changeIndexAction,
   contextMenuChangeId as changeIdAction,
 } from '../../actions/ui';
+import {
+  showSuccessMessage as showSuccessMessageAction,
+} from '../../actions/messages';
 
 function PaperComponent(props) {
   return (
@@ -48,6 +51,7 @@ function MergeDialog({
   user,
   lng,
   removeTransaction,
+  showSuccessMessage
 }) {
   const classes = useStyles();
   const [lastTransactions, setLastTransactions] = useState([]);
@@ -91,6 +95,7 @@ function MergeDialog({
     removeTransaction(user.token, id, index);
     changeUIIndex(undefined);
     close();
+    showSuccessMessage(i18n.t('successMessages.transactionMerged', { lng }));
   }
 
   function printTransactionIdentifier(t) {
@@ -201,6 +206,9 @@ const mapDispatchToProps = (dispatch) => ({
       .catch((error) => {
         console.log(error.message);
       });
+  },
+  showSuccessMessage: (msg) => {
+    dispatch(showSuccessMessageAction(msg));
   },
 });
 

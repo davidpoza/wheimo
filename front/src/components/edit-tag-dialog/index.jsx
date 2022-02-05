@@ -15,6 +15,10 @@ import i18n from 'utils/i18n';
 import TagRules from 'components/tags-view/_children/tag-rules/index.jsx'
 import useStyles from './styles';
 import {
+  showSuccessMessage as showSuccessMessageAction,
+} from '../../actions/messages';
+
+import {
   editDialogOpen as openAction,
   editDialogClose as closeAction,
   apply as applyAction,
@@ -47,7 +51,8 @@ function EditTagDialog({
   indexInStore,
   apply,
   untagAll,
-  lng
+  lng,
+  showSuccessMessage
 }) {
   const classes = useStyles();
   const [tagName, setTagName] = useState('');
@@ -105,6 +110,7 @@ function EditTagDialog({
             onClick={(e) => {
               e.stopPropagation();
               apply(user.token, id);
+              showSuccessMessage(i18n.t('successMessages.applyTags', { lng }));
             }}
           >
             {i18n.t('editTag.apply', { lng })}
@@ -196,7 +202,10 @@ const mapDispatchToProps = (dispatch) => ({
   },
   untagAll: (token, tagId) => {
     dispatch(untagAction(token, tagId));
-  }
+  },
+  showSuccessMessage: (msg) => {
+    dispatch(showSuccessMessageAction(msg));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditTagDialog);

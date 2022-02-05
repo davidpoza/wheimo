@@ -15,6 +15,7 @@ const initialState = {
   showCharts: false,
   error: false,
   errorMessage: undefined,
+  successMessage: undefined,
 };
 
 const reducer = (state = initialState, action) => {

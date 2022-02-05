@@ -11,6 +11,7 @@ import tag from './reducers/tag';
 import transaction from './reducers/transaction';
 import ui from './reducers/ui';
 import user from './reducers/user';
+import messages from './reducers/messages';
 
 const stateLoader = new StateLoader();
 
@@ -20,7 +21,7 @@ const enhancer = composeWithDevTools(
 
 const store = createStore(
   combineReducers({
-    user, transaction, tag, ui, account,
+    user, transaction, tag, ui, account, messages,
   }),
   stateLoader.loadState(),
   enhancer,

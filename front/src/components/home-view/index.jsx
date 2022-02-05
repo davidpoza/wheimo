@@ -20,6 +20,7 @@ import TransactionFilter from '../transaction-filter';
 import DetailsDialog from '../details-dialog';
 import MergeDialog from '../merge-dialog';
 import withLoader from '../../hocs/with-loader';
+import withMessages from '../../hocs/with-messages';
 import useStyles from './styles';
 
 function HomeView({
@@ -124,4 +125,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withLoader(HomeView));
+export default connect(mapStateToProps, mapDispatchToProps)(withMessages(withLoader(HomeView)));
