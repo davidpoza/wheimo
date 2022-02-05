@@ -11,6 +11,7 @@ import TagsGrid from './_children/tags-grid';
 import OperationDropdown from '../operation-dropdown';
 import CreateTagInput from './_children/create-tag-input';
 import withLoader from '../../hocs/with-loader';
+import withMessages from '../../hocs/with-messages';
 import useStyles from './styles';
 
 function TagsView({
@@ -53,4 +54,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withLoader(TagsView));
+export default connect(mapStateToProps, mapDispatchToProps)(withLoader(withMessages(TagsView)));
