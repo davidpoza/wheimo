@@ -10,6 +10,7 @@ const initialState = {
   editDialogOpen: false,
   error: false,
   errorMessage: undefined,
+  successMessage: undefined,
 };
 
 const reducer = (state = initialState, action) => {
@@ -110,6 +111,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         editDialogOpen: false,
+      };
+    case types.ACCOUNTS_HIDE_ALL_MSGS:
+      return {
+        ...state,
+        errorMessage: undefined,
+        successMessage: undefined,
       };
     default:
       return state;

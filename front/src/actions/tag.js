@@ -44,3 +44,8 @@ export const setPage = (page) => ({
   type: types.TAGS_SET_PAGE,
   payload: page,
 });
+
+export const hideMessages = () => ({
+  type: types.TAGS_HIDE_ALL_MSGS,
+});
+

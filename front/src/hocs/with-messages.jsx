@@ -10,6 +10,18 @@ import { makeStyles } from '@material-ui/core/styles';
 import {
   hideMessages as hideMessagesAction,
 } from 'actions/messages';
+import {
+  hideMessages as hideMessagesFromTransactionsAction,
+} from 'actions/transaction';
+import {
+  hideMessages as hideMessagesFromAccountAction,
+} from 'actions/account';
+import {
+  hideMessages as hideMessagesFromTagAction,
+} from 'actions/tag';
+import {
+  hideMessages as hideMessagesFromUserAction,
+} from 'actions/user';
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -29,13 +41,25 @@ const useStyles = makeStyles((theme) => ({
 
 
 const mapStateToProps = (state) => ({
-  errorMessage: state.messages.error,
-  successMessage: state.messages.success,
+  errorMessage: state.messages.error ||
+    state.transaction.errorMessage ||
+    state.tag.errorMessage ||
+    state.account.errorMessage ||
+    state.user.errorMessage,
+  successMessage: state.messages.success ||
+    state.transaction.successMessage ||
+    state.tag.successMessage ||
+    state.account.successMessage ||
+    state.user.successMessage
 });
 
 const mapDispatchToProps = (dispatch) => ({
   hideMessages: () => {
     dispatch(hideMessagesAction());
+    dispatch(hideMessagesFromTransactionsAction());
+    dispatch(hideMessagesFromAccountAction());
+    dispatch(hideMessagesFromTagAction());
+    dispatch(hideMessagesFromUserAction());
   },
 });
 
@@ -52,7 +76,7 @@ const Messages = connect(mapStateToProps, mapDispatchToProps)(
             horizontal: 'center',
           }}
           open={errorMessage || successMessage}
-          autoHideDuration={3000}
+          autoHideDuration={2000}
           onClose={() => {
             hideMessages();
           }}

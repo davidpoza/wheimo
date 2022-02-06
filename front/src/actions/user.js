@@ -4,6 +4,7 @@ import types from './types';
 
 export const getAuth = createAsyncAction('AUTH', async (email, password) => {
   const res = await userApi.login(email, password);
+  localStorage.setItem('lang', res.lang);
   return res;
 });
 
@@ -21,5 +22,11 @@ export const settingsDialogClose = () => ({
 
 export const updateUser = createAsyncAction('UPDATE', async (token, userId, { name, theme, lang, email  }) => {
   const res = await userApi.updateUser(token, userId, { name, theme, lang, email  });
+  localStorage.setItem('lang', res.lang);
   return res;
 });
+
+export const hideMessages = () => ({
+  type: types.USER_HIDE_ALL_MSGS,
+});
+

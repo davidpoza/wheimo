@@ -95,3 +95,8 @@ export const removeAttachment = createAsyncAction('TRANSACTIONS_REMOVE_ATTACHMEN
     await attachmentApi.remove(token, id);
     return { id, transactionId };
   });
+
+export const hideMessages = () => ({
+  type: types.TRANSACTIONS_HIDE_ALL_MSGS,
+});
+

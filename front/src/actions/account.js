@@ -30,3 +30,8 @@ export const editDialogOpen = () => ({
 export const editDialogClose = () => ({
   type: types.ACCOUNTS_EDIT_DIALOG_CLOSE,
 });
+
+export const hideMessages = () => ({
+  type: types.ACCOUNTS_HIDE_ALL_MSGS,
+});
+

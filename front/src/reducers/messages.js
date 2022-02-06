@@ -1,9 +1,13 @@
 import types from '../actions/types';
 
+/*
+This reducer manages general messages, not linked to transaction, tag, account or user entities
+*/
 const initialState = {
   success: undefined,
   error: undefined,
 };
+
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
