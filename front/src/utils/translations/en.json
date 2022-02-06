@@ -181,6 +181,23 @@
   },
   "successMessages": {
     "transactionMerged": "Transaction moved successfully",
-    "applyTags": "Tags applied successfully"
+    "applyTags": "Tags applied successfully",
+    "deleteTag": "Tag deleted successfully",
+    "createTag": "Tag created successfully",
+    "updateTag": "Tag updated successfully",
+    "updateUser": "Settings saved successfully",
+    "updateTransaction": "Changes were saved successfully",
+    "createTransaction": "Entry created successfully",
+    "deleteTransaction": "Entry deleted successfully"
+  },
+  "errorMessages": {
+    "createTag": "Tag creation failed",
+    "deleteTag": "Tag deletion failed",
+    "updateTag": "Tag update failed",
+    "updateUser": "Settings saving failed",
+    "updateTransaction": "An error ocurred during data saving",
+    "fetchTransactions": "An error ocurred during transaction retrieving",
+    "createTransaction": "An error ocurred during transaction creation",
+    "deleteTransaction": "An error ocurred during transaction deletion"
   }
 }

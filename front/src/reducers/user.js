@@ -1,3 +1,4 @@
+import i18n from 'utils/i18n';
 import { getAuth, updateUser } from '../actions/user';
 import types from '../actions/types';
 
@@ -5,11 +6,13 @@ const initialState = {
   isLoading: false,
   current: null,
   error: false,
-  errorMessage: undefined,
   settingsDialogOpen: false,
+  errorMessage: undefined,
+  successMessage: undefined,
 };
 
 const reducer = (state = initialState, action) => {
+  const lng = localStorage.getItem('lang');
   switch (action.type) {
     case String(getAuth.pending):
       return {
@@ -18,6 +21,7 @@ const reducer = (state = initialState, action) => {
         current: null,
         error: false,
         errorMessage: undefined,
+        successMessage: undefined,
       };
     case String(getAuth.fulfilled):
       return {
@@ -31,7 +35,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         error: true,
-        errorMessage: action.payload.message,
+        errorMessage: i18n.t('errorMessages.updateUser', { lng }),
       };
     case String(updateUser.pending):
       return {
@@ -39,6 +43,7 @@ const reducer = (state = initialState, action) => {
         isLoading: true,
         error: false,
         errorMessage: undefined,
+        successMessage: undefined,
       };
     case String(updateUser.fulfilled):
       return {
@@ -48,6 +53,7 @@ const reducer = (state = initialState, action) => {
           ...action.payload,
           token: state.current.token
         },
+        successMessage: i18n.t('successMessages.updateUser', { lng }),
         error: false,
       };
     case String(updateUser.rejected):
@@ -68,6 +74,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         settingsDialogOpen: false,
+      };
+    case types.USER_HIDE_ALL_MSGS:
+      return {
+        ...state,
+        errorMessage: undefined,
+        successMessage: undefined,
       };
     default:
       return state;
