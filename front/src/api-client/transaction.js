@@ -144,16 +144,31 @@ export async function update(token, id, data) {
   }
 }
 
-export async function remove(token, id) {
+/**
+ * @param {*} token
+ * @param {number, array<number>} id
+ * @returns
+ */
+export async function remove(token, ids) {
   try {
-    await fetch(`${config.API_HOST}/transactions/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return (id);
+    if (Array.isArray(ids)) {
+      await fetch(`${config.API_HOST}/transactions?ids=${ids.join(',')}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } else {
+      await fetch(`${config.API_HOST}/transactions/${ids}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
+    return (ids);
   } catch (err) {
     throw Error('Error during transaction deletion.');
   }

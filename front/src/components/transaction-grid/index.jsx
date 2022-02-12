@@ -18,6 +18,7 @@ function TransactionGrid({ transactions, page = 1, setPage, lng }) {
   const classes = useStyles();
   const listRef = useRef();
   const [pageSize, setPageSize] = useState(0);
+  const [selection, setSelection] = useState([]);
   const ITEM_SIZE = 60;
 
   useEffect(() => {

@@ -27,9 +27,9 @@ export const update = createAsyncAction('UPDATE_TRANSACTION', async (token, id, 
   return res;
 });
 
-export const remove = createAsyncAction('DELETE_TRANSACTION', async (token, id, index) => {
-  await transactionApi.remove(token, id);
-  return (index);
+export const remove = createAsyncAction('DELETE_TRANSACTION', async (token, ids, indexes) => {
+  await transactionApi.remove(token, ids);
+  return (indexes);
 });
 
 export const fetchExpensesByTag = createAsyncAction('TRANSACTIONS_EXPENSES_BY_TAG', async (token, {
