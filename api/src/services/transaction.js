@@ -207,6 +207,8 @@ export default class TransactionService {
     isFav,
     isDraft,
     hasAttachments,
+    ids,
+    entity,
   }) {
     const dateFilter = from || to ? {} : undefined;
     if (from)
@@ -238,6 +240,7 @@ export default class TransactionService {
 
     let filter = pickBy({
       // pickBy (by default) removes undefined keys
+      id: ids?.split(','),
       accountId,
       "$tags.id$": tags,
       "$account.user_id$": userId,
@@ -310,6 +313,10 @@ export default class TransactionService {
         },
       })
     });
+
+    if (entity) {
+      return transactions;
+    }
 
     return Promise.all(transactions.map(async (t) => {
       return await this.getTemplate(t, tags !== undefined);
@@ -396,6 +403,25 @@ export default class TransactionService {
         throw new Error("Transaction does not exist");
       }
       return transaction;
+    }
+    return null;
+  }
+
+
+  /**
+   * It only deletes owned transactions->accounts
+   */
+   async deleteByIdList(ids, userId) {
+    const transactions = await this.findAll({ ids, userId, entity: true });
+
+    if (transactions) {
+      for (const t of transactions) {
+        const affectedRows = await t.destroy();
+        if (affectedRows === 0) {
+          throw new Error("Transaction does not exist");
+        }
+      }
+      return transactions.map(t => t.id);
     }
     return null;
   }

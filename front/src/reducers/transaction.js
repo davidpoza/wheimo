@@ -127,6 +127,20 @@ const reducer = (state = initialState, action) => {
         successMessage: undefined,
       };
     case String(remove.fulfilled):
+      if (Array.isArray(action.payload)) {
+        return {
+          ...state,
+          isLoading: false,
+          fetchedTransactions: fetchedTransactionsCopy
+            .map((t, i) => {
+              if (!action.payload.includes(i)) return t;
+              return undefined;
+            })
+            .filter(t => t),
+          successMessage: i18n.t('successMessages.deleteTransaction', { lng }),
+          error: false,
+        };
+      }
       fetchedTransactionsCopy.splice(action.payload, 1);
       return {
         ...state,

@@ -48,6 +48,12 @@ function OperationDropdown({
   transactions,
 }) {
   const classes = useStyles();
+  const selectedTransactions = transactions
+    ?.map((t, i) => ({
+      ...t,
+      index: i,
+    }))
+    ?.filter(t => t.checked);
 
   function handleContextMenu(e) {
     e.preventDefault();
@@ -75,7 +81,11 @@ function OperationDropdown({
   function handleRemove() {
     switch (entity) {
       case 'transaction':
-        removeTransaction(user.token, contextMenuState.id, contextMenuState.index);
+        if (selectedTransactions.length > 0) {
+          removeTransaction(user.token, selectedTransactions.map(t => t.id), selectedTransactions.map(t => t.index));
+        } else {
+          removeTransaction(user.token, contextMenuState.id, contextMenuState.index);
+        }
         break;
       case 'tag':
         removeTag(user.token, contextMenuState.id, contextMenuState.index);
@@ -146,7 +156,7 @@ function OperationDropdown({
         {i18n.t('opMenu.edit', {lng})}
       </MenuItem>
       <MenuItem className={classes.item} onClick={handleRemove}>
-        {i18n.t('opMenu.delete', {lng})}
+        {i18n.t('opMenu.delete', {lng})} { selectedTransactions.length > 0 && `(${selectedTransactions.length})`}
       </MenuItem>
     </Menu>
   );
