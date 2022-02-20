@@ -188,7 +188,8 @@
     "updateUser": "Settings saved successfully",
     "updateTransaction": "Changes were saved successfully",
     "createTransaction": "Entry created successfully",
-    "deleteTransaction": "Entry deleted successfully"
+    "deleteTransaction": "Entry deleted successfully",
+    "linkCopied": "Link copied to the clipboard"
   },
   "errorMessages": {
     "createTag": "Tag creation failed",
