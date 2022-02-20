@@ -189,7 +189,8 @@
     "updateUser": "Configuración guardada con éxito",
     "updateTransaction": "Los cambios se guardaron con éxito",
     "createTransaction": "Entrada creada con éxito",
-    "deleteTransaction": "Entrada borrada con éxito"
+    "deleteTransaction": "Entrada borrada con éxito",
+    "linkCopied": "Enlace copiado al portapapeles"
   },
   "errorMessages": {
     "createTag": "La creación de la etiqueta falló",

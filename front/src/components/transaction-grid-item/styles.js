@@ -8,7 +8,7 @@ export default makeStyles((theme) => ({
     height: '60px',
   },
   checkbox: {
-    display: 'none',
+    minWidth: '0px',
     [theme.breakpoints.up('lg')]: {
       display: 'block',
       minWidth: '30px',
