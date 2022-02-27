@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import AddBoxIcon from '@material-ui/icons/AddBox';
@@ -25,17 +25,17 @@ function CreateTagRuleInput({
   const [value, setValue] = useState('');
   const [error, setError] = useState(true);
 
-  function checkErrors() {
+  const checkErrors = useCallback(() => {
     if (name === '' || type === '' || value === '') {
       setError(true);
     } else {
       setError(false);
     }
-  }
+  }, [setError, name, type, value]);
 
   useEffect(() => {
     checkErrors();
-  }, [name, type, value]);
+  }, [checkErrors]);
 
   async function add() {
     const rule = await ruleApi.create(user.token, { name, type, value });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
@@ -66,7 +66,7 @@ function EditAccountDialog({
     close();
   }
 
-  function setInitialState() {
+  const setInitialState = useCallback(() => {
     if (accounts[index]) {
       setName(accounts[index].name);
       setType(accounts[index].bankId);
@@ -82,13 +82,29 @@ function EditAccountDialog({
       setAccessPassword(accounts[index].accessPassword);
       setSettings(accounts[index].settings);
     }
-  }
+  }, [
+    setName,
+    setType,
+    setDescription,
+    setBalance,
+    setSavingInitDate,
+    setSavingTargetDate,
+    setSavingAmount,
+    setSavingTargetAmount,
+    setSavingAmountFunc,
+    setSavingFrequency,
+    setAccessId,
+    setAccessPassword,
+    setSettings,
+    accounts,
+    index,
+  ]);
 
   useEffect(() => {
     if (index !== undefined) {
       setInitialState();
     }
-  }, [index]);
+  }, [setInitialState, index]);
 
   async function processData() {
     console.log('-->', settings);

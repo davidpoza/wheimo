@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
@@ -63,17 +63,17 @@ function EditTagDialog({
     close();
   }
 
-  function setInitialState() {
+  const setInitialState = useCallback(() => {
     if (tags[index]) {
       setTagName(tags[index].name);
     }
-  }
+  }, [setTagName, tags, index]);
 
   useEffect(() => {
     if (index !== undefined) {
       setInitialState();
     }
-  }, [index]);
+  }, [setInitialState, index]);
 
   async function processData() {
     const data = {

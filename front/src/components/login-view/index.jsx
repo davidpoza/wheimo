@@ -24,7 +24,7 @@ function Login({ getAuth, user, history }) {
     if (get(user, 'token')) {
       history.push('/');
     }
-  }, [user]);
+  }, [history, user]);
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {

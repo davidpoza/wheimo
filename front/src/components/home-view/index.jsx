@@ -46,7 +46,7 @@ function HomeView({
         openDetailsDialog();
       }
     }
-  }, []);
+  }, [changeIndex, changeId, openDetailsDialog, id, transactions]);
 
   useEffect(() => {
     fetchAllTransactions(user.token, {
@@ -57,7 +57,7 @@ function HomeView({
     fetchExpenses(user.token, {
       from: dayjs().subtract(3, 'month').format('YYYY-MM-DD'),
     });
-  }, [onlyDrafts]);
+  }, [onlyDrafts, fetchExpenses, fetchAllTransactions, user.token]);
 
   function handleChangeFilter(filter) {
     // TODO: call fetch action depending on filters selected

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { ResponsiveLine } from '@nivo/line';
 import dayjs from 'dayjs';
@@ -7,7 +7,6 @@ import dayjs from 'dayjs';
 import useStyles from './styles';
 
 function ToolTip({ balance, date }) {
-  const classes = useStyles();
   return (
     <div>
       <div>

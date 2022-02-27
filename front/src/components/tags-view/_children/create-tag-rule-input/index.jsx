@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
@@ -25,17 +25,17 @@ function CreateTagRuleInput({
   const [value, setValue] = useState('');
   const [error, setError] = useState(true);
 
-  function checkErrors() {
+  const checkErrors = useCallback(() => {
     if (type === '' || value === '') {
       setError(true);
     } else {
       setError(false);
     }
-  }
+  }, [type, value]);
 
   useEffect(() => {
     checkErrors();
-  }, [type, value]);
+  }, [checkErrors]);
 
   async function add() {
     const uuid = uuidv4();

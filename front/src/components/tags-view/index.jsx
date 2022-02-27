@@ -21,7 +21,7 @@ function TagsView({
 
   useEffect(() => {
     fetchTags(user.token);
-  }, []);
+  }, [fetchTags, user.token]);
 
   return (
     <div className={classes.root}>

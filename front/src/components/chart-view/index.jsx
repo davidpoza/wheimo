@@ -94,6 +94,11 @@ function ChartView({
   );
 }
 
+ChartView.propTypes = {
+  user: PropTypes.object,
+  isMobile: PropTypes.bool,
+}
+
 const mapStateToProps = (state) => ({
   user: state.user.current,
   loading: state.transaction.isLoading,

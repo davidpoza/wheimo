@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import get from 'lodash.get';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -20,7 +20,7 @@ function AccountSelect({
 
   useEffect(() => {
     fetchAccounts(user.token);
-  }, [user]);
+  }, [fetchAccounts, user.token]);
 
   return (
     <FormControl className={classes} {...rest}>

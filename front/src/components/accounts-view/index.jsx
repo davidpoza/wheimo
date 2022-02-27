@@ -20,7 +20,7 @@ function AccountsView({
 
   useEffect(() => {
     fetchAccounts(user.token);
-  }, []);
+  }, [fetchAccounts, user.token]);
 
   return (
     <div className={classes.root}>

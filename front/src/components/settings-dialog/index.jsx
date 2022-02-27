@@ -43,7 +43,6 @@ function SettingsDialog({
   const [email, setEmail] = useState();
   const [theme, setTheme] = useState();
   const [lang, setLang] = useState();
-  const [photo, setPhoto] = useState();
 
   function handleClose() {
     close();

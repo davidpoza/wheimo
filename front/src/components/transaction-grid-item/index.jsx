@@ -57,7 +57,6 @@ function TransactionGridItem({
   attachments,
 }) {
   const classes = useStyles();
-  const labelId = `checkbox-list-label-${index}`;
   const emitterReceiver = amount > 0 ? emitterName : receiverName;
   const emitterLimit = isMobile ? 26 : 26;
   const descriptionLimit = isMobile ? 26 : 60;

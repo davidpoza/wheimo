@@ -1,6 +1,6 @@
 import i18n from 'utils/i18n';
 import {
-  fetchAll, create, remove, update, apply, untag, setPage,
+  fetchAll, create, remove, update, apply, untag,
 } from '../actions/tag';
 import { azOrder } from '../utils/utilities';
 import types from '../actions/types';

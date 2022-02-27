@@ -78,7 +78,9 @@ function TransactionFilter({
     setOperationType,
     isFav,
     setIsFav,
-    hasAttachments
+    hasAttachments,
+    handleChangeFilter,
+    onlyDrafts
   ]);
 
 

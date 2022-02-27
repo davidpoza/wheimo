@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Config from '../utils/config';
 
 export default function usePushNotifications(token) {
@@ -14,7 +14,7 @@ export default function usePushNotifications(token) {
     return navigator.serviceWorker.register('./sw.js');
   }
 
-  function urlBase64ToUint8Array(base64String) {
+  const urlBase64ToUint8Array = useCallback((base64String) => {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
 
@@ -26,22 +26,22 @@ export default function usePushNotifications(token) {
       outputArray[i] = rawData.charCodeAt(i);
     }
     return outputArray;
-  }
+  }, []);
 
-  async function createSubscription() {
+   const createSubscription = useCallback(async () => {
     const sw = await navigator.serviceWorker.ready;
     return sw.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(Config.PUBLIC_VAPID_KEY),
     });
-  }
+  }, [urlBase64ToUint8Array]);
 
   async function getExistingSubscription() {
     const sw = await navigator.serviceWorker.ready;
     return sw.pushManager.getSubscription();
   }
 
-  const sendSubscription = (sub) => {
+  const sendSubscription = useCallback((sub) => {
     (async () => {
       setLoading(true);
       setError(false);
@@ -59,7 +59,7 @@ export default function usePushNotifications(token) {
         setError(err);
       }
     })();
-  };
+  }, [token]);
 
   const pushNotificationSupported = isPushNotificationSupported();
 
@@ -76,7 +76,7 @@ export default function usePushNotifications(token) {
         }
       }
     })();
-  }, []);
+  }, [pushNotificationSupported]);
 
   useEffect(() => {
     setLoading(true);
@@ -94,7 +94,7 @@ export default function usePushNotifications(token) {
         console.log('error', e);
       }
     })();
-  }, []);
+  }, [createSubscription, sendSubscription]);
 
   return {
     userSubscription,

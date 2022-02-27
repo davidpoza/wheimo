@@ -45,7 +45,6 @@ export default makeStyles((theme) => ({
     display: 'none',
   },
   attachmentButton: {
-    fontSize: '1em',
     marginRight: 'auto',
     textTransform: 'uppercase',
     fontSize: '0.875rem',
