@@ -40,7 +40,7 @@ function AccountTypeSelect({
 
 AccountTypeSelect.propTypes = {
   label: PropTypes.string,
-  value: PropTypes.number,
+  value: PropTypes.string,
   handleChange: PropTypes.func,
 };
 
