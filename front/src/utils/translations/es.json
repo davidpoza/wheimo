@@ -34,7 +34,8 @@
     "merge": "Copiar a",
     "edit": "Modificar",
     "delete": "Borrar",
-    "copyLink": "Copiar enlace"
+    "copyLink": "Copiar enlace",
+    "tag": "Aplicar tags"
   },
   "transactionDetails": {
     "title": "Detalle de movimiento",
@@ -95,6 +96,12 @@
     "label": "Movimiento donde pegar los datos",
     "cancel": "Cancelar",
     "proceed": "Pegar"
+  },
+  "taggingDialog": {
+    "title": "Etiquetar los movimientos seleccionados",
+    "label": "Selecciona los las etiquetas que aplicar",
+    "cancel": "Cancelar",
+    "proceed": "Aplicar"
   },
   "statistics": {
     "mostExpensiveDay": "Día más caro",
@@ -190,7 +197,8 @@
     "updateTransaction": "Los cambios se guardaron con éxito",
     "createTransaction": "Entrada creada con éxito",
     "deleteTransaction": "Entrada borrada con éxito",
-    "linkCopied": "Enlace copiado al portapapeles"
+    "linkCopied": "Enlace copiado al portapapeles",
+    "applySpecificTags": "Los movimientos seleccionados se han etiquetado correctamente"
   },
   "errorMessages": {
     "createTag": "La creación de la etiqueta falló",
@@ -200,6 +208,7 @@
     "updateTransaction": "Ocurrió un problema al guardar los cambios",
     "fetchTransactions": "Ocurrió un problema al descargar los movimientos",
     "createTransaction": "Ocurrió un problema al dar de alta la nueva entrada",
-    "deleteTransaction": "Ocurrió un problema al borrar la entrada"
+    "deleteTransaction": "Ocurrió un problema al borrar la entrada",
+    "applySpecificTags": "Ocurrió un problema al etiquetas los movimientos"
   }
 }

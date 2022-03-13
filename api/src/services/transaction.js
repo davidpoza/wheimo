@@ -26,6 +26,7 @@ export default class TransactionService {
     this.notificationQueue = Container.get("notificationQueue");
     this.resync = this.resync.bind(this);
     this.tagTransaction = this.tagTransaction.bind(this);
+    this.tagTransactions = this.tagTransactions.bind(this);
     this.transactionMeetsRule = this.transactionMeetsRule.bind(this);
     this.transactionMeetsRules = this.transactionMeetsRules.bind(this);
     this.transactionMeetsRules = this.transactionMeetsRules.bind(this);
@@ -240,7 +241,7 @@ export default class TransactionService {
 
     let filter = pickBy({
       // pickBy (by default) removes undefined keys
-      id: ids?.split(','),
+      id: Array.isArray(ids) ? ids : ids?.split(','),
       accountId,
       "$tags.id$": tags,
       "$account.user_id$": userId,
@@ -557,6 +558,35 @@ export default class TransactionService {
     }
     const existingTags = transaction.tags.map((t) => t.id);
     transaction.setTags([...existingTags, tagId]);
+  }
+
+  /**
+   * Tag transactions with one or more specified tags, adding it to existing ones.
+   * @param {Array<Number>} transactions
+   * @param {Array<Number>} tagsId
+   * @returns {Object} ids as keys, containing whole tag array for each one.
+   */
+  async tagTransactions(ids, tagIds, userId) {
+    const transactions = await this.findAll({
+      ids,
+      entity: true,
+      userId
+    })
+    const ret = {};
+    for (const t of transactions) {
+      this.logger.info(
+        `> ✅ tagging🏷️transaction ${t.id} with tags ${tagIds.join(', ')}`
+      );
+      const existingTags = t.tags.map((t) => t.id);
+      await t.setTags([...existingTags, ...tagIds]);
+      await t.save();
+      await t.reload();
+      ret[t.id] = t.tags.map(tag => ({
+        id: tag.id,
+        name: tag.name
+      }));
+    };
+    return ret;
   }
 
   /**

@@ -190,6 +190,27 @@ export async function applyTags(token, id) {
   }
 }
 
+export async function applySpecificTags(token, ids, tagIds) {
+  try {
+    const res = await fetch(`${config.API_HOST}/transactions/apply-specific-tags`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        ids,
+        tagIds
+      }),
+    });
+    if (isErrorCode(res.status)) throw new Error();
+    const result = await res.json();
+    return (result);
+  } catch (err) {
+    throw Error('Error during tags application.');
+  }
+}
+
 /**
  *
  * @param {*} token

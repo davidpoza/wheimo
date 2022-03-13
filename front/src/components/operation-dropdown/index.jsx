@@ -11,6 +11,7 @@ import {
   createEditDialogOpen as openTransactionDialogAction,
   mergeDialogClose as mergeDialogCloseAction,
   mergeDialogOpen as mergeDialogOpenAction,
+  taggingDialogOpen as openTaggingDialogAction,
 } from 'actions/transaction';
 import {
   remove as removeTagAction,
@@ -33,23 +34,24 @@ import config from 'utils/config';
 import useStyles from './styles';
 
 function OperationDropdown({
-  lng,
-  entity = 'transaction',
-  removeTransaction,
-  removeTag,
-  removeAccount,
-  user,
-  changePosition,
   changeId,
   changeIndex,
-  contextMenuState,
-  openTransactionDialog,
-  openAccountDialog,
-  openTagDialog,
-  openMergeDialog,
+  changePosition,
   closeMergeDialog,
+  contextMenuState,
+  entity = 'transaction',
+  lng,
+  openAccountDialog,
+  openMergeDialog,
+  openTagDialog,
+  openTaggingDialog,
+  openTransactionDialog,
+  removeAccount,
+  removeTag,
+  removeTransaction,
   showSuccessMessage,
   transactions,
+  user,
 }) {
   const classes = useStyles();
   const selectedTransactions = transactions
@@ -131,6 +133,11 @@ function OperationDropdown({
     }
   }
 
+  function handleTag() {
+    close();
+    openTaggingDialog();
+  }
+
   return (
     <Menu
       keepMounted
@@ -147,6 +154,13 @@ function OperationDropdown({
         entity === 'transaction' && selectedTransactions.length <= 1 && (
           <MenuItem className={classes.item} onClick={handleCopyLink}>
             {i18n.t('opMenu.copyLink', {lng})}
+          </MenuItem>
+        )
+      }
+      {
+        entity === 'transaction' && selectedTransactions.length > 0 && (
+          <MenuItem className={classes.item} onClick={handleTag}>
+            {i18n.t('opMenu.tag', {lng})} { selectedTransactions.length > 0 && `(${selectedTransactions.length})`}
           </MenuItem>
         )
       }
@@ -182,6 +196,7 @@ OperationDropdown.propTypes = {
   openMergeDialog: PropTypes.func,
   openTagDialog: PropTypes.func,
   openTransactionDialog: PropTypes.func,
+  openTaggingDialog: PropTypes.func,
   removeAccount: PropTypes.func,
   removeTag: PropTypes.func,
   removeTransaction: PropTypes.func,
@@ -240,6 +255,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   openAccountDialog: () => {
     dispatch(openEditAccountDialogAction());
+  },
+  openTaggingDialog: () => {
+    dispatch(openTaggingDialogAction());
   },
   showSuccessMessage: (msg) => {
     dispatch(showSuccessMessageAction(msg));

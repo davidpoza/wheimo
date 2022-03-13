@@ -1,6 +1,14 @@
 import i18n from 'utils/i18n';
 import {
-  fetchAll, create, remove, update, fetchExpensesByTag, addAttachment, removeAttachment, updatedAttachment,
+  fetchAll,
+  create,
+  remove,
+  update,
+  fetchExpensesByTag,
+  addAttachment,
+  removeAttachment,
+  updatedAttachment,
+  applySpecificTags,
 } from 'actions/transaction';
 import types from 'actions/types';
 
@@ -13,6 +21,7 @@ const initialState = {
   createEditDialogOpen: false,
   detailsDialogOpen: false,
   mergeDialogOpen: false,
+  taggingDialogOpen: false,
   showCharts: false,
   error: false,
   errorMessage: undefined,
@@ -118,6 +127,33 @@ const reducer = (state = initialState, action) => {
         error: true,
         errorMessage: i18n.t('errorMessages.updateTransaction', { lng }),
       };
+    case String(applySpecificTags.pending):
+      return {
+        ...state,
+        isLoading: true,
+        error: false,
+        errorMessage: undefined,
+        successMessage: undefined,
+      };
+    case String(applySpecificTags.fulfilled):
+      Object.keys(action.payload).forEach(id => {
+        const index = fetchedTransactionsCopy.findIndex(t => t.id === parseInt(id));
+        if (index !== -1) fetchedTransactionsCopy[index].tags = action.payload[id];
+      });
+      return {
+        ...state,
+        isLoading: false,
+        fetchedTransactions: fetchedTransactionsCopy,
+        successMessage: i18n.t('successMessages.applySpecificTags', { lng }),
+        error: false,
+      };
+    case String(applySpecificTags.rejected):
+      return {
+        ...state,
+        isLoading: false,
+        error: true,
+        errorMessage: i18n.t('errorMessages.applySpecificTags', { lng }),
+      };
     case String(remove.pending):
       return {
         ...state,
@@ -185,6 +221,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         detailsDialogOpen: false,
+      };
+    case types.TRANSACTIONS_TAGGING_DIALOG_OPEN:
+      return {
+        ...state,
+        taggingDialogOpen: true,
+      };
+    case types.TRANSACTIONS_TAGGING_DIALOG_CLOSE:
+      return {
+        ...state,
+        taggingDialogOpen: false,
       };
     case types.TRANSACTIONS_TOGGLE_CHECKBOX:
       fetchedTransactionsCopy[action.payload].checked = !fetchedTransactionsCopy[action.payload].checked;

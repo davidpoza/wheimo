@@ -239,4 +239,26 @@ export default (app) => {
       return next(err);
     }
   });
+
+  // apply specific tag
+  route.post('/apply-specific-tags',
+  middlewares.isAuth,
+  celebrate({
+    body: Joi.object({
+      ids: Joi.array().items(Joi.number()).required(),
+      tagIds: Joi.array().items(Joi.number()).required(),
+    }),
+  }),
+  async (req, res, next) => {
+    const { ids, tagIds } = req.body;
+    const userId = req.user.id;
+    const transactionService = Container.get('transactionService');
+    try {
+      const tags = await transactionService.tagTransactions(ids, tagIds, userId);
+      return res.status(200).json(tags);
+    } catch (err) {
+      loggerInstance.error('🔥 error: %o', err);
+      return next(err);
+    }
+  });
 };
