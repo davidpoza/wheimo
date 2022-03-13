@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback  } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -59,11 +59,11 @@ function HomeView({
     });
   }, [onlyDrafts, fetchExpenses, fetchAllTransactions, user.token]);
 
-  function handleChangeFilter(filter) {
+  const handleChangeFilter = useCallback((filter) => {
     // TODO: call fetch action depending on filters selected
     fetchAllTransactions(user.token, {...filter, sort: 'desc'});
     fetchExpenses(user.token, {...filter});
-  }
+  }, [fetchAllTransactions, fetchExpenses, user.token]);
 
   return (
     <div id="tt" className={classes.root}>

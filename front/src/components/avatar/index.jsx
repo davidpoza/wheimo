@@ -11,12 +11,12 @@ import {
   settingsDialogOpen as openAction,
   settingsDialogClose as closeAction,
 } from '../../actions/user';
-import usePushNotifications from '../../hooks/use-push-notification';
+// import usePushNotifications from '../../hooks/use-push-notification';
 import config from '../../utils/config';
 import useStyles from './styles';
 
 function MyAvatar({ user, openSettingsDialog }) {
-  const { userSubscription } = usePushNotifications(user?.token);
+  // const { userSubscription } = usePushNotifications(user?.token);
   const classes = useStyles();
 
   const handleClick = (event) => {
