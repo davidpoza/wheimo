@@ -6,28 +6,31 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 // own
 import i18n from 'utils/i18n';
-import useStyles from './styles';
 import {
   remove as removeTransactionAction,
   createEditDialogOpen as openTransactionDialogAction,
   mergeDialogClose as mergeDialogCloseAction,
   mergeDialogOpen as mergeDialogOpenAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   remove as removeTagAction,
   editDialogOpen as openEditTagDialogAction,
-} from '../../actions/tag';
+} from 'actions/tag';
 import {
   remove as removeAccountAction,
   editDialogOpen as openEditAccountDialogAction,
-} from '../../actions/account';
+} from 'actions/account';
 import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import {
+  showSuccessMessage as showSuccessMessageAction,
+} from 'actions/messages';
 import { copyToClipboard } from 'utils/utilities';
 import config from 'utils/config';
+import useStyles from './styles';
 
 function OperationDropdown({
   lng,
@@ -45,9 +48,16 @@ function OperationDropdown({
   openTagDialog,
   openMergeDialog,
   closeMergeDialog,
+  showSuccessMessage,
   transactions,
 }) {
   const classes = useStyles();
+  const selectedTransactions = transactions
+    ?.map((t, i) => ({
+      ...t,
+      index: i,
+    }))
+    ?.filter(t => t.checked);
 
   function handleContextMenu(e) {
     e.preventDefault();
@@ -68,6 +78,7 @@ function OperationDropdown({
       else if(t.emitterName) text = `${t.emitterName.substr(0,30)}...`;
       else if(t.receiverName) text = `${t.receiverName.substr(0,30)}...`;
       await copyToClipboard(`[#${contextMenuState.id} ${text} ${t.amount}€](${config.APP_HOST}/transactions/${contextMenuState.id})`);
+      showSuccessMessage(i18n.t('successMessages.linkCopied', {lng}));
     }
     close();
   }
@@ -75,7 +86,11 @@ function OperationDropdown({
   function handleRemove() {
     switch (entity) {
       case 'transaction':
-        removeTransaction(user.token, contextMenuState.id, contextMenuState.index);
+        if (selectedTransactions.length > 0) {
+          removeTransaction(user.token, selectedTransactions.map(t => t.id), selectedTransactions.map(t => t.index));
+        } else {
+          removeTransaction(user.token, contextMenuState.id, contextMenuState.index);
+        }
         break;
       case 'tag':
         removeTag(user.token, contextMenuState.id, contextMenuState.index);
@@ -129,24 +144,27 @@ function OperationDropdown({
           : undefined
       }>
       {
-        entity === 'transaction' && (
+        entity === 'transaction' && selectedTransactions.length <= 1 && (
           <MenuItem className={classes.item} onClick={handleCopyLink}>
             {i18n.t('opMenu.copyLink', {lng})}
           </MenuItem>
         )
       }
       {
-        entity === 'transaction' && (
+        entity === 'transaction' && selectedTransactions.length <= 1 && (
           <MenuItem className={classes.item} onClick={handleMerge}>
             {i18n.t('opMenu.merge', {lng})}
           </MenuItem>
         )
       }
-      <MenuItem className={classes.item} onClick={handleEdit}>
-        {i18n.t('opMenu.edit', {lng})}
-      </MenuItem>
+      {
+        selectedTransactions.length <= 1
+          && <MenuItem className={classes.item} onClick={handleEdit}>
+          {i18n.t('opMenu.edit', {lng})}
+        </MenuItem>
+      }
       <MenuItem className={classes.item} onClick={handleRemove}>
-        {i18n.t('opMenu.delete', {lng})}
+        {i18n.t('opMenu.delete', {lng})} { selectedTransactions.length > 0 && `(${selectedTransactions.length})`}
       </MenuItem>
     </Menu>
   );
@@ -223,6 +241,9 @@ const mapDispatchToProps = (dispatch) => ({
   openAccountDialog: () => {
     dispatch(openEditAccountDialogAction());
   },
+  showSuccessMessage: (msg) => {
+    dispatch(showSuccessMessageAction(msg));
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OperationDropdown);

@@ -1,3 +1,8 @@
 #!/bin/ash
 
-npm run start-dev
+if [ "$DEBUG" = true ] ;
+then
+  npm run start-dev
+else
+  npm run start
+fi

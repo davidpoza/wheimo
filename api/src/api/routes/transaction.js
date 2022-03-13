@@ -175,7 +175,7 @@ export default (app) => {
     async (req, res, next) => {
       const { id } = req.params
       const userId = req.user.id;
-      const { accountId, tags, limit, sort, offset, from, to, search, min, max, operationType, isFav, isDraft } = req.query;
+      const { accountId, tags, limit, sort, offset, from, to, search, min, max, operationType, isFav, isDraft, hasAttachments, ids } = req.query;
       const tagsArray = tags ? tags.split(',').map((id) => parseInt(id, 10)) : undefined;
       const transactionService = Container.get('transactionService');
       try {
@@ -187,7 +187,7 @@ export default (app) => {
           return res.status(200).json(transaction);
         }
         const transactions = await transactionService.findAll({
-          accountId, userId, tags: tagsArray, from, to, min, max, limit, offset, sort, search, operationType, isDraft, isFav
+          accountId, userId, tags: tagsArray, from, to, min, max, limit, offset, sort, search, operationType, isDraft, isFav, hasAttachments, ids
         });
         return res.status(200).json(transactions);
       } catch (err) {
@@ -196,14 +196,19 @@ export default (app) => {
       }
   });
 
-  route.delete('/:id',
+  route.delete('/:id?',
     middlewares.isAuth,
     async (req, res, next) => {
       const { id } = req.params
+      const { ids } = req.query;
       const userId = req.user.id;
       const transactionService = Container.get('transactionService');
       try {
-        if (!await transactionService.deleteById(id, userId)) {
+        if (ids) {
+          if (!await transactionService.deleteByIdList(ids, userId)) {
+            return res.sendStatus(404);
+          }
+        } else if (!await transactionService.deleteById(id, userId)) {
           return res.sendStatus(404);
         }
         return res.sendStatus(204);

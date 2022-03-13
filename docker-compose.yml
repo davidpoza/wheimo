@@ -1,19 +1,19 @@
 version: '3'
 
 services:
-  front:
-    build:
-      context: ./
-      dockerfile: ./docker/front/Dockerfile
-    ports:
-      - "3000:3000"
-    restart: always
-    volumes:
-      - ./front/src:/usr/src/app/front/src
-      - ./front/public:/usr/src/app/front/public
-      - ./front/build:/usr/src/app/front/build
-      - ./front/node_modules:/usr/src/app/front/node_modules
-      - ./api/src/shared:/usr/src/app/front/src/shared
+  # front:
+  #   build:
+  #     context: ./
+  #     dockerfile: ./docker/front/Dockerfile
+  #   ports:
+  #     - "3000:3000"
+  #   restart: always
+  #   volumes:
+  #     - ./front/src:/usr/src/app/front/src
+  #     - ./front/public:/usr/src/app/front/public
+  #     - ./front/build:/usr/src/app/front/build
+  #     - ./front/node_modules:/usr/src/app/front/node_modules
+  #     - ./api/src/shared:/usr/src/app/front/src/shared
   api:
     build:
       context: ./
@@ -25,8 +25,8 @@ services:
       - ./api/src:/usr/src/app/api/src
       - db-volume:/usr/src/app/api/data/db
       - attachments-volume:/usr/src/app/api/data/images
-    # env_file:
-    #   - ./api/.env
+    env_file:
+      - .env
   notifier:
     build:
       context: ./

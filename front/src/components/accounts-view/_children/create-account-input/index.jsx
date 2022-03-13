@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import AddBoxIcon from '@material-ui/icons/AddBox';
@@ -19,17 +19,17 @@ function CreateAccountInput({
   const [accountName, setAccountName] = useState('');
   const [error, setError] = useState(true);
 
-  function checkErrors() {
+  const checkErrors = useCallback(() => {
     if (accountName === '') {
       setError(true);
     } else {
       setError(false);
     }
-  }
+  }, [accountName]);
 
   useEffect(() => {
     checkErrors();
-  }, [accountName]);
+  }, [checkErrors]);
 
   function add() {
     create(user.token, { name: accountName, number: 'xxx', bankId: 'wallet' });

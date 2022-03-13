@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
@@ -16,8 +16,8 @@ import CreateIcon from '@material-ui/icons/Create';
 import i18n from 'utils/i18n';
 
 // own
-import useStyles from './styles';
-import Editor from '../editor';
+import withIsMobile from 'hocs/with-is-mobile.jsx';
+import ConditionalWrapper from 'shared/conditional-wrapper';
 import {
   addAttachment as addAttachmentAction,
   create as createAction,
@@ -25,19 +25,26 @@ import {
   detailsDialogOpen as openAction,
   update as updateAction,
   createEditDialogOpen as openTransactionDialogAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
   contextMenuChangeId as changeIdAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import useStyles from './styles';
+import Editor from '../editor';
 import Tags from '../tags';
 import Attachments from './_children/attachment';
 
 function PaperComponent(props) {
   return (
-    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+    <ConditionalWrapper
+      condition={!props.isMobile}
+      ElementType={Draggable}
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
       <Paper {...props} />
-    </Draggable>
+    </ConditionalWrapper>
   );
 }
 
@@ -55,6 +62,7 @@ function DetailsDialog({
   openTransactionDialog,
   user,
   lng,
+  isMobile,
 }) {
   const classes = useStyles();
   const [comments, setComments] = useState('');
@@ -64,19 +72,20 @@ function DetailsDialog({
   } = transactions?.[index] || {};
   const account = transactions?.[index]?.account?.name;
 
-  function uploadFile(blob, desc, transactionId) {
+  const uploadFile = useCallback((blob, desc, transactionId) => {
     const attachmentsData = new FormData();
     attachmentsData.append('attachment', blob);
     attachmentsData.append('description', desc);
     attachmentsData.append('transactionId', transactionId);
     addAttachment(user.token, attachmentsData);
-  }
+  }, [addAttachment, user.token]);
 
-  function setInitialState() {
+  const setInitialState = useCallback(() => {
     if (transactions?.[index]) {
       setComments(transactions?.[index]?.comments);
     }
-  }
+  }, [setComments, transactions, index]);
+
   function clearForm() {
     setComments('');
   }
@@ -85,7 +94,7 @@ function DetailsDialog({
     if (index !== undefined) {
       setInitialState();
     }
-  }, [index]);
+  }, [setInitialState, index]);
 
   useEffect(() => {
     if (index !== undefined) {
@@ -99,7 +108,7 @@ function DetailsDialog({
         };
       };
     }
-  }, [index]);
+  }, [uploadFile, index, transactions]);
 
   function handleOnAddFile(e) {
     uploadFile(e.target.files[0], 'attachment', transactions?.[index].id);
@@ -153,6 +162,7 @@ function DetailsDialog({
       aria-labelledby="form-dialog-title"
       PaperComponent={PaperComponent}
       onKeyDown={handleOnKeyDown}
+      PaperProps={{ isMobile }}
     >
       <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -285,4 +295,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(DetailsDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(withIsMobile(DetailsDialog));

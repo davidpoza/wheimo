@@ -34,12 +34,24 @@ export default class TransactionService {
     this.untagTransactions = this.untagTransactions.bind(this);
     this.getTransactionsCalendar = this.getTransactionsCalendar.bind(this);
     this.calculateStatistics = this.calculateStatistics.bind(this);
+    this.getTemplate = this.getTemplate.bind(this);
+    this.create = this.create.bind(this);
+    this.findById = this.findById.bind(this);
+    this.findAll = this.findAll.bind(this);
+    this.isAlreadyImported = this.isAlreadyImported.bind(this);
+    this.updateById = this.updateById.bind(this);
+    this.deleteById = this.deleteById.bind(this);
+    this.calculateExpensesByTags = this.calculateExpensesByTags.bind(this);
   }
 
   /**
    * @param {Object} transaction
    */
-  getTemplate(transaction) {
+  async getTemplate(transaction, toQueryTags = false) {
+    if (toQueryTags) {
+      const t = await this.findById({ id: transaction.id });
+      transaction.tags = t.tags;
+    }
     if (transaction) {
       return {
         account: transaction.account,
@@ -61,6 +73,7 @@ export default class TransactionService {
         receiverName: transaction.receiverName,
         updatedAt: transaction.updatedAt,
         valueDate: transaction.valueDate,
+        attachmentCount: transaction.dataValues && transaction.dataValues.attachmentCount,
         attachments: transaction.attachments
           ? transaction.attachments.map((attachment) => ({
               id: attachment.id,
@@ -156,7 +169,7 @@ export default class TransactionService {
           userId,
         });
         msg.save();
-        return this.getTemplate(transaction);
+        return await this.getTemplate(transaction);
       }
       return null;
     } catch (err) {
@@ -193,6 +206,9 @@ export default class TransactionService {
     operationType,
     isFav,
     isDraft,
+    hasAttachments,
+    ids,
+    entity,
   }) {
     const dateFilter = from || to ? {} : undefined;
     if (from)
@@ -224,6 +240,7 @@ export default class TransactionService {
 
     let filter = pickBy({
       // pickBy (by default) removes undefined keys
+      id: ids?.split(','),
       accountId,
       "$tags.id$": tags,
       "$account.user_id$": userId,
@@ -235,7 +252,7 @@ export default class TransactionService {
     if (limitsFilter) {
       filter[this.sequelizeOp.and] = [
         this.sequelize.where(
-          this.sequelizeFn("abs", this.sequelizeCol("amount")),
+          this.sequelizeFn("ABS", this.sequelizeCol("amount")),
           limitsFilter
         ),
       ];
@@ -263,32 +280,47 @@ export default class TransactionService {
           duplicating: false,
         },
         { model: this.sequelize.models.tags, as: "tags", duplicating: false },
-        { model: this.sequelize.models.attachments },
+        { model: this.sequelize.models.attachments, as: "attachments", duplicating: false },
       ],
-      attributes: [
-        "amount",
-        "id",
-        "comments",
-        "description",
-        "currency",
-        "date",
-        "value_date",
-        "favourite",
-        "balance",
-        "account_id",
-        "receiverName",
-        "emitterName",
-        "draft",
-      ],
+      attributes: {
+        include: [
+          "amount",
+          "id",
+          "comments",
+          "description",
+          "currency",
+          "date",
+          "value_date",
+          "favourite",
+          "balance",
+          "account_id",
+          "receiverName",
+          "emitterName",
+          "draft",
+          hasAttachments && [this.sequelizeFn("COUNT", this.sequelizeCol("attachments.id")), "attachmentCount"]
+        ].filter(e => e)
+      },
       limit,
       offset,
       where: filter,
       order: [["createdAt", sort === "asc" ? "ASC" : "DESC"]],
+      ...(hasAttachments && {
+        group: ['attachments.id'],
+        having: {
+          attachmentCount : {
+            [this.sequelizeOp.gt]: 0
+          }
+        },
+      })
     });
 
-    return transactions.map((t) => {
-      return this.getTemplate(t);
-    });
+    if (entity) {
+      return transactions;
+    }
+
+    return Promise.all(transactions.map(async (t) => {
+      return await this.getTemplate(t, tags !== undefined);
+    }));
   }
 
   /**
@@ -314,7 +346,7 @@ export default class TransactionService {
     if (entity) {
       return transaction;
     }
-    return this.getTemplate(transaction.dataValues);
+    return await this.getTemplate(transaction.dataValues);
   }
 
   async isAlreadyImported(importId) {
@@ -355,7 +387,7 @@ export default class TransactionService {
         }
       }
 
-      return this.getTemplate(transaction);
+      return await this.getTemplate(transaction);
     }
     return null;
   }
@@ -371,6 +403,25 @@ export default class TransactionService {
         throw new Error("Transaction does not exist");
       }
       return transaction;
+    }
+    return null;
+  }
+
+
+  /**
+   * It only deletes owned transactions->accounts
+   */
+   async deleteByIdList(ids, userId) {
+    const transactions = await this.findAll({ ids, userId, entity: true });
+
+    if (transactions) {
+      for (const t of transactions) {
+        const affectedRows = await t.destroy();
+        if (affectedRows === 0) {
+          throw new Error("Transaction does not exist");
+        }
+      }
+      return transactions.map(t => t.id);
     }
     return null;
   }

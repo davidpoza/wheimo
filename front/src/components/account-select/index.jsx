@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import get from 'lodash.get';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -11,7 +11,7 @@ import FormControl from '@material-ui/core/FormControl';
 import useStyles from './styles';
 import {
   fetchAll as fetchAccountsAction,
-} from '../../actions/account';
+} from 'actions/account';
 
 function AccountSelect({
   user, label, value, handleChange, fetchAccounts, accounts, layout = 'filter', className, ...rest
@@ -20,7 +20,7 @@ function AccountSelect({
 
   useEffect(() => {
     fetchAccounts(user.token);
-  }, [user]);
+  }, [fetchAccounts, user.token]);
 
   return (
     <FormControl className={classes} {...rest}>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback  } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -9,17 +9,18 @@ import {
   fetchAll as fetchAllAction,
   fetchExpensesByTag as fetchExpensesByTagAction,
   detailsDialogOpen as openAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import withLoader from 'hocs/with-loader';
+import withMessages from 'hocs/with-messages';
 import TransactionGrid from '../transaction-grid';
 import Charts from '../charts';
 import TransactionFilter from '../transaction-filter';
 import DetailsDialog from '../details-dialog';
 import MergeDialog from '../merge-dialog';
-import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
 
 function HomeView({
@@ -45,7 +46,7 @@ function HomeView({
         openDetailsDialog();
       }
     }
-  }, []);
+  }, [changeIndex, changeId, openDetailsDialog, id, transactions]);
 
   useEffect(() => {
     fetchAllTransactions(user.token, {
@@ -56,13 +57,13 @@ function HomeView({
     fetchExpenses(user.token, {
       from: dayjs().subtract(3, 'month').format('YYYY-MM-DD'),
     });
-  }, [onlyDrafts]);
+  }, [onlyDrafts, fetchExpenses, fetchAllTransactions, user.token]);
 
-  function handleChangeFilter(filter) {
+  const handleChangeFilter = useCallback((filter) => {
     // TODO: call fetch action depending on filters selected
     fetchAllTransactions(user.token, {...filter, sort: 'desc'});
     fetchExpenses(user.token, {...filter});
-  }
+  }, [fetchAllTransactions, fetchExpenses, user.token]);
 
   return (
     <div id="tt" className={classes.root}>
@@ -124,4 +125,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withLoader(HomeView));
+export default connect(mapStateToProps, mapDispatchToProps)(withMessages(withLoader(HomeView)));

@@ -80,5 +80,8 @@ export default makeStyles((theme) => ({
   },
   isFavCheckbox: {
     paddingTop: '1em'
+  },
+  hasAttachments: {
+    paddingTop: '0em'
   }
 }));

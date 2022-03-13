@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import removeMd from 'remove-markdown';
 import PropTypes from 'prop-types';
 import ListItem from '@material-ui/core/ListItem';
-import Checkbox from '@material-ui/core/Checkbox';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -13,6 +12,7 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import dayjs from 'dayjs';
 
 // own
+import Checkbox from 'shared/checkbox';
 import withIsMobile from 'hocs/with-is-mobile.jsx';
 import Tags from '../tags';
 import useStyles from './styles';
@@ -21,12 +21,12 @@ import {
   toggleChecked as toggleCheckedAction,
   update as updateAction,
   detailsDialogOpen as openAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
-} from '../../actions/ui';
+} from 'actions/ui';
 import { formatAmount } from 'utils/utilities';
 
 function TransactionGridItem({
@@ -57,7 +57,6 @@ function TransactionGridItem({
   attachments,
 }) {
   const classes = useStyles();
-  const labelId = `checkbox-list-label-${index}`;
   const emitterReceiver = amount > 0 ? emitterName : receiverName;
   const emitterLimit = isMobile ? 26 : 26;
   const descriptionLimit = isMobile ? 26 : 60;
@@ -97,16 +96,10 @@ function TransactionGridItem({
       onTap>
       <ListItemIcon className={classes.checkbox}>
         <Checkbox
-          edge="start"
           checked={checked}
           onClick={(e) => {
-            e.stopPropagation();
             toggleChecked(indexInStore);
           }}
-          tabIndex={-1}
-          disableRipple
-          className={classes.checkbox}
-          inputProps={{'aria-labelledby': labelId}}
         />
       </ListItemIcon>
       <div className={classes.content}>

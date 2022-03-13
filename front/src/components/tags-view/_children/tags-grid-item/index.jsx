@@ -6,16 +6,16 @@ import LabelIcon from '@material-ui/icons/Label';
 import i18n from 'utils/i18n';
 
 // own
-import useStyles from './styles';
 import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
-} from '../../../../actions/ui';
+} from 'actions/ui';
 import {
   apply as applyAction,
   untag as untagAction,
-} from '../../../../actions/tag';
+} from 'actions/tag';
+import useStyles from './styles';
 
 function TagsGridItem({
   user,

@@ -64,7 +64,7 @@ export default class TagService {
    * @param {number} param.offset - query offset
    * @param {string} param.sort - asc/desc sorting by createdAt column
    */
-  async findAll({ userId, limit, offset, sort }) {
+  async findAll({ userId, limit, offset, sort = 'desc', orderBy = 'createdAt' }) {
     const filter = pickBy({ // pickBy (by default) removes undefined keys
       userId
     });
@@ -74,7 +74,7 @@ export default class TagService {
         include: { model: this.sequelize.models.rules, as: 'rules' } ,
         limit,
         offset,
-        order: [ ['createdAt', sort === 'asc' ? 'ASC' : 'DESC'] ]
+        order: [ [orderBy, sort === 'asc' ? 'ASC' : 'DESC'] ]
       }
     );
 

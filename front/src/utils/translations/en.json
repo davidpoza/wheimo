@@ -22,10 +22,13 @@
     "minAmount": "Min. €",
     "maxAmount": "Max. €",
     "isFavorite": "Is marked as favorite",
+    "hasAttachments": "It has attachment(s)",
     "opType": "Operation type",
     "showAllTypes": "Show all types",
     "showExpensesType": "Show only expenses",
-    "showIncomesType": "Show onlye incomes"
+    "showIncomesType": "Show onlye incomes",
+    "close": "Close",
+    "reset": "Reset filters"
   },
   "opMenu": {
     "merge": "Merge into",
@@ -175,5 +178,27 @@
       "bankId": "Bank identifier"
     },
     "newRule": "Create new rule"
+  },
+  "successMessages": {
+    "transactionMerged": "Transaction moved successfully",
+    "applyTags": "Tags applied successfully",
+    "deleteTag": "Tag deleted successfully",
+    "createTag": "Tag created successfully",
+    "updateTag": "Tag updated successfully",
+    "updateUser": "Settings saved successfully",
+    "updateTransaction": "Changes were saved successfully",
+    "createTransaction": "Entry created successfully",
+    "deleteTransaction": "Entry deleted successfully",
+    "linkCopied": "Link copied to the clipboard"
+  },
+  "errorMessages": {
+    "createTag": "Tag creation failed",
+    "deleteTag": "Tag deletion failed",
+    "updateTag": "Tag update failed",
+    "updateUser": "Settings saving failed",
+    "updateTransaction": "An error ocurred during data saving",
+    "fetchTransactions": "An error ocurred during transaction retrieving",
+    "createTransaction": "An error ocurred during transaction creation",
+    "deleteTransaction": "An error ocurred during transaction deletion"
   }
 }

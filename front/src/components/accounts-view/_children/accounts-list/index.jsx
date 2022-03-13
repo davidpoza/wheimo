@@ -1,12 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import List from '@material-ui/core/List';
 
 // own
+import { azOrder } from 'utils/utilities';
 import AccountsListItem from '../accounts-list-item';
 import useStyles from './styles';
-import { azOrder } from '../../../../utils/utilities';
 
 function AccountsList({
   user, accounts = [],

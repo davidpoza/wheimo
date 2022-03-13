@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
@@ -13,18 +13,22 @@ import i18n from 'utils/i18n';
 
 // own
 import TagRules from 'components/tags-view/_children/tag-rules/index.jsx'
-import useStyles from './styles';
+import {
+  showSuccessMessage as showSuccessMessageAction,
+} from 'actions/messages';
+
 import {
   editDialogOpen as openAction,
   editDialogClose as closeAction,
   apply as applyAction,
   untag as untagAction,
   update as updateAction,
-} from '../../actions/tag';
+} from 'actions/tag';
 import {
   contextMenuChangeIndex as changeIndexAction,
   contextMenuChangeId as changeIdAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import useStyles from './styles';
 
 function PaperComponent(props) {
   return (
@@ -47,7 +51,8 @@ function EditTagDialog({
   indexInStore,
   apply,
   untagAll,
-  lng
+  lng,
+  showSuccessMessage
 }) {
   const classes = useStyles();
   const [tagName, setTagName] = useState('');
@@ -58,17 +63,17 @@ function EditTagDialog({
     close();
   }
 
-  function setInitialState() {
+  const setInitialState = useCallback(() => {
     if (tags[index]) {
       setTagName(tags[index].name);
     }
-  }
+  }, [setTagName, tags, index]);
 
   useEffect(() => {
     if (index !== undefined) {
       setInitialState();
     }
-  }, [index]);
+  }, [setInitialState, index]);
 
   async function processData() {
     const data = {
@@ -105,6 +110,7 @@ function EditTagDialog({
             onClick={(e) => {
               e.stopPropagation();
               apply(user.token, id);
+              showSuccessMessage(i18n.t('successMessages.applyTags', { lng }));
             }}
           >
             {i18n.t('editTag.apply', { lng })}
@@ -196,7 +202,10 @@ const mapDispatchToProps = (dispatch) => ({
   },
   untagAll: (token, tagId) => {
     dispatch(untagAction(token, tagId));
-  }
+  },
+  showSuccessMessage: (msg) => {
+    dispatch(showSuccessMessageAction(msg));
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditTagDialog);

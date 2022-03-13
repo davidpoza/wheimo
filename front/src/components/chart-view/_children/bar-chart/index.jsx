@@ -2,8 +2,10 @@ import React from 'react';
 import { ResponsiveBar } from '@nivo/bar'
 import dayjs from 'dayjs';
 
+import useStyles from './styles';
 
 export default function BarChart({ rawData, from, to, tags, darkMode }) {
+  const classes = useStyles();
 
   const mapper = obj => {
     const ret = [];
@@ -26,7 +28,6 @@ export default function BarChart({ rawData, from, to, tags, darkMode }) {
       });
     });
 
-    console.log(ret)
     return ret
       .sort((a, b) => dayjs(a.month, 'MMM').diff(dayjs(b.month, 'MMM')))
   };
@@ -42,6 +43,9 @@ export default function BarChart({ rawData, from, to, tags, darkMode }) {
         labelTextColor={['#fff']}
         colors={['#3F51B5', '#7E8CD6', '#596FF0', '#4C5485', '#262B45']}
         borderColor={{ from: 'color' }}
+        tooltip={point => {
+          return <div className={classes.tooltip}><strong>{point.value}€</strong> in <strong>{point.id}</strong> category during {point.indexValue}</div>;
+        }}
         borderWidth={2}
         borderRadius={2}
         colorBy="id"

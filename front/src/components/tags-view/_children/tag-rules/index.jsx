@@ -11,8 +11,8 @@ import Paper from '@material-ui/core/Paper';
 import i18n from 'utils/i18n';
 
 // own
+import withLoader from 'hocs/with-loader';
 import useStyles from './styles';
-import withLoader from '../../../../hocs/with-loader';
 import TagRulesItem from '../tag-rules-item';
 import CreateTagRuleInput from '../create-tag-rule-input';
 

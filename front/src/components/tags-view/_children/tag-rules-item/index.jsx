@@ -7,11 +7,11 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 
 // own
-import useStyles from './styles';
 import {
   update as updateAction,
-} from '../../../../actions/tag';
-import * as ruleApi from '../../../../api-client/rule';
+} from 'actions/tag';
+import * as ruleApi from 'api-client/rule';
+import useStyles from './styles';
 
 function TagRulesItem({
   user, name, value, type, tagId, tagIndex, currentRules, ruleId, updateTag,

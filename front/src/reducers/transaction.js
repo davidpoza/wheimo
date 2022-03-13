@@ -1,7 +1,8 @@
+import i18n from 'utils/i18n';
 import {
   fetchAll, create, remove, update, fetchExpensesByTag, addAttachment, removeAttachment, updatedAttachment,
-} from '../actions/transaction';
-import types from '../actions/types';
+} from 'actions/transaction';
+import types from 'actions/types';
 
 const initialState = {
   isLoading: false,
@@ -15,9 +16,11 @@ const initialState = {
   showCharts: false,
   error: false,
   errorMessage: undefined,
+  successMessage: undefined,
 };
 
 const reducer = (state = initialState, action) => {
+  const lng = localStorage.getItem('lang');
   const fetchedTransactionsCopy = state.fetchedTransactions
     ? [...state.fetchedTransactions]
     : [];
@@ -30,6 +33,7 @@ const reducer = (state = initialState, action) => {
         // fetchedTransactions: null,
         error: false,
         errorMessage: undefined,
+        successMessage: undefined,
       };
     case String(fetchAll.fulfilled):
       return {
@@ -43,7 +47,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         error: true,
-        errorMessage: action.payload.message,
+        errorMessage: i18n.t('errorMessages.fetchTransactions', { lng }),
       };
     case String(fetchExpensesByTag.pending):
       return {
@@ -51,6 +55,7 @@ const reducer = (state = initialState, action) => {
         isLoading: true,
         error: false,
         errorMessage: undefined,
+        successMessage: undefined,
       };
     case String(fetchExpensesByTag.fulfilled):
       return {
@@ -72,12 +77,14 @@ const reducer = (state = initialState, action) => {
         isLoading: true,
         error: false,
         errorMessage: undefined,
+        successMessage: undefined,
       };
     case String(create.fulfilled):
       return {
         ...state,
         isLoading: false,
         fetchedTransactions: action.payload.refresh ? [action.payload, ...state.fetchedTransactions] : state.fetchedTransactions,
+        successMessage: i18n.t('successMessages.createTransaction', { lng }),
         error: false,
       };
     case String(create.rejected):
@@ -85,7 +92,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         error: true,
-        errorMessage: action.payload.message,
+        errorMessage: i18n.t('errorMessages.createTransaction', { lng }),
       };
     case String(update.pending):
       return {
@@ -93,6 +100,7 @@ const reducer = (state = initialState, action) => {
         isLoading: true,
         error: false,
         errorMessage: undefined,
+        successMessage: undefined,
       };
     case String(update.fulfilled):
       fetchedTransactionsCopy[action.payload.index] = action.payload;
@@ -100,6 +108,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         fetchedTransactions: fetchedTransactionsCopy,
+        successMessage: i18n.t('successMessages.updateTransaction', { lng }),
         error: false,
       };
     case String(update.rejected):
@@ -107,7 +116,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         error: true,
-        errorMessage: action.payload.message,
+        errorMessage: i18n.t('errorMessages.updateTransaction', { lng }),
       };
     case String(remove.pending):
       return {
@@ -115,13 +124,29 @@ const reducer = (state = initialState, action) => {
         isLoading: true,
         error: false,
         errorMessage: undefined,
+        successMessage: undefined,
       };
     case String(remove.fulfilled):
+      if (Array.isArray(action.payload)) {
+        return {
+          ...state,
+          isLoading: false,
+          fetchedTransactions: fetchedTransactionsCopy
+            .map((t, i) => {
+              if (!action.payload.includes(i)) return t;
+              return undefined;
+            })
+            .filter(t => t),
+          successMessage: i18n.t('successMessages.deleteTransaction', { lng }),
+          error: false,
+        };
+      }
       fetchedTransactionsCopy.splice(action.payload, 1);
       return {
         ...state,
         isLoading: false,
         fetchedTransactions: fetchedTransactionsCopy,
+        successMessage: i18n.t('successMessages.deleteTransaction', { lng }),
         error: false,
       };
     case String(remove.rejected):
@@ -129,7 +154,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         isLoading: false,
         error: true,
-        errorMessage: action.payload.message,
+        errorMessage: i18n.t('errorMessages.deleteTransaction', { lng }),
       };
     case types.TRANSACTIONS_CREATE_EDIT_DIALOG_OPEN:
       return {
@@ -183,6 +208,7 @@ const reducer = (state = initialState, action) => {
         isUploadingAttachment: true,
         error: false,
         errorMessage: undefined,
+        successMessage: undefined,
       };
     case String(addAttachment.fulfilled):
       if (transactionIndex !== -1) {
@@ -209,6 +235,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         error: false,
         errorMessage: undefined,
+        successMessage: undefined,
       };
     case String(removeAttachment.fulfilled):
       if (transactionIndex !== -1) {
@@ -231,6 +258,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         error: false,
         errorMessage: undefined,
+        successMessage: undefined,
       };
     case String(updatedAttachment.fulfilled):
       if (transactionIndex !== -1) {
@@ -249,6 +277,12 @@ const reducer = (state = initialState, action) => {
         ...state,
         error: true,
         errorMessage: action.payload.message,
+      };
+    case types.TRANSACTIONS_HIDE_ALL_MSGS:
+      return {
+        ...state,
+        errorMessage: undefined,
+        successMessage: undefined,
       };
     default:
       return state;

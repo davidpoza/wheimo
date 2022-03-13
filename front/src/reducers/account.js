@@ -1,8 +1,8 @@
 import {
   fetchAll, create, remove, update,
-} from '../actions/account';
-import { azOrder } from '../utils/utilities';
-import types from '../actions/types';
+} from 'actions/account';
+import { azOrder } from 'utils/utilities';
+import types from 'actions/types';
 
 const initialState = {
   isLoading: false,
@@ -10,6 +10,7 @@ const initialState = {
   editDialogOpen: false,
   error: false,
   errorMessage: undefined,
+  successMessage: undefined,
 };
 
 const reducer = (state = initialState, action) => {
@@ -110,6 +111,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         editDialogOpen: false,
+      };
+    case types.ACCOUNTS_HIDE_ALL_MSGS:
+      return {
+        ...state,
+        errorMessage: undefined,
+        successMessage: undefined,
       };
     default:
       return state;

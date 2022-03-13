@@ -3,10 +3,8 @@ import dayjs from 'dayjs';
 import i18n from 'utils/i18n';
 import { connect } from 'react-redux';
 
-import translate from 'utils/translations/index';
 import useStyles from '../../styles';
 
-const monthsTranslation = translate('months');
 
 function Statistics({ data, lng }) {
   const classes = useStyles();

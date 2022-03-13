@@ -7,7 +7,11 @@ export default function useTags({ callback, user, from, to }) {
 
   useEffect(() => {
     (async () => {
-      if (user?.token) setTags([ { id: 0, name: 'All' }, ...await fetchAll(user?.token)]);
+      if (user?.token)
+        setTags([
+          {id: 0, name: 'All'},
+          ...(await fetchAll(user?.token, {orderBy: 'name', sort: 'asc'})),
+        ]);
     })()
   }, [user])
 

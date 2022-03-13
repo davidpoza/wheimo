@@ -7,7 +7,6 @@ import dayjs from 'dayjs';
 import useStyles from './styles';
 
 function ToolTip({ amount, savings, date }) {
-  const classes = useStyles();
   return (
     <div>
       <div>

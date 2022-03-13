@@ -22,10 +22,13 @@
     "minAmount": "Min. €",
     "maxAmount": "Max. €",
     "isFavorite": "Está marcado como favorito",
+    "hasAttachments": "Tiene adjuntos",
     "opType": "Tipo de operación",
     "showAllTypes": "Mostrar todas",
     "showExpensesType": "Mostrar solo gastos",
-    "showIncomesType": "Mostrar solo ingresos"
+    "showIncomesType": "Mostrar solo ingresos",
+    "close": "Cerrar",
+    "reset": "Resetear filtros"
   },
   "opMenu": {
     "merge": "Copiar a",
@@ -175,5 +178,28 @@
       "bankId": "Identificador de entidad bancaria"
     },
     "newRule": "Crear nueva regla"
+  },
+  "successMessages": {
+    "transactionMerged": "Operación realizada con éxito",
+    "applyTags": "Etiquetas aplicadas con éxito",
+    "deleteTag": "Etiqueta borrada con éxito",
+    "createTag": "Etiqueta creada con éxito",
+    "updateTag": "Etiqueta actualiza con éxito",
+    "deleteUser": "Usuario borrado con éxito",
+    "updateUser": "Configuración guardada con éxito",
+    "updateTransaction": "Los cambios se guardaron con éxito",
+    "createTransaction": "Entrada creada con éxito",
+    "deleteTransaction": "Entrada borrada con éxito",
+    "linkCopied": "Enlace copiado al portapapeles"
+  },
+  "errorMessages": {
+    "createTag": "La creación de la etiqueta falló",
+    "deleteTag": "El borrado de la etiqueta falló",
+    "updateTag": "La actualización del tag falló",
+    "updateUser": "Se produjo un fallo al salvar la configuración",
+    "updateTransaction": "Ocurrió un problema al guardar los cambios",
+    "fetchTransactions": "Ocurrió un problema al descargar los movimientos",
+    "createTransaction": "Ocurrió un problema al dar de alta la nueva entrada",
+    "deleteTransaction": "Ocurrió un problema al borrar la entrada"
   }
 }

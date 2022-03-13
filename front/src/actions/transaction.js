@@ -4,10 +4,10 @@ import * as attachmentApi from '../api-client/attachment';
 import types from './types';
 
 export const fetchAll = createAsyncAction('TRANSACTIONS', async (token, {
-  offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav, isDraft, year
+  offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav, isDraft, year, hasAttachments
 }) => {
   const res = await transactionApi.fetchAll(token, {
-    offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav, isDraft, year
+    offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav, isDraft, year, hasAttachments,
   });
   return res;
 });
@@ -27,9 +27,9 @@ export const update = createAsyncAction('UPDATE_TRANSACTION', async (token, id, 
   return res;
 });
 
-export const remove = createAsyncAction('DELETE_TRANSACTION', async (token, id, index) => {
-  await transactionApi.remove(token, id);
-  return (index);
+export const remove = createAsyncAction('DELETE_TRANSACTION', async (token, ids, indexes) => {
+  await transactionApi.remove(token, ids);
+  return (indexes);
 });
 
 export const fetchExpensesByTag = createAsyncAction('TRANSACTIONS_EXPENSES_BY_TAG', async (token, {
@@ -95,3 +95,8 @@ export const removeAttachment = createAsyncAction('TRANSACTIONS_REMOVE_ATTACHMEN
     await attachmentApi.remove(token, id);
     return { id, transactionId };
   });
+
+export const hideMessages = () => ({
+  type: types.TRANSACTIONS_HIDE_ALL_MSGS,
+});
+

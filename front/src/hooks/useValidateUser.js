@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+
 import Config from 'utils/config';
 import { validateToken } from 'api-client/user';
 

@@ -2,9 +2,9 @@
 import { isErrorCode } from 'utils/utilities';
 import config from '../utils/config';
 
-export async function fetchAll(token) {
+export async function fetchAll(token, { orderBy = 'createdAt', sort = 'asc' } = {}) {
   try {
-    const res = await fetch(`${config.API_HOST}/tags`, {
+    const res = await fetch(`${config.API_HOST}/tags?orderBy=${orderBy}&sort=${sort}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

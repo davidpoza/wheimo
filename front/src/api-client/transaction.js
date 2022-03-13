@@ -3,7 +3,7 @@ import config from '../utils/config';
 import { isErrorCode } from 'utils/utilities';
 
 export async function fetchAll(token, {
-  offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav, isDraft
+  offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav, isDraft, hasAttachments
 }) {
   try {
     let url = `${config.API_HOST}/transactions`;
@@ -21,6 +21,7 @@ export async function fetchAll(token, {
     if (operationType) params.push(`operationType=${operationType}`);
     if (isFav) params.push('isFav=1');
     if (isDraft) params.push('isDraft=1');
+    if (hasAttachments) params.push('hasAttachments=1');
 
     params.forEach((param, index) => {
       if (index === 0) {
@@ -143,16 +144,31 @@ export async function update(token, id, data) {
   }
 }
 
-export async function remove(token, id) {
+/**
+ * @param {*} token
+ * @param {number, array<number>} id
+ * @returns
+ */
+export async function remove(token, ids) {
   try {
-    await fetch(`${config.API_HOST}/transactions/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return (id);
+    if (Array.isArray(ids)) {
+      await fetch(`${config.API_HOST}/transactions?ids=${ids.join(',')}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } else {
+      await fetch(`${config.API_HOST}/transactions/${ids}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    }
+    return (ids);
   } catch (err) {
     throw Error('Error during transaction deletion.');
   }

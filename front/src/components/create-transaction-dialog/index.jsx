@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -26,25 +26,32 @@ import {
 } from '@material-ui/pickers';
 
 // own
-import useStyles from './styles';
-import AccountSelect from '../account-select';
-import TagsSelect from '../tags-select';
+import withIsMobile from 'hocs/with-is-mobile.jsx';
+import ConditionalWrapper from 'shared/conditional-wrapper';
 import {
   create as createAction,
   update as updateAction,
   createEditDialogOpen as openAction,
   createEditDialogClose as closeAction,
   detailsDialogOpen as openDetailsAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import useStyles from './styles';
+import AccountSelect from '../account-select';
+import TagsSelect from '../tags-select';
 
 function PaperComponent(props) {
   return (
-    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+    <ConditionalWrapper
+      condition={!props.isMobile}
+      ElementType={Draggable}
+      handle="#draggable-dialog-title"
+      cancel={'[class*="MuiDialogContent-root"]'}
+    >
       <Paper {...props} />
-    </Draggable>
+    </ConditionalWrapper>
   );
 }
 
@@ -61,6 +68,7 @@ function CreateTransactionDialog({
   changeUIIndex,
   lng,
   openDetails,
+  isMobile,
 }) {
   const classes = useStyles();
   const [incoming, setIncoming] = useState(false);
@@ -77,15 +85,15 @@ function CreateTransactionDialog({
   const [hasErrors, setHasErrors] = useState(true);
   const location = useLocation();
 
-  function amountSignCorrection(val) {
+  const amountSignCorrection = useCallback((val) => {
     if (incoming) {
       setAmount(Math.abs(val));
     } else {
       setAmount(Math.abs(val) * -1);
     }
-  }
+  }, [setAmount, incoming]);
 
-  function setInitialState() {
+  const setInitialState = useCallback(() => {
     if (transactions?.[index]) {
       setIncoming(transactions[index].amount > 0);
       setReceipt(transactions[index].receipt);
@@ -99,10 +107,23 @@ function CreateTransactionDialog({
       setSelectedDate(new Date(transactions[index].date));
       setDraft(transactions[index].draft);
     }
-  }
+  }, [
+    setIncoming,
+    setReceipt,
+    setAmount,
+    setDescription,
+    setComments,
+    setEmitterName,
+    setReceiverName,
+    setSelectedAccount,
+    setTags,
+    setSelectedDate,
+    setDraft,
+    transactions,
+    index,
+  ]);
 
-  function clearForm() {
-    console.log("****LIMPIANDO")
+  const clearForm = useCallback(() => {
     setIncoming(false);
     setReceipt(false);
     setAmount(0.0);
@@ -115,17 +136,30 @@ function CreateTransactionDialog({
     setSelectedDate(new Date());
     setHasErrors(true);
     setDraft(false);
-  }
+  }, [
+    setIncoming,
+    setReceipt,
+    setAmount,
+    setDescription,
+    setComments,
+    setEmitterName,
+    setReceiverName,
+    setSelectedAccount,
+    setTags,
+    setSelectedDate,
+    setHasErrors,
+    setDraft,
+  ]);
 
   useEffect(() => {
     if (index !== undefined) {
       setInitialState();
     }
-  }, [index]);
+  }, [setInitialState, index]);
 
   useEffect(() => {
     amountSignCorrection(amount);
-  }, [incoming]);
+  }, [amount, amountSignCorrection]);
 
   // controls hasErrors
   useEffect(() => {
@@ -144,7 +178,8 @@ function CreateTransactionDialog({
     open();
   }
 
-  function handleViewDetails() {
+  function handleViewDetails(e) {
+    e.stopPropagation();
     close();
     openDetails();
   }
@@ -194,13 +229,33 @@ function CreateTransactionDialog({
 
   return (
     <div className={classes.root}>
-      <IconButton className={classes.addButton} color="primary" aria-label="add" onClick={handleClickOpen} size="medium">
+      <IconButton
+        className={classes.addButton}
+        color="primary"
+        aria-label="add"
+        onClick={handleClickOpen}
+        size="medium"
+      >
         <AddIcon fontSize="inherit" />
       </IconButton>
-      <Dialog open={isOpen} onClose={handleClose} aria-labelledby="form-dialog-title" PaperComponent={PaperComponent}>
-        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            { index !== undefined ? i18n.t('createTransaction.editTitle', { lng }) : i18n.t('createTransaction.addTitle', { lng }) }
+      <Dialog
+        open={isOpen}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+        PaperComponent={PaperComponent}
+        PaperProps={{ isMobile }}
+      >
+        <DialogTitle style={{ cursor: "move" }} id="draggable-dialog-title">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            {index !== undefined
+              ? i18n.t("createTransaction.editTitle", { lng })
+              : i18n.t("createTransaction.addTitle", { lng })}
             <Button onClick={handleViewDetails} color="primary">
               <VisibilityIcon />
             </Button>
@@ -210,110 +265,142 @@ function CreateTransactionDialog({
         <DialogContent>
           <FormGroup row>
             <FormControlLabel
-              control={<Checkbox checked={draft} onChange={() => { setDraft(!draft); }} name="draft" />}
-              label={i18n.t('createTransaction.draft', { lng })}
+              control={
+                <Checkbox
+                  checked={draft}
+                  onChange={() => {
+                    setDraft(!draft);
+                  }}
+                  name="draft"
+                />
+              }
+              label={i18n.t("createTransaction.draft", { lng })}
             />
           </FormGroup>
           <FormGroup row>
             <FormControlLabel
-              control={<Checkbox checked={receipt} onChange={() => { setReceipt(!receipt); }} name="receipt" />}
-              label={i18n.t('createTransaction.receipt', { lng })}
+              control={
+                <Checkbox
+                  checked={receipt}
+                  onChange={() => {
+                    setReceipt(!receipt);
+                  }}
+                  name="receipt"
+                />
+              }
+              label={i18n.t("createTransaction.receipt", { lng })}
             />
           </FormGroup>
           <div className={classes.selectGroup}>
-            <MuiPickersUtilsProvider utils={DayJsUtils} className={classes.dateSelector}>
+            <MuiPickersUtilsProvider
+              utils={DayJsUtils}
+              className={classes.dateSelector}
+            >
               <KeyboardDatePicker
                 margin="normal"
                 id="date-picker-dialog"
-                label={i18n.t('createTransaction.date', { lng })}
+                label={i18n.t("createTransaction.date", { lng })}
                 format="DD/MM/YYYY"
                 value={selectedDate}
                 onChange={handleDateChange}
                 KeyboardButtonProps={{
-                  'aria-label': 'change date',
+                  "aria-label": "change date",
                 }}
               />
             </MuiPickersUtilsProvider>
             <AccountSelect
-              label={i18n.t('createTransaction.account', { lng })}
+              label={i18n.t("createTransaction.account", { lng })}
               value={selectedAccount}
-              handleChange={(e) => { setSelectedAccount(e.target.value); }}
+              handleChange={(e) => {
+                setSelectedAccount(e.target.value);
+              }}
               layout="modal"
             />
           </div>
 
           <FormGroup row className={classes.transactionTargetSwitch}>
             <FormControlLabel
-              control={<Switch checked={incoming} onChange={handleIncomingSwitch} name="incoming" />}
-              label={incoming ? i18n.t('createTransaction.incomig', { lng }) : i18n.t('createTransaction.outgoing', { lng })}
+              control={
+                <Switch
+                  checked={incoming}
+                  onChange={handleIncomingSwitch}
+                  name="incoming"
+                />
+              }
+              label={
+                incoming
+                  ? i18n.t("createTransaction.incomig", { lng })
+                  : i18n.t("createTransaction.outgoing", { lng })
+              }
             />
           </FormGroup>
 
-          {
-            !draft
-              && <TextField
-                className={classes.transactionTargetTextField}
-                margin="dense"
-                id={incoming ? 'emitterName' : 'receiverName'}
-                label={incoming ? i18n.t('createTransaction.emitter', { lng }) : i18n.t('createTransaction.receiver', { lng })}
-                type="text"
-                value={incoming ? emitterName : receiverName}
-                onChange={(e) => {
-                  if (incoming) {
-                    setEmitterName(e.target.value);
-                  } else {
-                    setReceiverName(e.target.value);
-                  }
-                }}
-                fullWidth
-              />
-          }
-
+          {!draft && (
+            <TextField
+              className={classes.transactionTargetTextField}
+              margin="dense"
+              id={incoming ? "emitterName" : "receiverName"}
+              label={
+                incoming
+                  ? i18n.t("createTransaction.emitter", { lng })
+                  : i18n.t("createTransaction.receiver", { lng })
+              }
+              type="text"
+              value={incoming ? emitterName : receiverName}
+              onChange={(e) => {
+                if (incoming) {
+                  setEmitterName(e.target.value);
+                } else {
+                  setReceiverName(e.target.value);
+                }
+              }}
+              fullWidth
+            />
+          )}
 
           <TextField
             required
             className={classes.amount}
             margin="dense"
             id="amount"
-            label={i18n.t('createTransaction.amount', { lng })}
+            label={i18n.t("createTransaction.amount", { lng })}
             type="number"
             value={amount}
             onChange={handleAmountChange}
             fullWidth
           />
 
-          {
-            !draft
-              && <TextField
+          {!draft && (
+            <TextField
               margin="dense"
               id="description"
-              label={i18n.t('createTransaction.description', { lng })}
+              label={i18n.t("createTransaction.description", { lng })}
               type="text"
               value={description}
-              onChange={(e) => { setDescription(e.target.value); }}
+              onChange={(e) => {
+                setDescription(e.target.value);
+              }}
               fullWidth
             />
-          }
+          )}
 
           <TagsSelect
-            label={i18n.t('createTransaction.tags', { lng })}
+            label={i18n.t("createTransaction.tags", { lng })}
             value={tags}
-            handleOnChange={ (e, value) => {
+            handleOnChange={(e, value) => {
               setTags(value);
-            } }
+            }}
           />
         </DialogContent>
 
         <DialogActions>
           <Button onClick={handleClose} color="primary">
-            {i18n.t('createTransaction.cancel', { lng })}
+            {i18n.t("createTransaction.cancel", { lng })}
           </Button>
           <Button disabled={hasErrors} onClick={processData} color="primary">
-            {
-              index !== undefined
-                ? i18n.t('createTransaction.save', { lng })
-                : i18n.t('createTransaction.add', { lng })
-            }
+            {index !== undefined
+              ? i18n.t("createTransaction.save", { lng })
+              : i18n.t("createTransaction.add", { lng })}
           </Button>
         </DialogActions>
       </Dialog>
@@ -371,4 +458,4 @@ const mapDispatchToProps = (dispatch) => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(CreateTransactionDialog);
+export default connect(mapStateToProps, mapDispatchToProps)(withIsMobile(CreateTransactionDialog));
