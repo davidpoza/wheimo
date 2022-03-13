@@ -17,9 +17,9 @@ import TransactionIcon from '@material-ui/icons/Receipt';
 import BarChart from '@material-ui/icons/BarChart';
 
 import i18n from 'utils/i18n';
+import { resetState } from 'actions/user';
+import { closeDrawer as closeDrawerAction } from 'actions/ui';
 import useStyles from './styles';
-import { resetState } from '../../actions/user';
-import { closeDrawer as closeDrawerAction } from '../../actions/ui';
 
 function NavMenu({ resetUserState, drawerOpen, closeDrawer, lng }) {
   const classes = useStyles();

@@ -11,19 +11,18 @@ import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
 // own
-import useStyles from './styles';
-import PiggyConfig from './_children/piggy-config';
-import OpbkConfig from './_children/opbk-config';
-
 import {
   editDialogOpen as openAction,
   editDialogClose as closeAction,
   update as updateAction,
-} from '../../actions/account';
+} from 'actions/account';
 import {
   contextMenuChangeIndex as changeIndexAction,
   contextMenuChangeId as changeIdAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import useStyles from './styles';
+import PiggyConfig from './_children/piggy-config';
+import OpbkConfig from './_children/opbk-config';
 import AccountTypeSelect from '../account-type-select';
 
 function PaperComponent(props) {

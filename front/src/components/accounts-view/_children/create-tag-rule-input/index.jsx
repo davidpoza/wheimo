@@ -12,8 +12,8 @@ import IconButton from '@material-ui/core/IconButton';
 import useStyles from './styles';
 import {
   update as updateAction,
-} from '../../../../actions/tag';
-import * as ruleApi from '../../../../api-client/rule';
+} from 'actions/tag';
+import * as ruleApi from 'api-client/rule';
 
 function CreateTagRuleInput({
   user, updateTag, currentRules, tagId, tagIndex,

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import Config from '../utils/config';
+import Config from 'utils/config';
 
 export default function usePushNotifications(token) {
   const [userSubscription, setUserSubscription] = useState(null);

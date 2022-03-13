@@ -28,19 +28,19 @@ import {
 // own
 import withIsMobile from 'hocs/with-is-mobile.jsx';
 import ConditionalWrapper from 'shared/conditional-wrapper';
-import useStyles from './styles';
-import AccountSelect from '../account-select';
-import TagsSelect from '../tags-select';
 import {
   create as createAction,
   update as updateAction,
   createEditDialogOpen as openAction,
   createEditDialogClose as closeAction,
   detailsDialogOpen as openDetailsAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import useStyles from './styles';
+import AccountSelect from '../account-select';
+import TagsSelect from '../tags-select';
 
 function PaperComponent(props) {
   return (

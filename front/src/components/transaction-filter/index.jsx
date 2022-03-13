@@ -10,15 +10,15 @@ import i18n from 'utils/i18n';
 
 
 // own
+import {
+  toggleCharts as toggleChartsAction,
+  setPage as setPageAction,
+} from 'actions/transaction';
 import withIsMobile from 'hocs/with-is-mobile.jsx';
 import CreateTransationDialog from '../create-transaction-dialog';
 import FiltersOnDrawer from './children/filters-on-drawer';
 import useStyles from './styles';
 
-import {
-  toggleCharts as toggleChartsAction,
-  setPage as setPageAction,
-} from '../../actions/transaction';
 
 function TransactionFilter({
   handleChangeFilter, toggleCharts, setPage, showCharts = false, isMobile, onlyDrafts, lng,

@@ -14,7 +14,7 @@ import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
-} from '../../../../actions/ui';
+} from 'actions/ui';
 
 function AccountsListItem({
   name,

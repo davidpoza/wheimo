@@ -11,7 +11,7 @@ import FormControl from '@material-ui/core/FormControl';
 import useStyles from './styles';
 import {
   fetchAll as fetchAccountsAction,
-} from '../../actions/account';
+} from 'actions/account';
 
 function AccountSelect({
   user, label, value, handleChange, fetchAccounts, accounts, layout = 'filter', className, ...rest

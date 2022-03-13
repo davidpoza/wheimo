@@ -1,8 +1,8 @@
 import {
   fetchAll, create, remove, update,
-} from '../actions/account';
-import { azOrder } from '../utils/utilities';
-import types from '../actions/types';
+} from 'actions/account';
+import { azOrder } from 'utils/utilities';
+import types from 'actions/types';
 
 const initialState = {
   isLoading: false,

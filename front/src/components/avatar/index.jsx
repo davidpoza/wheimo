@@ -10,9 +10,9 @@ import SettingsDialog from 'components/settings-dialog';
 import {
   settingsDialogOpen as openAction,
   settingsDialogClose as closeAction,
-} from '../../actions/user';
+} from 'actions/user';
 // import usePushNotifications from '../../hooks/use-push-notification';
-import config from '../../utils/config';
+import config from 'utils/config';
 import useStyles from './styles';
 
 function MyAvatar({ user, openSettingsDialog }) {

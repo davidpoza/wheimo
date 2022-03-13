@@ -9,18 +9,18 @@ import {
   fetchAll as fetchAllAction,
   fetchExpensesByTag as fetchExpensesByTagAction,
   detailsDialogOpen as openAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import withLoader from 'hocs/with-loader';
+import withMessages from 'hocs/with-messages';
 import TransactionGrid from '../transaction-grid';
 import Charts from '../charts';
 import TransactionFilter from '../transaction-filter';
 import DetailsDialog from '../details-dialog';
 import MergeDialog from '../merge-dialog';
-import withLoader from '../../hocs/with-loader';
-import withMessages from '../../hocs/with-messages';
 import useStyles from './styles';
 
 function HomeView({

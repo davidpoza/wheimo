@@ -7,10 +7,10 @@ import TextField from '@material-ui/core/TextField';
 import i18n from 'utils/i18n';
 
 // own
-import useStyles from './styles';
 import {
   create as createAction,
-} from '../../../../actions/tag';
+} from 'actions/tag';
+import useStyles from './styles';
 
 function CreateTagInput({
   user, tags = [], create, lng,

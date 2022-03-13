@@ -11,8 +11,8 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
 // own
+import { getAuth as getAuthAction } from 'actions/user';
 import useStyles from './styles';
-import { getAuth as getAuthAction } from '../../actions/user';
 
 function Login({ getAuth, user, history }) {
   const classes = useStyles();

@@ -10,11 +10,11 @@ import TextField from '@material-ui/core/TextField';
 import i18n from 'utils/i18n';
 
 // own
-import useStyles from './styles';
 import {
   update as updateAction,
-} from '../../../../actions/tag';
-import * as ruleApi from '../../../../api-client/rule';
+} from 'actions/tag';
+import * as ruleApi from 'api-client/rule';
+import useStyles from './styles';
 
 function CreateTagRuleInput({
   user, updateTag, currentRules, tagId, tagIndex, lng,

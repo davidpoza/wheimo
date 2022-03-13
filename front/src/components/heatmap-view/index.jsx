@@ -6,10 +6,10 @@ import { connect } from 'react-redux';
 import YearSelector from 'shared/year-selector';
 import useYearSelector from 'shared/year-selector/useYearSelector';
 import withIsMobile from 'hocs/with-is-mobile.jsx';
+import withLoader from 'hocs/with-loader';
 import Heatmap from './_children/heatmap';
-import withLoader from '../../hocs/with-loader';
-import useStyles from './styles';
 import { fetchAll, calculateStatistics } from 'api-client/total';
+import useStyles from './styles';
 import Statistics from './_children/statistics';
 
 const calculateDateRangeList = (isMob) => {

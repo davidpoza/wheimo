@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 // own
 import YearSelector from 'shared/year-selector';
 import useYearSelector from 'shared/year-selector/useYearSelector';
+import withLoader from 'hocs/with-loader';
 import withIsMobile from 'hocs/with-is-mobile.jsx';
 import BarChart from './_children/bar-chart';
-import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
 import { fetchAll } from 'api-client/total';
 import TagList from 'components/chart-view/_children/tag-list';

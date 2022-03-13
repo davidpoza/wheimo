@@ -13,10 +13,9 @@ import i18n from 'utils/i18n';
 
 // own
 import TagRules from 'components/tags-view/_children/tag-rules/index.jsx'
-import useStyles from './styles';
 import {
   showSuccessMessage as showSuccessMessageAction,
-} from '../../actions/messages';
+} from 'actions/messages';
 
 import {
   editDialogOpen as openAction,
@@ -24,11 +23,12 @@ import {
   apply as applyAction,
   untag as untagAction,
   update as updateAction,
-} from '../../actions/tag';
+} from 'actions/tag';
 import {
   contextMenuChangeIndex as changeIndexAction,
   contextMenuChangeId as changeIdAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import useStyles from './styles';
 
 function PaperComponent(props) {
   return (

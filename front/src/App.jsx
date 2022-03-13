@@ -1,22 +1,22 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
 // own
-import './App.css';
-import PrivateRoute from './hocs/private-route';
-import Content from './components/content';
-import HomeView from './components/home-view';
-import TagsView from './components/tags-view';
-import AccountsView from './components/accounts-view';
-import HeatmapView from './components/heatmap-view';
-import ChartView from './components/chart-view';
-import LoginView from './components/login-view';
-import AppBar from './components/app-bar';
-
+import PrivateRoute from 'hocs/private-route';
+import Content from 'components/content';
+import HomeView from 'components/home-view';
+import TagsView from 'components/tags-view';
+import AccountsView from 'components/accounts-view';
+import HeatmapView from 'components/heatmap-view';
+import ChartView from 'components/chart-view';
+import LoginView from 'components/login-view';
+import AppBar from 'components/app-bar';
 import useValidateUser from 'hooks/useValidateUser';
+import './App.css';
 
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
+
 
 const theme = createMuiTheme({
   "palette": {

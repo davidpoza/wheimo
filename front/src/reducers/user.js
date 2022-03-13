@@ -1,6 +1,6 @@
 import i18n from 'utils/i18n';
-import { getAuth, updateUser } from '../actions/user';
-import types from '../actions/types';
+import { getAuth, updateUser } from 'actions/user';
+import types from 'actions/types';
 
 const initialState = {
   isLoading: false,

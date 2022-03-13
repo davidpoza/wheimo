@@ -18,19 +18,19 @@ import i18n from 'utils/i18n';
 
 // own
 import { fetchAll, update } from 'api-client/transaction';
-import useStyles from './styles';
 import {
   mergeDialogOpen as openAction,
   mergeDialogClose as closeAction,
   remove as removeTransactionAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
   contextMenuChangeId as changeIdAction,
-} from '../../actions/ui';
+} from 'actions/ui';
 import {
   showSuccessMessage as showSuccessMessageAction,
-} from '../../actions/messages';
+} from 'actions/messages';
+import useStyles from './styles';
 
 function PaperComponent(props) {
   return (

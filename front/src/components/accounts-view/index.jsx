@@ -5,12 +5,12 @@ import { connect } from 'react-redux';
 // own
 import {
   fetchAll as fetchAccountsAction,
-} from '../../actions/account';
+} from 'actions/account';
+import withLoader from 'hocs/with-loader';
 import EditAccountDialog from '../edit-account-dialog';
 import AccountsList from './_children/accounts-list';
 import OperationDropdown from '../operation-dropdown';
 import CreateAccountInput from './_children/create-account-input';
-import withLoader from '../../hocs/with-loader';
 import useStyles from './styles';
 
 function AccountsView({

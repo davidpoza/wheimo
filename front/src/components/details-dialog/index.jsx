@@ -18,8 +18,6 @@ import i18n from 'utils/i18n';
 // own
 import withIsMobile from 'hocs/with-is-mobile.jsx';
 import ConditionalWrapper from 'shared/conditional-wrapper';
-import useStyles from './styles';
-import Editor from '../editor';
 import {
   addAttachment as addAttachmentAction,
   create as createAction,
@@ -27,11 +25,13 @@ import {
   detailsDialogOpen as openAction,
   update as updateAction,
   createEditDialogOpen as openTransactionDialogAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
   contextMenuChangeId as changeIdAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import useStyles from './styles';
+import Editor from '../editor';
 import Tags from '../tags';
 import Attachments from './_children/attachment';
 

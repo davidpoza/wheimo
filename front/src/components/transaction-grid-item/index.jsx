@@ -21,12 +21,12 @@ import {
   toggleChecked as toggleCheckedAction,
   update as updateAction,
   detailsDialogOpen as openAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
-} from '../../actions/ui';
+} from 'actions/ui';
 import { formatAmount } from 'utils/utilities';
 
 function TransactionGridItem({
