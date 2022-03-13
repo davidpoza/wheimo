@@ -32,6 +32,13 @@ export const remove = createAsyncAction('DELETE_TRANSACTION', async (token, ids,
   return (indexes);
 });
 
+export const applySpecificTags = createAsyncAction('APPLY_TAGS_TRANSACTIONS', async (token, {
+  ids, tagIds,
+}) => {
+  const res = await transactionApi.applySpecificTags(token, ids, tagIds);
+  return res;
+});
+
 export const fetchExpensesByTag = createAsyncAction('TRANSACTIONS_EXPENSES_BY_TAG', async (token, {
   from, to, accountId,
 }) => {
@@ -69,6 +76,15 @@ export const detailsDialogOpen = () => ({
 export const detailsDialogClose = () => ({
   type: types.TRANSACTIONS_DETAILS_DIALOG_CLOSE,
 });
+
+export const taggingDialogOpen = () => ({
+  type: types.TRANSACTIONS_TAGGING_DIALOG_OPEN,
+});
+
+export const taggingDialogClose = () => ({
+  type: types.TRANSACTIONS_TAGGING_DIALOG_CLOSE ,
+});
+
 
 export const toggleCharts = () => ({
   type: types.TRANSACTIONS_TOGGLE_CHARTS,

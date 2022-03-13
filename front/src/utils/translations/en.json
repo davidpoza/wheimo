@@ -34,7 +34,8 @@
     "merge": "Merge into",
     "edit": "Edit",
     "delete": "Delete",
-    "copyLink": "Copy link"
+    "copyLink": "Copy link",
+    "tag": "Apply tags"
   },
   "transactionDetails": {
     "title": "Transaction detail",
@@ -95,6 +96,12 @@
     "label": "Transaction you want to merge into",
     "cancel": "Cancel",
     "proceed": "Merge"
+  },
+  "taggingDialog": {
+    "title": "Apply tags over selected transactions",
+    "label": "Select tags to been applied",
+    "cancel": "Cancel",
+    "proceed": "Apply"
   },
   "statistics": {
     "mostExpensiveDay": "Most expensive day",
@@ -189,7 +196,8 @@
     "updateTransaction": "Changes were saved successfully",
     "createTransaction": "Entry created successfully",
     "deleteTransaction": "Entry deleted successfully",
-    "linkCopied": "Link copied to the clipboard"
+    "linkCopied": "Link copied to the clipboard",
+    "applySpecificTags": "Selected transactions got successfully tagged"
   },
   "errorMessages": {
     "createTag": "Tag creation failed",
@@ -199,6 +207,7 @@
     "updateTransaction": "An error ocurred during data saving",
     "fetchTransactions": "An error ocurred during transaction retrieving",
     "createTransaction": "An error ocurred during transaction creation",
-    "deleteTransaction": "An error ocurred during transaction deletion"
+    "deleteTransaction": "An error ocurred during transaction deletion",
+    "applySpecificTags": "An error ocurred during transactions tagging"
   }
 }
