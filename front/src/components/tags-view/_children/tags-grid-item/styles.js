@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core/styles';
-import { Block } from '@material-ui/icons';
 
 export default makeStyles((theme) => ({
   root: {

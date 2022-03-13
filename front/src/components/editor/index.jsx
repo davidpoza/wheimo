@@ -5,8 +5,8 @@ import ReactMarkdown from 'react-markdown';
 import gfm from 'remark-gfm';
 
 // own
-import useStyles from './styles';
 import withIsMobile from 'hocs/with-is-mobile.jsx';
+import useStyles from './styles';
 
 function Editor({
   content, setContent, isMobile,

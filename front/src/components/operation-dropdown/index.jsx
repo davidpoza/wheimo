@@ -6,31 +6,31 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 // own
 import i18n from 'utils/i18n';
-import useStyles from './styles';
 import {
   remove as removeTransactionAction,
   createEditDialogOpen as openTransactionDialogAction,
   mergeDialogClose as mergeDialogCloseAction,
   mergeDialogOpen as mergeDialogOpenAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   remove as removeTagAction,
   editDialogOpen as openEditTagDialogAction,
-} from '../../actions/tag';
+} from 'actions/tag';
 import {
   remove as removeAccountAction,
   editDialogOpen as openEditAccountDialogAction,
-} from '../../actions/account';
+} from 'actions/account';
 import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
-} from '../../actions/ui';
+} from 'actions/ui';
 import {
   showSuccessMessage as showSuccessMessageAction,
-} from '../../actions/messages';
+} from 'actions/messages';
 import { copyToClipboard } from 'utils/utilities';
 import config from 'utils/config';
+import useStyles from './styles';
 
 function OperationDropdown({
   lng,

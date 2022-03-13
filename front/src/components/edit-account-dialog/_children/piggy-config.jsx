@@ -8,9 +8,9 @@ import {
 import DayJsUtils from '@date-io/dayjs';
 
 // own
+import { calculateSavingSeries } from 'utils/utilities';
 import useStyles from '../styles';
 import SavingsChart from '../../savings-chart';
-import { calculateSavingSeries } from 'utils/utilities';
 
 export default function PiggyConfig({
   savingInitDate, setSavingInitDate,

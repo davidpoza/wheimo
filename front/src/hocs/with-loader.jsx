@@ -1,7 +1,7 @@
 import React from 'react';
 
 // own
-import Loader from '../components/loader';
+import Loader from 'components/loader';
 
 /* eslint-disable react/prop-types */
 const withLoader = (Component) => ({

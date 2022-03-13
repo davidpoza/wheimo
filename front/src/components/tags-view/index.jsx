@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 // own
 import {
   fetchAll as fetchTagsAction,
-} from '../../actions/tag';
+} from 'actions/tag';
+import withLoader from 'hocs/with-loader';
+import withMessages from 'hocs/with-messages';
 import EditTagDialog from '../edit-tag-dialog';
 import TagsGrid from './_children/tags-grid';
 import OperationDropdown from '../operation-dropdown';
 import CreateTagInput from './_children/create-tag-input';
-import withLoader from '../../hocs/with-loader';
-import withMessages from '../../hocs/with-messages';
 import useStyles from './styles';
 
 function TagsView({
@@ -21,7 +21,7 @@ function TagsView({
 
   useEffect(() => {
     fetchTags(user.token);
-  }, []);
+  }, [fetchTags, user.token]);
 
   return (
     <div className={classes.root}>

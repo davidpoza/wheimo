@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,11 +10,11 @@ import TextField from '@material-ui/core/TextField';
 import i18n from 'utils/i18n';
 
 // own
-import useStyles from './styles';
 import {
   update as updateAction,
-} from '../../../../actions/tag';
-import * as ruleApi from '../../../../api-client/rule';
+} from 'actions/tag';
+import * as ruleApi from 'api-client/rule';
+import useStyles from './styles';
 
 function CreateTagRuleInput({
   user, updateTag, currentRules, tagId, tagIndex, lng,
@@ -25,17 +25,17 @@ function CreateTagRuleInput({
   const [value, setValue] = useState('');
   const [error, setError] = useState(true);
 
-  function checkErrors() {
+  const checkErrors = useCallback(() => {
     if (type === '' || value === '') {
       setError(true);
     } else {
       setError(false);
     }
-  }
+  }, [type, value]);
 
   useEffect(() => {
     checkErrors();
-  }, [type, value]);
+  }, [checkErrors]);
 
   async function add() {
     const uuid = uuidv4();

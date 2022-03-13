@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLocation } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -28,19 +28,19 @@ import {
 // own
 import withIsMobile from 'hocs/with-is-mobile.jsx';
 import ConditionalWrapper from 'shared/conditional-wrapper';
-import useStyles from './styles';
-import AccountSelect from '../account-select';
-import TagsSelect from '../tags-select';
 import {
   create as createAction,
   update as updateAction,
   createEditDialogOpen as openAction,
   createEditDialogClose as closeAction,
   detailsDialogOpen as openDetailsAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import useStyles from './styles';
+import AccountSelect from '../account-select';
+import TagsSelect from '../tags-select';
 
 function PaperComponent(props) {
   return (
@@ -85,15 +85,15 @@ function CreateTransactionDialog({
   const [hasErrors, setHasErrors] = useState(true);
   const location = useLocation();
 
-  function amountSignCorrection(val) {
+  const amountSignCorrection = useCallback((val) => {
     if (incoming) {
       setAmount(Math.abs(val));
     } else {
       setAmount(Math.abs(val) * -1);
     }
-  }
+  }, [setAmount, incoming]);
 
-  function setInitialState() {
+  const setInitialState = useCallback(() => {
     if (transactions?.[index]) {
       setIncoming(transactions[index].amount > 0);
       setReceipt(transactions[index].receipt);
@@ -107,10 +107,23 @@ function CreateTransactionDialog({
       setSelectedDate(new Date(transactions[index].date));
       setDraft(transactions[index].draft);
     }
-  }
+  }, [
+    setIncoming,
+    setReceipt,
+    setAmount,
+    setDescription,
+    setComments,
+    setEmitterName,
+    setReceiverName,
+    setSelectedAccount,
+    setTags,
+    setSelectedDate,
+    setDraft,
+    transactions,
+    index,
+  ]);
 
-  function clearForm() {
-    console.log("****LIMPIANDO")
+  const clearForm = useCallback(() => {
     setIncoming(false);
     setReceipt(false);
     setAmount(0.0);
@@ -123,17 +136,30 @@ function CreateTransactionDialog({
     setSelectedDate(new Date());
     setHasErrors(true);
     setDraft(false);
-  }
+  }, [
+    setIncoming,
+    setReceipt,
+    setAmount,
+    setDescription,
+    setComments,
+    setEmitterName,
+    setReceiverName,
+    setSelectedAccount,
+    setTags,
+    setSelectedDate,
+    setHasErrors,
+    setDraft,
+  ]);
 
   useEffect(() => {
     if (index !== undefined) {
       setInitialState();
     }
-  }, [index]);
+  }, [setInitialState, index]);
 
   useEffect(() => {
     amountSignCorrection(amount);
-  }, [incoming]);
+  }, [amount, amountSignCorrection]);
 
   // controls hasErrors
   useEffect(() => {

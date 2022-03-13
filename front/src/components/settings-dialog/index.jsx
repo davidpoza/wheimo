@@ -16,12 +16,12 @@ import Draggable from 'react-draggable';
 import i18n from 'utils/i18n';
 
 // own
-import useStyles from './styles';
 import {
   settingsDialogOpen as openAction,
   settingsDialogClose as closeAction,
   updateUser as updateAction,
-} from '../../actions/user';
+} from 'actions/user';
+import useStyles from './styles';
 
 function PaperComponent(props) {
   return (
@@ -43,7 +43,6 @@ function SettingsDialog({
   const [email, setEmail] = useState();
   const [theme, setTheme] = useState();
   const [lang, setLang] = useState();
-  const [photo, setPhoto] = useState();
 
   function handleClose() {
     close();

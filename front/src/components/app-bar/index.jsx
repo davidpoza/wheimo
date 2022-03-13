@@ -55,7 +55,8 @@ function MyAppBar({ openDrawer, lng }) {
 }
 
 MyAppBar.propTypes = {
-
+  openDrawer: PropTypes.func,
+  lng: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({

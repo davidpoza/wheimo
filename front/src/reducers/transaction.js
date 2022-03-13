@@ -1,8 +1,8 @@
 import i18n from 'utils/i18n';
 import {
   fetchAll, create, remove, update, fetchExpensesByTag, addAttachment, removeAttachment, updatedAttachment,
-} from '../actions/transaction';
-import types from '../actions/types';
+} from 'actions/transaction';
+import types from 'actions/types';
 
 const initialState = {
   isLoading: false,

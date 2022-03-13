@@ -1,4 +1,4 @@
-import types from '../actions/types';
+import types from 'actions/types';
 
 /*
 This reducer manages general messages, not linked to transaction, tag, account or user entities

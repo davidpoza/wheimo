@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import TextField from '@material-ui/core/TextField';
@@ -11,19 +11,18 @@ import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 
 // own
-import useStyles from './styles';
-import PiggyConfig from './_children/piggy-config';
-import OpbkConfig from './_children/opbk-config';
-
 import {
   editDialogOpen as openAction,
   editDialogClose as closeAction,
   update as updateAction,
-} from '../../actions/account';
+} from 'actions/account';
 import {
   contextMenuChangeIndex as changeIndexAction,
   contextMenuChangeId as changeIdAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import useStyles from './styles';
+import PiggyConfig from './_children/piggy-config';
+import OpbkConfig from './_children/opbk-config';
 import AccountTypeSelect from '../account-type-select';
 
 function PaperComponent(props) {
@@ -66,7 +65,7 @@ function EditAccountDialog({
     close();
   }
 
-  function setInitialState() {
+  const setInitialState = useCallback(() => {
     if (accounts[index]) {
       setName(accounts[index].name);
       setType(accounts[index].bankId);
@@ -82,13 +81,29 @@ function EditAccountDialog({
       setAccessPassword(accounts[index].accessPassword);
       setSettings(accounts[index].settings);
     }
-  }
+  }, [
+    setName,
+    setType,
+    setDescription,
+    setBalance,
+    setSavingInitDate,
+    setSavingTargetDate,
+    setSavingAmount,
+    setSavingTargetAmount,
+    setSavingAmountFunc,
+    setSavingFrequency,
+    setAccessId,
+    setAccessPassword,
+    setSettings,
+    accounts,
+    index,
+  ]);
 
   useEffect(() => {
     if (index !== undefined) {
       setInitialState();
     }
-  }, [index]);
+  }, [setInitialState, index]);
 
   async function processData() {
     console.log('-->', settings);

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import get from 'lodash.get';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -41,7 +40,7 @@ function AccountTypeSelect({
 
 AccountTypeSelect.propTypes = {
   label: PropTypes.string,
-  value: PropTypes.number,
+  value: PropTypes.string,
   handleChange: PropTypes.func,
 };
 

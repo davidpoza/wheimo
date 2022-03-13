@@ -14,7 +14,7 @@ import {
   contextMenuChangePosition as changePositionAction,
   contextMenuChangeId as changeIdAction,
   contextMenuChangeIndex as changeIndexAction,
-} from '../../../../actions/ui';
+} from 'actions/ui';
 
 function AccountsListItem({
   name,
@@ -126,7 +126,7 @@ AccountsListItem.propTypes = {
   indexInStore: PropTypes.number,
   balance: PropTypes.number,
   savingTargetAmount: PropTypes.number,
-  bankId: PropTypes.number,
+  bankId: PropTypes.string,
   name: PropTypes.string,
   number: PropTypes.string,
   description: PropTypes.string,

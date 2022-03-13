@@ -8,7 +8,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import PersonIcon from '@material-ui/icons/PersonOutline';
 import ExitIcon from '@material-ui/icons/ExitToApp';
 import TagIcon from '@material-ui/icons/LocalOffer';
 import CreateIcon from '@material-ui/icons/Create';
@@ -18,9 +17,9 @@ import TransactionIcon from '@material-ui/icons/Receipt';
 import BarChart from '@material-ui/icons/BarChart';
 
 import i18n from 'utils/i18n';
+import { resetState } from 'actions/user';
+import { closeDrawer as closeDrawerAction } from 'actions/ui';
 import useStyles from './styles';
-import { resetState } from '../../actions/user';
-import { closeDrawer as closeDrawerAction } from '../../actions/ui';
 
 function NavMenu({ resetUserState, drawerOpen, closeDrawer, lng }) {
   const classes = useStyles();
@@ -99,6 +98,13 @@ function NavMenu({ resetUserState, drawerOpen, closeDrawer, lng }) {
   >
     {list()}
   </Drawer>
+}
+
+NavMenu.propTypes = {
+  resetUserState: PropTypes.func,
+  drawerOpen: PropTypes.bool,
+  closeDrawer: PropTypes.func,
+  lng: PropTypes.string,
 }
 
 const mapStateToProps = (state) => ({

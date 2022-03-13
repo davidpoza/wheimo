@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import useStyles from './styles';
 import {
   fetchAll as fetchTagsAction,
-} from '../../actions/tag';
+} from 'actions/tag';
 
 function TagsSelect({
   user, label, handleOnChange, limitTags, value, fetchTags, fetchedTags,

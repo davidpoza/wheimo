@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
@@ -18,8 +18,6 @@ import i18n from 'utils/i18n';
 // own
 import withIsMobile from 'hocs/with-is-mobile.jsx';
 import ConditionalWrapper from 'shared/conditional-wrapper';
-import useStyles from './styles';
-import Editor from '../editor';
 import {
   addAttachment as addAttachmentAction,
   create as createAction,
@@ -27,11 +25,13 @@ import {
   detailsDialogOpen as openAction,
   update as updateAction,
   createEditDialogOpen as openTransactionDialogAction,
-} from '../../actions/transaction';
+} from 'actions/transaction';
 import {
   contextMenuChangeIndex as changeIndexAction,
   contextMenuChangeId as changeIdAction,
-} from '../../actions/ui';
+} from 'actions/ui';
+import useStyles from './styles';
+import Editor from '../editor';
 import Tags from '../tags';
 import Attachments from './_children/attachment';
 
@@ -72,19 +72,20 @@ function DetailsDialog({
   } = transactions?.[index] || {};
   const account = transactions?.[index]?.account?.name;
 
-  function uploadFile(blob, desc, transactionId) {
+  const uploadFile = useCallback((blob, desc, transactionId) => {
     const attachmentsData = new FormData();
     attachmentsData.append('attachment', blob);
     attachmentsData.append('description', desc);
     attachmentsData.append('transactionId', transactionId);
     addAttachment(user.token, attachmentsData);
-  }
+  }, [addAttachment, user.token]);
 
-  function setInitialState() {
+  const setInitialState = useCallback(() => {
     if (transactions?.[index]) {
       setComments(transactions?.[index]?.comments);
     }
-  }
+  }, [setComments, transactions, index]);
+
   function clearForm() {
     setComments('');
   }
@@ -93,7 +94,7 @@ function DetailsDialog({
     if (index !== undefined) {
       setInitialState();
     }
-  }, [index]);
+  }, [setInitialState, index]);
 
   useEffect(() => {
     if (index !== undefined) {
@@ -107,7 +108,7 @@ function DetailsDialog({
         };
       };
     }
-  }, [index]);
+  }, [uploadFile, index, transactions]);
 
   function handleOnAddFile(e) {
     uploadFile(e.target.files[0], 'attachment', transactions?.[index].id);

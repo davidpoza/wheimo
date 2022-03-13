@@ -10,13 +10,13 @@ import i18n from 'utils/i18n';
 
 // own
 import withIsMobile from 'hocs/with-is-mobile.jsx';
-import useStyles from './styles';
-import config from '../../../../utils/config';
-import Modal from '../../../modal';
+import config from 'utils/config';
 import {
   removeAttachment as removeAttachmentAction,
   updatedAttachment as updateAttachmentAction,
-} from '../../../../actions/transaction';
+} from 'actions/transaction';
+import Modal from 'components/modal';
+import useStyles from './styles';
 
 function MimeIcon({
   id, type, setShowLightbox, clickedImage,
