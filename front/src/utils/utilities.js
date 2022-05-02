@@ -159,3 +159,16 @@ export function isErrorCode(statusCode) {
 export async function copyToClipboard(text) {
   await navigator.clipboard.writeText(text);
 }
+
+export function calculateTotals(transactions) {
+  let expenses = 0;
+  let income = 0;
+  transactions?.forEach((t) => {
+    if (t.amount > 0) income += Math.abs(t.amount);
+    else expenses += Math.abs(t.amount);
+  });
+  return {
+    expenses: expenses.toFixed(2),
+    income: income.toFixed(2),
+  }
+}

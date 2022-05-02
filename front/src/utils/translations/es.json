@@ -28,7 +28,8 @@
     "showExpensesType": "Mostrar solo gastos",
     "showIncomesType": "Mostrar solo ingresos",
     "close": "Cerrar",
-    "reset": "Resetear filtros"
+    "reset": "Resetear filtros",
+    "total": "Total"
   },
   "opMenu": {
     "merge": "Copiar a",

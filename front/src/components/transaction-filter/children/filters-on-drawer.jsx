@@ -15,7 +15,8 @@ import AccountSelect from 'components/account-select';
 import TagsSelect from 'components/tags-select';
 import OperationTypeSelect from 'components/operation-type-select';
 import i18n from 'utils/i18n';
-
+import { calculateTotals } from 'utils/utilities';
+import withIsMobile from 'hocs/with-is-mobile.jsx';
 import useStyles from '../styles';
 
 function FiltersOnDrawer({
@@ -34,11 +35,22 @@ function FiltersOnDrawer({
   setFiltersOpen,
   tags,
   handleChangeFilter,
+  isMobile,
+  transactions,
  }) {
   const classes = useStyles();
   return (
     <div className={classes.drawerRoot}>
-      <h2>{i18n.t('filters.title', {lng})}</h2>
+      {
+        tags?.length > 0
+          && <div className={classes.totalSection}>
+            <span className={classes.text}>{i18n.t('filters.total', {lng})}</span>
+            <span className={classes.amount}>{calculateTotals(transactions).expenses} €</span>
+          </div>
+      }
+      {
+        !isMobile && <h2>{i18n.t('filters.title', {lng})}</h2>
+      }
       <TextField
         id="search"
         label={i18n.t('filters.byText', {lng})}
@@ -194,9 +206,10 @@ function FiltersOnDrawer({
 
 const mapStateToProps = (state) => ({
   lng: state.user?.current?.lang,
+  transactions: state.transaction.fetchedTransactions,
 });
 
-export default connect(mapStateToProps)(FiltersOnDrawer);
+export default connect(mapStateToProps)(withIsMobile(FiltersOnDrawer));
 
 FiltersOnDrawer.propTypes = {
   accountId: PropTypes.string,
@@ -213,4 +226,6 @@ FiltersOnDrawer.propTypes = {
   supLimit: PropTypes.string,
   tags: PropTypes.array,
   tagsKey: PropTypes.string,
+  isMobile: PropTypes.bool,
+  transactions: PropTypes.array,
 }

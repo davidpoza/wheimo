@@ -49,9 +49,12 @@ export default makeStyles((theme) => ({
     border: '1px solid grey',
     borderRadius: '5px',
     padding: '5px',
-    marginTop: '3em',
+    marginTop: '1em',
     cursor: 'pointer',
-    textAlign: 'center'
+    textAlign: 'center',
+    [theme.breakpoints.up('lg')]: {
+      marginTop: '3em',
+    },
   },
   closeFilterButton: {
     color: 'white',
@@ -83,5 +86,16 @@ export default makeStyles((theme) => ({
   },
   hasAttachments: {
     paddingTop: '0em'
-  }
+  },
+  totalSection: {
+    fontSize: '1.5em',
+    marginBottom: '1.5em',
+    fontWeight: 'bold',
+    borderBottom: '1px solid white',
+    textAlign: 'justify'
+  },
+
+  amount: {
+    float: 'right',
+  },
 }));
