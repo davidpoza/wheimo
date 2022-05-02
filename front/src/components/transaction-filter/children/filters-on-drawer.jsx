@@ -29,21 +29,11 @@ function FiltersOnDrawer({
   operationType,
   resetFilters,
   search,
-  setAccountId,
-  setEndDate,
-  setFiltersOpen,
-  setHasAttachments,
-  setInfLimit,
-  setIsFav,
-  setOperationType,
-  setSearch,
-  setStartDate,
-  setSupLimit,
-  setTagIds,
-  setTags,
   startDate,
   supLimit,
+  setFiltersOpen,
   tags,
+  handleChangeFilter,
  }) {
   const classes = useStyles();
   return (
@@ -53,10 +43,12 @@ function FiltersOnDrawer({
         id="search"
         label={i18n.t('filters.byText', {lng})}
         type="text"
-        value={search}
+        value={search || ""}
         fullWidth
         onChange={(e) => {
-          setSearch(e.target.value);
+          handleChangeFilter({
+            search: e.target.value,
+          });
         }}
       />
       <MuiPickersUtilsProvider utils={DayJsUtils}>
@@ -68,7 +60,9 @@ function FiltersOnDrawer({
           format="DD/MM/YYYY"
           value={startDate}
           onChange={(date) => {
-            setStartDate(date);
+            handleChangeFilter({
+              startDate: date,
+            });
           }}
           KeyboardButtonProps={{
             'aria-label': 'change date',
@@ -82,7 +76,9 @@ function FiltersOnDrawer({
           format="DD/MM/YYYY"
           value={endDate}
           onChange={(date) => {
-            setEndDate(date);
+            handleChangeFilter({
+              endDate: date,
+            });
           }}
           KeyboardButtonProps={{
             'aria-label': 'change date',
@@ -96,44 +92,57 @@ function FiltersOnDrawer({
         label={i18n.t('filters.account', {lng})}
         value={accountId}
         handleChange={(e) => {
-          setAccountId(e.target.value);
+          handleChangeFilter({
+            accountId: e.target.value,
+          });
         }}
         fullWidth
       />
       <TagsSelect
         limitTags={3}
         label={i18n.t('filters.tags', {lng})}
-        value={tags}
+        value={tags || []}
         handleOnChange={(e, value) => {
-          setTags(value);
-          setTagIds(value.map((tag) => tag.id));
+          handleChangeFilter({
+            tags: value,
+          });
         }}
       />
       <div className={classes.limits}>
         <TextField
           size="small"
           id="min"
+          InputProps={{ inputProps: { min: 0 } }}
           label={i18n.t('filters.minAmount', {lng})}
           type="number"
           value={infLimit}
           onChange={(e) => {
-            setInfLimit(e.target.value);
+            handleChangeFilter({
+              infLimit: e.target.value,
+            });
           }}
         />
         <TextField
           size="small"
           id="max"
+          InputProps={{ inputProps: { min: 0 } }}
           label={i18n.t('filters.maxAmount', {lng})}
           type="number"
           value={supLimit}
           onChange={(e) => {
-            setSupLimit(e.target.value);
+            handleChangeFilter({
+              supLimit: e.target.value,
+            });
           }}
         />
       </div>
       <OperationTypeSelect
         operationType={operationType}
-        setOperationType={setOperationType}
+        setOperationType={(value) => {
+          handleChangeFilter({
+            operationType: value,
+          });
+        }}
       />
       <FormGroup className={classes.isFavCheckbox}>
         <FormControlLabel
@@ -141,7 +150,9 @@ function FiltersOnDrawer({
             <Checkbox
               checked={isFav}
               onChange={() => {
-                setIsFav(!isFav);
+                handleChangeFilter({
+                  isFav: !isFav,
+                });
               }}
               name="isFav"
             />
@@ -156,7 +167,9 @@ function FiltersOnDrawer({
             <Checkbox
               checked={hasAttachments}
               onChange={() => {
-                setHasAttachments(!hasAttachments);
+                handleChangeFilter({
+                  hasAttachments: !hasAttachments,
+                });
               }}
               name="isFav"
             />
@@ -189,23 +202,15 @@ FiltersOnDrawer.propTypes = {
   accountId: PropTypes.string,
   accountIdKey: PropTypes.string,
   endDate: PropTypes.string,
+  handleChangeFilter: PropTypes.func,
+  hasAttachments: PropTypes.string,
   infLimit: PropTypes.string,
   operationType: PropTypes.string,
   resetFilters: PropTypes.func,
   search: PropTypes.string,
-  setAccountId: PropTypes.func,
-  setEndDate: PropTypes.func,
   setFiltersOpen: PropTypes.func,
-  setInfLimit: PropTypes.func,
-  setOperationType: PropTypes.func,
-  setSearch: PropTypes.func,
-  setStartDate: PropTypes.func,
-  setSupLimit: PropTypes.func,
-  setTags: PropTypes.func,
   startDate: PropTypes.string,
   supLimit: PropTypes.string,
   tags: PropTypes.array,
   tagsKey: PropTypes.string,
-  hasAttachments: PropTypes.string,
-  setHasAttachments: PropTypes.func,
 }

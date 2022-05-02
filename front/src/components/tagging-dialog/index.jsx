@@ -16,7 +16,7 @@ import TagSelect from 'components/tags-select';
 import {
   taggingDialogOpen as openAction,
   taggingDialogClose as closeAction,
-  remove as removeTransactionAction,
+  // remove as removeTransactionAction,
   applySpecificTags as applySpecificTagsAction,
 } from 'actions/transaction';
 import {

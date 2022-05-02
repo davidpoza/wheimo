@@ -55,6 +55,7 @@ function TransactionGridItem({
   valueDate,
   isMobile,
   attachments,
+  handleChangeFilter,
 }) {
   const classes = useStyles();
   const emitterReceiver = amount > 0 ? emitterName : receiverName;
@@ -125,7 +126,7 @@ function TransactionGridItem({
             </span>
           )}
           <div className={classes.tags}>
-            <Tags tags={tags} />
+            <Tags tags={tags} handleChangeFilter={handleChangeFilter} />
           </div>
           {
             <div className={classes.attachments}>
@@ -180,10 +181,11 @@ function TransactionGridItem({
 }
 
 TransactionGridItem.propTypes = {
-  accountIdentifier: PropTypes.string,
-  accountDescription: PropTypes.string,
   accountBalance: PropTypes.number,
+  accountDescription: PropTypes.string,
+  accountIdentifier: PropTypes.string,
   amount: PropTypes.number,
+  attachments: PropTypes.array,
   changeId: PropTypes.func,
   changeIndex: PropTypes.func,
   changePosition: PropTypes.func,
@@ -193,6 +195,7 @@ TransactionGridItem.propTypes = {
   description: PropTypes.string,
   emitterName: PropTypes.string,
   favourite: PropTypes.bool,
+  handleChangeFilter: PropTypes.func,
   id: PropTypes.number,
   index: PropTypes.number,
   indexInStore: PropTypes.number,
@@ -203,7 +206,6 @@ TransactionGridItem.propTypes = {
   updateFavourite: PropTypes.func,
   user: PropTypes.object,
   valueDate: PropTypes.string,
-  attachments: PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({

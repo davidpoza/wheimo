@@ -106,7 +106,6 @@ function EditAccountDialog({
   }, [setInitialState, index]);
 
   async function processData() {
-    console.log('-->', settings);
     const data = {
       name: name || undefined,
       description: description || undefined,
