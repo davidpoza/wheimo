@@ -1,11 +1,15 @@
+import dayjs from 'dayjs';
 import { createAsyncAction } from 'redux-promise-middleware-actions';
 import * as transactionApi from '../api-client/transaction';
 import * as attachmentApi from '../api-client/attachment';
 import types from './types';
 
 export const fetchAll = createAsyncAction('TRANSACTIONS', async (token, {
-  offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav, isDraft, year, hasAttachments
+  offset, limit, startDate, endDate, accountId, tagIds:tags, sort, search, infLimit:min, supLimit:max, operationType, isFav, isDraft, year, hasAttachments
 }) => {
+  const from = startDate ? dayjs(startDate)?.format('YYYY-MM-DD') : undefined;
+  const to = endDate ? dayjs(endDate)?.format('YYYY-MM-DD') : undefined;
+
   const res = await transactionApi.fetchAll(token, {
     offset, limit, from, to, accountId, tags, sort, search, min, max, operationType, isFav, isDraft, year, hasAttachments,
   });

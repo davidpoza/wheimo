@@ -28,7 +28,8 @@
     "showExpensesType": "Show only expenses",
     "showIncomesType": "Show onlye incomes",
     "close": "Close",
-    "reset": "Reset filters"
+    "reset": "Reset filters",
+    "total": "Total"
   },
   "opMenu": {
     "merge": "Merge into",

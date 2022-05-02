@@ -14,7 +14,7 @@ import {
   setPage as setPageAction,
 } from 'actions/transaction';
 
-function TransactionGrid({ transactions, page = 1, setPage, lng }) {
+function TransactionGrid({ transactions, page = 1, handleChangeFilter, setPage, lng }) {
   const classes = useStyles();
   const listRef = useRef();
   const [pageSize, setPageSize] = useState(0);
@@ -71,6 +71,7 @@ function TransactionGrid({ transactions, page = 1, setPage, lng }) {
                           tags={transaction.tags}
                           valueDate={transaction.valueDate}
                           attachments={transaction.attachments}
+                          handleChangeFilter={handleChangeFilter}
                         />
                       })
                     }
@@ -98,9 +99,10 @@ function TransactionGrid({ transactions, page = 1, setPage, lng }) {
 }
 
 TransactionGrid.propTypes = {
-  transactions: PropTypes.array,
+  handleChangeFilter: PropTypes.func,
   page: PropTypes.number,
   setPage: PropTypes.func,
+  transactions: PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({

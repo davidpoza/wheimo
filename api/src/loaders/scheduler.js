@@ -146,7 +146,6 @@ export default class Scheduler {
     const jobs = await this.notificationQueue.getJobs('succeeded');
     for (const j of jobs) {
       try {
-        console.log(">>", j)
         await this.notificationQueue.removeJob(j.id);
       } catch(error) {
         this.logger(`⚠ Error removing job ${j.id}`);
