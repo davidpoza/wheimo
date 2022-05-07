@@ -104,6 +104,14 @@
     "cancel": "Cancelar",
     "proceed": "Aplicar"
   },
+  "editAccountDialog": {
+    "title": "Modificar cuenta",
+    "accountIdentifier": "Identificador de cuenta",
+    "accountType": "Tipo de cuenta",
+    "accountDescription": "Descripción",
+    "accountBalance": "Balance"
+
+  },
   "statistics": {
     "mostExpensiveDay": "Día más caro",
     "leastExpensiveDay": "Día más barato",

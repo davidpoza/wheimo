@@ -19,7 +19,7 @@ export const definition = [
     bankId: {
       type: Sequelize.STRING,
       validate: {
-        isIn: [['opbk', 'wallet', 'piggybank']],
+        isIn: [['opbk', 'wallet', 'piggybank', 'nordigen']],
       },
       allowNull: false,
     },

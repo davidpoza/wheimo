@@ -9,6 +9,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
+import i18n from 'utils/i18n';
 
 // own
 import {
@@ -23,6 +24,7 @@ import {
 import useStyles from './styles';
 import PiggyConfig from './_children/piggy-config';
 import OpbkConfig from './_children/opbk-config';
+import NordigenConfig from './_children/nordigen-config';
 import AccountTypeSelect from '../account-type-select';
 
 function PaperComponent(props) {
@@ -43,6 +45,7 @@ function EditAccountDialog({
   updateTag,
   changeUIId,
   changeUIIndex,
+  lng,
 }) {
   const classes = useStyles();
   const [name, setName] = useState('');
@@ -143,13 +146,13 @@ function EditAccountDialog({
       PaperComponent={PaperComponent}
     >
       <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-        Edit Account
+        {i18n.t('editAccountDialog.title', { lng })}
       </DialogTitle>
       <DialogContent>
         <TextField
           className={classes.transactionTargetTextField}
           margin="dense"
-          label="Account Identifier"
+          label={i18n.t('editAccountDialog.accountIdentifier', { lng })}
           inputProps={{ maxLength: 6 }}
           type="text"
           value={name}
@@ -159,14 +162,14 @@ function EditAccountDialog({
           fullWidth
         />
         <AccountTypeSelect
-          label="Account type"
+          label={i18n.t('editAccountDialog.accountType', { lng })}
           value={type}
           handleChange={(e) => { setType(e.target.value); }}
         />
         <TextField
           className={classes.transactionTargetTextField}
           margin="dense"
-          label="Account Description"
+          label={i18n.t('editAccountDialog.accountDescription', { lng })}
           type="text"
           value={description}
           onChange={(e) => {
@@ -178,7 +181,7 @@ function EditAccountDialog({
           required
           margin="dense"
           id="balance"
-          label="Balance"
+          label={i18n.t('editAccountDialog.accountBalance', { lng })}
           type="number"
           value={balance}
           onChange={(e) => {
@@ -214,6 +217,17 @@ function EditAccountDialog({
               setSettings={setSettings}
             />
         }
+        {
+          type === 'nordigen'
+            && <NordigenConfig
+              accessId={accessId}
+              setAccessId={setAccessId}
+              accessPassword={accessPassword}
+              setAccessPassword={setAccessPassword}
+              settings={settings}
+              setSettings={setSettings}
+            />
+        }
       </DialogContent>
 
       <DialogActions>
@@ -238,6 +252,7 @@ EditAccountDialog.propTypes = {
   changeUIId: PropTypes.func,
   changeUIIndex: PropTypes.func,
   accounts: PropTypes.array,
+  lng: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
@@ -247,6 +262,7 @@ const mapStateToProps = (state) => ({
   id: state.ui.contextMenuState.id,
   index: state.ui.contextMenuState.index,
   accounts: state.account.fetchedAccounts,
+  lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({
