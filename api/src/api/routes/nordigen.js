@@ -71,13 +71,14 @@ export default (app) => {
       });
 
 
-    route.post('/retrieve-transactions',
+    route.post('/retrieve-account-details',
       middlewares.isAuth,
       celebrate({
         body: Joi.object({
           nordigenAccountId: Joi.string().required(),
           accountId: Joi.number().required(),
           token: Joi.string().required(),
+          includeTransactions: Joi.bool()
         }),
       }),
       async (req, res, next) => {
@@ -85,12 +86,18 @@ export default (app) => {
         const nordigenService = Container.get('nordigenService');
 
         const {
-          accountId, nordigenAccountId, token
+          accountId, nordigenAccountId, token, includeTransactions
         } = req.body;
         const userId = req.user.id;
         try {
           const account = await accountService.findById(accountId, userId, true);
-          const data = await nordigenService.getTransactions(account.accessId, account.accessPassword, token, nordigenAccountId);
+          const data = await nordigenService.getAccountDetails(
+            account.accessId,
+            account.accessPassword,
+            token,
+            nordigenAccountId,
+            includeTransactions ? true : false
+          );
           res.status(200).json(data);
         } catch (err) {
           loggerInstance.error('🔥 error: %o', err);

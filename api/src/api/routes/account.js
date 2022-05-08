@@ -73,7 +73,12 @@ export default (app) => {
         bankId: Joi.string(),
         settings: Joi.object({
           contract: Joi.string(),
-          product: Joi.string()
+          product: Joi.string(),
+          nordigenLink: Joi.string(),
+          nordigenRequisitionId: Joi.string(),
+          nordigenAccountId: Joi.string(),
+          nordigenRequisitionEndDate: Joi.string()
+
         }),
         accessId: Joi.string(),
         accessPassword: Joi.string(),

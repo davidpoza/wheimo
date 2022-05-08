@@ -220,6 +220,7 @@ function EditAccountDialog({
         {
           type === 'nordigen'
             && <NordigenConfig
+              accountId={id}
               accessId={accessId}
               setAccessId={setAccessId}
               accessPassword={accessPassword}

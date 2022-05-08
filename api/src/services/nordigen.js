@@ -53,12 +53,11 @@ export default class NordigenService {
     client.token = token;
 
     const requisitionData = await client.requisition.getRequisitionById(requisitionId);
-    return {
-      accounts: requisitionData.accounts,
-    }
+    return requisitionData;
   }
 
-  async getTransactions(accessId, accessKeyEncrypted, token, nordigenAccountId) {
+  async getAccountDetails(accessId, accessKeyEncrypted, token, nordigenAccountId, includeTransactions) {
+    let transactions;
     const descryptedAccessKey = AES.decrypt(
       accessKeyEncrypted,
       config.aesPassphrase
@@ -76,7 +75,8 @@ export default class NordigenService {
     const metadata = await account.getMetadata();
     const balances = await account.getBalances();
     const details = await account.getDetails();
-    const transactions = await account.getTransactions();
+
+    if (includeTransactions) transactions = await account.getTransactions();
 
     return {
       metadata,

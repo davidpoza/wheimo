@@ -2,73 +2,68 @@ import { isErrorCode } from 'utils/utilities';
 // own
 import config from '../utils/config';
 
-// export async function auth(token) {
-//   try {
-//     const res = await fetch(`${config.API_HOST}/accounts`, {
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-//     const result = await res.json();
-//     if (isErrorCode(res.status)) throw new Error(result?.message);
-//     return result;
-//   } catch (err) {
-//     throw Error('Error during accounts fetch.');
-//   }
-// }
-
-export async function auth(secretId, secretKey) {
+export async function createLink(token, accountId, institutionId) {
   try {
-    const res = await fetch(`${config.NORDIGEN_API_TOKEN}`, {
+    const res = await fetch(`${config.API_HOST}/nordigen/create-link`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        secret_id: secretId,
-        secret_key: secretKey
+        accountId,
+        institutionId
       }),
     });
     const result = await res.json();
     if (isErrorCode(res.status)) throw new Error(result?.message);
     return (result);
   } catch (err) {
-    throw Error('Error during account creation.');
+    throw Error('Error during link creation.');
   }
 }
 
-// export async function update(token, id, data) {
-//   try {
-//     const res = await fetch(`${config.API_HOST}/accounts/${id}`, {
-//       method: 'PATCH',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         Authorization: `Bearer ${token}`,
-//       },
-//       body: JSON.stringify(data),
-//     });
-//     const result = await res.json();
-//     if (isErrorCode(res.status)) throw new Error(result?.message);
-//     return (result);
-//   } catch (err) {
-//     throw Error('Error during account update.');
-//   }
-// }
+export async function retrieveAccountList(token, accountId, nordigenToken, requisitionId) {
+  try {
+    const res = await fetch(`${config.API_HOST}/nordigen/retrieve-account-list`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        accountId,
+        requisitionId,
+        token: nordigenToken
+      }),
+    });
+    const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
+    return (result);
+  } catch (err) {
+    throw Error('Error during accounts\' retrieval.');
+  }
+}
 
-// export async function remove(token, id) {
-//   try {
-//     const res = await fetch(`${config.API_HOST}/accounts/${id}`, {
-//       method: 'DELETE',
-//       headers: {
-//         'Content-Type': 'application/json',
-//         Authorization: `Bearer ${token}`,
-//       },
-//     });
-//     if (isErrorCode(res.status)) throw new Error();
-//     return (id);
-//   } catch (err) {
-//     throw Error('Error during account deletion.');
-//   }
-// }
+export async function retrieveAccountDetails(token, accountId, nordigenToken, nordigenAccountId, includeTransactions) {
+  try {
+    const res = await fetch(`${config.API_HOST}/nordigen/retrieve-account-details`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        accountId,
+        nordigenAccountId,
+        token: nordigenToken,
+        includeTransactions
+      }),
+    });
+    const result = await res.json();
+    if (isErrorCode(res.status)) throw new Error(result?.message);
+    return (result);
+  } catch (err) {
+    throw Error('Error during accounts\' retrieval.');
+  }
+}
