@@ -20,6 +20,7 @@ import RecurrentService from '../services/recurrent.js';
 import BudgetService from '../services/budget.js';
 import OpenbankImporter from '../services/importers/openbank.js';
 import AttachmentService from '../services/attachment.js';
+import NordigenService from '../services/nordigen.js';
 
 export default async ({ expressApp }) => {
   const sequelize = await sequelizeLoader.newConnection();
@@ -38,6 +39,7 @@ export default async ({ expressApp }) => {
     BudgetService,
     OpenbankImporter,
     AttachmentService,
+    NordigenService,
     AES,
     dayjs,
     sharp,
