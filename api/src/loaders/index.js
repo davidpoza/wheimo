@@ -19,6 +19,7 @@ import RuleService from '../services/rule.js';
 import RecurrentService from '../services/recurrent.js';
 import BudgetService from '../services/budget.js';
 import OpenbankImporter from '../services/importers/openbank.js';
+import NordigenImporter from '../services/importers/nordigen.js';
 import AttachmentService from '../services/attachment.js';
 import NordigenService from '../services/nordigen.js';
 
@@ -27,23 +28,24 @@ export default async ({ expressApp }) => {
   logger.info('🟢 Database loaded');
 
   diLoader({
-    sequelize,
-    logger,
-    AuthService,
-    UserService,
-    TransactionService,
-    AccountService,
-    TagService,
-    RuleService,
-    RecurrentService,
-    BudgetService,
-    OpenbankImporter,
-    AttachmentService,
-    NordigenService,
     AES,
-    dayjs,
-    sharp,
+    AccountService,
+    AttachmentService,
+    AuthService,
+    BudgetService,
+    NordigenImporter,
+    NordigenService,
+    OpenbankImporter,
     Queue,
+    RecurrentService,
+    RuleService,
+    TagService,
+    TransactionService,
+    UserService,
+    dayjs,
+    logger,
+    sequelize,
+    sharp,
     //<-- add scheduler as last dependency
   });
   logger.info('🟢 Dependency injection loaded');

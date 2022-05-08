@@ -15,6 +15,7 @@ export default ({
   RecurrentService,
   AttachmentService,
   OpenbankImporter,
+  NordigenImporter,
   NordigenService,
   AES,
   dayjs,
@@ -71,9 +72,13 @@ export default ({
   Container.set('attachmentService', new AttachmentService());
   logger.info('💉 attachments service instance injected');
 
+  Container.set('nordigenService', new NordigenService());
+  logger.info('💉 NordigenService injected');
+
   Container.set('OpenbankImporter', OpenbankImporter);
   logger.info('💉 openbank importer injected');
 
-  Container.set('nordigenService', new NordigenService());
-  logger.info('💉 NordigenService injected');
+  Container.set('NordigenImporter', NordigenImporter);
+  logger.info('💉 nordigen importer injected');
+
 }

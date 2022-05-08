@@ -304,7 +304,7 @@ export default class TransactionService {
       limit,
       offset,
       where: filter,
-      order: [["createdAt", sort === "asc" ? "ASC" : "DESC"]],
+      order: [["date", sort === "asc" ? "ASC" : "DESC"]],
       ...(hasAttachments && {
         group: ['attachments.id'],
         having: {
@@ -452,7 +452,7 @@ export default class TransactionService {
 
     if (config.debug !== true) {
       // get bankId of account
-      const { bankId, accessId, accessPassword } = account.dataValues;
+      const { bankId, accessId, accessPassword, settings } = account.dataValues;
 
       let importer;
 
@@ -461,16 +461,20 @@ export default class TransactionService {
         case "opbk":
           importer = Container.get("OpenbankImporter");
           break;
+        case "nordigen":
+          importer = Container.get("NordigenImporter");
+          break;
         default:
           throw new Error("Wrong bankId");
       }
 
       // login
-      const descryptedPassword = this.AES.decrypt(
+      const decryptedPassword = this.AES.decrypt(
         accessPassword,
         config.aesPassphrase
       ).toString(CryptoJS.enc.Utf8);
-      const token = await importer.login(accessId, descryptedPassword);
+
+      const token = await importer.login(accessId, decryptedPassword);
       this.logger.info("Login into bank account successfully");
       if (!token) {
         const forbidden = new Error(
@@ -482,9 +486,10 @@ export default class TransactionService {
 
       // fetch transactions
       const { balance: fetchedBalance, transactions: fetchedTransactions } =
-        await importer.fetchTransactions(token, from, contract, product);
+        await importer.fetchTransactions({ accessId, decryptedPassword, token, from, contract, product, settings });
       transactions = fetchedTransactions;
       balance = fetchedBalance;
+      console.log("========>",transactions)
     } else {
       // with mocked data
       transactions = mockedImportedTransactions.transactions;
@@ -492,7 +497,7 @@ export default class TransactionService {
     }
 
     this.logger.info(
-      `💸It's been fetched ${transactions.length} transactions in account #${accountId}`
+      `💸It's been fetched ${transactions?.length} transactions in account #${accountId}`
     );
 
     const queryArray = [];

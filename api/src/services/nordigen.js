@@ -8,10 +8,23 @@ import config from '../config/config.js';
 
 export default class NordigenService {
   constructor() {
-    this.sequelize = Container.get('sequelizeInstance');
-    this.logger = Container.get('loggerInstance');
+    this.generateToken = this.generateToken.bind(this);
     this.getLink = this.getLink.bind(this);
+    this.getAccounts = this.getAccounts.bind(this);
+    this.getAccountDetails = this.getAccountDetails.bind(this);
+  }
 
+  async generateToken(accessId, accessKeyDecrypted) {
+    const client = new NordigenClient({
+      secretId: accessId,
+      secretKey: accessKeyDecrypted
+    });
+
+    const tokenData = await client.generateToken();
+
+    return {
+      token: tokenData.access,
+    };
   }
 
   async getLink(accessId, accessKeyEncrypted, institutionId) {
@@ -77,6 +90,34 @@ export default class NordigenService {
     const details = await account.getDetails();
 
     if (includeTransactions) transactions = await account.getTransactions();
+
+    return {
+      metadata,
+      balances: balances?.balances,
+      details,
+      transactions: transactions?.transactions
+    }
+  }
+
+  /** to be used from backend */
+  async getAccountTransactionWithToken(accessId, decryptedPassword, token, nordigenAccountId, from) {
+    let transactions;
+
+    const client = new NordigenClient({
+      secretId: accessId,
+      secretKey: decryptedPassword
+    });
+
+    client.token = token;
+
+    const account = client.account(nordigenAccountId);
+
+    const metadata = await account.getMetadata();
+    const balances = await account.getBalances();
+    const details = await account.getDetails();
+
+
+    transactions = await account.getTransactions({ dateFrom: from });
 
     return {
       metadata,

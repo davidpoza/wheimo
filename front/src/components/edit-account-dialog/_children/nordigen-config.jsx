@@ -105,7 +105,7 @@ function AccountSelector({
               {details?.metadata?.iban}
             </p>
             <p>
-              Balance: {details?.balances?.balances?.[0]?.balanceAmount?.amount} {details?.balances?.balances?.[0]?.balanceAmount?.currency}
+              Balance: {details?.balances?.[0]?.balanceAmount?.amount} {details?.balances?.[0]?.balanceAmount?.currency}
             </p>
           </div>
       }
