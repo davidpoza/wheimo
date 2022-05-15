@@ -89,7 +89,7 @@ export function calculateSavingSeries(
 
 
 export function formatAmount(amount, absolute = true) {
-  return (absolute ? Math.abs(amount) : amount).toLocaleString('es-ES', {
+  return (absolute ? Math.abs(amount) : amount)?.toLocaleString('es-ES', {
     style: 'currency',
     currency: 'EUR',
   });

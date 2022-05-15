@@ -91,13 +91,13 @@ export default (app) => {
         const userId = req.user.id;
         try {
           const account = await accountService.findById(accountId, userId, true);
-          const data = await nordigenService.getAccountDetails(
-            account.accessId,
-            account.accessPassword,
+          const data = await nordigenService.getAccountDetails({
+            accessId: account.accessId,
+            decryptedPassword: account.accessPassword,
             token,
             nordigenAccountId,
-            includeTransactions ? true : false
-          );
+            includeTransactions: includeTransactions ? true : false
+          });
           res.status(200).json(data);
         } catch (err) {
           loggerInstance.error('🔥 error: %o', err);

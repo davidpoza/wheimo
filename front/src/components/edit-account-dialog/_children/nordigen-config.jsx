@@ -69,7 +69,7 @@ function AccountSelector({
             setSettings({
               ...settings,
               nordigenAccountId: e.target.value,
-              nordigenRequisitionEndDate: dayjs.add(90, 'day').format('YYYY-MM-DD'),
+              nordigenRequisitionEndDate: dayjs().add(90, 'day').format('YYYY-MM-DD'),
             });
             setLoading(true);
             const detReq = await retrieveAccountDetails(

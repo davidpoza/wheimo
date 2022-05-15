@@ -17,7 +17,7 @@ export default class NordigenService {
   async generateToken(accessId, accessKeyDecrypted) {
     const client = new NordigenClient({
       secretId: accessId,
-      secretKey: accessKeyDecrypted
+      secretKey: accessKeyDecrypted,
     });
 
     const tokenData = await client.generateToken();
@@ -35,14 +35,14 @@ export default class NordigenService {
 
     const client = new NordigenClient({
       secretId: accessId,
-      secretKey: descryptedAccessKey
+      secretKey: descryptedAccessKey,
     });
 
     const tokenData = await client.generateToken();
     const init = await client.initSession({
-      redirectUrl: "https://wheimo.davidinformatico.com",
+      redirectUrl: 'https://wheimo.davidinformatico.com',
       institutionId: institutionId,
-      referenceId: uuidv4()
+      referenceId: uuidv4(),
     });
 
     return {
@@ -60,25 +60,36 @@ export default class NordigenService {
 
     const client = new NordigenClient({
       secretId: accessId,
-      secretKey: descryptedAccessKey
+      secretKey: descryptedAccessKey,
     });
 
     client.token = token;
 
-    const requisitionData = await client.requisition.getRequisitionById(requisitionId);
+    const requisitionData = await client.requisition.getRequisitionById(
+      requisitionId
+    );
     return requisitionData;
   }
 
-  async getAccountDetails(accessId, accessKeyEncrypted, token, nordigenAccountId, includeTransactions) {
+  async getAccountDetails({
+    accessId,
+    decryptedPassword,
+    accessKeyEncrypted,
+    token,
+    nordigenAccountId,
+    includeTransactions,
+  }) {
     let transactions;
-    const descryptedAccessKey = AES.decrypt(
-      accessKeyEncrypted,
-      config.aesPassphrase
-    ).toString(CryptoJS.enc.Utf8);
+
+    const descryptedAccessKey =
+      decryptedPassword ||
+      AES.decrypt(accessKeyEncrypted, config.aesPassphrase).toString(
+        CryptoJS.enc.Utf8
+      );
 
     const client = new NordigenClient({
       secretId: accessId,
-      secretKey: descryptedAccessKey
+      secretKey: descryptedAccessKey,
     });
 
     client.token = token;
@@ -95,17 +106,23 @@ export default class NordigenService {
       metadata,
       balances: balances?.balances,
       details,
-      transactions: transactions?.transactions
-    }
+      transactions: transactions?.transactions,
+    };
   }
 
   /** to be used from backend */
-  async getAccountTransactionWithToken(accessId, decryptedPassword, token, nordigenAccountId, from) {
+  async getAccountTransactionWithToken(
+    accessId,
+    decryptedPassword,
+    token,
+    nordigenAccountId,
+    from
+  ) {
     let transactions;
 
     const client = new NordigenClient({
       secretId: accessId,
-      secretKey: decryptedPassword
+      secretKey: decryptedPassword,
     });
 
     client.token = token;
@@ -116,14 +133,13 @@ export default class NordigenService {
     const balances = await account.getBalances();
     const details = await account.getDetails();
 
-
-    transactions = await account.getTransactions({ dateFrom: from });
+    transactions = await account.getTransactions({ dateFrom: "2022-03-03"});
 
     return {
       metadata,
       balances,
       details,
-      transactions
-    }
+      transactions,
+    };
   }
 };

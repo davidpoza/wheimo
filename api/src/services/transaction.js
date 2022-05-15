@@ -452,8 +452,12 @@ export default class TransactionService {
 
     if (config.debug !== true) {
       // get bankId of account
-      const { bankId, accessId, accessPassword, settings } = account.dataValues;
-
+      const { bankId, accessId, accessPassword, settings, balance: currentBalance } = account.dataValues;
+      if (!accessId || !accessPassword) {
+        throw new Error(
+          "Forbidden: accessId or accessPassword not defined"
+        );
+      }
       let importer;
 
       // select importer
@@ -486,10 +490,10 @@ export default class TransactionService {
 
       // fetch transactions
       const { balance: fetchedBalance, transactions: fetchedTransactions } =
-        await importer.fetchTransactions({ accessId, decryptedPassword, token, from, contract, product, settings });
-      transactions = fetchedTransactions;
+        await importer.fetchTransactions({ accessId, decryptedPassword, token, from, contract, product, settings, currentBalance });
+      transactions = fetchedTransactions || [];
+
       balance = fetchedBalance;
-      console.log("========>",transactions)
     } else {
       // with mocked data
       transactions = mockedImportedTransactions.transactions;
