@@ -71,7 +71,7 @@ export default class NordigenImporter {
       // calculate balances per transaction. Nordingen does not offer this for free
       // IMPORTANT: first we need to manually setup the balance of the account
       // at the moment of the first imported transaction
-      for (let i = transactions.length - 1; i >= 0; i--) {
+      for (let i = transactions?.length - 1; i >= 0; i--) {
         if (i === (transactions.length - 1)) {
           transactions[i].balance = currentBalance;
         } else {
