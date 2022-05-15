@@ -364,6 +364,7 @@ export default class TransactionService {
    * It only updates owned transactions->accounts
    */
   async updateById(id, userId, values) {
+    console.log(userId)
     const attService = new AttachmentService();
     let transaction = await this.findById({ id, userId });
 

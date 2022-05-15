@@ -204,4 +204,55 @@ export default (app) => {
       }
     });
 
+    route.post('/fix-balances',
+      middlewares.isAuth,
+      celebrate({
+        body: Joi.object({
+          fromTransactionId: Joi.number().required(),
+          initialBalance: Joi.number().required()
+        }),
+      }),
+      async (req, res, next) => {
+        console.log(":...")
+        const transactionService = Container.get('transactionService');
+        const { initialBalance, fromTransactionId } = req.body;
+        const userId = req.user.id;
+
+        try {
+          let transactions = await transactionService.findAll({ userId, sort: 'desc' });
+          const index = transactions.findIndex(t => t.id === fromTransactionId);
+          transactions = transactions.slice(0, index + 1);
+          for (let i = transactions.length - 1; i >= 0; i--) {
+            if (i === (transactions.length - 1)) {
+              transactions[i].balance = initialBalance;
+            } else {
+              transactions[i].balance = transactions[i+1]?.balance + transactions[i].amount;
+            }
+          }
+
+
+
+          //return res.status(200).json(transactions);
+
+
+          for (const t in transactions) {
+            await transactionService.updateById(transactions[t].id, userId,
+              {
+                balance: transactions[t].balance,
+              }
+            );
+          }
+          res.sendStatus(204);
+        } catch (err) {
+          loggerInstance.error(err.message);
+          if (err.name === 'SequelizeUniqueConstraintError') {
+            return res.sendStatus(400);
+          } else if (err.name === 'not-found') {
+            return res.sendStatus(404);
+          } else if (err.name === 'forbidden') {
+            return res.sendStatus(403);
+          }
+          return next(err);
+        }
+      });
 };
