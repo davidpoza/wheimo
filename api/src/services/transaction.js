@@ -506,7 +506,7 @@ export default class TransactionService {
 
     const queryArray = [];
     for (const t of transactions) {
-      const importId = md5(`${t.balance}${t.description}${t.amount}`);
+      const importId = md5(`${t.transactionDate}${t.description}${t.amount}`);
       const exist = await this.isAlreadyImported(importId);
       if (!exist) {
         queryArray.push({
