@@ -132,7 +132,7 @@ export default class TransactionService {
       if (!draft && !balance) newBalance += amount;
 
       if (account) {
-        const importId = md5(`${balance}${description}${amount}`);
+        const importId = md5(`${date}${description}${amount}`);
         let transaction = await this.transactionModel.create({
           importId,
           accountId,
@@ -507,7 +507,8 @@ export default class TransactionService {
 
     const queryArray = [];
     for (const t of transactions) {
-      const importId = md5(`${t.transactionDate}${t.description}${t.amount}`);
+      const dateString = this.dayjs(t.transactionDate).format('YYYY-MM-DD');
+      const importId = md5(`${dateString}${t.description}${t.amount}`);
       const exist = await this.isAlreadyImported(importId);
       if (!exist) {
         queryArray.push({
