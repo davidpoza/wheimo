@@ -11,6 +11,7 @@ import recurrent from './routes/recurrent.js';
 import budget from './routes/budget.js';
 import attachment from './routes/attachment.js';
 import total from './routes/total.js';
+import nordigen from './routes/nordigen.js';
 
 export default () => {
   const app = Router();
@@ -24,5 +25,6 @@ export default () => {
   budget(app);
   attachment(app);
   total(app);
+  nordigen(app);
   return app
 }

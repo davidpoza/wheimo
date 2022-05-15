@@ -8,6 +8,7 @@ const initialState = {
   isLoading: false,
   fetchedAccounts: [],
   editDialogOpen: false,
+  fixBalancesDialogOpen: false,
   error: false,
   errorMessage: undefined,
   successMessage: undefined,
@@ -111,6 +112,16 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         editDialogOpen: false,
+      };
+    case types.ACCOUNTS_FIX_BALANCES_DIALOG_OPEN:
+      return {
+        ...state,
+        fixBalancesDialogOpen: true,
+      };
+    case types.ACCOUNTS_FIX_BALANCES_DIALOG_CLOSE:
+      return {
+        ...state,
+        fixBalancesDialogOpen: false,
       };
     case types.ACCOUNTS_HIDE_ALL_MSGS:
       return {

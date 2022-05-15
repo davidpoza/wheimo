@@ -36,7 +36,13 @@
     "edit": "Modificar",
     "delete": "Borrar",
     "copyLink": "Copiar enlace",
-    "tag": "Aplicar tags"
+    "tag": "Aplicar tags",
+    "fixBalances": "Corregir balances parciales"
+  },
+  "fixBalances": {
+    "title": "Corregir balances parciales",
+    "description": "Se corregirán los balances de los movimientos, empezando por:",
+    "initialBalance": "Balance aplicado al primer movimiento"
   },
   "transactionDetails": {
     "title": "Detalle de movimiento",
@@ -103,6 +109,14 @@
     "label": "Selecciona los las etiquetas que aplicar",
     "cancel": "Cancelar",
     "proceed": "Aplicar"
+  },
+  "editAccountDialog": {
+    "title": "Modificar cuenta",
+    "accountIdentifier": "Identificador de cuenta",
+    "accountType": "Tipo de cuenta",
+    "accountDescription": "Descripción",
+    "accountBalance": "Balance"
+
   },
   "statistics": {
     "mostExpensiveDay": "Día más caro",

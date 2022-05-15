@@ -36,7 +36,13 @@
     "edit": "Edit",
     "delete": "Delete",
     "copyLink": "Copy link",
-    "tag": "Apply tags"
+    "tag": "Apply tags",
+    "fixBalances": "Fix parcial balances"
+  },
+  "fixBalances": {
+    "title": "Fix parcial balances",
+    "description": "Will be corrected those transaction balances starting from:",
+    "initialBalance": "Balance for the first transaction"
   },
   "transactionDetails": {
     "title": "Transaction detail",
@@ -103,6 +109,14 @@
     "label": "Select tags to been applied",
     "cancel": "Cancel",
     "proceed": "Apply"
+  },
+  "editAccountDialog": {
+    "title": "Edit account",
+    "accountIdentifier": "Account identifier",
+    "accountType": "Account type",
+    "accountDescription": "Descripción",
+    "accountBalance": "Balance"
+
   },
   "statistics": {
     "mostExpensiveDay": "Most expensive day",

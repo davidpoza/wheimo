@@ -16,6 +16,7 @@ function AccountTypeSelect({
     opbk: 'Open Bank',
     wallet: 'Wallet',
     piggybank: 'Piggy Bank',
+    nordigen: 'Nordigen'
   };
   return (
     <FormControl>

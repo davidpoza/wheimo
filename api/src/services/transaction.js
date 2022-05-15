@@ -304,7 +304,7 @@ export default class TransactionService {
       limit,
       offset,
       where: filter,
-      order: [["createdAt", sort === "asc" ? "ASC" : "DESC"]],
+      order: [["date", sort === "asc" ? "ASC" : "DESC"]],
       ...(hasAttachments && {
         group: ['attachments.id'],
         having: {
@@ -364,6 +364,7 @@ export default class TransactionService {
    * It only updates owned transactions->accounts
    */
   async updateById(id, userId, values) {
+    console.log(userId)
     const attService = new AttachmentService();
     let transaction = await this.findById({ id, userId });
 
@@ -452,8 +453,12 @@ export default class TransactionService {
 
     if (config.debug !== true) {
       // get bankId of account
-      const { bankId, accessId, accessPassword } = account.dataValues;
-
+      const { bankId, accessId, accessPassword, settings, balance: currentBalance } = account.dataValues;
+      if (!accessId || !accessPassword) {
+        throw new Error(
+          "Forbidden: accessId or accessPassword not defined"
+        );
+      }
       let importer;
 
       // select importer
@@ -461,16 +466,20 @@ export default class TransactionService {
         case "opbk":
           importer = Container.get("OpenbankImporter");
           break;
+        case "nordigen":
+          importer = Container.get("NordigenImporter");
+          break;
         default:
           throw new Error("Wrong bankId");
       }
 
       // login
-      const descryptedPassword = this.AES.decrypt(
+      const decryptedPassword = this.AES.decrypt(
         accessPassword,
         config.aesPassphrase
       ).toString(CryptoJS.enc.Utf8);
-      const token = await importer.login(accessId, descryptedPassword);
+
+      const token = await importer.login(accessId, decryptedPassword);
       this.logger.info("Login into bank account successfully");
       if (!token) {
         const forbidden = new Error(
@@ -482,8 +491,9 @@ export default class TransactionService {
 
       // fetch transactions
       const { balance: fetchedBalance, transactions: fetchedTransactions } =
-        await importer.fetchTransactions(token, from, contract, product);
-      transactions = fetchedTransactions;
+        await importer.fetchTransactions({ accessId, decryptedPassword, token, from, contract, product, settings, currentBalance });
+      transactions = fetchedTransactions || [];
+
       balance = fetchedBalance;
     } else {
       // with mocked data
@@ -492,12 +502,12 @@ export default class TransactionService {
     }
 
     this.logger.info(
-      `💸It's been fetched ${transactions.length} transactions in account #${accountId}`
+      `💸It's been fetched ${transactions?.length} transactions in account #${accountId}`
     );
 
     const queryArray = [];
     for (const t of transactions) {
-      const importId = md5(`${t.balance}${t.description}${t.amount}`);
+      const importId = md5(`${t.transactionDate}${t.description}${t.amount}`);
       const exist = await this.isAlreadyImported(importId);
       if (!exist) {
         queryArray.push({

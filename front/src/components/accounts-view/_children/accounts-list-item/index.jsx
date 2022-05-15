@@ -56,6 +56,8 @@ function AccountsListItem({
     switch (bkId) {
       case 'opbk':
         return 'Open Bank';
+      case 'nordigen':
+        return 'Nordigen aggregator';
       case 'piggybank':
         return 'Piggy Bank';
       default:

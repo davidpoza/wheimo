@@ -33,7 +33,7 @@ export default class OpenbankImporter {
    * @param {string} contract - number DDDDDDD format
    * @param {string} product - number with format DDD
    */
-  static async fetchTransactions(token, from, contract, product) {
+  static async fetchTransactions({ token, from, contract, product }) {
     const conceptSeparator = /,? CONCEPTO /;
     const hasReceiver = /(BIZUM|TRANSFERENCIA) ([A-Z]* )?A FAVOR DE/;
     const hasEmitter = /(BIZUM|TRANSFERENCIA) ([A-Z]* )?DE /;

@@ -27,9 +27,18 @@ export const editDialogOpen = () => ({
   type: types.ACCOUNTS_EDIT_DIALOG_OPEN,
 });
 
+export const fixBalancesDialogClose = () => ({
+  type: types.ACCOUNTS_FIX_BALANCES_DIALOG_CLOSE,
+});
+
+export const fixBalancesDialogOpen = () => ({
+  type: types.ACCOUNTS_FIX_BALANCES_DIALOG_OPEN,
+});
+
 export const editDialogClose = () => ({
   type: types.ACCOUNTS_EDIT_DIALOG_CLOSE,
 });
+
 
 export const hideMessages = () => ({
   type: types.ACCOUNTS_HIDE_ALL_MSGS,

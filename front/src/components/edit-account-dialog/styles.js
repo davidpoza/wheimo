@@ -55,4 +55,8 @@ export default makeStyles(() => ({
     marginLeft: '2em',
     width: '250px',
   },
+  bankSelector: {
+    width: '14em',
+    marginBottom: '6px',
+  },
 }));
