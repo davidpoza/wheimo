@@ -22,6 +22,7 @@ import TransactionGrid from '../transaction-grid';
 import Charts from '../charts';
 import TransactionFilter from '../transaction-filter';
 import DetailsDialog from '../details-dialog';
+import FixBalancesDialog from '../fix-balances-dialog';
 import MergeDialog from '../merge-dialog';
 import TaggingDialog from '../tagging-dialog';
 import useStyles from './styles';
@@ -122,6 +123,7 @@ function HomeView({
       <DetailsDialog />
       <MergeDialog />
       <TaggingDialog />
+      <FixBalancesDialog />
     </div>
   );
 }

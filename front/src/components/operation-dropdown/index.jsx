@@ -20,6 +20,7 @@ import {
 import {
   remove as removeAccountAction,
   editDialogOpen as openEditAccountDialogAction,
+  fixBalancesDialogOpen as fixBalancesDialogOpenAction,
 } from 'actions/account';
 import {
   contextMenuChangePosition as changePositionAction,
@@ -46,6 +47,7 @@ function OperationDropdown({
   openTagDialog,
   openTaggingDialog,
   openTransactionDialog,
+  openFixBalancesDialog,
   removeAccount,
   removeTag,
   removeTransaction,
@@ -138,6 +140,11 @@ function OperationDropdown({
     openTaggingDialog();
   }
 
+  function handleFixBalances() {
+    openFixBalancesDialog();
+    changePosition(null, null);
+  }
+
   return (
     <Menu
       keepMounted
@@ -180,6 +187,9 @@ function OperationDropdown({
       <MenuItem className={classes.item} onClick={handleRemove}>
         {i18n.t('opMenu.delete', {lng})} { selectedTransactions.length > 0 && `(${selectedTransactions.length})`}
       </MenuItem>
+      <MenuItem className={classes.item} onClick={handleFixBalances}>
+        {i18n.t('opMenu.fixBalances', {lng})}
+      </MenuItem>
     </Menu>
   );
 }
@@ -196,6 +206,7 @@ OperationDropdown.propTypes = {
   openMergeDialog: PropTypes.func,
   openTagDialog: PropTypes.func,
   openTransactionDialog: PropTypes.func,
+  openFixBalancesDialog: PropTypes.func,
   openTaggingDialog: PropTypes.func,
   removeAccount: PropTypes.func,
   removeTag: PropTypes.func,
@@ -243,6 +254,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   openTransactionDialog: () => {
     dispatch(openTransactionDialogAction());
+  },
+  openFixBalancesDialog: () => {
+    dispatch(fixBalancesDialogOpenAction());
   },
   openMergeDialog: () => {
     dispatch(mergeDialogOpenAction());

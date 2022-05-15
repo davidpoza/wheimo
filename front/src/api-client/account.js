@@ -70,3 +70,22 @@ export async function remove(token, id) {
     throw Error('Error during account deletion.');
   }
 }
+
+export async function fixBalances(token, fromTransactionId, initialBalance) {
+  try {
+    const res = await fetch(`${config.API_HOST}/accounts/fix-balances`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        fromTransactionId,
+        initialBalance
+      })
+    });
+    if (isErrorCode(res.status)) throw new Error();
+  } catch (err) {
+    throw Error('Error during balance fix application.');
+  }
+}
