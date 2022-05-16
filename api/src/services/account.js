@@ -119,16 +119,18 @@ export default class AccountService {
   async fixBalances({ userId, transactions, initialBalance, fromTransactionId, onlyRegenerateImportId }) {
     const transactionService = Container.get('transactionService');
     if (!transactions) return;
-    const index = transactions?.findIndex(t => t.id === fromTransactionId);
-
-    transactions = transactions?.slice(0, index + 1);
-    for (let i = transactions?.length - 1; i >= 0; i--) {
-      if (i === (transactions.length - 1)) {
-        transactions[i].balance = initialBalance;
-      } else {
-        transactions[i].balance = transactions[i+1]?.balance + transactions[i].amount;
+    if (!onlyRegenerateImportId) {
+      const index = transactions?.findIndex(t => t.id === fromTransactionId);
+      transactions = transactions?.slice(0, index + 1);
+      for (let i = transactions?.length - 1; i >= 0; i--) {
+        if (i === (transactions.length - 1)) {
+          transactions[i].balance = initialBalance;
+        } else {
+          transactions[i].balance = transactions[i+1]?.balance + transactions[i].amount;
+        }
       }
     }
+
     for (const t in transactions) {
       const dateString = dayjs(transactions[t].valueDate).format('YYYY-MM-DD');
       await transactionService.updateById(transactions[t].id, userId,
