@@ -24,6 +24,7 @@ services:
     volumes:
       - ./api/src:/usr/src/app/api/src
       - db-volume:/usr/src/app/api/data/db
+      - api-logs:/usr/src/app/api/logs
       - attachments-volume:/usr/src/app/api/data/images
     env_file:
       - .env
@@ -55,4 +56,5 @@ services:
 volumes:
   redis-volume:
   db-volume:
+  api-logs:
   attachments-volume:
