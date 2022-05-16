@@ -128,6 +128,6 @@ export function leftPadding(num, size) {
 }
 
 export function generateImportId({ accountId, balance, dateString, description, amount }) {
-  console.log(`${accountId || ''}${balance || ''}${dateString || ''}${description || ''}${amount || ''}`);
-  return md5(`${accountId || ''}${balance || ''}${dateString || ''}${description || ''}${amount || ''}`);
+  console.log(`${accountId || ''}${dateString || ''}${description || ''}${amount || ''}`);
+  return md5(`${accountId || ''}${dateString || ''}${description || ''}${amount || ''}`);
 }
