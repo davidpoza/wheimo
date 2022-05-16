@@ -130,9 +130,9 @@ export default class TransactionService {
       let newBalance = account.balance;
       if (balance) newBalance = balance;
       if (!draft && !balance) newBalance += amount;
-
+      const dateString = dayjs(valueDate).format('YYYY-MM-DD');
       if (account) {
-        const importId = md5(`${date}${description}${amount}`);
+        const importId = md5(`${accountId}${balance}${dateString}${description}${amount}`);
         let transaction = await this.transactionModel.create({
           importId,
           accountId,
@@ -483,7 +483,7 @@ export default class TransactionService {
       this.logger.info("Login into bank account successfully");
       if (!token) {
         const forbidden = new Error(
-          "Forbidden: login into bank account failed"
+          `Forbidden: login into bank account ${accountId} failed`
         );
         forbidden.name = "forbidden";
         throw forbidden;
@@ -507,8 +507,8 @@ export default class TransactionService {
 
     const queryArray = [];
     for (const t of transactions) {
-      const dateString = this.dayjs(t.transactionDate).format('YYYY-MM-DD');
-      const importId = md5(`${dateString}${t.description}${t.amount}`);
+      const dateString = this.dayjs(t.valueDate).format('YYYY-MM-DD');
+      const importId = md5(`${accountId}${dateString}${dateString}${t.description}${t.amount}`);
       const exist = await this.isAlreadyImported(importId);
       if (!exist) {
         queryArray.push({

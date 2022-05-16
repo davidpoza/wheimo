@@ -213,35 +213,15 @@ export default (app) => {
         }),
       }),
       async (req, res, next) => {
-        console.log(":...")
         const transactionService = Container.get('transactionService');
+        const accountService = Container.get('accountService');
+
         const { initialBalance, fromTransactionId } = req.body;
         const userId = req.user.id;
 
         try {
           let transactions = await transactionService.findAll({ userId, sort: 'desc' });
-          const index = transactions.findIndex(t => t.id === fromTransactionId);
-          transactions = transactions.slice(0, index + 1);
-          for (let i = transactions.length - 1; i >= 0; i--) {
-            if (i === (transactions.length - 1)) {
-              transactions[i].balance = initialBalance;
-            } else {
-              transactions[i].balance = transactions[i+1]?.balance + transactions[i].amount;
-            }
-          }
-
-
-
-          //return res.status(200).json(transactions);
-
-
-          for (const t in transactions) {
-            await transactionService.updateById(transactions[t].id, userId,
-              {
-                balance: transactions[t].balance,
-              }
-            );
-          }
+          await accountService.fixBalances({ transactions, initialBalance, fromTransactionId, userId });
           res.sendStatus(204);
         } catch (err) {
           loggerInstance.error(err.message);
