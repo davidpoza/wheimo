@@ -508,7 +508,7 @@ export default class TransactionService {
     const queryArray = [];
     for (const t of transactions) {
       const dateString = this.dayjs(t.valueDate).format('YYYY-MM-DD');
-      const importId = md5(`${accountId}${dateString}${dateString}${t.description}${t.amount}`);
+      const importId = md5(`${accountId}${t.balance}${dateString}${t.description}${t.amount}`);
       const exist = await this.isAlreadyImported(importId);
       if (!exist) {
         queryArray.push({
