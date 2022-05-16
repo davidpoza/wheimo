@@ -2,8 +2,8 @@ import pickBy from 'lodash.pickby';
 import { Container } from 'typedi';
 import dayjs from 'dayjs';
 import AES from 'crypto-js/aes.js';
-import md5 from 'md5';
 import config from '../config/config.js';
+import { generateImportId } from '../shared/utilities.js';
 
 export default class AccountService {
   constructor() {
@@ -136,7 +136,7 @@ export default class AccountService {
       await transactionService.updateById(transactions[t].id, userId,
         {
           ...(!onlyRegenerateImportId && {balance: transactions[t].balance}),
-          importId: md5(`${transactions[t].accountId}${transactions[t].balance}${dateString}${transactions[t].description}${transactions[t].amount}`),
+          importId: generateImportId({ accountId: transactions[t].accountId, balance: transactions[t].balance, dateString, description: transactions[t].description, amount: transactions[t].amount })
         }
       );
     }
