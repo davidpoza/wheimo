@@ -9,7 +9,9 @@ const transports = [
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
     maxSize: '20m',
-    maxFiles: '14d'
+    maxFiles: '14d',
+    createSymlink: true,
+    symlinkName: 'application.log',
   })
 ];
 
