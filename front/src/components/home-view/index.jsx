@@ -43,7 +43,7 @@ function HomeView({
   const {id} = useParams();
 
   // shared state for filters (used from filters-on-drawer and transaction-filter)
-  const [ filter, setFilter ] = useState(constants.initialFilter);
+  const [ filter, setFilter ] = useState(constants.INITIAL_FILTER);
 
   useEffect(() => {
     if (id) {
@@ -58,7 +58,7 @@ function HomeView({
 
   useEffect(() => {
     fetchAllTransactions(user.token, {
-      startDate: constants.initialFilter.startDate,
+      startDate: constants.INITIAL_FILTER.startDate,
       isDraft: onlyDrafts,
       sort: 'desc',
     });
@@ -70,7 +70,7 @@ function HomeView({
   const handleChangeFilter = useCallback(({
     isReset, startDate, endDate, accountId, tags, search, infLimit, supLimit, operationType, isFav, hasAttachments, _onlyDrafts
   }) => {
-    const newFilter = { ...(isReset ? constants.initialFilter : filter) };
+    const newFilter = { ...(isReset ? constants.INITIAL_FILTER : filter) };
 
     if (!isReset) {
       newFilter.search = search?.length > 0 ? search : undefined;

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-const initialFilter = {
+const INITIAL_FILTER = {
   operationType: 'all',
   accountId: undefined,
   infLimit: '',
@@ -15,8 +15,11 @@ const initialFilter = {
   hasAttachments: false,
 };
 
+const BANK_ID_NORDIGEN = 'nordigen';
+
 const constants = {
-  initialFilter
+  INITIAL_FILTER,
+  BANK_ID_NORDIGEN
 }
 
 export default constants;

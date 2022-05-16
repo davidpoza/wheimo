@@ -28,12 +28,15 @@ import {
   contextMenuChangeIndex as changeIndexAction,
 } from 'actions/ui';
 import { formatAmount } from 'utils/utilities';
+import constants from 'utils/constants';
 
 function TransactionGridItem({
-  accountIdentifier,
-  accountDescription,
   accountBalance,
+  accountDescription,
+  accountIdentifier,
   amount,
+  attachments,
+  bankId,
   changeId,
   changeIndex,
   changePosition,
@@ -43,9 +46,11 @@ function TransactionGridItem({
   description,
   emitterName,
   favourite,
+  handleChangeFilter,
   id,
   index,
   indexInStore,
+  isMobile,
   openDetailsDialog,
   receiverName,
   tags,
@@ -53,9 +58,6 @@ function TransactionGridItem({
   updateFavourite,
   user,
   valueDate,
-  isMobile,
-  attachments,
-  handleChangeFilter,
 }) {
   const classes = useStyles();
   const emitterReceiver = amount > 0 ? emitterName : receiverName;
@@ -171,8 +173,9 @@ function TransactionGridItem({
                 ?.toUpperCase()}
           </div>
           <div className={classes.account}>
-            {isMobile ? accountIdentifier : accountDescription} |{' '}
-            {formatAmount(accountBalance, false)}
+            {isMobile ? accountIdentifier : accountDescription}
+            {bankId !== constants.BANK_ID_NORDIGEN && ` | `}
+            {bankId !== constants.BANK_ID_NORDIGEN ? formatAmount(accountBalance, false) : null}
           </div>
         </div>
       </div>
@@ -186,6 +189,7 @@ TransactionGridItem.propTypes = {
   accountIdentifier: PropTypes.string,
   amount: PropTypes.number,
   attachments: PropTypes.array,
+  bankId: PropTypes.string,
   changeId: PropTypes.func,
   changeIndex: PropTypes.func,
   changePosition: PropTypes.func,
@@ -205,7 +209,7 @@ TransactionGridItem.propTypes = {
   toggleChecked: PropTypes.func,
   updateFavourite: PropTypes.func,
   user: PropTypes.object,
-  valueDate: PropTypes.string,
+  valueDate: PropTypes.string
 };
 
 const mapStateToProps = (state) => ({
