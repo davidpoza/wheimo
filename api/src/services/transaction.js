@@ -507,7 +507,7 @@ export default class TransactionService {
 
     const queryArray = [];
     for (const t of transactions) {
-      const dateString = this.dayjs(t.date).format('YYYY-MM-DD');
+      const dateString = this.dayjs(t.transactionDate).format('YYYY-MM-DD');
       const importId = generateImportId({
         accountId,
         balance: t.balance,
