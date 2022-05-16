@@ -55,6 +55,7 @@ function TransactionGrid({ transactions, page = 1, handleChangeFilter, setPage, 
                         return <TransactionGridItem
                           accountIdentifier={transaction.account.name}
                           accountDescription={transaction.account.description}
+                          bankId={transaction.account.bankId}
                           accountBalance={transaction.balance}
                           amount={transaction.amount}
                           checked={transaction.checked || false}

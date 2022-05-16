@@ -451,9 +451,9 @@ export default class TransactionService {
       throw new Error("Account does not exist");
     }
 
+    const { bankId, accessId, accessPassword, settings, balance: currentBalance } = account.dataValues;
     if (config.debug !== true) {
       // get bankId of account
-      const { bankId, accessId, accessPassword, settings, balance: currentBalance } = account.dataValues;
       if (!accessId || !accessPassword) {
         throw new Error(
           "Forbidden: accessId or accessPassword not defined"
@@ -536,6 +536,20 @@ export default class TransactionService {
       }
     }
     if (queryArray.length === 0) return;
+    if (bankId === 'nordigen') { // calculation of parcial balances
+      // calculate balances per transaction. Nordingen does not offer this for same banks
+      // IMPORTANT: first we need to manually setup the balance of the account
+      // at the moment of the first imported transaction
+      // for nordigen array is sorted by date desc
+      for (let i = queryArray?.length - 1; i >= 0; i--) {
+        if (i === (queryArray.length - 1)) {
+          queryArray[i].balance = currentBalance + queryArray[i].amount;
+        } else {
+          queryArray[i].balance = parseFloat((queryArray[i+1]?.balance + queryArray[i].amount).toFixed(2));
+        }
+      }
+    }
+
     const res = await this.transactionModel.bulkCreate(queryArray);
     if (!res) {
       throw new Error("error during transaction creation");
