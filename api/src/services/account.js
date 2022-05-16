@@ -116,7 +116,7 @@ export default class AccountService {
     }
   }
 
-  async fixBalances({ userId, transactions, initialBalance, fromTransactionId }) {
+  async fixBalances({ userId, transactions, initialBalance, fromTransactionId, onlyRegenerateImportId }) {
     const transactionService = Container.get('transactionService');
     if (!transactions) return;
     const index = transactions?.findIndex(t => t.id === fromTransactionId);
@@ -133,7 +133,7 @@ export default class AccountService {
       const dateString = dayjs(transactions[t].valueDate).format('YYYY-MM-DD');
       await transactionService.updateById(transactions[t].id, userId,
         {
-          balance: transactions[t].balance,
+          ...(!onlyRegenerateImportId && {balance: transactions[t].balance}),
           importId: md5(`${transactions[t].accountId}${transactions[t].balance}${dateString}${transactions[t].description}${transactions[t].amount}`),
         }
       );

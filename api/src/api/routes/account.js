@@ -209,7 +209,8 @@ export default (app) => {
       celebrate({
         body: Joi.object({
           fromTransactionId: Joi.number().required(),
-          initialBalance: Joi.number().required(),
+          initialBalance: Joi.number(),
+          onlyRegenerateImportId: Joi.bool(),
           accountId: Joi.number().required()
         }),
       }),
@@ -217,12 +218,12 @@ export default (app) => {
         const transactionService = Container.get('transactionService');
         const accountService = Container.get('accountService');
 
-        const { initialBalance, fromTransactionId, accountId} = req.body;
+        const { initialBalance, fromTransactionId, accountId, onlyRegenerateImportId } = req.body;
         const userId = req.user.id;
 
         try {
           let transactions = await transactionService.findAll({ userId, accountId, sort: 'desc' });
-          await accountService.fixBalances({ transactions, initialBalance, fromTransactionId, userId });
+          await accountService.fixBalances({ transactions, initialBalance, fromTransactionId, userId, onlyRegenerateImportId });
           res.sendStatus(204);
         } catch (err) {
           loggerInstance.error(err.message);
