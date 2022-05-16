@@ -1,7 +1,8 @@
 import pickBy from 'lodash.pickby';
 import { Container } from 'typedi';
+import dayjs from 'dayjs';
 import AES from 'crypto-js/aes.js';
-
+import md5 from 'md5';
 import config from '../config/config.js';
 
 export default class AccountService {
@@ -112,6 +113,30 @@ export default class AccountService {
     const affectedRows = await this.accountModel.destroy({ where: { id, userId } });
     if (affectedRows === 0) {
       throw new Error('Account does not exist');
+    }
+  }
+
+  async fixBalances({ userId, transactions, initialBalance, fromTransactionId }) {
+    const transactionService = Container.get('transactionService');
+    if (!transactions) return;
+    const index = transactions?.findIndex(t => t.id === fromTransactionId);
+
+    transactions = transactions?.slice(0, index + 1);
+    for (let i = transactions?.length - 1; i >= 0; i--) {
+      if (i === (transactions.length - 1)) {
+        transactions[i].balance = initialBalance;
+      } else {
+        transactions[i].balance = transactions[i+1]?.balance + transactions[i].amount;
+      }
+    }
+    for (const t in transactions) {
+      const dateString = dayjs(transactions[t].valueDate).format('YYYY-MM-DD');
+      await transactionService.updateById(transactions[t].id, userId,
+        {
+          balance: transactions[t].balance,
+          importId: md5(`${transactions[t].accountId}${transactions[t].balance}${dateString}${transactions[t].description}${transactions[t].amount}`),
+        }
+      );
     }
   }
 };
