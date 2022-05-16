@@ -71,7 +71,7 @@ export async function remove(token, id) {
   }
 }
 
-export async function fixBalances(token, fromTransactionId, initialBalance) {
+export async function fixBalances({ token, accountId, fromTransactionId, initialBalance }) {
   try {
     const res = await fetch(`${config.API_HOST}/accounts/fix-balances`, {
       method: 'POST',
@@ -81,7 +81,8 @@ export async function fixBalances(token, fromTransactionId, initialBalance) {
       },
       body: JSON.stringify({
         fromTransactionId,
-        initialBalance
+        initialBalance,
+        accountId
       })
     });
     if (isErrorCode(res.status)) throw new Error();

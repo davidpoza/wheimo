@@ -209,18 +209,19 @@ export default (app) => {
       celebrate({
         body: Joi.object({
           fromTransactionId: Joi.number().required(),
-          initialBalance: Joi.number().required()
+          initialBalance: Joi.number().required(),
+          accountId: Joi.number().required()
         }),
       }),
       async (req, res, next) => {
         const transactionService = Container.get('transactionService');
         const accountService = Container.get('accountService');
 
-        const { initialBalance, fromTransactionId } = req.body;
+        const { initialBalance, fromTransactionId, accountId} = req.body;
         const userId = req.user.id;
 
         try {
-          let transactions = await transactionService.findAll({ userId, sort: 'desc' });
+          let transactions = await transactionService.findAll({ userId, accountId, sort: 'desc' });
           await accountService.fixBalances({ transactions, initialBalance, fromTransactionId, userId });
           res.sendStatus(204);
         } catch (err) {

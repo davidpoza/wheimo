@@ -13,6 +13,7 @@ import i18n from 'utils/i18n';
 
 // own
 import { fixBalances } from 'api-client/account';
+import { fetchOne } from 'api-client/transaction';
 import withIsMobile from 'hocs/with-is-mobile.jsx';
 import ConditionalWrapper from 'shared/conditional-wrapper';
 import {
@@ -57,7 +58,8 @@ function FixBalancesDialog({
   }
 
   async function processData() {
-    fixBalances(user.token, id, initialBalance);
+    const t = await fetchOne(user.token, id);
+    await fixBalances({ token: user.token, accountId: t.accountId, fromTransactionId: id, initialBalance });
     close();
   }
 
