@@ -132,13 +132,17 @@ export default class AccountService {
     }
 
     for (const t in transactions) {
-      const dateString = dayjs(transactions[t].valueDate).format('YYYY-MM-DD');
-      await transactionService.updateById(transactions[t].id, userId,
-        {
-          ...(!onlyRegenerateImportId && {balance: transactions[t].balance}),
-          importId: generateImportId({ accountId: transactions[t].accountId, balance: transactions[t].balance, dateString, description: transactions[t].description, amount: transactions[t].amount })
-        }
-      );
+      const dateString = dayjs(transactions[t].date).format('YYYY-MM-DD');
+      await transactionService.updateById(transactions[t].id, userId, {
+        ...(!onlyRegenerateImportId && {balance: transactions[t].balance}),
+        importId: generateImportId({
+          accountId: transactions[t].accountId,
+          balance: transactions[t].balance,
+          transactionDateString: dateString,
+          description: transactions[t].description,
+          amount: transactions[t].amount,
+        }),
+      });
     }
   }
 };

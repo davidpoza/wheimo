@@ -73,6 +73,7 @@ export default class TransactionService {
         receiverName: transaction.receiverName,
         updatedAt: transaction.updatedAt,
         valueDate: transaction.valueDate,
+        transactionDate: transaction.transactionDate,
         attachmentCount: transaction.dataValues && transaction.dataValues.attachmentCount,
         attachments: transaction.attachments
           ? transaction.attachments.map((attachment) => ({
@@ -129,9 +130,9 @@ export default class TransactionService {
       let newBalance = account.balance;
       if (balance) newBalance = balance;
       if (!draft && !balance) newBalance += amount;
-      const dateString = dayjs(valueDate).format('YYYY-MM-DD');
+      const dateString = dayjs(date).format('YYYY-MM-DD');
       if (account) {
-        const importId = generateImportId({ accountId, balance, dateString, description, amount });
+        const importId = generateImportId({ accountId, balance, transactionDateString: dateString, description, amount });
         let transaction = await this.transactionModel.create({
           importId,
           accountId,
@@ -506,8 +507,14 @@ export default class TransactionService {
 
     const queryArray = [];
     for (const t of transactions) {
-      const dateString = this.dayjs(t.valueDate).format('YYYY-MM-DD');
-      const importId = generateImportId({ accountId, balance: t.balance, dateString, description: t.description, amount: t.amount });
+      const dateString = this.dayjs(t.date).format('YYYY-MM-DD');
+      const importId = generateImportId({
+        accountId,
+        balance: t.balance,
+        transactionDateString: dateString,
+        description: t.description,
+        amount: t.amount,
+      });
       const exist = await this.isAlreadyImported(importId);
       if (!exist) {
         queryArray.push({

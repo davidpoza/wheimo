@@ -127,7 +127,7 @@ export function leftPadding(num, size) {
   return num;
 }
 
-export function generateImportId({ accountId, balance, dateString, description, amount }) {
-  console.log(`${accountId || ''}${dateString || ''}${description || ''}${amount || ''}`);
-  return md5(`${accountId || ''}${dateString || ''}${description || ''}${amount || ''}`);
+export function generateImportId({ accountId, balance, transactionDateString, description, amount }) {
+  console.log(`${accountId || ''}${transactionDateString || ''}${description || ''}${amount || ''}`);
+  return md5(`${accountId || ''}${transactionDateString || ''}${description || ''}${amount || ''}`);
 }
