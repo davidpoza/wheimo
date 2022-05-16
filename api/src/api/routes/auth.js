@@ -40,7 +40,8 @@ export default (app) => {
     async (req, res, next) => {
       try {
         const authService = Container.get('authService');
-        console.log('login attempt: ', req.headers['x-forwarded-for'] || req.socket.remoteAddress);
+        const logger = Container.get('loggerInstance');
+        logger.info(`login attempt: ${req.headers['x-forwarded-for'] || req.socket.remoteAddress}`)
         const user = await authService.signIn(req.body);
         return res.status(200).json(user);
       } catch (e) {
