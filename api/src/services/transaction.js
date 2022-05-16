@@ -1,10 +1,9 @@
 import { Container } from 'typedi';
 import pickBy from 'lodash.pickby';
 import CryptoJS from 'crypto-js';
-import md5 from 'md5';
 import dayjs from 'dayjs';
 
-import { leftPadding } from '../shared/utilities.js';
+import { leftPadding, generateImportId } from '../shared/utilities.js';
 import config from '../config/config.js';
 import mockedImportedTransactions from './importers/mock.js';
 import AttachmentService from './attachment.js';
@@ -132,7 +131,7 @@ export default class TransactionService {
       if (!draft && !balance) newBalance += amount;
       const dateString = dayjs(valueDate).format('YYYY-MM-DD');
       if (account) {
-        const importId = md5(`${accountId}${balance}${dateString}${description}${amount}`);
+        const importId = generateImportId({ accountId, balance, dateString, description, amount });
         let transaction = await this.transactionModel.create({
           importId,
           accountId,
@@ -508,7 +507,7 @@ export default class TransactionService {
     const queryArray = [];
     for (const t of transactions) {
       const dateString = this.dayjs(t.valueDate).format('YYYY-MM-DD');
-      const importId = md5(`${accountId}${t.balance}${dateString}${t.description}${t.amount}`);
+      const importId = generateImportId({ accountId, balance: t.balance, dateString, description: t.description, amount: t.amount });
       const exist = await this.isAlreadyImported(importId);
       if (!exist) {
         queryArray.push({

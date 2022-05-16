@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import md5 from 'md5';
 
 export function mod97(string) {
   let checksum = string.slice(0, 2);
@@ -124,4 +125,9 @@ export function leftPadding(num, size) {
   num = num.toString();
   while (num.length < size) num = "0" + num;
   return num;
+}
+
+export function generateImportId({ accountId, balance, dateString, description, amount }) {
+  console.log(`${accountId}${balance}${dateString}${description}${amount}`);
+  return md5(`${accountId}${balance}${dateString}${description}${amount}`);
 }
