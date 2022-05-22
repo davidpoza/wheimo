@@ -36,7 +36,7 @@ export default class LogService {
         {
           ip,
           userId,
-          location: jsongeoip.success ? `${jsongeoip[city]}-${jsongeoip[country_code]}` : ''
+          location: jsongeoip?.success ? `${jsongeoip?.city}-${jsongeoip?.country_code}` : ''
         });
       return log;
     } catch (err) {
