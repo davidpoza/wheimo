@@ -81,6 +81,7 @@
     "theme": "Tema visual",
     "save": "Guardar",
     "cancel": "Cancelar",
+    "ignoredTag": "Etiqueta para movimientos ignorados",
     "ip": "Ip",
     "location": "Localización",
     "lastAccess": "Accessos en los últimos 30 días",

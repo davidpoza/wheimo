@@ -49,15 +49,16 @@ export default (app) => {
         level: Joi.string(),
         theme: Joi.string(),
         lang: Joi.string(),
+        ignoredTagId: Joi.number()
       }),
     }),
     async (req, res, next) => {
       const userService = Container.get('userService');
       const { id } = req.params;
-      const { email, name, active, level, theme, lang } = req.body;
+      const { email, name, active, level, theme, lang, ignoredTagId } = req.body;
       try {
         const user = await userService.updateById(id,
-          { email, name, active, level, theme, lang }
+          { email, name, active, level, theme, lang, ignoredTagId }
         );
         if (!user) {
           res.sendStatus(404);

@@ -854,6 +854,13 @@ export default class TransactionService {
     tags,
     operationType = "expense",
   }) {
+    const userService = Container.get('userService');
+    const tagService = Container.get('tagService');
+    const allTags = (await tagService.findAll({ userId }))
+      ?.map(t => t.id);
+    const user = await userService.findById(userId);
+    const ignoredTagId = user.ignoredTagId;
+
     let operationTypeFilter =
       operationType && operationType !== "all" ? {} : undefined;
     if (operationType === "expense")
@@ -861,6 +868,8 @@ export default class TransactionService {
     if (operationType === "income")
       operationTypeFilter[this.sequelizeOp.gt] = 0;
 
+//     let tagsFilter = tags || allTags?.filter(t => t !== ignoredTagId) || undefined;
+console.log(tags)
     const transactions = await this.transactionModel.findAll({
       include: [
         {
@@ -868,13 +877,11 @@ export default class TransactionService {
           as: "account",
           duplicating: false,
         },
-        tags
-          ? {
-              model: this.sequelize.models.tags,
-              as: "tags",
-              duplicating: false,
-            }
-          : undefined,
+        {
+          model: this.sequelize.models.tags,
+          as: "tags",
+          duplicating: false,
+        }
       ].filter((e) => e),
       attributes: [
         [
@@ -918,6 +925,7 @@ export default class TransactionService {
     });
 
     return transactions
+      .filter(t => ignoredTagId ? !t?.tags?.map(t => t.dataValues.id)?.includes(ignoredTagId) : true)
       .map((t) => {
         return {
           day: groupBy === "day" ? t?.dataValues?.day : undefined,

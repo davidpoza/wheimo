@@ -17,6 +17,14 @@ export const definition = [
         isIn: [['en', 'es']],
       },
     },
+    ignoredTagId: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'tags',
+        key: 'id'
+      }
+    },
     theme: {
       type: Sequelize.STRING,
       allowNull: false,
