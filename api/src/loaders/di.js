@@ -11,6 +11,7 @@ export default ({
   TransactionService,
   TagService,
   RuleService,
+  LogService,
   BudgetService,
   RecurrentService,
   AttachmentService,
@@ -81,4 +82,6 @@ export default ({
   Container.set('NordigenImporter', NordigenImporter);
   logger.info('💉 nordigen importer injected');
 
+  Container.set('logService', new LogService());
+  logger.info('💉 log service instance injected');
 }

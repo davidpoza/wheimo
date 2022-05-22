@@ -17,6 +17,7 @@ import AccountService from '../services/account.js';
 import TagService from '../services/tag.js';
 import RuleService from '../services/rule.js';
 import RecurrentService from '../services/recurrent.js';
+import LogService from '../services/log.js';
 import BudgetService from '../services/budget.js';
 import OpenbankImporter from '../services/importers/openbank.js';
 import NordigenImporter from '../services/importers/nordigen.js';
@@ -41,6 +42,7 @@ export default async ({ expressApp }) => {
     RuleService,
     TagService,
     TransactionService,
+    LogService,
     UserService,
     dayjs,
     logger,
