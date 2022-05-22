@@ -1,5 +1,6 @@
 import { Container } from 'typedi';
 import fetch from 'node-fetch';
+import dayjs from 'dayjs';
 
 export default class LogService {
   constructor() {
@@ -45,7 +46,15 @@ export default class LogService {
   }
 
   async findAll(userId) {
-    const logs = await this.logModel.findAll({ where: { userId } });
+    const logs = await this.logModel.findAll({
+      where: {
+        userId,
+        createdAt: {
+          [this.sequelize.Sequelize.Op.gt]: dayjs().subtract(30, 'days').toDate(),
+        }
+      },
+      order: [['createdAt', 'DESC']],
+     });
     return logs.map((a) => {
       return (this.getTemplate(a));
     });

@@ -80,7 +80,11 @@
     "language": "Language",
     "theme": "Theme",
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "ip": "Ip",
+    "location": "Location",
+    "lastAccess": "Accesses during last 30 days",
+    "accessDate": "Access date"
   },
   "screensTitles": {
     "tagsAndRules": "Tags & Rules",
