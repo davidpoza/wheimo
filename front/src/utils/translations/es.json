@@ -80,7 +80,11 @@
     "language": "Idioma",
     "theme": "Tema visual",
     "save": "Guardar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "ip": "Ip",
+    "location": "Localización",
+    "lastAccess": "Accessos en los últimos 30 días",
+    "accessDate": "Fecha de acceso"
   },
   "screensTitles": {
     "tagsAndRules": "Etiquetas y reglas",

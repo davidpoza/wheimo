@@ -12,6 +12,7 @@ import budget from './routes/budget.js';
 import attachment from './routes/attachment.js';
 import total from './routes/total.js';
 import nordigen from './routes/nordigen.js';
+import log from './routes/log.js';
 
 export default () => {
   const app = Router();
@@ -26,5 +27,6 @@ export default () => {
   attachment(app);
   total(app);
   nordigen(app);
+  log(app);
   return app
 }

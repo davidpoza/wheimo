@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import dayjs from 'dayjs';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -14,6 +15,12 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Paper from '@material-ui/core/Paper';
 import Draggable from 'react-draggable';
 import i18n from 'utils/i18n';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
 // own
 import {
@@ -21,6 +28,7 @@ import {
   settingsDialogClose as closeAction,
   updateUser as updateAction,
 } from 'actions/user';
+import { getListOfLogins } from 'api-client/user';
 import useStyles from './styles';
 
 function PaperComponent(props) {
@@ -43,16 +51,21 @@ function SettingsDialog({
   const [email, setEmail] = useState();
   const [theme, setTheme] = useState();
   const [lang, setLang] = useState();
+  const [logins, setLogins] = useState();
 
   function handleClose() {
     close();
   }
 
   useEffect(() => {
+    (async () => {
+      setLogins(await getListOfLogins(user.token));
+    })();
     setName(user.name);
     setEmail(user.email);
     setTheme(user?.theme);
     setLang(user.lang);
+
   }, [user]);
 
   async function processData() {
@@ -137,6 +150,32 @@ function SettingsDialog({
           </Select>
         </FormControl>
 
+        <h3 style={{ marginTop: '2em' }}>
+          {i18n.t('userSettings.lastAccess', { lng })}
+        </h3>
+        <Paper style={{ width: '100%', overflow: 'hidden' }}>
+          <TableContainer style={{ maxHeight: 200 }}>
+            <Table stickyHeader size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="left" className={classes.tableHead}>{i18n.t('userSettings.accessDate', { lng })}</TableCell>
+                  <TableCell align="left" className={classes.tableHead}>{i18n.t('userSettings.ip', { lng })}</TableCell>
+                  <TableCell align="left" className={classes.tableHead}>{i18n.t('userSettings.location', { lng })}</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  logins?.map((log, index) => <TableRow
+                    key={index}>
+                      <TableCell align="left">{dayjs(log.createdAt).format('DD/MM/YYYY HH:mm')}</TableCell>
+                      <TableCell align="left">{log.ip}</TableCell>
+                      <TableCell align="left">{log.location}</TableCell>
+                    </TableRow>)
+                }
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
       </DialogContent>
 
       <DialogActions>

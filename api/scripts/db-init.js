@@ -15,6 +15,7 @@ import { definition as taggedDefinition } from '../src/models/tagged.js';
 import { definition as appliedRulesDefinition } from '../src/models/applied-rules.js';
 import { definition as budgetDefinition } from '../src/models/budget.js';
 import { definition as attachmentDefinition } from '../src/models/attachment.js';
+import { definition as logDefinition } from '../src/models/log.js';
 
 const sequelize = sequelizeLoader.newConnection();
 const queryInterface = sequelize.getQueryInterface();
@@ -29,6 +30,7 @@ queryInterface.dropTable('tagged');
 queryInterface.dropTable('appliedRules');
 queryInterface.dropTable('budgets');
 queryInterface.dropTable('attachments');
+queryInterface.dropTable('logs');
 
 queryInterface.createTable(...userDefinition);
 queryInterface.createTable(...accountDefinition);
@@ -40,6 +42,7 @@ queryInterface.createTable(...taggedDefinition);
 queryInterface.createTable(...appliedRulesDefinition);
 queryInterface.createTable(...budgetDefinition);
 queryInterface.createTable(...attachmentDefinition);
+queryInterface.createTable(...logDefinition);
 
 sequelize.models.users.create({
   email: process.env.ADMIN_EMAIL, name: 'admin', password: bcrypt.hashSync(process.env.ADMIN_PASS, config.bcryptRounds, config.bcryptSalt), active: true, level: 'admin'
