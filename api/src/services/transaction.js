@@ -928,6 +928,7 @@ export default class TransactionService {
     });
 
     return transactions
+      .filter(t => ignoredTagId ? !t?.tags?.map(t => t.dataValues.id)?.includes(ignoredTagId) : true)
       .map((t) => {
         return {
           day: groupBy === "day" ? t?.dataValues?.day : undefined,
