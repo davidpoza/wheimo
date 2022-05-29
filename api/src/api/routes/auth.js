@@ -49,6 +49,7 @@ export default (app) => {
         logService.create({ userId: user.id, ip });
         return res.status(200).json(user);
       } catch (e) {
+        console.log(e)
         loggerInstance.error(`🔥 failed login attempt ::: ${ip}`);
         res.sendStatus(404);
       }

@@ -38,7 +38,7 @@ export async function validateToken(token) {
   }
 }
 
-export async function updateUser(token, userId, { name, theme, lang, email }) {
+export async function updateUser(token, userId, { name, theme, lang, email, ignoredTagId }) {
   try {
     const res = await fetch(`${config.API_HOST}/users/${userId}`, {
       method: 'PATCH',
@@ -46,7 +46,7 @@ export async function updateUser(token, userId, { name, theme, lang, email }) {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ name, theme, lang, email }),
+      body: JSON.stringify({ name, theme, lang, email, ignoredTagId }),
     });
     const result = await res.json();
     if (isErrorCode(res.status)) throw new Error(result?.message);

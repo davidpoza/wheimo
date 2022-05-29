@@ -20,8 +20,8 @@ export const settingsDialogClose = () => ({
   type: types.USER_SETTINGS_DIALOG_CLOSE,
 });
 
-export const updateUser = createAsyncAction('UPDATE', async (token, userId, { name, theme, lang, email  }) => {
-  const res = await userApi.updateUser(token, userId, { name, theme, lang, email  });
+export const updateUser = createAsyncAction('UPDATE', async (token, userId, { name, theme, lang, email, ignoredTagId  }) => {
+  const res = await userApi.updateUser(token, userId, { name, theme, lang, email, ignoredTagId  });
   localStorage.setItem('lang', res.lang);
   return res;
 });

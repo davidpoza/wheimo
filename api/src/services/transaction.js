@@ -854,12 +854,24 @@ export default class TransactionService {
     tags,
     operationType = "expense",
   }) {
+    const userService = Container.get('userService');
+    const user = await userService.findById(userId);
+    const ignoredTagId = user.ignoredTagId;
+
     let operationTypeFilter =
       operationType && operationType !== "all" ? {} : undefined;
     if (operationType === "expense")
       operationTypeFilter[this.sequelizeOp.lt] = 0;
     if (operationType === "income")
       operationTypeFilter[this.sequelizeOp.gt] = 0;
+
+    let tagsFilter = tags
+      ? {
+        [this.sequelizeOp.in]: tags,
+      }
+      : {
+        [this.sequelizeOp.ne]: ignoredTagId
+      };
 
     const transactions = await this.transactionModel.findAll({
       include: [
@@ -868,13 +880,11 @@ export default class TransactionService {
           as: "account",
           duplicating: false,
         },
-        tags
-          ? {
-              model: this.sequelize.models.tags,
-              as: "tags",
-              duplicating: false,
-            }
-          : undefined,
+        {
+          model: this.sequelize.models.tags,
+          as: "tags",
+          duplicating: false,
+        }
       ].filter((e) => e),
       attributes: [
         [
@@ -898,7 +908,7 @@ export default class TransactionService {
         ],
       ],
       where: pickBy({
-        "$tags.id$": tags || undefined,
+        "$tags.id$": tagsFilter,
         "$account.user_id$": userId,
         date: {
           [this.sequelizeOp.gte]: from

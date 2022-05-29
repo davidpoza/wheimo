@@ -30,6 +30,7 @@ import {
 } from 'actions/user';
 import { getListOfLogins } from 'api-client/user';
 import useStyles from './styles';
+import { mergeDialogClose } from 'actions/transaction';
 
 function PaperComponent(props) {
   return (
@@ -43,6 +44,7 @@ function SettingsDialog({
   isOpen,
   close,
   user,
+  tags,
   updateUser,
   lng,
 }) {
@@ -50,6 +52,7 @@ function SettingsDialog({
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [theme, setTheme] = useState();
+  const [ignoredTagId, setIgnoredTagId] = useState();
   const [lang, setLang] = useState();
   const [logins, setLogins] = useState();
 
@@ -65,11 +68,12 @@ function SettingsDialog({
     setEmail(user.email);
     setTheme(user?.theme);
     setLang(user.lang);
+    setIgnoredTagId(user?.ignoredTagId);
 
   }, [user]);
 
   async function processData() {
-    updateUser(user.token, user.id, { name, lang, theme });
+    updateUser(user.token, user.id, { name, lang, theme, ignoredTagId });
     close();
 
   }
@@ -150,6 +154,24 @@ function SettingsDialog({
           </Select>
         </FormControl>
 
+        <FormControl className={classes.select}>
+          <InputLabel id="ignored-tag-select-label">{i18n.t('userSettings.ignoredTag', { lng })}</InputLabel>
+          <Select
+            labelId="ignored-tag-select-label"
+            id="ignoredTagId"
+            value={ignoredTagId}
+            onChange={(e) => {
+              setIgnoredTagId(e.target.value);
+            }}
+          >
+            {
+              tags?.map((tag) => (
+                <MenuItem key={tag.id} value={tag.id}>{tag.name}</MenuItem>
+              ))
+            }
+          </Select>
+        </FormControl>
+
         <h3 style={{ marginTop: '2em' }}>
           {i18n.t('userSettings.lastAccess', { lng })}
         </h3>
@@ -194,17 +216,19 @@ SettingsDialog.propTypes = {
   isOpen: PropTypes.bool,
   close: PropTypes.func,
   user: PropTypes.object,
+  tags: PropTypes.array,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user.current,
+  tags: state.tag.fetchedTags,
   isOpen: state.user.settingsDialogOpen,
   lng: state.user?.current?.lang,
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  updateUser: (token, userId, { name, theme, lang, email }) => {
-    dispatch(updateAction(token, userId, { name, theme, lang, email }))
+  updateUser: (token, userId, { name, theme, lang, email, ignoredTagId }) => {
+    dispatch(updateAction(token, userId, { name, theme, lang, email, ignoredTagId }))
       .catch((error) => {
         console.log(error.message);
       });
