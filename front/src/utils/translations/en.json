@@ -81,6 +81,7 @@
     "theme": "Theme",
     "save": "Save",
     "cancel": "Cancel",
+    "ignoredTag": "Tag for ignored transactions",
     "ip": "Ip",
     "location": "Location",
     "lastAccess": "Accesses during last 30 days",

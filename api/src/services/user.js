@@ -22,6 +22,7 @@ export default class UserService {
         updatedAt: user.updatedAt,
         lang: user.lang,
         theme: user.theme,
+        ignoredTagId: user.ignoredTagId
       });
     }
     return null;
