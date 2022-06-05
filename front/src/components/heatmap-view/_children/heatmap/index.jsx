@@ -12,7 +12,7 @@ function Heatmap({ rawData, isMobile, from, to, lng }) {
 
 
   const calculateColor = (value) => {
-    if (!value) {
+    if (!value || value.count === 0 ) {
       return 'color-empty';
     } else if (value.count > 0 && value.count <= 20) {
       return 'color-scale-1';

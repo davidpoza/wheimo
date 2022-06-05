@@ -839,25 +839,7 @@ export default class TransactionService {
     return tags;
   }
 
-  /**
-   *
-   * @param {Number} param.userId
-   * @param {String} param.from - format YYYY-MM-DD
-   * @param {String} param.to - format YYYY-MM-DD
-   * @returns
-   */
-  async getTransactionsCalendar({
-    userId,
-    from,
-    to,
-    groupBy = "day",
-    tags,
-    operationType = "expense",
-  }) {
-    const userService = Container.get('userService');
-    const user = await userService.findById(userId);
-    const ignoredTagId = user.ignoredTagId;
-
+  async getTagTotal({ tags, groupBy = "day", userId, from, to, operationType = "expense", }) {
     let operationTypeFilter =
       operationType && operationType !== "all" ? {} : undefined;
     if (operationType === "expense")
@@ -869,9 +851,7 @@ export default class TransactionService {
       ? {
         [this.sequelizeOp.in]: tags,
       }
-      : {
-        [this.sequelizeOp.ne]: ignoredTagId
-      };
+      : undefined;
 
     const transactions = await this.transactionModel.findAll({
       include: [
@@ -880,11 +860,13 @@ export default class TransactionService {
           as: "account",
           duplicating: false,
         },
-        {
-          model: this.sequelize.models.tags,
-          as: "tags",
-          duplicating: false,
-        }
+        tags
+          ? {
+            model: this.sequelize.models.tags,
+            as: "tags",
+            duplicating: false,
+          }
+          : undefined
       ].filter((e) => e),
       attributes: [
         [
@@ -928,7 +910,6 @@ export default class TransactionService {
     });
 
     return transactions
-      .filter(t => ignoredTagId ? !t?.tags?.map(t => t.dataValues.id)?.includes(ignoredTagId) : true)
       .map((t) => {
         return {
           day: groupBy === "day" ? t?.dataValues?.day : undefined,
@@ -941,6 +922,38 @@ export default class TransactionService {
           return dayjs(a.day, "YYYY-MM-DD").diff(dayjs(b.day, "YYYY-MM-DD"));
         return dayjs(a.month, "YYYY-MM").diff(dayjs(b.month, "YYYY-MM"));
       });
+  }
+
+  /**
+   *
+   * @param {Number} param.userId
+   * @param {String} param.from - format YYYY-MM-DD
+   * @param {String} param.to - format YYYY-MM-DD
+   * @returns
+   */
+  async getTransactionsCalendar({
+    userId,
+    from,
+    to,
+    groupBy = 'day',
+    tags,
+    operationType = 'expense',
+  }) {
+    const userService = Container.get('userService');
+    const user = await userService.findById(userId);
+    const ignoredTagId = user.ignoredTagId;
+
+    const ignoredTagTotals = await this.getTagTotal({ tags: [ignoredTagId],  groupBy, userId, from, to, operationType });
+    const restTotals = await this.getTagTotal({ tags,  groupBy, userId, from, to, operationType });
+
+    return restTotals
+      .map((t, i) => {
+        const ignored = ignoredTagTotals.find(e => e?.[groupBy] === t?.[groupBy])?.totalAmount || 0;
+        return {
+          ...t,
+          totalAmount: t?.totalAmount - ignored,
+        };
+      })
   }
 
   /**
