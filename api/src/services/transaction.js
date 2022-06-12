@@ -943,7 +943,7 @@ export default class TransactionService {
     const user = await userService.findById(userId);
     const ignoredTagId = user.ignoredTagId;
 
-    const ignoredTagTotals = tags
+    const ignoredTagTotals = !tags
       ? await this.getTagTotal({ tags: [ignoredTagId],  groupBy, userId, from, to, operationType })
       : undefined;
     const restTotals = await this.getTagTotal({ tags,  groupBy, userId, from, to, operationType });
