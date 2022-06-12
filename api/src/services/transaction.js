@@ -942,13 +942,17 @@ export default class TransactionService {
     const userService = Container.get('userService');
     const user = await userService.findById(userId);
     const ignoredTagId = user.ignoredTagId;
-
-    const ignoredTagTotals = await this.getTagTotal({ tags: [ignoredTagId],  groupBy, userId, from, to, operationType });
+console.log(tags)
+    const ignoredTagTotals = tags?.length === 0
+      ? await this.getTagTotal({ tags: [ignoredTagId],  groupBy, userId, from, to, operationType })
+      : undefined;
     const restTotals = await this.getTagTotal({ tags,  groupBy, userId, from, to, operationType });
+
+    console.log(restTotals)
 
     return restTotals
       .map((t, i) => {
-        const ignored = ignoredTagTotals.find(e => e?.[groupBy] === t?.[groupBy])?.totalAmount || 0;
+        const ignored = ignoredTagTotals?.find(e => e?.[groupBy] === t?.[groupBy])?.totalAmount || 0;
         return {
           ...t,
           totalAmount: t?.totalAmount - ignored,
