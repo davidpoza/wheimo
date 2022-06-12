@@ -942,13 +942,11 @@ export default class TransactionService {
     const userService = Container.get('userService');
     const user = await userService.findById(userId);
     const ignoredTagId = user.ignoredTagId;
-console.log(tags)
-    const ignoredTagTotals = tags?.length === 0
+
+    const ignoredTagTotals = tags
       ? await this.getTagTotal({ tags: [ignoredTagId],  groupBy, userId, from, to, operationType })
       : undefined;
     const restTotals = await this.getTagTotal({ tags,  groupBy, userId, from, to, operationType });
-
-    console.log(restTotals)
 
     return restTotals
       .map((t, i) => {
