@@ -56,6 +56,8 @@ function AccountsListItem({
     switch (bkId) {
       case 'opbk':
         return 'Open Bank';
+      case 'opbkprepaid':
+        return 'Open Bank Prepaid';
       case 'nordigen':
         return 'Nordigen aggregator';
       case 'piggybank':
@@ -112,7 +114,7 @@ function AccountsListItem({
             className={`${classes.balance} ${
               balance > 0 ? classes.positiveBalance : classes.negativeBalance
             }`}>
-            {balance}€
+            {balance.toFixed(2)}€
           </div>
         </div>
       </ListItem>

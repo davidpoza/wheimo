@@ -438,7 +438,7 @@ export default class TransactionService {
     userId,
     from,
     admin,
-    settings: { contract, product } = {},
+    settings: { contract, product, pan } = {},
   }) {
     let balance;
     let transactions;
@@ -469,6 +469,9 @@ export default class TransactionService {
         case "nordigen":
           importer = Container.get("NordigenImporter");
           break;
+        case "opbkprepaid":
+          importer = Container.get("OpenbankPrepaidImporter");
+          break;
         default:
           throw new Error("Wrong bankId");
       }
@@ -491,7 +494,7 @@ export default class TransactionService {
 
       // fetch transactions
       const { balance: fetchedBalance, transactions: fetchedTransactions } =
-        await importer.fetchTransactions({ accessId, decryptedPassword, token, from, contract, product, settings, currentBalance });
+        await importer.fetchTransactions({ accessId, decryptedPassword, token, from, contract, product, settings, currentBalance, pan });
       transactions = fetchedTransactions || [];
 
       balance = fetchedBalance;

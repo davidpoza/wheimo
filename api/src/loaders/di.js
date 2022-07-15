@@ -17,6 +17,7 @@ export default ({
   AttachmentService,
   OpenbankImporter,
   NordigenImporter,
+  OpenbankPrepaidImporter,
   NordigenService,
   AES,
   dayjs,
@@ -81,6 +82,9 @@ export default ({
 
   Container.set('NordigenImporter', NordigenImporter);
   logger.info('💉 nordigen importer injected');
+
+  Container.set('OpenbankPrepaidImporter', OpenbankPrepaidImporter);
+  logger.info('💉 OpenbankPrepaid importer injected');
 
   Container.set('logService', new LogService());
   logger.info('💉 log service instance injected');

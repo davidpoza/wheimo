@@ -55,7 +55,7 @@ export default makeStyles((theme) => ({
   amount: {
     marginLeft: '0.1em',
     fontWeight: 'bold',
-    width: '4em',
+    width: '5em',
 
   },
   icon: {
