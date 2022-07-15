@@ -21,6 +21,7 @@ import LogService from '../services/log.js';
 import BudgetService from '../services/budget.js';
 import OpenbankImporter from '../services/importers/openbank.js';
 import NordigenImporter from '../services/importers/nordigen.js';
+import OpenbankPrepaidImporter from '../services/importers/openbank-prepaid.js';
 import AttachmentService from '../services/attachment.js';
 import NordigenService from '../services/nordigen.js';
 
@@ -37,6 +38,7 @@ export default async ({ expressApp }) => {
     NordigenImporter,
     NordigenService,
     OpenbankImporter,
+    OpenbankPrepaidImporter,
     Queue,
     RecurrentService,
     RuleService,

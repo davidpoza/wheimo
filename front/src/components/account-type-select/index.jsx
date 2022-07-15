@@ -14,6 +14,7 @@ function AccountTypeSelect({
   const classes = useStyles();
   const types = {
     opbk: 'Open Bank',
+    opbkprepaid: 'Open Bank Tarjeta prepago',
     wallet: 'Wallet',
     piggybank: 'Piggy Bank',
     nordigen: 'Nordigen'

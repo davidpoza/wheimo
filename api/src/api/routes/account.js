@@ -74,6 +74,7 @@ export default (app) => {
         settings: Joi.object({
           contract: Joi.string(),
           product: Joi.string(),
+          pan: Joi.string(),
           nordigenLink: Joi.string(),
           nordigenRequisitionId: Joi.string(),
           nordigenAccountId: Joi.string(),
@@ -183,12 +184,12 @@ export default (app) => {
     }),
     async (req, res, next) => {
       const transactionService = Container.get('transactionService');
-      const { from, contract, product } = req.body;
+      const { from, contract, product, pan } = req.body;
       const { id } = req.params;
       const userId = req.user.id;
       try {
         await transactionService.resync(
-          { accountId:id, userId, from, settings: { contract, product } }
+          { accountId:id, userId, from, settings: { contract, product, pan } }
         );
         res.sendStatus(204);
       } catch (err) {

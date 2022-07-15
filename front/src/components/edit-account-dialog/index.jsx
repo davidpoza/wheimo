@@ -25,6 +25,7 @@ import useStyles from './styles';
 import PiggyConfig from './_children/piggy-config';
 import OpbkConfig from './_children/opbk-config';
 import NordigenConfig from './_children/nordigen-config';
+import OpbkPrepaidConfig from './_children/opbkprepaid-config';
 import AccountTypeSelect from '../account-type-select';
 
 function PaperComponent(props) {
@@ -221,6 +222,17 @@ function EditAccountDialog({
           type === 'nordigen'
             && <NordigenConfig
               accountId={id}
+              accessId={accessId}
+              setAccessId={setAccessId}
+              accessPassword={accessPassword}
+              setAccessPassword={setAccessPassword}
+              settings={settings}
+              setSettings={setSettings}
+            />
+        }
+        {
+          type === 'opbkprepaid'
+            && <OpbkPrepaidConfig
               accessId={accessId}
               setAccessId={setAccessId}
               accessPassword={accessPassword}
