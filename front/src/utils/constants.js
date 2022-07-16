@@ -16,10 +16,12 @@ const INITIAL_FILTER = {
 };
 
 const BANK_ID_NORDIGEN = 'nordigen';
+const BANK_ID_OPBKPREPAID = 'opbkprepaid';
 
 const constants = {
   INITIAL_FILTER,
-  BANK_ID_NORDIGEN
+  BANK_ID_NORDIGEN,
+  BANK_ID_OPBKPREPAID
 }
 
 export default constants;

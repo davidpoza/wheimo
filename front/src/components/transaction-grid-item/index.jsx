@@ -64,6 +64,9 @@ function TransactionGridItem({
   const emitterLimit = isMobile ? 26 : 26;
   const descriptionLimit = isMobile ? 26 : 60;
   const commentsLimit = isMobile ? 26 : 60;
+  const accountsWithNoBalance = [constants.BANK_ID_NORDIGEN, constants.BANK_ID_OPBKPREPAID];
+  const receiverAsDescription = bankId === constants.BANK_ID_OPBKPREPAID;
+  const hasBalance = !accountsWithNoBalance.includes(bankId);
 
   function handleContextMenu(e) {
     e.preventDefault();
@@ -121,7 +124,7 @@ function TransactionGridItem({
             }`}>
             {`${formatAmount(amount)}`}
           </span>
-          {emitterReceiver && !isMobile && (
+          {emitterReceiver && !receiverAsDescription && !isMobile && (
             <span className={classes.emitter}>
               {emitterReceiver?.substr(0, emitterLimit)?.toLowerCase()}
               {emitterReceiver.length > emitterLimit && <>...</>}
@@ -157,13 +160,22 @@ function TransactionGridItem({
         <div className={classes.secondLine}>
           <div className={classes.description}>
             {
-              description?.substr(0, descriptionLimit).toUpperCase() ||
-                (isMobile &&
-                  (emitterReceiver?.substr(0, emitterLimit)?.toUpperCase() ||
-                    comments
-                      ?.substr(0, commentsLimit)
-                      .split('\n')?.[0]
-                      ?.toUpperCase()))
+              !receiverAsDescription
+                && (
+                  description?.substr(0, descriptionLimit).toUpperCase() ||
+                  (isMobile &&
+                    (emitterReceiver?.substr(0, emitterLimit)?.toUpperCase() ||
+                      comments
+                        ?.substr(0, commentsLimit)
+                        .split('\n')?.[0]
+                        ?.toUpperCase()))
+                )
+            }
+            {
+              receiverAsDescription
+                && (
+                  emitterReceiver?.substr(0, descriptionLimit).trim().toUpperCase()
+                )
             }
             {!isMobile && description?.length > 0 && comments && ' - '}
             {!isMobile &&
@@ -173,9 +185,13 @@ function TransactionGridItem({
                 ?.toUpperCase()}
           </div>
           <div className={classes.account}>
-            {isMobile ? accountIdentifier : accountDescription}
-            {bankId !== constants.BANK_ID_NORDIGEN && ` | `}
-            {bankId !== constants.BANK_ID_NORDIGEN ? formatAmount(accountBalance, false) : null}
+            {
+              isMobile
+                ? accountIdentifier
+                : accountDescription
+            }
+            {hasBalance && ` | `}
+            {hasBalance ? formatAmount(accountBalance, false) : null}
           </div>
         </div>
       </div>
