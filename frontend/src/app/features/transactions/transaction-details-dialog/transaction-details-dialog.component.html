@@ -1,0 +1,72 @@
+<p-dialog
+  header="Transaction Detail"
+  [visible]="visible()"
+  (visibleChange)="visibleChange.emit($event)"
+  [modal]="true"
+  [style]="{ width: '560px' }"
+>
+  @if (transaction(); as tx) {
+    <div class="detail-grid">
+      <div class="detail-row">
+        <span class="label">Date</span>
+        <span>{{ tx.date | date: 'dd/MM/yyyy' }}</span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Amount</span>
+        <span [class.expense]="tx.amount < 0" [class.income]="tx.amount > 0" class="amount">
+          {{ tx.amount | currency: tx.currency : 'symbol' : '1.2-2' }}
+        </span>
+      </div>
+      @if (tx.emitterName) {
+        <div class="detail-row"><span class="label">From</span><span>{{ tx.emitterName }}</span></div>
+      }
+      @if (tx.receiverName) {
+        <div class="detail-row"><span class="label">To</span><span>{{ tx.receiverName }}</span></div>
+      }
+      @if (tx.description) {
+        <div class="detail-row"><span class="label">Description</span><span>{{ tx.description }}</span></div>
+      }
+      <div class="detail-row">
+        <span class="label">Balance</span>
+        <span>{{ tx.balance | currency: tx.currency : 'symbol' : '1.2-2' }}</span>
+      </div>
+
+      <div class="field mt-2">
+        <label>Comments</label>
+        <textarea pTextarea [ngModel]="comments()" (ngModelChange)="comments.set($event)" rows="3" class="w-full"></textarea>
+      </div>
+
+      <div class="field">
+        <label>Tags</label>
+        <p-multiselect
+          [ngModel]="selectedTagIds()"
+          (ngModelChange)="selectedTagIds.set($event)"
+          [options]="allTags"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Select tags"
+          class="w-full"
+        />
+      </div>
+
+      @if (tx.attachments.length > 0) {
+        <div class="attachments">
+          <label>Attachments</label>
+          <div class="att-list">
+            @for (att of tx.attachments; track att.id) {
+              <div class="att-item">
+                <i class="pi pi-file"></i>
+                <span>{{ att.description || att.filename }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <ng-template pTemplate="footer">
+    <p-button label="Close" [text]="true" severity="secondary" (onClick)="close()" />
+    <p-button label="Save" (onClick)="save()" />
+  </ng-template>
+</p-dialog>

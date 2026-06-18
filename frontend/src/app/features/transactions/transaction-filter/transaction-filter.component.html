@@ -1,0 +1,60 @@
+<!-- Desktop filter bar -->
+<div class="filter-bar desktop-filters">
+  <input pInputText [(ngModel)]="draft.search" placeholder="Search..." class="filter-input" />
+
+  <p-select
+    [(ngModel)]="draft.accountId"
+    [options]="accounts()"
+    optionLabel="name"
+    optionValue="id"
+    placeholder="Account"
+    [showClear]="true"
+    class="filter-select"
+  />
+
+  <p-multiselect
+    [(ngModel)]="draft.tags"
+    [options]="tags()"
+    optionLabel="name"
+    optionValue="id"
+    placeholder="Tags"
+    class="filter-select"
+  />
+
+  <p-datepicker [(ngModel)]="draft.from" placeholder="From" dateFormat="dd/mm/yy" class="filter-date" />
+  <p-datepicker [(ngModel)]="draft.to" placeholder="To" dateFormat="dd/mm/yy" class="filter-date" />
+
+  <p-select
+    [(ngModel)]="draft.operationType"
+    [options]="operationOptions"
+    optionLabel="label"
+    optionValue="value"
+    placeholder="Type"
+    class="filter-select-sm"
+  />
+
+  <p-button label="Apply" (onClick)="apply()" />
+  <p-button label="Reset" severity="secondary" [text]="true" (onClick)="reset()" />
+</div>
+
+<!-- Mobile filter button + drawer -->
+<div class="mobile-filter-btn">
+  <p-button icon="pi pi-filter" label="Filters" severity="secondary" (onClick)="drawerVisible.set(true)" />
+</div>
+
+<p-drawer [(visible)]="drawerVisible" header="Filters" position="bottom" styleClass="mobile-filter-drawer">
+  <div class="drawer-fields">
+    <input pInputText [(ngModel)]="draft.search" placeholder="Search..." class="w-full" />
+    <p-select [(ngModel)]="draft.accountId" [options]="accounts()" optionLabel="name" optionValue="id" placeholder="Account" [showClear]="true" class="w-full" />
+    <p-multiselect [(ngModel)]="draft.tags" [options]="tags()" optionLabel="name" optionValue="id" placeholder="Tags" class="w-full" />
+    <p-datepicker [(ngModel)]="draft.from" placeholder="From" dateFormat="dd/mm/yy" class="w-full" />
+    <p-datepicker [(ngModel)]="draft.to" placeholder="To" dateFormat="dd/mm/yy" class="w-full" />
+    <p-select [(ngModel)]="draft.operationType" [options]="operationOptions" optionLabel="label" optionValue="value" placeholder="Type" class="w-full" />
+  </div>
+  <ng-template pTemplate="footer">
+    <div class="drawer-footer">
+      <p-button label="Reset" severity="secondary" [text]="true" (onClick)="reset()" />
+      <p-button label="Apply" (onClick)="apply()" />
+    </div>
+  </ng-template>
+</p-drawer>

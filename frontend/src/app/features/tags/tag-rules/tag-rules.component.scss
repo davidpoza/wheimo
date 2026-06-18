@@ -1,0 +1,23 @@
+.rules-toolbar { margin-bottom: 1rem; }
+
+.rule-form {
+  background: var(--p-surface-card);
+  border: 1px solid var(--p-surface-border);
+  border-radius: 6px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+
+  .field { display: flex; flex-direction: column; gap: 0.375rem; }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 0.25rem;
+  }
+}
+
+.tags-cell { display: flex; flex-wrap: wrap; gap: 0.25rem; }

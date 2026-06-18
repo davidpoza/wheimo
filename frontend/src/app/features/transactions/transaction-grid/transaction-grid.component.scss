@@ -1,0 +1,60 @@
+.tx-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  h2 { margin: 0; }
+
+  .tx-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+.tx-row {
+  cursor: pointer;
+}
+
+.date-col {
+  white-space: nowrap;
+  font-size: 0.875rem;
+  color: var(--p-text-muted-color);
+}
+
+.desc-col {
+  max-width: 300px;
+
+  .desc-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+  }
+
+  .fav-icon {
+    color: var(--p-yellow-500);
+    margin-left: 0.25rem;
+    font-size: 0.75rem;
+  }
+}
+
+.amount-col {
+  font-weight: 600;
+  text-align: right;
+
+  &.expense { color: var(--p-red-500); }
+  &.income  { color: var(--p-green-500); }
+}
+
+.tags-cell {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.empty-msg {
+  text-align: center;
+  color: var(--p-text-muted-color);
+  padding: 2rem;
+}

@@ -1,0 +1,19 @@
+spring:
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
+
+server:
+  port: ${SERVER_PORT:8081}
+
+app:
+  aes:
+    passphrase: ${AES_PASSPHRASE:changeme-aes-passphrase}
+  redis:
+    sync-requests-channel: sync-requests
+    sync-results-channel: sync-results
+
+logging:
+  level:
+    com.wheimo.fetcher: INFO

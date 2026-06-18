@@ -1,0 +1,26 @@
+<div class="heatmap-section">
+  <h3>Spending Heatmap {{ year }}</h3>
+  <div class="month-labels">
+    @for (m of months; track m) {
+      <span class="month-label">{{ m }}</span>
+    }
+  </div>
+  <div class="heatmap-grid">
+    @for (week of weeks(); track $index) {
+      <div class="week-col">
+        @for (day of week; track $index) {
+          @if (day) {
+            <div
+              class="day-cell"
+              [class]="intensity(day.amount)"
+              [pTooltip]="day.label"
+              tooltipPosition="top"
+            ></div>
+          } @else {
+            <div class="day-cell empty"></div>
+          }
+        }
+      </div>
+    }
+  </div>
+</div>

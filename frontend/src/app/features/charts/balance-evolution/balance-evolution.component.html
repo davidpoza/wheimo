@@ -1,0 +1,36 @@
+<div class="charts-page">
+  <div class="charts-header">
+    <h2>Charts & Analytics</h2>
+    <p-select
+      [(ngModel)]="selectedAccountId"
+      (ngModelChange)="selectedAccountId.set($event); loadChart()"
+      [options]="accounts()"
+      optionLabel="name"
+      optionValue="id"
+      placeholder="Select account"
+      class="account-select"
+    />
+  </div>
+
+  <div class="chart-section">
+    <h3>Balance Evolution (last 90 days)</h3>
+    @if (chartData()) {
+      <p-chart type="line" [data]="chartData()" [options]="chartOptions" styleClass="balance-chart" />
+    } @else {
+      <div class="chart-empty">Select an account to view balance evolution</div>
+    }
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-section">
+      <app-tag-expenses-chart [accountId]="selectedAccountId()" />
+    </div>
+    <div class="chart-section">
+      <app-statistics [accountId]="selectedAccountId()" />
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <app-heatmap [accountId]="selectedAccountId()" />
+  </div>
+</div>

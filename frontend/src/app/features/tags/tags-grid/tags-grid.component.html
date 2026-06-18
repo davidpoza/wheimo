@@ -1,0 +1,49 @@
+<div class="tags-header">
+  <h2>Tags & Rules</h2>
+  <div class="tab-buttons">
+    <p-button label="Tags" [text]="activeTab() !== 'tags'" (onClick)="activeTab.set('tags')" />
+    <p-button label="Rules" [text]="activeTab() !== 'rules'" (onClick)="activeTab.set('rules')" />
+  </div>
+</div>
+
+@if (activeTab() === 'tags') {
+  <div class="create-row">
+    <input pInputText [(ngModel)]="newTagName" (ngModelChange)="newTagName.set($event)" placeholder="New tag name..." class="create-input" />
+    <p-button label="Add" icon="pi pi-plus" (onClick)="createTag()" [disabled]="!newTagName().trim()" />
+  </div>
+
+  <p-table [value]="tags()" styleClass="p-datatable-sm">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Name</th>
+        <th style="width: 8rem"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-tag>
+      <tr>
+        <td>
+          @if (editingId() === tag.id) {
+            <input pInputText [(ngModel)]="editingName" (ngModelChange)="editingName.set($event)" class="w-full" />
+          } @else {
+            {{ tag.name }}
+          }
+        </td>
+        <td>
+          @if (editingId() === tag.id) {
+            <p-button icon="pi pi-check" [text]="true" severity="success" (onClick)="saveEdit(tag)" />
+            <p-button icon="pi pi-times" [text]="true" severity="secondary" (onClick)="cancelEdit()" />
+          } @else {
+            <p-button icon="pi pi-pencil" [text]="true" (onClick)="startEdit(tag)" />
+            <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="deleteTag(tag)" />
+          }
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+}
+
+@if (activeTab() === 'rules') {
+  <app-tag-rules />
+}
+
+<p-toast />

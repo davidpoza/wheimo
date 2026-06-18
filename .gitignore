@@ -107,3 +107,10 @@ dist
 
 # docker volumes
 redis-volume
+# Java build artifacts
+backend/target/
+fetcher/target/
+
+# Angular build
+frontend/dist/
+frontend/node_modules/

@@ -1,0 +1,41 @@
+.heatmap-section {
+  h3 { margin: 0 0 0.75rem; font-size: 1rem; }
+}
+
+.month-labels {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  margin-bottom: 0.25rem;
+
+  .month-label {
+    font-size: 0.75rem;
+    color: var(--p-text-muted-color);
+  }
+}
+
+.heatmap-grid {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+}
+
+.week-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.day-cell {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  background: var(--p-surface-border);
+  cursor: pointer;
+
+  &.empty { background: transparent; cursor: default; }
+  &.level-0 { background: var(--p-surface-200); }
+  &.level-1 { background: #bbf7d0; }
+  &.level-2 { background: #4ade80; }
+  &.level-3 { background: #16a34a; }
+  &.level-4 { background: #14532d; }
+}

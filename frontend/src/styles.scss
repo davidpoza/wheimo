@@ -1,0 +1,42 @@
+@use 'primeicons/primeicons.css';
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: var(--p-font-family, system-ui, sans-serif);
+  font-size: 14px;
+  background: var(--p-surface-ground);
+  color: var(--p-text-color);
+}
+
+.w-full { width: 100%; }
+.mt-2 { margin-top: 0.5rem; }
+.p-error { color: var(--p-red-500); font-size: 0.8125rem; }
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  label {
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+}
+
+.field-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dialog-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}

@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/wheimo}
+    username: ${SPRING_DATASOURCE_USERNAME:wheimo}
+    password: ${SPRING_DATASOURCE_PASSWORD:wheimo}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+  data:
+    redis:
+      host: ${SPRING_REDIS_HOST:localhost}
+      port: ${SPRING_REDIS_PORT:6379}
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:changeme-very-long-secret-key-for-jwt-at-least-32-chars}
+    expiration-ms: ${JWT_EXPIRATION_MS:900000}
+    refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:2592000000}
+  aes:
+    passphrase: ${AES_PASSPHRASE:changeme-aes-passphrase}
+  attachments:
+    path: ${ATTACHMENTS_PATH:./data/attachments}
+  redis:
+    sync-requests-channel: sync-requests
+    sync-results-channel: sync-results
+
+logging:
+  level:
+    com.wheimo: INFO
+    org.springframework.security: WARN

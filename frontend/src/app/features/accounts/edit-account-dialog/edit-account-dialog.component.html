@@ -1,0 +1,51 @@
+<p-dialog
+  [header]="isEdit ? 'Edit Account' : 'New Account'"
+  [visible]="visible()"
+  (visibleChange)="visibleChange.emit($event)"
+  [modal]="true"
+  [style]="{ width: '480px' }"
+>
+  <form [formGroup]="form" class="dialog-form">
+    <div class="field">
+      <label>Name *</label>
+      <input pInputText formControlName="name" class="w-full" />
+    </div>
+
+    <div class="field">
+      <label>Description</label>
+      <input pInputText formControlName="description" class="w-full" />
+    </div>
+
+    <div class="field">
+      <label>Bank</label>
+      <p-select formControlName="bankId" [options]="bankOptions" optionLabel="label" optionValue="value" class="w-full" />
+    </div>
+
+    <div class="field">
+      <label>Account Number / IBAN</label>
+      <input pInputText formControlName="number" class="w-full" />
+    </div>
+
+    @if (bankId !== 'manual') {
+      <div class="field">
+        <label>Access ID / User</label>
+        <input pInputText formControlName="accessId" class="w-full" />
+      </div>
+
+      <div class="field">
+        <label>{{ bankId === 'nordigen' ? 'Secret Key' : 'Password' }}</label>
+        <input pInputText type="password" formControlName="accessPassword" class="w-full" />
+      </div>
+    }
+
+    <div class="field-checkbox">
+      <p-checkbox formControlName="saving" [binary]="true" inputId="saving" />
+      <label for="saving">Savings account</label>
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="close()" />
+    <p-button label="Save" (onClick)="save()" [disabled]="form.invalid" />
+  </ng-template>
+</p-dialog>
