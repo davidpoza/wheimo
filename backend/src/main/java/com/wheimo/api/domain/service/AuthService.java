@@ -39,7 +39,7 @@ public class AuthService {
         String accessToken = jwtService.generateToken(user.getId(), user.getLevel());
         String refreshToken = jwtService.generateRefreshToken(user.getId());
         addRefreshCookie(response, refreshToken);
-        return AuthResponse.builder().token(accessToken).user(toDto(user)).build();
+        return AuthResponse.builder().accessToken(accessToken).user(toDto(user)).build();
     }
 
     public String refresh(String refreshToken) {

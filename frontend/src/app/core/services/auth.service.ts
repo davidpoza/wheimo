@@ -34,10 +34,9 @@ export class AuthService {
   }
 
   refresh() {
-    return this.http.post<AuthTokens>(`${this.baseUrl}/refresh`, {}, { withCredentials: true }).pipe(
+    return this.http.post<Pick<AuthTokens, 'accessToken'>>(`${this.baseUrl}/refresh`, {}, { withCredentials: true }).pipe(
       tap((res) => {
         this.accessToken.set(res.accessToken);
-        this.currentUser.set(res.user);
         sessionStorage.setItem('accessToken', res.accessToken);
       }),
       catchError(() => {

@@ -40,7 +40,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         String newToken = authService.refresh(refreshToken);
-        return ResponseEntity.ok(Map.of("token", newToken));
+        return ResponseEntity.ok(Map.of("accessToken", newToken));
     }
 
     @PostMapping("/logout")
