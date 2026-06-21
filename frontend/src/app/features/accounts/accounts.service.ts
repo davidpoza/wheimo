@@ -37,6 +37,12 @@ export class AccountsService {
     return this.http.post(`${this.baseUrl}/${id}/resync`, {});
   }
 
+  importXls(id: number, file: File) {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post<{ imported: number; skipped: number }>(`${this.baseUrl}/${id}/import/xls`, formData);
+  }
+
   fixBalances() {
     return this.http.post(`${this.baseUrl}/fix-balances`, {});
   }

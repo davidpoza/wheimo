@@ -25,7 +25,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AccountService {
 
-    private static final Set<String> SUPPORTED_BANK_IDS = Set.of("opbk", "nordigen", "opbkprepaid", "wallet", "piggybank");
+    private static final Set<String> SUPPORTED_BANK_IDS = Set.of("opbk", "nordigen", "opbkprepaid", "wallet", "piggybank", "manual");
     private static final Set<String> SYNCABLE_BANK_IDS = Set.of("opbk", "nordigen", "opbkprepaid");
 
     private final AccountRepository accountRepository;

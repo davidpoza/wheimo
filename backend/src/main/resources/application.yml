@@ -30,6 +30,9 @@ server:
   servlet:
     context-path: /api
 
+fetcher:
+  url: ${FETCHER_URL:http://wheimo-fetcher:8081}
+
 app:
   auth:
     username: ${AUTH_USERNAME:admin@wheimo.com}

@@ -202,13 +202,13 @@ public class TransactionService {
     }
 
     @Transactional
-    public void processImportResult(SyncResultMessage msg) {
+    public int processImportResult(SyncResultMessage msg) {
         if (msg.getError() != null) {
             log.error("Sync error for account {}: {}", msg.getAccountId(), msg.getError());
-            return;
+            return 0;
         }
         Account account = accountRepository.findById(msg.getAccountId()).orElse(null);
-        if (account == null) return;
+        if (account == null) return 0;
 
         List<Transaction> newTransactions = new ArrayList<>();
         for (SyncResultMessage.ImportedTransaction it : msg.getTransactions()) {
@@ -238,6 +238,7 @@ public class TransactionService {
                 accountRepository.save(account);
             }
         }
+        return newTransactions.size();
     }
 
     private Specification<Transaction> buildSpec(Long userId, TransactionFilterParams p) {

@@ -3,6 +3,8 @@
   <p-button label="Add Account" icon="pi pi-plus" (onClick)="openCreate()" />
 </div>
 
+<input #xlsInput type="file" accept=".xls" style="display:none" (change)="onXlsFileSelected($event)" />
+
 <div class="accounts-grid">
   @for (account of accounts(); track account.id) {
     <p-card styleClass="account-card">
@@ -20,6 +22,7 @@
       </div>
 
       <div class="account-actions">
+        <p-button icon="pi pi-upload" [text]="true" severity="secondary" (onClick)="openXlsImport(account)" pTooltip="Import XLS" />
         <p-button icon="pi pi-refresh" [text]="true" severity="info" (onClick)="resync(account)" pTooltip="Resync" />
         <p-button icon="pi pi-pencil" [text]="true" (onClick)="openEdit(account)" pTooltip="Edit" />
         <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="delete(account)" pTooltip="Delete" />
