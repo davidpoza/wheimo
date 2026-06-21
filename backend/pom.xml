@@ -94,6 +94,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- OpenAPI / Swagger -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.7.0</version>
+        </dependency>
+
         <!-- Multipart file upload -->
         <dependency>
             <groupId>commons-io</groupId>

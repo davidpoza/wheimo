@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/wheimo}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://192.168.1.26:5432/wheimo}
     username: ${SPRING_DATASOURCE_USERNAME:wheimo}
     password: ${SPRING_DATASOURCE_PASSWORD:wheimo}
     driver-class-name: org.postgresql.Driver
@@ -18,7 +18,7 @@ spring:
     baseline-on-migrate: true
   data:
     redis:
-      host: ${SPRING_REDIS_HOST:localhost}
+      host: ${SPRING_REDIS_HOST:192.168.1.26}
       port: ${SPRING_REDIS_PORT:6379}
   servlet:
     multipart:

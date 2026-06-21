@@ -53,7 +53,6 @@ public class TransactionService {
 
         Transaction transaction = Transaction.builder()
                 .importId(importId)
-                .accountId(req.getAccountId())
                 .amount(req.getAmount())
                 .assCard(req.getAssCard())
                 .balance(newBalance)

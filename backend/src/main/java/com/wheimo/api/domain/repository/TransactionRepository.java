@@ -15,7 +15,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
     boolean existsByImportId(String importId);
     Optional<Transaction> findByIdAndAccountUserId(Long id, Long userId);
 
-    @Query("SELECT t FROM Transaction t JOIN t.account a WHERE a.userId = :userId AND t.id IN :ids")
+    @Query("SELECT t FROM Transaction t JOIN t.account a WHERE a.user.id = :userId AND t.id IN :ids")
     List<Transaction> findAllByIdsAndUserId(@Param("ids") List<Long> ids, @Param("userId") Long userId);
 
     @Query("""
@@ -23,13 +23,13 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
         JOIN FETCH t.account a
         LEFT JOIN FETCH t.tags
         LEFT JOIN FETCH t.attachments
-        WHERE a.userId = :userId AND t.id = :id
+        WHERE a.user.id = :userId AND t.id = :id
         """)
     Optional<Transaction> findByIdWithDetails(@Param("id") Long id, @Param("userId") Long userId);
 
     @Query("""
         SELECT t FROM Transaction t JOIN t.account a
-        WHERE a.id = :accountId AND a.userId = :userId
+        WHERE a.id = :accountId AND a.user.id = :userId
         ORDER BY t.date DESC
         """)
     List<Transaction> findByAccountIdAndUserId(@Param("accountId") Long accountId, @Param("userId") Long userId);
