@@ -1,9 +1,11 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap, catchError, EMPTY } from 'rxjs';
+import { tap, catchError, EMPTY, switchMap } from 'rxjs';
 import { User, AuthTokens } from '../models/user.model';
 import { environment } from '../../../environments/environment';
+
+const TOKEN_KEY = 'accessToken';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -16,7 +18,7 @@ export class AuthService {
   readonly isAuthenticated = computed(() => this.currentUser() !== null);
 
   constructor() {
-    const stored = sessionStorage.getItem('accessToken');
+    const stored = localStorage.getItem(TOKEN_KEY);
     if (stored) {
       this.accessToken.set(stored);
       this.loadCurrentUser();
@@ -28,7 +30,7 @@ export class AuthService {
       tap((res) => {
         this.accessToken.set(res.accessToken);
         this.currentUser.set(res.user);
-        sessionStorage.setItem('accessToken', res.accessToken);
+        localStorage.setItem(TOKEN_KEY, res.accessToken);
       }),
     );
   }
@@ -37,7 +39,7 @@ export class AuthService {
     return this.http.post<Pick<AuthTokens, 'accessToken'>>(`${this.baseUrl}/refresh`, {}, { withCredentials: true }).pipe(
       tap((res) => {
         this.accessToken.set(res.accessToken);
-        sessionStorage.setItem('accessToken', res.accessToken);
+        localStorage.setItem(TOKEN_KEY, res.accessToken);
       }),
       catchError(() => {
         this.clearSession();
@@ -59,13 +61,12 @@ export class AuthService {
   private loadCurrentUser() {
     this.http.get<User>(`${environment.apiUrl}/users/me`).subscribe({
       next: (user) => this.currentUser.set(user),
-      error: () => this.clearSession(),
     });
   }
 
   private clearSession() {
     this.currentUser.set(null);
     this.accessToken.set(null);
-    sessionStorage.removeItem('accessToken');
+    localStorage.removeItem(TOKEN_KEY);
   }
 }

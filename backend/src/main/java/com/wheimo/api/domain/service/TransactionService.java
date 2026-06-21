@@ -84,16 +84,17 @@ public class TransactionService {
         return toDto(transaction);
     }
 
-    public List<TransactionDto> findAll(Long userId, TransactionFilterParams params) {
+    public TransactionPageDto findAll(Long userId, TransactionFilterParams params) {
         Specification<Transaction> spec = buildSpec(userId, params);
         Sort sort = Sort.by(params.getSort() != null && "asc".equals(params.getSort()) ? Sort.Direction.ASC : Sort.Direction.DESC, "date");
 
         if (params.getLimit() != null) {
             int offset = params.getOffset() != null ? params.getOffset() : 0;
             var page = transactionRepository.findAll(spec, PageRequest.of(offset / params.getLimit(), params.getLimit(), sort));
-            return page.stream().map(this::toDto).toList();
+            return new TransactionPageDto(page.stream().map(this::toDto).toList(), page.getTotalElements());
         }
-        return transactionRepository.findAll(spec, sort).stream().map(this::toDto).toList();
+        var list = transactionRepository.findAll(spec, sort).stream().map(this::toDto).toList();
+        return new TransactionPageDto(list, list.size());
     }
 
     public TransactionDto findById(Long id, Long userId) {

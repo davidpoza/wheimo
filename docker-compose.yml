@@ -42,6 +42,7 @@ services:
       JWT_REFRESH_EXPIRATION_MS: ${JWT_REFRESH_EXPIRATION_MS:-2592000000}
       AES_PASSPHRASE: ${AES_PASSPHRASE:-changeme-aes-passphrase}
       ATTACHMENTS_PATH: /data/attachments
+      FETCHER_URL: http://wheimo-fetcher:8081
     volumes:
       - attachments-data:/data/attachments
 

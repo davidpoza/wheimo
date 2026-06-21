@@ -23,7 +23,7 @@ export class AppLayoutComponent {
 
   readonly navItems: NavItem[] = [
     { label: 'Transactions', icon: 'pi pi-list', route: '/transactions' },
-    { label: 'Accounts', icon: 'pi pi-bank', route: '/accounts' },
+    { label: 'Accounts', icon: 'pi pi-credit-card', route: '/accounts' },
     { label: 'Tags', icon: 'pi pi-tags', route: '/tags' },
     { label: 'Charts', icon: 'pi pi-chart-bar', route: '/charts' },
     { label: 'Budgets', icon: 'pi pi-wallet', route: '/budgets' },
