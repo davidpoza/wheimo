@@ -1,13 +1,12 @@
 package com.wheimo.api.domain.service;
 
+import com.wheimo.api.config.AppAuthProperties;
 import com.wheimo.api.domain.dto.AuthResponse;
 import com.wheimo.api.domain.dto.LoginRequest;
-import com.wheimo.api.domain.dto.SignUpRequest;
 import com.wheimo.api.domain.dto.UserDto;
 import com.wheimo.api.domain.entity.User;
 import com.wheimo.api.domain.repository.UserRepository;
 import com.wheimo.api.security.JwtService;
-import com.wheimo.api.web.exception.ConflictException;
 import com.wheimo.api.web.exception.UnauthorizedException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,24 +22,15 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final AppAuthProperties authProperties;
 
     @Value("${app.jwt.refresh-expiration-ms}")
     private long refreshExpirationMs;
 
-    public UserDto signUp(SignUpRequest req) {
-        if (userRepository.existsByEmail(req.getEmail())) {
-            throw new ConflictException("Email already registered");
-        }
-        User user = User.builder()
-                .email(req.getEmail())
-                .passwordHash(passwordEncoder.encode(req.getPassword()))
-                .name(req.getName())
-                .build();
-        user = userRepository.save(user);
-        return toDto(user);
-    }
-
     public AuthResponse signIn(LoginRequest req, HttpServletResponse response) {
+        if (!req.getEmail().equals(authProperties.getUsername())) {
+            throw new UnauthorizedException("Invalid credentials");
+        }
         User user = userRepository.findByEmail(req.getEmail())
                 .orElseThrow(() -> new UnauthorizedException("Invalid credentials"));
         if (!passwordEncoder.matches(req.getPassword(), user.getPasswordHash())) {

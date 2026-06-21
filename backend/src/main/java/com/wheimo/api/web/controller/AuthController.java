@@ -2,8 +2,6 @@ package com.wheimo.api.web.controller;
 
 import com.wheimo.api.domain.dto.AuthResponse;
 import com.wheimo.api.domain.dto.LoginRequest;
-import com.wheimo.api.domain.dto.SignUpRequest;
-import com.wheimo.api.domain.dto.UserDto;
 import com.wheimo.api.domain.service.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,11 +21,6 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
-
-    @PostMapping("/signup")
-    public ResponseEntity<UserDto> signUp(@Valid @RequestBody SignUpRequest req) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(authService.signUp(req));
-    }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest req, HttpServletResponse response) {

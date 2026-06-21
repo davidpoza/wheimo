@@ -31,6 +31,9 @@ server:
     context-path: /api
 
 app:
+  auth:
+    username: ${AUTH_USERNAME:admin@wheimo.com}
+    password: ${AUTH_PASSWORD:admin}
   jwt:
     secret: ${JWT_SECRET:changeme-very-long-secret-key-for-jwt-at-least-32-chars}
     expiration-ms: ${JWT_EXPIRATION_MS:900000}
