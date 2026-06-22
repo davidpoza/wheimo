@@ -35,6 +35,7 @@ public class TransactionService {
     private final RuleService ruleService;
     private final RuleRepository ruleRepository;
     private final UserRepository userRepository;
+    private final RecurrentTransactionLinkRepository recurrentLinkRepository;
 
     @Transactional
     public TransactionDto create(Long userId, CreateTransactionRequest req) {
@@ -121,6 +122,7 @@ public class TransactionService {
         if (req.getDraft() != null) t.setDraft(req.getDraft());
         if (req.getReceiverName() != null) t.setReceiverName(req.getReceiverName());
         if (req.getValueDate() != null) t.setValueDate(req.getValueDate());
+        if (req.getNote() != null) t.setNote(req.getNote().isBlank() ? null : req.getNote());
 
         if (req.getTags() != null) {
             t.setTags(tagRepository.findAllById(req.getTags()));
@@ -255,7 +257,8 @@ public class TransactionService {
                         cb.like(cb.lower(root.get("description")), like),
                         cb.like(cb.lower(root.get("comments")), like),
                         cb.like(cb.lower(root.get("emitterName")), like),
-                        cb.like(cb.lower(root.get("receiverName")), like)
+                        cb.like(cb.lower(root.get("receiverName")), like),
+                        cb.like(cb.lower(cb.coalesce(root.get("note"), "")), like)
                 ));
             }
             if (p.getOperationType() != null) {
@@ -288,6 +291,23 @@ public class TransactionService {
     }
 
     public TransactionDto toDto(Transaction t) {
+        List<RecurrentLinkDto> recurrentLinks = recurrentLinkRepository.findByTransactionId(t.getId())
+                .stream()
+                .map(l -> RecurrentLinkDto.builder()
+                        .recurrentId(l.getRecurrent().getId())
+                        .transactionId(t.getId())
+                        .name(l.getRecurrent().getName())
+                        .establishment(l.getRecurrent().getEstablishment())
+                        .amountSnapshot(l.getAmountSnapshot())
+                        .transactionDate(t.getDate())
+                        .transactionAmount(t.getAmount())
+                        .build())
+                .toList();
+        BigDecimal recurrentsTotal = recurrentLinks.stream()
+                .map(RecurrentLinkDto::getAmountSnapshot)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal recurrentsDiff = t.getAmount() != null ? t.getAmount().subtract(recurrentsTotal) : BigDecimal.ZERO;
+
         return TransactionDto.builder()
                 .id(t.getId())
                 .importId(t.getImportId())
@@ -309,6 +329,10 @@ public class TransactionService {
                 .attachments(t.getAttachments().stream().map(a -> AttachmentDto.builder()
                         .id(a.getId()).filename(a.getFilename()).description(a.getDescription())
                         .type(a.getType()).transactionId(t.getId()).createdAt(a.getCreatedAt()).build()).toList())
+                .note(t.getNote())
+                .recurrents(recurrentLinks)
+                .recurrentsTotal(recurrentsTotal)
+                .recurrentsDiff(recurrentsDiff)
                 .createdAt(t.getCreatedAt())
                 .updatedAt(t.getUpdatedAt())
                 .build();

@@ -33,6 +33,17 @@ export class TransactionsService {
     );
   }
 
+  search(filters: TransactionFilters) {
+    let params = new HttpParams();
+    Object.entries(filters).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== '') {
+        if (Array.isArray(v)) v.forEach((item) => (params = params.append(k, item)));
+        else params = params.set(k, String(v));
+      }
+    });
+    return this.http.get<TransactionPage>(this.baseUrl, { params });
+  }
+
   create(data: Partial<Transaction>) {
     return this.http.post<Transaction>(this.baseUrl, data);
   }
@@ -65,6 +76,10 @@ export class TransactionsService {
     let params = new HttpParams().set('from', from).set('to', to);
     if (accountId) params = params.set('accountId', accountId);
     return this.http.get<TagExpense[]>(`${this.baseUrl}/tags`, { params });
+  }
+
+  updateNote(id: number, note: string | null) {
+    return this.http.patch<Transaction>(`${this.baseUrl}/${id}`, { note });
   }
 
   setFilters(f: TransactionFilters) {

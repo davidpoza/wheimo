@@ -40,6 +40,13 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/budgets/budgets/budgets.component').then((m) => m.BudgetsComponent),
       },
+      {
+        path: 'recurrents',
+        loadComponent: () =>
+          import('./features/recurrents/recurrents-list/recurrents-list.component').then(
+            (m) => m.RecurrentsListComponent,
+          ),
+      },
       { path: '', redirectTo: 'transactions', pathMatch: 'full' },
     ],
   },

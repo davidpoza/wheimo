@@ -1,0 +1,103 @@
+<p-dialog
+  [header]="'Asignar transacción — ' + recurrent().name"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onHide)="onHide()"
+  [modal]="true"
+  [style]="{ width: '600px' }"
+  appendTo="body"
+>
+  <div class="assign-dialog">
+
+    <!-- Date range filter -->
+    <div class="field">
+      <label>Rango de fechas</label>
+      <p-datepicker
+        [ngModel]="dateRange()"
+        (ngModelChange)="dateRange.set($event); onDateChange()"
+        selectionMode="range"
+        [readonlyInput]="true"
+        dateFormat="dd/mm/yy"
+        placeholder="Selecciona rango..."
+        [showButtonBar]="true"
+        class="w-full"
+      />
+    </div>
+
+    <!-- Transaction autocomplete -->
+    <div class="field">
+      <label>Buscar transacción</label>
+      <p-autocomplete
+        [ngModel]="selectedTransaction()"
+        (ngModelChange)="selectedTransaction.set($event)"
+        [suggestions]="suggestions()"
+        (completeMethod)="onSearch($event)"
+        placeholder="Escribe para buscar..."
+        class="w-full"
+        appendTo="body"
+        [forceSelection]="true"
+      >
+        <ng-template pTemplate="item" let-tx>
+          <div class="tx-option">
+            <span class="tx-date">{{ tx.date | date: 'dd/MM/yy' }}</span>
+            <span class="tx-desc">{{ tx.description || tx.emitterName || tx.receiverName }}</span>
+            <span class="tx-amount" [class.expense]="tx.amount < 0" [class.income]="tx.amount > 0">
+              {{ tx.amount | currency: tx.currency : 'symbol' : '1.2-2' }}
+            </span>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="selectedItem" let-tx>
+          {{ transactionLabel(tx) }}
+        </ng-template>
+      </p-autocomplete>
+    </div>
+
+    <!-- Assign button -->
+    <div class="assign-action">
+      <p-button
+        label="Asignar"
+        icon="pi pi-link"
+        [disabled]="!selectedTransaction() || assigning()"
+        [loading]="assigning()"
+        (onClick)="assign()"
+      />
+    </div>
+
+    <!-- Already linked transactions -->
+    @if (linkedTransactions().length > 0) {
+      <div class="linked-section">
+        <h4>Transacciones vinculadas</h4>
+        <table class="linked-table">
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Importe transacción</th>
+              <th>Snapshot precio</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (link of linkedTransactions(); track link.transactionId) {
+              <tr>
+                <td>{{ link.transactionDate | date: 'dd/MM/yyyy' }}</td>
+                <td [class.expense]="(link.transactionAmount ?? 0) < 0">
+                  {{ link.transactionAmount | currency: 'EUR' : 'symbol' : '1.2-2' }}
+                </td>
+                <td>{{ link.amountSnapshot | currency: 'EUR' : 'symbol' : '1.2-2' }}</td>
+                <td>
+                  <p-button icon="pi pi-times" [text]="true" severity="danger" pTooltip="Desvincular" (onClick)="unassign(link)" />
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cerrar" [text]="true" severity="secondary" (onClick)="visible.set(false)" />
+  </ng-template>
+</p-dialog>
+
+<p-toast />

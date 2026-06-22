@@ -20,6 +20,7 @@ import { TagsService } from '../../tags/tags.service';
         optionValue="id"
         placeholder="Select tags"
         class="w-full"
+        appendTo="body"
       />
       <ng-template pTemplate="footer">
         <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="visibleChange.emit(false)" />

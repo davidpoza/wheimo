@@ -1,0 +1,61 @@
+<p-dialog
+  [header]="'Historial de precios — ' + recurrent().name"
+  [visible]="visible()"
+  (visibleChange)="visible.set($event)"
+  (onHide)="onHide()"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+>
+  <div class="history-container">
+    <div class="history-actions">
+      <p-button
+        [label]="addFormVisible() ? 'Cancelar' : 'Registrar precio'"
+        [icon]="addFormVisible() ? 'pi pi-times' : 'pi pi-plus'"
+        [severity]="addFormVisible() ? 'secondary' : 'primary'"
+        [text]="addFormVisible()"
+        (onClick)="addFormVisible.set(!addFormVisible())"
+      />
+    </div>
+
+    @if (addFormVisible()) {
+      <form [formGroup]="form" class="add-form">
+        <div class="field">
+          <label>Precio (€) *</label>
+          <p-inputnumber formControlName="amount" mode="decimal" [minFractionDigits]="2" class="w-full" />
+        </div>
+        <div class="field">
+          <label>Fecha (dejar vacío = hoy)</label>
+          <p-datepicker formControlName="recordedAt" dateFormat="dd/mm/yy" [showTime]="false" class="w-full" />
+        </div>
+        <p-button label="Guardar" (onClick)="addEntry()" [disabled]="form.invalid" />
+      </form>
+    }
+
+    @if (history().length === 0) {
+      <div class="empty">Sin entradas de precio aún.</div>
+    } @else {
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Precio</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (entry of history(); track entry.id) {
+            <tr>
+              <td>{{ entry.recordedAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+              <td class="amount">{{ entry.amount | currency: 'EUR' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </div>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cerrar" severity="secondary" (onClick)="onHide()" />
+  </ng-template>
+</p-dialog>
+
+<p-toast />

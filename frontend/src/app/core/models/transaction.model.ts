@@ -1,5 +1,6 @@
 import { Tag } from './tag.model';
 import { Attachment } from './attachment.model';
+import { RecurrentLink } from './recurrent.model';
 
 export interface Transaction {
   id: number;
@@ -20,6 +21,10 @@ export interface Transaction {
   accountId: number;
   tags: Tag[];
   attachments: Attachment[];
+  note: string | null;
+  recurrents: RecurrentLink[];
+  recurrentsTotal: number;
+  recurrentsDiff: number;
 }
 
 export interface TransactionFilters {

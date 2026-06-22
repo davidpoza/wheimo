@@ -8,7 +8,7 @@
   <form [formGroup]="form" class="dialog-form">
     <div class="field">
       <label>Account *</label>
-      <p-select formControlName="accountId" [options]="accountsService.accounts()" optionLabel="name" optionValue="id" class="w-full" />
+      <p-select formControlName="accountId" [options]="accountsService.accounts()" optionLabel="name" optionValue="id" class="w-full" appendTo="body" />
     </div>
     <div class="field">
       <label>Amount *</label>

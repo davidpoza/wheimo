@@ -11,8 +11,10 @@ public class RecurrentDto {
     private Long id;
     private String name;
     private BigDecimal amount;
-    private String emitter;
-    private Long transactionId;
+    private String establishment;
+    private Integer periodicity;
+    private String link;
+    private OffsetDateTime nextPredictedDate;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
 }

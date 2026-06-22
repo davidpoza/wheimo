@@ -22,11 +22,11 @@ public class Recurrent {
     private BigDecimal amount = BigDecimal.ZERO;
 
     @Column(nullable = false)
-    private String emitter;
+    private String establishment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "transaction_id")
-    private Transaction transaction;
+    private Integer periodicity;
+
+    private String link;
 
     @Column(name = "created_at")
     private OffsetDateTime createdAt;

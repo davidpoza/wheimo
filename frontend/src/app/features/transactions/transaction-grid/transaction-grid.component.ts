@@ -8,7 +8,9 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { TransactionsService } from '../transactions.service';
+import { RecurrentsService } from '../../recurrents/recurrents.service';
 import { Transaction } from '../../../core/models/transaction.model';
+import { RecurrentLink } from '../../../core/models/recurrent.model';
 import { TransactionDetailsDialogComponent } from '../transaction-details-dialog/transaction-details-dialog.component';
 import { TransactionFilterComponent } from '../transaction-filter/transaction-filter.component';
 import { CreateTransactionDialogComponent } from '../create-transaction-dialog/create-transaction-dialog.component';
@@ -37,6 +39,7 @@ import { TaggingDialogComponent } from '../tagging-dialog/tagging-dialog.compone
 })
 export class TransactionGridComponent implements OnInit {
   private readonly txService = inject(TransactionsService);
+  private readonly recurrentsService = inject(RecurrentsService);
   private readonly messageService = inject(MessageService);
 
   transactions = this.txService.transactions;
@@ -48,6 +51,7 @@ export class TransactionGridComponent implements OnInit {
   detailVisible = signal(false);
   createVisible = signal(false);
   taggingVisible = signal(false);
+  expandedRows: Record<number, boolean> = {};
 
   ngOnInit() {
     this.txService.loadAll().subscribe();
@@ -92,6 +96,15 @@ export class TransactionGridComponent implements OnInit {
     this.txService.applyTags(tx.id).subscribe({
       next: () => this.txService.loadAll().subscribe(),
       error: () => this.messageService.add({ severity: 'error', summary: 'Error applying tags' }),
+    });
+  }
+
+  unassignRecurrent(tx: Transaction, link: RecurrentLink) {
+    this.recurrentsService.unassignTransaction(link.recurrentId, tx.id).subscribe({
+      next: () => {
+        this.txService.loadAll().subscribe();
+        this.messageService.add({ severity: 'success', summary: 'Vínculo eliminado' });
+      },
     });
   }
 }

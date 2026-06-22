@@ -27,6 +27,7 @@ export class AppLayoutComponent {
     { label: 'Tags', icon: 'pi pi-tags', route: '/tags' },
     { label: 'Charts', icon: 'pi pi-chart-bar', route: '/charts' },
     { label: 'Budgets', icon: 'pi pi-wallet', route: '/budgets' },
+    { label: 'Recurrentes', icon: 'pi pi-refresh', route: '/recurrents' },
   ];
 
   logout() {

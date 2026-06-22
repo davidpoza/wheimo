@@ -37,6 +37,18 @@
       </div>
 
       <div class="field">
+        <label>Nota</label>
+        <textarea
+          pTextarea
+          [ngModel]="note()"
+          (ngModelChange)="note.set($event)"
+          rows="2"
+          class="w-full"
+          placeholder="Explica diferencias o gastos puntuales..."
+        ></textarea>
+      </div>
+
+      <div class="field">
         <label>Tags</label>
         <p-multiselect
           [ngModel]="selectedTagIds()"
@@ -46,6 +58,7 @@
           optionValue="id"
           placeholder="Select tags"
           class="w-full"
+          appendTo="body"
         />
       </div>
 

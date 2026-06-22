@@ -33,6 +33,7 @@ export class TransactionDetailsDialogComponent {
   saved = output<void>();
 
   comments = signal('');
+  note = signal('');
   selectedTagIds = signal<number[]>([]);
   uploadUrl = `${environment.apiUrl}/attachments`;
 
@@ -41,6 +42,7 @@ export class TransactionDetailsDialogComponent {
       const tx = this.transaction();
       if (tx) {
         this.comments.set(tx.comments ?? '');
+        this.note.set(tx.note ?? '');
         this.selectedTagIds.set(tx.tags.map((t) => t.id));
       }
     });
@@ -55,6 +57,7 @@ export class TransactionDetailsDialogComponent {
     if (!tx) return;
     this.txService.update(tx.id, {
       comments: this.comments(),
+      note: this.note() || null,
       tags: this.selectedTagIds(),
     } as any).subscribe({ next: () => this.saved.emit() });
   }
