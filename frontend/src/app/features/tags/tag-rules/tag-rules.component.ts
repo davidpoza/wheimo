@@ -7,7 +7,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { TagsService } from '../tags.service';
 
 const RULE_TYPES = [
@@ -25,8 +26,8 @@ const RULE_TYPES = [
 @Component({
   selector: 'app-tag-rules',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonModule, InputTextModule, SelectModule, MultiSelectModule, TableModule, TagModule, ToastModule],
-  providers: [MessageService],
+  imports: [ReactiveFormsModule, ButtonModule, InputTextModule, SelectModule, MultiSelectModule, TableModule, TagModule, ToastModule, ConfirmDialogModule],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './tag-rules.component.html',
   styleUrl: './tag-rules.component.scss',
 })
@@ -34,6 +35,7 @@ export class TagRulesComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly tagsService = inject(TagsService);
   private readonly messageService = inject(MessageService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   rules = this.tagsService.rules;
   tags = this.tagsService.tags;
@@ -68,8 +70,17 @@ export class TagRulesComponent implements OnInit {
   }
 
   deleteRule(id: number) {
-    this.tagsService.deleteRule(id).subscribe({
-      next: () => this.messageService.add({ severity: 'success', summary: 'Rule deleted' }),
+    this.confirmationService.confirm({
+      message: '¿Eliminar esta regla?',
+      header: 'Confirmar eliminación',
+      icon: 'pi pi-trash',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      accept: () => {
+        this.tagsService.deleteRule(id).subscribe({
+          next: () => this.messageService.add({ severity: 'success', summary: 'Rule deleted' }),
+        });
+      },
     });
   }
 }

@@ -4,7 +4,8 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { TagsService } from '../tags.service';
 import { Tag } from '../../../core/models/tag.model';
 import { TagRulesComponent } from '../tag-rules/tag-rules.component';
@@ -12,14 +13,15 @@ import { TagRulesComponent } from '../tag-rules/tag-rules.component';
 @Component({
   selector: 'app-tags-grid',
   standalone: true,
-  imports: [FormsModule, ButtonModule, InputTextModule, TableModule, ToastModule, TagRulesComponent],
-  providers: [MessageService],
+  imports: [FormsModule, ButtonModule, InputTextModule, TableModule, ToastModule, ConfirmDialogModule, TagRulesComponent],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './tags-grid.component.html',
   styleUrl: './tags-grid.component.scss',
 })
 export class TagsGridComponent implements OnInit {
   private readonly tagsService = inject(TagsService);
   private readonly messageService = inject(MessageService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   tags = this.tagsService.tags;
   newTagName = signal('');
@@ -61,8 +63,17 @@ export class TagsGridComponent implements OnInit {
   }
 
   deleteTag(tag: Tag) {
-    this.tagsService.deleteTag(tag.id).subscribe({
-      next: () => this.messageService.add({ severity: 'success', summary: 'Tag deleted' }),
+    this.confirmationService.confirm({
+      message: `¿Eliminar el tag "${tag.name}"?`,
+      header: 'Confirmar eliminación',
+      icon: 'pi pi-trash',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      accept: () => {
+        this.tagsService.deleteTag(tag.id).subscribe({
+          next: () => this.messageService.add({ severity: 'success', summary: 'Tag deleted' }),
+        });
+      },
     });
   }
 }

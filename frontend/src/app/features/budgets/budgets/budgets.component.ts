@@ -8,7 +8,8 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { BudgetsService } from '../budgets.service';
 import { TagsService } from '../../tags/tags.service';
 import { BudgetStatus } from '../../../core/models/budget.model';
@@ -20,9 +21,9 @@ import { BudgetStatus } from '../../../core/models/budget.model';
     CurrencyPipe, DatePipe, PercentPipe,
     ReactiveFormsModule,
     ButtonModule, DialogModule, InputNumberModule, DatePickerModule, SelectModule,
-    ProgressBarModule, ToastModule,
+    ProgressBarModule, ToastModule, ConfirmDialogModule,
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './budgets.component.html',
   styleUrl: './budgets.component.scss',
 })
@@ -31,6 +32,7 @@ export class BudgetsComponent implements OnInit {
   private readonly budgetsService = inject(BudgetsService);
   private readonly tagsService = inject(TagsService);
   private readonly messageService = inject(MessageService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   statuses = this.budgetsService.statuses;
   tags = this.tagsService.tags;
@@ -69,10 +71,19 @@ export class BudgetsComponent implements OnInit {
   }
 
   deleteBudget(id: number) {
-    this.budgetsService.delete(id).subscribe({
-      next: () => {
-        this.budgetsService.loadAllStatuses().subscribe();
-        this.messageService.add({ severity: 'success', summary: 'Budget deleted' });
+    this.confirmationService.confirm({
+      message: '¿Eliminar este presupuesto?',
+      header: 'Confirmar eliminación',
+      icon: 'pi pi-trash',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      accept: () => {
+        this.budgetsService.delete(id).subscribe({
+          next: () => {
+            this.budgetsService.loadAllStatuses().subscribe();
+            this.messageService.add({ severity: 'success', summary: 'Budget deleted' });
+          },
+        });
       },
     });
   }

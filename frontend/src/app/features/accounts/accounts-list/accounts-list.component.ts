@@ -5,7 +5,8 @@ import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
-import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { AccountsService } from '../accounts.service';
 import { Account } from '../../../core/models/account.model';
 import { EditAccountDialogComponent } from '../edit-account-dialog/edit-account-dialog.component';
@@ -13,8 +14,8 @@ import { EditAccountDialogComponent } from '../edit-account-dialog/edit-account-
 @Component({
   selector: 'app-accounts-list',
   standalone: true,
-  imports: [CurrencyPipe, ButtonModule, CardModule, TagModule, ToastModule, TooltipModule, EditAccountDialogComponent],
-  providers: [MessageService],
+  imports: [CurrencyPipe, ButtonModule, CardModule, TagModule, ToastModule, TooltipModule, ConfirmDialogModule, EditAccountDialogComponent],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './accounts-list.component.html',
   styleUrl: './accounts-list.component.scss',
 })
@@ -23,6 +24,7 @@ export class AccountsListComponent implements OnInit {
 
   private readonly accountsService = inject(AccountsService);
   private readonly messageService = inject(MessageService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   accounts = this.accountsService.accounts;
   dialogVisible = signal(false);
@@ -51,9 +53,18 @@ export class AccountsListComponent implements OnInit {
   }
 
   delete(account: Account) {
-    this.accountsService.delete(account.id).subscribe({
-      next: () => this.messageService.add({ severity: 'success', summary: 'Deleted', detail: account.name }),
-      error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Delete failed' }),
+    this.confirmationService.confirm({
+      message: `¿Eliminar la cuenta "${account.name}"?`,
+      header: 'Confirmar eliminación',
+      icon: 'pi pi-trash',
+      acceptLabel: 'Sí',
+      rejectLabel: 'No',
+      accept: () => {
+        this.accountsService.delete(account.id).subscribe({
+          next: () => this.messageService.add({ severity: 'success', summary: 'Deleted', detail: account.name }),
+          error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Delete failed' }),
+        });
+      },
     });
   }
 
