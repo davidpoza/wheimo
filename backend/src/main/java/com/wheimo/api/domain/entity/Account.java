@@ -62,6 +62,11 @@ public class Account {
     @Column(name = "saving_target_date")
     private OffsetDateTime savingTargetDate;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "movement_type", nullable = false, length = 10)
+    @Builder.Default
+    private MovementType movementType = MovementType.BOTH;
+
     @Column(name = "last_sync_count")
     @Builder.Default
     private Integer lastSyncCount = 0;

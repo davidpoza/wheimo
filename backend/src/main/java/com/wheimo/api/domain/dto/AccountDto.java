@@ -1,5 +1,6 @@
 package com.wheimo.api.domain.dto;
 
+import com.wheimo.api.domain.entity.MovementType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -23,6 +24,7 @@ public class AccountDto {
     private String savingFrequency;
     private OffsetDateTime savingInitDate;
     private OffsetDateTime savingTargetDate;
+    private MovementType movementType;
     private Integer lastSyncCount;
     private Long userId;
     private OffsetDateTime createdAt;

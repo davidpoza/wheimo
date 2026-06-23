@@ -1,5 +1,6 @@
 package com.wheimo.api.domain.dto;
 
+import com.wheimo.api.domain.entity.MovementType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -14,4 +15,5 @@ public class CreateAccountRequest {
     private String accessId;
     private String accessPassword;
     private Map<String, String> settings;
+    private MovementType movementType;
 }

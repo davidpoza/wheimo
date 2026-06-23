@@ -38,6 +38,11 @@
       </div>
     }
 
+    <div class="field">
+      <label>Tipo de movimiento</label>
+      <p-select formControlName="movementType" [options]="movementTypeOptions" optionLabel="label" optionValue="value" class="w-full" appendTo="body" />
+    </div>
+
     <div class="field-checkbox">
       <p-checkbox formControlName="saving" [binary]="true" inputId="saving" />
       <label for="saving">Savings account</label>

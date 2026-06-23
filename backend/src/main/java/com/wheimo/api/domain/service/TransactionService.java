@@ -2,6 +2,7 @@ package com.wheimo.api.domain.service;
 
 import com.wheimo.api.domain.dto.*;
 import com.wheimo.api.domain.entity.*;
+import com.wheimo.api.domain.entity.MovementType;
 import com.wheimo.api.domain.repository.*;
 import com.wheimo.api.web.exception.ForbiddenException;
 import com.wheimo.api.web.exception.NotFoundException;
@@ -213,9 +214,13 @@ public class TransactionService {
         Account account = accountRepository.findById(msg.getAccountId()).orElse(null);
         if (account == null) return 0;
 
+        MovementType movementType = account.getMovementType() != null ? account.getMovementType() : MovementType.BOTH;
+
         List<Transaction> newTransactions = new ArrayList<>();
         for (SyncResultMessage.ImportedTransaction it : msg.getTransactions()) {
             if (transactionRepository.existsByImportId(it.getImportId())) continue;
+            if (movementType == MovementType.INCOME && it.getAmount().signum() <= 0) continue;
+            if (movementType == MovementType.EXPENSE && it.getAmount().signum() >= 0) continue;
             Transaction t = Transaction.builder()
                     .importId(it.getImportId())
                     .amount(it.getAmount())

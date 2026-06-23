@@ -6,13 +6,19 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AccountsService } from '../accounts.service';
-import { Account } from '../../../core/models/account.model';
+import { Account, MovementType } from '../../../core/models/account.model';
 
 const BANK_OPTIONS = [
   { label: 'Nordigen (Open Banking)', value: 'nordigen' },
   { label: 'Openbank', value: 'openbank' },
   { label: 'Openbank Prepaid', value: 'openbank-prepaid' },
   { label: 'Manual', value: 'manual' },
+];
+
+const MOVEMENT_TYPE_OPTIONS: { label: string; value: MovementType }[] = [
+  { label: 'Ambos', value: 'BOTH' },
+  { label: 'Entrada', value: 'INCOME' },
+  { label: 'Salida', value: 'EXPENSE' },
 ];
 
 @Component({
@@ -31,6 +37,7 @@ export class EditAccountDialogComponent {
   saved = output<void>();
 
   bankOptions = BANK_OPTIONS;
+  movementTypeOptions = MOVEMENT_TYPE_OPTIONS;
 
   form = this.fb.group({
     name: ['', Validators.required],
@@ -40,21 +47,26 @@ export class EditAccountDialogComponent {
     accessId: [''],
     accessPassword: [''],
     saving: [false],
+    movementType: ['BOTH' as MovementType],
   });
 
   constructor() {
     effect(() => {
       const acc = this.account();
       if (acc) {
+        const mt = acc.movementType ?? 'BOTH';
+        console.log('[EditAccount] effect patch — account.movementType:', acc.movementType, '→ patching with:', mt);
         this.form.patchValue({
           name: acc.name,
           description: acc.description,
           number: acc.number,
           bankId: acc.bankId,
           saving: acc.saving,
+          movementType: mt,
         });
+        console.log('[EditAccount] form.value after patch:', this.form.getRawValue());
       } else {
-        this.form.reset({ bankId: 'manual', saving: false });
+        this.form.reset({ bankId: 'manual', saving: false, movementType: 'BOTH' });
       }
     });
   }
@@ -69,12 +81,28 @@ export class EditAccountDialogComponent {
 
   save() {
     if (this.form.invalid) return;
-    const data = this.form.value;
-    const obs = this.isEdit
-      ? this.accountsService.update(this.account()!.id, data as Partial<Account>)
-      : this.accountsService.create(data as Partial<Account>);
+    const v = this.form.getRawValue();
+    console.log('[EditAccount] save() — getRawValue():', v);
+    const payload: Record<string, unknown> = {
+      name: v.name,
+      description: v.description,
+      number: v.number,
+      bankId: v.bankId,
+      saving: v.saving,
+      movementType: v.movementType ?? 'BOTH',
+    };
+    if (v.accessId) payload['accessId'] = v.accessId;
+    if (v.accessPassword) payload['accessPassword'] = v.accessPassword;
+    console.log('[EditAccount] payload being sent:', payload);
 
-    obs.subscribe({ next: () => this.saved.emit() });
+    const obs = this.isEdit
+      ? this.accountsService.update(this.account()!.id, payload as Partial<Account>)
+      : this.accountsService.create(payload as Partial<Account>);
+
+    obs.subscribe({
+      next: () => this.saved.emit(),
+      error: (err) => console.error('[EditAccount] save failed:', err),
+    });
   }
 
   close() {

@@ -2,6 +2,7 @@ package com.wheimo.api.domain.service;
 
 import com.wheimo.api.domain.dto.*;
 import com.wheimo.api.domain.entity.Account;
+import com.wheimo.api.domain.entity.MovementType;
 import com.wheimo.api.domain.entity.Transaction;
 import com.wheimo.api.domain.entity.User;
 import com.wheimo.api.domain.repository.AccountRepository;
@@ -47,6 +48,7 @@ public class AccountService {
                 .accessId(req.getAccessId())
                 .accessPassword(req.getAccessPassword() != null ? encryptionService.encrypt(req.getAccessPassword()) : null)
                 .settings(req.getSettings())
+                .movementType(req.getMovementType() != null ? req.getMovementType() : MovementType.BOTH)
                 .user(user)
                 .build();
         return toDto(accountRepository.save(account));
@@ -77,6 +79,7 @@ public class AccountService {
         if (req.getSavingFrequency() != null) account.setSavingFrequency(req.getSavingFrequency());
         if (req.getSavingInitDate() != null) account.setSavingInitDate(req.getSavingInitDate());
         if (req.getSavingTargetDate() != null) account.setSavingTargetDate(req.getSavingTargetDate());
+        if (req.getMovementType() != null) account.setMovementType(req.getMovementType());
         return toDto(accountRepository.save(account));
     }
 
@@ -158,6 +161,7 @@ public class AccountService {
                 .savingFrequency(account.getSavingFrequency())
                 .savingInitDate(account.getSavingInitDate())
                 .savingTargetDate(account.getSavingTargetDate())
+                .movementType(account.getMovementType())
                 .lastSyncCount(account.getLastSyncCount())
                 .userId(account.getUser().getId())
                 .createdAt(account.getCreatedAt())
