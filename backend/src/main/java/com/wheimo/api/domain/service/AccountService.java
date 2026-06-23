@@ -49,6 +49,7 @@ public class AccountService {
                 .accessPassword(req.getAccessPassword() != null ? encryptionService.encrypt(req.getAccessPassword()) : null)
                 .settings(req.getSettings())
                 .movementType(req.getMovementType() != null ? req.getMovementType() : MovementType.BOTH)
+                .keepBalance(req.isKeepBalance())
                 .user(user)
                 .build();
         return toDto(accountRepository.save(account));
@@ -80,6 +81,7 @@ public class AccountService {
         if (req.getSavingInitDate() != null) account.setSavingInitDate(req.getSavingInitDate());
         if (req.getSavingTargetDate() != null) account.setSavingTargetDate(req.getSavingTargetDate());
         if (req.getMovementType() != null) account.setMovementType(req.getMovementType());
+        if (req.getKeepBalance() != null) account.setKeepBalance(req.getKeepBalance());
         return toDto(accountRepository.save(account));
     }
 
@@ -161,6 +163,7 @@ public class AccountService {
                 .savingFrequency(account.getSavingFrequency())
                 .savingInitDate(account.getSavingInitDate())
                 .savingTargetDate(account.getSavingTargetDate())
+                .keepBalance(account.isKeepBalance())
                 .movementType(account.getMovementType())
                 .lastSyncCount(account.getLastSyncCount())
                 .userId(account.getUser().getId())

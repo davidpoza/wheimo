@@ -62,6 +62,10 @@ public class Account {
     @Column(name = "saving_target_date")
     private OffsetDateTime savingTargetDate;
 
+    @Column(name = "keep_balance", nullable = false)
+    @Builder.Default
+    private boolean keepBalance = true;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "movement_type", nullable = false, length = 10)
     @Builder.Default

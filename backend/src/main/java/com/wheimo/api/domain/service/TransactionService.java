@@ -78,7 +78,7 @@ public class TransactionService {
             transaction = transactionRepository.save(transaction);
         }
 
-        if (!req.isDraft() && req.getBalance() == null) {
+        if (!req.isDraft() && req.getBalance() == null && account.isKeepBalance()) {
             account.setBalance(newBalance);
             accountRepository.save(account);
         }
@@ -241,7 +241,7 @@ public class TransactionService {
         if (!newTransactions.isEmpty()) {
             List<Rule> rules = ruleRepository.findByUserIdWithTags(msg.getUserId());
             ruleService.applyTags(newTransactions, rules);
-            if (msg.getBalance() != null) {
+            if (msg.getBalance() != null && account.isKeepBalance()) {
                 account.setBalance(msg.getBalance());
                 accountRepository.save(account);
             }

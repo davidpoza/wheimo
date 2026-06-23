@@ -31,13 +31,25 @@ public class OpenbankXlsImporter {
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final DateTimeFormatter TIME_FMT = DateTimeFormatter.ofPattern("HH:mm");
 
-    public List<SyncResultMessage.ImportedTransaction> parse(MultipartFile file, Long accountId) throws Exception {
+    public SyncResultMessage parse(MultipartFile file, Long accountId) throws Exception {
         List<SyncResultMessage.ImportedTransaction> result = new ArrayList<>();
+        BigDecimal totalBalance = null;
+
         try (Workbook wb = new HSSFWorkbook(file.getInputStream())) {
             Sheet sheet = wb.getSheetAt(0);
             for (int i = DATA_START_ROW; i <= sheet.getLastRowNum(); i++) {
                 Row row = sheet.getRow(i);
                 if (row == null) continue;
+
+                String col0 = cellStr(row, 0);
+                if ("Total".equalsIgnoreCase(col0)) {
+                    String totalStr = cellStr(row, 11);
+                    if (totalStr != null && !totalStr.isBlank()) {
+                        totalBalance = parseAmount(totalStr);
+                    }
+                    continue;
+                }
+
                 String dateStr = cellStr(row, 1);
                 if (dateStr == null || dateStr.isBlank()) continue;
 
@@ -61,7 +73,12 @@ public class OpenbankXlsImporter {
                         .build());
             }
         }
-        return result;
+
+        return SyncResultMessage.builder()
+                .accountId(accountId)
+                .transactions(result)
+                .balance(totalBalance)
+                .build();
     }
 
     private String cellStr(Row row, int idx) {

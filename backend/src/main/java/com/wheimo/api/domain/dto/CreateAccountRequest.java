@@ -16,4 +16,5 @@ public class CreateAccountRequest {
     private String accessPassword;
     private Map<String, String> settings;
     private MovementType movementType;
+    private boolean keepBalance = true;
 }

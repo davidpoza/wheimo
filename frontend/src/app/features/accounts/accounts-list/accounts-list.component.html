@@ -13,9 +13,11 @@
           <span class="account-name">{{ account.name }}</span>
           <p-tag [value]="account.bankId" severity="secondary" />
         </div>
-        <span class="account-balance" [class.negative]="account.balance < 0">
-          {{ account.balance | currency: 'EUR' : 'symbol' : '1.2-2' }}
-        </span>
+        @if (account.keepBalance) {
+          <span class="account-balance" [class.negative]="account.balance < 0">
+            {{ account.balance | currency: 'EUR' : 'symbol' : '1.2-2' }}
+          </span>
+        }
         @if (account.description) {
           <span class="account-desc">{{ account.description }}</span>
         }

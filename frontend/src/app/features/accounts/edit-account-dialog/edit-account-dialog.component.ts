@@ -47,6 +47,7 @@ export class EditAccountDialogComponent {
     accessId: [''],
     accessPassword: [''],
     saving: [false],
+    keepBalance: [true],
     movementType: ['BOTH' as MovementType],
   });
 
@@ -62,11 +63,12 @@ export class EditAccountDialogComponent {
           number: acc.number,
           bankId: acc.bankId,
           saving: acc.saving,
+          keepBalance: acc.keepBalance ?? true,
           movementType: mt,
         });
         console.log('[EditAccount] form.value after patch:', this.form.getRawValue());
       } else {
-        this.form.reset({ bankId: 'manual', saving: false, movementType: 'BOTH' });
+        this.form.reset({ bankId: 'manual', saving: false, keepBalance: true, movementType: 'BOTH' });
       }
     });
   }
@@ -89,6 +91,7 @@ export class EditAccountDialogComponent {
       number: v.number,
       bankId: v.bankId,
       saving: v.saving,
+      keepBalance: v.keepBalance ?? true,
       movementType: v.movementType ?? 'BOTH',
     };
     if (v.accessId) payload['accessId'] = v.accessId;

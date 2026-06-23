@@ -24,6 +24,7 @@ public class AccountDto {
     private String savingFrequency;
     private OffsetDateTime savingInitDate;
     private OffsetDateTime savingTargetDate;
+    private boolean keepBalance;
     private MovementType movementType;
     private Integer lastSyncCount;
     private Long userId;

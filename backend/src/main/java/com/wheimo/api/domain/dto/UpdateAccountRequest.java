@@ -24,4 +24,5 @@ public class UpdateAccountRequest {
     private OffsetDateTime savingInitDate;
     private OffsetDateTime savingTargetDate;
     private MovementType movementType;
+    private Boolean keepBalance;
 }

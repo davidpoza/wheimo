@@ -7,6 +7,7 @@ export interface Account {
   description: string;
   balance: number;
   bankId: string;
+  keepBalance: boolean;
   movementType: MovementType;
   saving: boolean;
   savingTarget: number | null;
