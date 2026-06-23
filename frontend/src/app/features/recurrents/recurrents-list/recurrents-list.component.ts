@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -20,7 +21,7 @@ import { AssignTransactionDialogComponent } from '../assign-transaction-dialog/a
   imports: [
     CurrencyPipe,
     ReactiveFormsModule,
-    ButtonModule, DialogModule, InputTextModule, InputNumberModule,
+    ButtonModule, DialogModule, InputTextModule, InputNumberModule, TableModule,
     ToastModule, TooltipModule, ConfirmDialogModule,
     PriceHistoryDialogComponent, AssignTransactionDialogComponent,
   ],

@@ -4,47 +4,48 @@
 </div>
 
 <div class="recurrents-table">
-  @if (recurrents().length === 0) {
-    <div class="empty">No hay artículos recurrentes. Crea uno para empezar.</div>
-  } @else {
-    <table>
-      <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Establecimiento</th>
-          <th>Periodicidad</th>
-          <th>Precio actual</th>
-          <th>Link</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (r of recurrents(); track r.id) {
-          <tr>
-            <td class="name">{{ r.name }}</td>
-            <td>{{ r.establishment }}</td>
-            <td class="muted">{{ r.periodicity ? r.periodicity + ' días' : '—' }}</td>
-            <td class="amount">{{ r.amount | currency: 'EUR' }}</td>
-            <td>
-              @if (r.link) {
-                <a [href]="r.link" target="_blank" rel="noopener" class="link-icon" pTooltip="{{ r.link }}">
-                  <i class="pi pi-external-link"></i>
-                </a>
-              } @else {
-                <span class="muted">—</span>
-              }
-            </td>
-            <td class="actions">
-              <p-button icon="pi pi-link" [text]="true" severity="success" pTooltip="Asignar transacción" (onClick)="openAssign(r)" />
-              <p-button icon="pi pi-chart-line" [text]="true" severity="info" pTooltip="Historial de precios" (onClick)="openHistory(r)" />
-              <p-button icon="pi pi-pencil" [text]="true" severity="secondary" pTooltip="Editar" (onClick)="openEdit(r)" />
-              <p-button icon="pi pi-trash" [text]="true" severity="danger" pTooltip="Eliminar" (onClick)="delete(r)" />
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  }
+  <p-table [value]="recurrents()" styleClass="p-datatable-sm" [rowHover]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nombre</th>
+        <th>Establecimiento</th>
+        <th>Periodicidad</th>
+        <th>Precio actual</th>
+        <th>Link</th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-r>
+      <tr>
+        <td class="name">{{ r.name }}</td>
+        <td>{{ r.establishment }}</td>
+        <td class="muted">{{ r.periodicity ? r.periodicity + ' días' : '—' }}</td>
+        <td class="amount">{{ r.amount | currency: 'EUR' }}</td>
+        <td>
+          @if (r.link) {
+            <a [href]="r.link" target="_blank" rel="noopener" class="link-icon" pTooltip="{{ r.link }}">
+              <i class="pi pi-external-link"></i>
+            </a>
+          } @else {
+            <span class="muted">—</span>
+          }
+        </td>
+        <td class="actions">
+          <p-button icon="pi pi-link" [text]="true" severity="success" pTooltip="Asignar transacción" (onClick)="openAssign(r)" />
+          <p-button icon="pi pi-chart-line" [text]="true" severity="info" pTooltip="Historial de precios" (onClick)="openHistory(r)" />
+          <p-button icon="pi pi-pencil" [text]="true" severity="secondary" pTooltip="Editar" (onClick)="openEdit(r)" />
+          <p-button icon="pi pi-trash" [text]="true" severity="danger" pTooltip="Eliminar" (onClick)="delete(r)" />
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="empty">
+      <tr>
+        <td colspan="6" class="empty-msg">No hay artículos recurrentes. Crea uno para empezar.</td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
 
 <!-- Create / Edit dialog -->

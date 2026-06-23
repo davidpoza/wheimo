@@ -8,30 +8,6 @@
 
 .recurrents-table {
   overflow-x: auto;
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: var(--p-surface-card);
-    border: 1px solid var(--p-surface-border);
-    border-radius: 8px;
-    overflow: hidden;
-
-    th, td {
-      padding: 0.75rem 1rem;
-      text-align: left;
-      border-bottom: 1px solid var(--p-surface-border);
-    }
-
-    th {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--p-text-muted-color);
-      background: var(--p-surface-ground);
-    }
-
-    tr:last-child td { border-bottom: none; }
-  }
 }
 
 .name { font-weight: 600; }
@@ -52,13 +28,10 @@
   justify-content: flex-end;
 }
 
-.empty {
+.empty-msg {
   color: var(--p-text-muted-color);
   text-align: center;
   padding: 3rem;
-  background: var(--p-surface-card);
-  border: 1px dashed var(--p-surface-border);
-  border-radius: 8px;
 }
 
 .dialog-form {
