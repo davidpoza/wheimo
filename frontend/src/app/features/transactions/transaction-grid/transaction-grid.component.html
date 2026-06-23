@@ -57,7 +57,6 @@
       <td class="date-col">{{ tx.date | date: 'dd/MM/yy' }}</td>
       <td class="desc-col">
         <span class="desc-text">{{ tx.description || tx.emitterName || tx.receiverName }}</span>
-        @if (tx.favourite) { <i class="pi pi-star-fill fav-icon"></i> }
       </td>
       <td class="amount-col" [class.expense]="tx.amount < 0" [class.income]="tx.amount > 0">
         {{ tx.amount | currency: tx.currency : 'symbol' : '1.2-2' }}
@@ -73,7 +72,7 @@
         </div>
       </td>
       <td (click)="$event.stopPropagation()">
-        <p-button icon="pi pi-star" [text]="true" [severity]="tx.favourite ? 'warn' : 'secondary'" (onClick)="toggleFav(tx)" />
+        <p-button [icon]="tx.favourite ? 'pi pi-star-fill' : 'pi pi-star'" [text]="true" [severity]="tx.favourite ? 'warn' : 'secondary'" (onClick)="toggleFav(tx)" />
         <p-button icon="pi pi-tags" [text]="true" severity="secondary" (onClick)="applyTags(tx)" pTooltip="Apply rules" />
       </td>
     </tr>
