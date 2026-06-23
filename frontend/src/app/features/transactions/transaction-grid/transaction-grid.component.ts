@@ -51,7 +51,7 @@ export class TransactionGridComponent implements OnInit {
   detailVisible = signal(false);
   createVisible = signal(false);
   taggingVisible = signal(false);
-  expandedRows: Record<number, boolean> = {};
+  expandedRows: Record<string, boolean> = {};
 
   ngOnInit() {
     this.txService.loadAll().subscribe();

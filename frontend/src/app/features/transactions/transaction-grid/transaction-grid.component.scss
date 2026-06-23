@@ -53,6 +53,28 @@
   gap: 0.25rem;
 }
 
+.recurrent-breakdown {
+  padding: 0.75rem 1rem 0.75rem 3.5rem;
+}
+
+.breakdown-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+
+  th, td { padding: 0.35rem 0.75rem; text-align: left; }
+  thead tr { border-bottom: 1px solid var(--p-surface-border); color: var(--p-text-muted-color); font-weight: 500; }
+  tbody tr:not(:last-child) { border-bottom: 1px solid var(--p-surface-border); }
+  tfoot tr { border-top: 1px solid var(--p-surface-border); }
+
+  .total-row td, .diff-row td { padding-top: 0.5rem; }
+  .diff-negative td { color: var(--p-red-500); }
+  .diff-positive td { color: var(--p-green-500); }
+
+  .muted { color: var(--p-text-muted-color); }
+  .amount-col { text-align: right; font-weight: 600; }
+}
+
 .empty-msg {
   text-align: center;
   color: var(--p-text-muted-color);

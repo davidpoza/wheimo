@@ -26,7 +26,7 @@
   dataKey="id"
   [rowHover]="true"
   styleClass="p-datatable-sm"
-  [(expandedRowKeys)]="expandedRows"
+  [expandedRowKeys]="expandedRows"
 >
   <ng-template pTemplate="header">
     <tr>
@@ -46,8 +46,8 @@
       <td (click)="$event.stopPropagation()">
         @if (tx.recurrents?.length > 0) {
           <p-button
-            [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
             [pRowToggler]="tx"
+            [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
             [text]="true"
             severity="secondary"
             pTooltip="Ver desglose recurrentes"
@@ -58,11 +58,6 @@
       <td class="desc-col">
         <span class="desc-text">{{ tx.description || tx.emitterName || tx.receiverName }}</span>
         @if (tx.favourite) { <i class="pi pi-star-fill fav-icon"></i> }
-        @if (tx.recurrents?.length > 0) {
-          <span class="recurrent-badge" pTooltip="{{ tx.recurrents.length }} recurrente(s)">
-            <i class="pi pi-sync"></i>
-          </span>
-        }
       </td>
       <td class="amount-col" [class.expense]="tx.amount < 0" [class.income]="tx.amount > 0">
         {{ tx.amount | currency: tx.currency : 'symbol' : '1.2-2' }}
@@ -84,7 +79,7 @@
     </tr>
   </ng-template>
 
-  <ng-template pTemplate="rowexpansion" let-tx>
+  <ng-template pTemplate="expandedrow" let-tx>
     <tr class="recurrent-expansion-row">
       <td colspan="7">
         <div class="recurrent-breakdown">

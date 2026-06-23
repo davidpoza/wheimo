@@ -298,7 +298,7 @@ public class TransactionService {
                         .transactionId(t.getId())
                         .name(l.getRecurrent().getName())
                         .establishment(l.getRecurrent().getEstablishment())
-                        .amountSnapshot(l.getAmountSnapshot())
+                        .amountSnapshot(l.getAmountSnapshot().negate())
                         .transactionDate(t.getDate())
                         .transactionAmount(t.getAmount())
                         .build())

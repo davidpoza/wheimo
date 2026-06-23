@@ -1,5 +1,5 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpBackend } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap, catchError, EMPTY, switchMap } from 'rxjs';
 import { User, AuthTokens } from '../models/user.model';
@@ -9,7 +9,7 @@ const TOKEN_KEY = 'accessToken';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private readonly http = inject(HttpClient);
+  private readonly http = new HttpClient(inject(HttpBackend));
   private readonly router = inject(Router);
   private readonly baseUrl = `${environment.apiUrl}/auth`;
 

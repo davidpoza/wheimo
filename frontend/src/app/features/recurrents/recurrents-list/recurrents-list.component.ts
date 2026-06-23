@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -18,7 +18,7 @@ import { AssignTransactionDialogComponent } from '../assign-transaction-dialog/a
   selector: 'app-recurrents-list',
   standalone: true,
   imports: [
-    CurrencyPipe, DatePipe,
+    CurrencyPipe,
     ReactiveFormsModule,
     ButtonModule, DialogModule, InputTextModule, InputNumberModule,
     ToastModule, TooltipModule, ConfirmDialogModule,
