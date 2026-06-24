@@ -22,6 +22,9 @@
   [rows]="filters().limit ?? 50"
   [paginator]="true"
   (onPage)="onPage($event)"
+  (onSort)="onSort($event)"
+  [sortField]="sortField"
+  [sortOrder]="sortOrder"
   [(selection)]="selected"
   dataKey="id"
   [rowHover]="true"
@@ -33,8 +36,8 @@
       <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
       <th style="width: 3rem"></th>
       <th pSortableColumn="date">Date <p-sortIcon field="date" /></th>
-      <th>Description</th>
-      <th pSortableColumn="amount">Amount <p-sortIcon field="amount" /></th>
+      <th pSortableColumn="description">Description <p-sortIcon field="description" /></th>
+      <th pSortableColumn="amount" style="width: 8rem; text-align: right">Amount <p-sortIcon field="amount" /></th>
       <th>Tags</th>
       <th></th>
     </tr>

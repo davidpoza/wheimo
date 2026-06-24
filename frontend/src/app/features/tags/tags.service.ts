@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { tap } from 'rxjs';
+import { forkJoin, of, switchMap, tap } from 'rxjs';
 import { Tag } from '../../core/models/tag.model';
 import { Rule } from '../../core/models/rule.model';
 import { environment } from '../../../environments/environment';
@@ -40,9 +40,16 @@ export class TagsService {
     return this.http.get<Rule[]>(this.rulesUrl).pipe(tap((rules) => this.rules.set(rules)));
   }
 
-  createRule(data: Partial<Rule>) {
+  createRule(data: Partial<Rule>, tagIds: number[] = []) {
     return this.http.post<Rule>(this.rulesUrl, data).pipe(
-      tap((rule) => this.rules.update((list) => [...list, rule])),
+      switchMap((rule) => {
+        if (!tagIds.length) {
+          return of(rule).pipe(tap(() => this.rules.update((list) => [...list, rule])));
+        }
+        return forkJoin(tagIds.map((tagId) => this.http.post<Rule>(`${this.rulesUrl}/${rule.id}/tags`, { tagId }))).pipe(
+          switchMap(() => this.loadRules()),
+        );
+      }),
     );
   }
 

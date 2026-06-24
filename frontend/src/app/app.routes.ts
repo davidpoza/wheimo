@@ -47,6 +47,11 @@ export const routes: Routes = [
             (m) => m.RecurrentsListComponent,
           ),
       },
+      {
+        path: 'rules',
+        loadComponent: () =>
+          import('./features/tags/tag-rules/tag-rules.component').then((m) => m.TagRulesComponent),
+      },
       { path: '', redirectTo: 'transactions', pathMatch: 'full' },
     ],
   },

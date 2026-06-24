@@ -57,8 +57,22 @@ export class TransactionGridComponent implements OnInit {
     this.txService.loadAll().subscribe();
   }
 
+  get sortField() {
+    return this.filters().sort?.split(',')[0] ?? 'date';
+  }
+
+  get sortOrder(): 1 | -1 {
+    return this.filters().sort?.split(',')[1] === 'asc' ? 1 : -1;
+  }
+
   onPage(event: { first: number; rows: number }) {
     this.txService.filters.update((f) => ({ ...f, offset: event.first, limit: event.rows }));
+    this.txService.loadAll().subscribe();
+  }
+
+  onSort(event: { field: string; order: 1 | -1 }) {
+    const dir = event.order === 1 ? 'asc' : 'desc';
+    this.txService.filters.update((f) => ({ ...f, sort: `${event.field},${dir}`, offset: 0 }));
     this.txService.loadAll().subscribe();
   }
 

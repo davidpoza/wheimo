@@ -16,6 +16,9 @@
       <div class="field">
         <label>Value</label>
         <input pInputText formControlName="value" placeholder="e.g. Mercadona|Lidl or gt10;lt50" class="w-full" />
+        @if (form.get('value')?.errors?.['invalidRegex'] && form.get('value')?.dirty) {
+          <small class="p-error">Expresión regular inválida</small>
+        }
       </div>
     }
     <div class="field">

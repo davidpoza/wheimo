@@ -88,7 +88,16 @@ public class TransactionService {
 
     public TransactionPageDto findAll(Long userId, TransactionFilterParams params) {
         Specification<Transaction> spec = buildSpec(userId, params);
-        Sort sort = Sort.by(params.getSort() != null && "asc".equals(params.getSort()) ? Sort.Direction.ASC : Sort.Direction.DESC, "date");
+        String sortField = "date";
+        Sort.Direction sortDir = Sort.Direction.DESC;
+        if (params.getSort() != null) {
+            String[] parts = params.getSort().split(",", 2);
+            sortField = parts[0];
+            if (parts.length > 1 && "asc".equalsIgnoreCase(parts[1])) {
+                sortDir = Sort.Direction.ASC;
+            }
+        }
+        Sort sort = Sort.by(sortDir, sortField);
 
         if (params.getLimit() != null) {
             int offset = params.getOffset() != null ? params.getOffset() : 0;

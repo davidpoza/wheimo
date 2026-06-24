@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
@@ -11,8 +11,18 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TagsService } from '../tags.service';
 
+function validRegex(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+  try {
+    new RegExp(control.value);
+    return null;
+  } catch {
+    return { invalidRegex: true };
+  }
+}
+
 const RULE_TYPES = [
-  { label: 'Regex (description)', value: 'regex' },
+  { label: 'Regex (description)', value: 'description' },
   { label: 'Equality', value: 'equality' },
   { label: 'Amount >', value: 'gt' },
   { label: 'Amount >=', value: 'gte' },
@@ -44,8 +54,8 @@ export class TagRulesComponent implements OnInit {
 
   form = this.fb.group({
     name: ['', Validators.required],
-    type: ['regex', Validators.required],
-    value: [''],
+    type: ['description', Validators.required],
+    value: ['', validRegex],
     tagIds: [[] as number[]],
   });
 
@@ -55,14 +65,15 @@ export class TagRulesComponent implements OnInit {
 
   ngOnInit() {
     this.tagsService.loadRules().subscribe();
+    this.tagsService.loadTags().subscribe();
   }
 
   createRule() {
     if (this.form.invalid) return;
     const { name, type, value, tagIds } = this.form.value;
-    this.tagsService.createRule({ name: name!, type: type as any, value: value ?? '', tags: tagIds?.map(id => ({ id })) as any }).subscribe({
+    this.tagsService.createRule({ name: name!, type: type as any, value: value ?? '' }, tagIds ?? []).subscribe({
       next: () => {
-        this.form.reset({ type: 'regex', tagIds: [] });
+        this.form.reset({ type: 'description', tagIds: [] });
         this.showForm.set(false);
         this.messageService.add({ severity: 'success', summary: 'Rule created' });
       },
