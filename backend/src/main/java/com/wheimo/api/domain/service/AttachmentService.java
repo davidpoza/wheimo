@@ -52,6 +52,7 @@ public class AttachmentService {
 
         Attachment attachment = Attachment.builder()
                 .filename(filename)
+                .originalFilename(file.getOriginalFilename())
                 .type(file.getContentType())
                 .transaction(transaction)
                 .build();
@@ -89,6 +90,7 @@ public class AttachmentService {
         return AttachmentDto.builder()
                 .id(a.getId())
                 .filename(a.getFilename())
+                .originalFilename(a.getOriginalFilename())
                 .description(a.getDescription())
                 .type(a.getType())
                 .transactionId(a.getTransaction() != null ? a.getTransaction().getId() : null)

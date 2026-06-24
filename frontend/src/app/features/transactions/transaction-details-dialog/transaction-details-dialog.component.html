@@ -5,7 +5,7 @@
   [modal]="true"
   [style]="{ width: '560px' }"
 >
-  @if (transaction(); as tx) {
+  @if (localTransaction(); as tx) {
     <div class="detail-grid">
       <div class="detail-row">
         <span class="label">Date</span>
@@ -50,19 +50,38 @@
         />
       </div>
 
-      @if (tx.attachments.length > 0) {
-        <div class="attachments">
-          <label>Attachments</label>
+      <div class="field">
+        <label>Attachments</label>
+        @if (tx.attachments.length > 0) {
           <div class="att-list">
             @for (att of tx.attachments; track att.id) {
               <div class="att-item">
-                <i class="pi pi-file"></i>
-                <span>{{ att.description || att.filename }}</span>
+                <span class="att-clickable" (click)="openAttachment(att)" (keyup.enter)="openAttachment(att)" tabindex="0" role="button">
+                  <i class="pi" [class.pi-image]="isImage(att)" [class.pi-file-pdf]="!isImage(att)"></i>
+                  <span>{{ attachmentLabel(att) }}</span>
+                </span>
+                <p-button
+                  icon="pi pi-trash"
+                  [text]="true"
+                  severity="danger"
+                  size="small"
+                  (onClick)="deleteAttachment(att)"
+                />
               </div>
             }
           </div>
-        </div>
-      }
+        }
+        <p-fileupload
+          mode="basic"
+          accept="image/*,application/pdf"
+          [multiple]="true"
+          [auto]="false"
+          chooseLabel="Attach files"
+          chooseIcon="pi pi-paperclip"
+          (onSelect)="onFilesSelected($event)"
+          styleClass="mt-2"
+        />
+      </div>
     </div>
   }
 
@@ -70,4 +89,16 @@
     <p-button label="Close" [text]="true" severity="secondary" (onClick)="close()" />
     <p-button label="Save" (onClick)="save()" />
   </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Image Preview"
+  [visible]="!!previewImageUrl()"
+  (visibleChange)="!$event && closeImagePreview()"
+  [modal]="true"
+  [style]="{ width: 'auto', maxWidth: '90vw' }"
+>
+  @if (previewImageUrl(); as url) {
+    <img [src]="url" alt="Attachment preview" style="max-width: 80vw; max-height: 80vh; display: block;" />
+  }
 </p-dialog>

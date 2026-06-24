@@ -19,6 +19,9 @@ public class Attachment {
     @Column(nullable = false)
     private String filename;
 
+    @Column(name = "original_filename")
+    private String originalFilename;
+
     @Column(nullable = false)
     private String type;
 

@@ -132,7 +132,6 @@ public class TransactionService {
         if (req.getDraft() != null) t.setDraft(req.getDraft());
         if (req.getReceiverName() != null) t.setReceiverName(req.getReceiverName());
         if (req.getValueDate() != null) t.setValueDate(req.getValueDate());
-        if (req.getNote() != null) t.setNote(req.getNote().isBlank() ? null : req.getNote());
 
         if (req.getTags() != null) {
             t.setTags(tagRepository.findAllById(req.getTags()));

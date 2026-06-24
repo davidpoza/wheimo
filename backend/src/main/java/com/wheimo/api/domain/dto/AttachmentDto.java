@@ -9,6 +9,7 @@ import java.time.OffsetDateTime;
 public class AttachmentDto {
     private Long id;
     private String filename;
+    private String originalFilename;
     private String description;
     private String type;
     private Long transactionId;
