@@ -22,9 +22,7 @@ services:
       - redis-data:/data
 
   wheimo-api:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: ghcr.io/davidpoza/wheimo-api:latest
     ports:
       - "8080:8080"
     restart: always
@@ -41,15 +39,15 @@ services:
       JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS:-900000}
       JWT_REFRESH_EXPIRATION_MS: ${JWT_REFRESH_EXPIRATION_MS:-2592000000}
       AES_PASSPHRASE: ${AES_PASSPHRASE:-changeme-aes-passphrase}
+      AUTH_USERNAME: ${AUTH_USERNAME:-admin@wheimo.com}
+      AUTH_PASSWORD: ${AUTH_PASSWORD:-admin}
       ATTACHMENTS_PATH: /data/attachments
       FETCHER_URL: http://wheimo-fetcher:8081
     volumes:
       - attachments-data:/data/attachments
 
   wheimo-fetcher:
-    build:
-      context: ./fetcher
-      dockerfile: Dockerfile
+    image: ghcr.io/davidpoza/wheimo-fetcher:latest
     ports:
       - "8081:8081"
     restart: always
@@ -62,9 +60,7 @@ services:
       SERVER_PORT: 8081
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
+    image: ghcr.io/davidpoza/wheimo-frontend:latest
     ports:
       - "4200:80"
     restart: always
