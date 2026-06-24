@@ -27,7 +27,6 @@ public class TransactionDto {
     private Long accountId;
     private List<TagDto> tags;
     private List<AttachmentDto> attachments;
-    private String note;
     private List<RecurrentLinkDto> recurrents;
     private BigDecimal recurrentsTotal;
     private BigDecimal recurrentsDiff;

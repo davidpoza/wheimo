@@ -78,10 +78,6 @@ export class TransactionsService {
     return this.http.get<TagExpense[]>(`${this.baseUrl}/tags`, { params });
   }
 
-  updateNote(id: number, note: string | null) {
-    return this.http.patch<Transaction>(`${this.baseUrl}/${id}`, { note });
-  }
-
   setFilters(f: TransactionFilters) {
     this.filters.set({ ...this.filters(), ...f, offset: 0 });
   }

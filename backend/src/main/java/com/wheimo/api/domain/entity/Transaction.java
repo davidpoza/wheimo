@@ -44,9 +44,6 @@ public class Transaction {
     @Column(name = "value_date")
     private OffsetDateTime valueDate;
 
-    @Column(columnDefinition = "TEXT")
-    private String note;
-
     @Builder.Default
     private BigDecimal balance = BigDecimal.ZERO;
 

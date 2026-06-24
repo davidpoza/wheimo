@@ -21,7 +21,6 @@ export interface Transaction {
   accountId: number;
   tags: Tag[];
   attachments: Attachment[];
-  note: string | null;
   recurrents: RecurrentLink[];
   recurrentsTotal: number;
   recurrentsDiff: number;

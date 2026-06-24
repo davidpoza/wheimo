@@ -271,8 +271,7 @@ public class TransactionService {
                         cb.like(cb.lower(root.get("description")), like),
                         cb.like(cb.lower(root.get("comments")), like),
                         cb.like(cb.lower(root.get("emitterName")), like),
-                        cb.like(cb.lower(root.get("receiverName")), like),
-                        cb.like(cb.lower(cb.coalesce(root.get("note"), "")), like)
+                        cb.like(cb.lower(root.get("receiverName")), like)
                 ));
             }
             if (p.getOperationType() != null) {
@@ -343,7 +342,6 @@ public class TransactionService {
                 .attachments(t.getAttachments().stream().map(a -> AttachmentDto.builder()
                         .id(a.getId()).filename(a.getFilename()).description(a.getDescription())
                         .type(a.getType()).transactionId(t.getId()).createdAt(a.getCreatedAt()).build()).toList())
-                .note(t.getNote())
                 .recurrents(recurrentLinks)
                 .recurrentsTotal(recurrentsTotal)
                 .recurrentsDiff(recurrentsDiff)

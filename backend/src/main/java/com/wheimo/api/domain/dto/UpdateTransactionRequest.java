@@ -24,5 +24,4 @@ public class UpdateTransactionRequest {
     private List<Long> tags;
     private OffsetDateTime valueDate;
     private List<Long> attachments;
-    private String note;
 }
