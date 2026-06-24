@@ -1,0 +1,16 @@
+.tags-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  h2 { margin: 0; }
+  .tab-buttons { display: flex; gap: 0.25rem; }
+}
+
+.create-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+
+  .create-input { flex: 1; max-width: 300px; }
+}

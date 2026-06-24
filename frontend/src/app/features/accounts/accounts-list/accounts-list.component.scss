@@ -1,0 +1,57 @@
+.accounts-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.accounts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.account-card {
+  .account-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .account-main {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .account-name {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  .account-balance {
+    font-size: 1.375rem;
+    font-weight: 700;
+    color: var(--p-green-500);
+
+    &.negative {
+      color: var(--p-red-500);
+    }
+  }
+
+  .account-desc {
+    font-size: 0.875rem;
+    color: var(--p-text-muted-color);
+  }
+
+  .account-actions {
+    display: flex;
+    gap: 0.25rem;
+    justify-content: flex-end;
+  }
+}

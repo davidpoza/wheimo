@@ -1,0 +1,129 @@
+:host {
+  display: block;
+  height: 100vh;
+}
+
+.layout-wrapper {
+  display: flex;
+  height: 100vh;
+  background: var(--p-surface-ground);
+}
+
+/* Sidebar (desktop) */
+.sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: var(--p-surface-card);
+  border-right: 1px solid var(--p-surface-border);
+  display: flex;
+  flex-direction: column;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.sidebar-header {
+  padding: 1.5rem 1.25rem;
+  border-bottom: 1px solid var(--p-surface-border);
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--p-primary-color);
+  }
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sidebar-footer {
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--p-surface-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .user-name {
+    font-size: 0.875rem;
+    color: var(--p-text-muted-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.875rem;
+  border-radius: 6px;
+  color: var(--p-text-color);
+  text-decoration: none;
+  font-size: 0.9375rem;
+  transition: background 0.15s;
+
+  i {
+    font-size: 1rem;
+  }
+
+  &:hover {
+    background: var(--p-surface-hover);
+  }
+
+  &.active {
+    background: var(--p-primary-50);
+    color: var(--p-primary-color);
+    font-weight: 600;
+  }
+}
+
+/* Mobile header */
+.mobile-header {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: var(--p-surface-card);
+  border-bottom: 1px solid var(--p-surface-border);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0.5rem;
+  z-index: 100;
+
+  .logo {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--p-primary-color);
+  }
+
+  @media (max-width: 768px) {
+    display: flex;
+  }
+}
+
+.mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    margin-top: 56px;
+  }
+}

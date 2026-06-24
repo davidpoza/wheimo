@@ -1,0 +1,41 @@
+<div class="login-wrapper">
+  <div class="login-card">
+    <h1 class="login-title">Wheimo</h1>
+    <p class="login-subtitle">Personal Finance</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+      <div class="field">
+        <label for="email">Email</label>
+        <input pInputText id="email" type="email" formControlName="email" placeholder="your@email.com" class="w-full" />
+        @if (form.get('email')?.touched && form.get('email')?.hasError('email')) {
+          <small class="p-error">Enter a valid email</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <p-password
+          id="password"
+          formControlName="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          placeholder="Password"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        />
+      </div>
+
+      @if (error()) {
+        <p-message severity="error" [text]="error()!" styleClass="w-full" />
+      }
+
+      <p-button
+        type="submit"
+        label="Sign In"
+        [loading]="loading()"
+        [disabled]="form.invalid"
+        styleClass="w-full mt-2"
+      />
+    </form>
+  </div>
+</div>

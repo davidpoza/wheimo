@@ -1,0 +1,39 @@
+<p-dialog
+  header="New Transaction"
+  [visible]="visible()"
+  (visibleChange)="visibleChange.emit($event)"
+  [modal]="true"
+  [style]="{ width: '480px' }"
+>
+  <form [formGroup]="form" class="dialog-form">
+    <div class="field">
+      <label>Account *</label>
+      <p-select formControlName="accountId" [options]="accountsService.accounts()" optionLabel="name" optionValue="id" class="w-full" appendTo="body" />
+    </div>
+    <div class="field">
+      <label>Amount *</label>
+      <p-inputnumber formControlName="amount" mode="decimal" [minFractionDigits]="2" class="w-full" />
+    </div>
+    <div class="field">
+      <label>Currency</label>
+      <input pInputText formControlName="currency" class="w-full" />
+    </div>
+    <div class="field">
+      <label>Date *</label>
+      <p-datepicker formControlName="date" dateFormat="dd/mm/yy" [showTime]="true" class="w-full" />
+    </div>
+    <div class="field">
+      <label>Value Date *</label>
+      <p-datepicker formControlName="valueDate" dateFormat="dd/mm/yy" class="w-full" />
+    </div>
+    <div class="field">
+      <label>Description</label>
+      <input pInputText formControlName="description" class="w-full" />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="close()" />
+    <p-button label="Create" (onClick)="save()" [disabled]="form.invalid" />
+  </ng-template>
+</p-dialog>

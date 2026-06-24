@@ -1,0 +1,65 @@
+<div class="rules-toolbar">
+  <p-button label="New Rule" icon="pi pi-plus" (onClick)="showForm.set(!showForm())" />
+</div>
+
+@if (showForm()) {
+  <form [formGroup]="form" (ngSubmit)="createRule()" class="rule-form">
+    <div class="field">
+      <label>Name *</label>
+      <input pInputText formControlName="name" placeholder="Rule name" class="w-full" />
+    </div>
+    <div class="field">
+      <label>Type *</label>
+      <p-select formControlName="type" [options]="ruleTypes" optionLabel="label" optionValue="value" class="w-full" />
+    </div>
+    @if (selectedType !== 'isExpense' && selectedType !== 'isReceipt') {
+      <div class="field">
+        <label>Value</label>
+        <input pInputText formControlName="value" placeholder="e.g. Mercadona|Lidl or gt10;lt50" class="w-full" />
+        @if (form.get('value')?.errors?.['invalidRegex'] && form.get('value')?.dirty) {
+          <small class="p-error">Expresión regular inválida</small>
+        }
+      </div>
+    }
+    <div class="field">
+      <label>Tags to apply</label>
+      <p-multiselect formControlName="tagIds" [options]="tags()" optionLabel="name" optionValue="id" placeholder="Select tags" class="w-full" />
+    </div>
+    <div class="form-actions">
+      <p-button type="button" label="Cancel" [text]="true" severity="secondary" (onClick)="showForm.set(false)" />
+      <p-button type="submit" label="Create" [disabled]="form.invalid" />
+    </div>
+  </form>
+}
+
+<p-table [value]="rules()" styleClass="p-datatable-sm mt-2">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Value</th>
+      <th>Tags</th>
+      <th style="width: 4rem"></th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rule>
+    <tr>
+      <td>{{ rule.name }}</td>
+      <td><p-tag [value]="rule.type" severity="info" /></td>
+      <td><code>{{ rule.value }}</code></td>
+      <td>
+        <div class="tags-cell">
+          @for (tag of rule.tags; track tag.id) {
+            <p-tag [value]="tag.name" severity="secondary" />
+          }
+        </div>
+      </td>
+      <td>
+        <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="deleteRule(rule.id)" />
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-toast />
+<p-confirmDialog />

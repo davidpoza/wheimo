@@ -1,0 +1,107 @@
+<div class="recurrents-header">
+  <h2>Artículos Recurrentes</h2>
+  <p-button label="Nuevo artículo" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="openCreate()" />
+</div>
+
+<div class="recurrents-table">
+  <p-table [value]="recurrents()" styleClass="p-datatable-sm" [rowHover]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nombre</th>
+        <th>Establecimiento</th>
+        <th>Periodicidad</th>
+        <th>Precio actual</th>
+        <th>Link</th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-r>
+      <tr>
+        <td class="name">{{ r.name }}</td>
+        <td>{{ r.establishment }}</td>
+        <td class="muted">{{ r.periodicity ? r.periodicity + ' días' : '—' }}</td>
+        <td class="amount">{{ r.amount | currency: 'EUR' }}</td>
+        <td>
+          @if (r.link) {
+            <a [href]="r.link" target="_blank" rel="noopener" class="link-icon" pTooltip="{{ r.link }}">
+              <i class="pi pi-external-link"></i>
+            </a>
+          } @else {
+            <span class="muted">—</span>
+          }
+        </td>
+        <td class="actions">
+          <p-button icon="pi pi-link" [text]="true" severity="success" pTooltip="Asignar transacción" (onClick)="openAssign(r)" />
+          <p-button icon="pi pi-chart-line" [text]="true" severity="info" pTooltip="Historial de precios" (onClick)="openHistory(r)" />
+          <p-button icon="pi pi-pencil" [text]="true" severity="secondary" pTooltip="Editar" (onClick)="openEdit(r)" />
+          <p-button icon="pi pi-trash" [text]="true" severity="danger" pTooltip="Eliminar" (onClick)="delete(r)" />
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="empty">
+      <tr>
+        <td colspan="6" class="empty-msg">No hay artículos recurrentes. Crea uno para empezar.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- Create / Edit dialog -->
+<p-dialog
+  [header]="isEdit ? 'Editar artículo' : 'Nuevo artículo'"
+  [visible]="dialogVisible()"
+  (visibleChange)="dialogVisible.set($event)"
+  [modal]="true"
+  [style]="{ width: '480px' }"
+>
+  <form [formGroup]="form" class="dialog-form">
+    <div class="field">
+      <label>Nombre *</label>
+      <input pInputText formControlName="name" class="w-full" placeholder="Ej. Suscripción Netflix" />
+    </div>
+    <div class="field">
+      <label>Establecimiento *</label>
+      <input pInputText formControlName="establishment" class="w-full" placeholder="Ej. Netflix" />
+    </div>
+    @if (!isEdit) {
+      <div class="field">
+        <label>Precio inicial (€)</label>
+        <p-inputnumber formControlName="amount" mode="decimal" [minFractionDigits]="2" class="w-full" />
+      </div>
+    }
+    <div class="field">
+      <label>Periodicidad (días)</label>
+      <p-inputnumber formControlName="periodicity" [useGrouping]="false" class="w-full" placeholder="Ej. 30" />
+    </div>
+    <div class="field">
+      <label>Link</label>
+      <input pInputText formControlName="link" class="w-full" placeholder="https://..." />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" [text]="true" severity="secondary" (onClick)="dialogVisible.set(false)" />
+    <p-button [label]="isEdit ? 'Guardar' : 'Crear'" (onClick)="save()" [disabled]="form.invalid" />
+  </ng-template>
+</p-dialog>
+
+<!-- Price history dialog -->
+@if (historyRecurrent()) {
+  <app-price-history-dialog
+    [recurrent]="historyRecurrent()!"
+    (close)="onHistoryClose()"
+  />
+}
+
+<!-- Assign transaction dialog -->
+@if (assignRecurrent()) {
+  <app-assign-transaction-dialog
+    [recurrent]="assignRecurrent()!"
+    (close)="onAssignClose()"
+  />
+}
+
+<p-toast />
+<p-confirmDialog />

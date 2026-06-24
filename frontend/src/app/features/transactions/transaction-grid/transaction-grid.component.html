@@ -1,0 +1,170 @@
+<div class="tx-header">
+  <h2>Transactions</h2>
+  <div class="tx-actions">
+    @if (selected().length > 0) {
+      <p-button
+        icon="pi pi-tags"
+        label="Tag Selected ({{ selected().length }})"
+        severity="secondary"
+        styleClass="icon-only-mobile"
+        (onClick)="openTagging()"
+      />
+    }
+    <p-button label="New" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="createVisible.set(true)" />
+  </div>
+</div>
+
+<app-transaction-filter />
+
+@if (mobileSelectMode()) {
+  <div class="mobile-select-banner">
+    <span>{{ selected().length }} seleccionadas</span>
+    <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="cancelMobileSelection()" />
+  </div>
+}
+
+<p-table
+  [value]="transactions()"
+  [lazy]="true"
+  [totalRecords]="total()"
+  [rows]="filters().limit ?? 50"
+  [paginator]="true"
+  (onPage)="onPage($event)"
+  (onSort)="onSort($event)"
+  [sortField]="sortField"
+  [sortOrder]="sortOrder"
+  [(selection)]="selected"
+  dataKey="id"
+  [rowHover]="true"
+  styleClass="p-datatable-sm"
+  [expandedRowKeys]="expandedRows"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th class="checkbox-col" style="width: 3rem"><p-tableHeaderCheckbox /></th>
+      <th class="toggle-col" style="width: 3rem"></th>
+      <th class="date-col" pSortableColumn="date">Date <p-sortIcon field="date" /></th>
+      <th class="desc-col" pSortableColumn="description">Description <p-sortIcon field="description" /></th>
+      <th class="amount-col" pSortableColumn="amount">Amount <p-sortIcon field="amount" /></th>
+      <th class="tags-col">Tags</th>
+      <th class="actions-col"></th>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="body" let-tx let-expanded="expanded">
+    <tr (click)="openDetail(tx)" class="tx-row"
+        [class.selected-row]="isSelected(tx)"
+        (touchstart)="onTouchStart($event, tx)"
+        (touchend)="onTouchEnd()"
+        (touchmove)="onTouchMove()">
+      <td class="checkbox-col" (click)="$event.stopPropagation()"><p-tableCheckbox [value]="tx" /></td>
+      <td class="toggle-col" (click)="$event.stopPropagation()">
+        @if (tx.recurrents?.length > 0) {
+          <p-button
+            [pRowToggler]="tx"
+            [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+            [text]="true"
+            severity="secondary"
+            pTooltip="Ver desglose recurrentes"
+          />
+        }
+      </td>
+      <td class="date-col">{{ tx.date | date: 'dd/MM/yy' }}</td>
+      <td class="desc-col">
+        <span class="desc-text">{{ tx.description || tx.emitterName || tx.receiverName }}</span>
+      </td>
+      <td class="amount-col" [class.expense]="tx.amount < 0" [class.income]="tx.amount > 0">
+        {{ tx.amount | currency: tx.currency : 'symbol' : '1.2-2' }}
+      </td>
+      <td class="tags-col">
+        <div class="tags-cell">
+          @for (tag of tx.tags.slice(0, 3); track tag.id) {
+            <p-tag [value]="tag.name" severity="secondary" styleClass="tag-chip" />
+          }
+          @if (tx.tags.length > 3) {
+            <p-tag [value]="'+' + (tx.tags.length - 3)" severity="info" />
+          }
+        </div>
+      </td>
+      <td class="actions-col" (click)="$event.stopPropagation()">
+        <p-button [icon]="tx.favourite ? 'pi pi-star-fill' : 'pi pi-star'" [text]="true" [severity]="tx.favourite ? 'warn' : 'secondary'" (onClick)="toggleFav(tx)" />
+        <p-button icon="pi pi-tags" [text]="true" severity="secondary" (onClick)="applyTags(tx)" pTooltip="Apply rules" styleClass="hide-mobile" />
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="expandedrow" let-tx>
+    <tr class="recurrent-expansion-row">
+      <td colspan="7">
+        <div class="recurrent-breakdown">
+          <table class="breakdown-table">
+            <thead>
+              <tr>
+                <th>Artículo recurrente</th>
+                <th>Establecimiento</th>
+                <th>Importe (snapshot)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (link of tx.recurrents; track link.recurrentId) {
+                <tr>
+                  <td>{{ link.name }}</td>
+                  <td class="muted">{{ link.establishment }}</td>
+                  <td class="amount-col">{{ link.amountSnapshot | currency: tx.currency : 'symbol' : '1.2-2' }}</td>
+                  <td>
+                    <p-button
+                      icon="pi pi-times"
+                      [text]="true"
+                      severity="danger"
+                      pTooltip="Desvincular"
+                      (onClick)="unassignRecurrent(tx, link)"
+                    />
+                  </td>
+                </tr>
+              }
+            </tbody>
+            <tfoot>
+              <tr class="total-row">
+                <td colspan="2"><strong>Total recurrentes</strong></td>
+                <td class="amount-col"><strong>{{ tx.recurrentsTotal | currency: tx.currency : 'symbol' : '1.2-2' }}</strong></td>
+                <td></td>
+              </tr>
+              <tr class="diff-row" [class.diff-negative]="tx.recurrentsDiff < 0" [class.diff-positive]="tx.recurrentsDiff > 0">
+                <td colspan="2"><strong>Diferencia</strong></td>
+                <td class="amount-col"><strong>{{ tx.recurrentsDiff | currency: tx.currency : 'symbol' : '1.2-2' }}</strong></td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+
+  <ng-template pTemplate="empty">
+    <tr><td colspan="7" class="empty-msg">No transactions found</td></tr>
+  </ng-template>
+</p-table>
+
+<app-transaction-details-dialog
+  [visible]="detailVisible()"
+  [transaction]="detailTx()"
+  (visibleChange)="detailVisible.set($event)"
+  (saved)="onDetailSaved()"
+/>
+
+<app-create-transaction-dialog
+  [visible]="createVisible()"
+  (visibleChange)="createVisible.set($event)"
+  (created)="onCreated()"
+/>
+
+<app-tagging-dialog
+  [visible]="taggingVisible()"
+  [transactionIds]="selected().map(t => t.id)"
+  (visibleChange)="taggingVisible.set($event)"
+  (done)="onTaggingDone()"
+/>
+
+<p-toast />

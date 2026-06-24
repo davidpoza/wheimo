@@ -1,0 +1,1 @@
+ALTER TABLE accounts ADD COLUMN movement_type VARCHAR(10) NOT NULL DEFAULT 'BOTH';

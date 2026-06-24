@@ -1,0 +1,55 @@
+<div class="layout-wrapper">
+  <!-- Desktop Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <span class="logo">Wheimo</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      @for (item of navItems; track item.route) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="nav-item"
+        >
+          <i [class]="item.icon"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <span class="user-name">{{ authService.currentUser()?.name }}</span>
+      <p-button icon="pi pi-sign-out" [text]="true" severity="secondary" (onClick)="logout()" />
+    </div>
+  </aside>
+
+  <!-- Mobile Top Bar -->
+  <header class="mobile-header">
+    <p-button icon="pi pi-bars" [text]="true" (onClick)="mobileMenuOpen.set(true)" />
+    <span class="logo">Wheimo</span>
+    <p-button icon="pi pi-sign-out" [text]="true" severity="secondary" (onClick)="logout()" />
+  </header>
+
+  <!-- Mobile Drawer -->
+  <p-drawer [(visible)]="mobileMenuOpen" header="Menu" position="left">
+    <nav class="mobile-nav">
+      @for (item of navItems; track item.route) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          class="nav-item"
+          (click)="mobileMenuOpen.set(false)"
+        >
+          <i [class]="item.icon"></i>
+          <span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+  </p-drawer>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet />
+  </main>
+</div>

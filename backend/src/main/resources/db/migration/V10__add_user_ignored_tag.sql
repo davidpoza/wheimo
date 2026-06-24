@@ -1,0 +1,2 @@
+ALTER TABLE users
+    ADD COLUMN ignored_tag_id BIGINT REFERENCES tags(id) ON DELETE SET NULL;

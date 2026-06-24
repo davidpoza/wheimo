@@ -1,182 +1,105 @@
-# WHEIMO
-Acronym for Where is my money, a web app for expenses tracking.
-This is a monorepo. For frontend I'm using React, and on backend, Node express.js with an sqlite database.
+# Wheimo
 
-## Installation
-```
-touch database.sqlite
-docker-compose up
-```
+**Where Is My Money** — aplicación web de seguimiento de gastos e ingresos personales.
 
-## Prerequisites
-- Node.js >= 13, I'm using 14.15.4
-- python to build sqlite3 package using node-pre-gyp (sudo apt install python)
+## Stack tecnológico
 
-## Environment variables
+| Capa | Tecnología |
+|------|-----------|
+| Frontend | Angular + Nginx |
+| API | Spring Boot 3 (Java 21) |
+| Fetcher | Spring Boot 3 (Java 21) — sincronización con bancos |
+| Base de datos | PostgreSQL 16 |
+| Caché / mensajería | Redis 7 |
+| Contenedores | Docker + Docker Compose |
 
-```
-ADMIN_EMAIL=admin@gmail.com
-ADMIN_PASS=xxxxxxxx
+## Puesta en marcha
 
-LOG_LEVEL=
+### 1. Requisitos previos
 
-# secret for encryption of jwt signature
-JWT_SECRET=yoursecret
+- Docker y Docker Compose instalados
+- Acceso a las imágenes publicadas en GHCR (ver sección de imágenes)
 
-# number of rounds for Blowfish algorithm for hashing user password
-BCRYPT_ROUNDS=12
+### 2. Configuración del entorno
 
-# lifetime of the token (in seconds)
-JWT_LIFETIME=86400
+Copia el fichero de ejemplo y edita los valores:
 
-# algorithm used in token signing
-JWT_ALGORITHM=HS256
-
-# passphrase used to encrypt access password
-AES_PASSPHRASE=xxxxxxx
-
-# Resync frequency in minutes
-RESYNC_FREQ=10
-
-UPLOAD_MAX_SIZE=10
-UPLOAD_MAX_RESOLUTION=1920
-
-# Vapid keys for web push notifications
-# generate using npx web-push generate-vapid-keys
-PRIVATE_VAPID_KEY=xxxxxxxxx
-WEB_PUSH_EMAIL=xxxx@xxx.com
-REACT_APP_PUBLIC_VAPID_KEY=yyyyyyyyyy
-REACT_APP_API_HOST=http://localhost:3001
-REACT_APP_NOTIFIER_HOST=http://localhost:3002
+```bash
+cp .env.example .env
 ```
 
-## API
-### /auth
-#### POST: /auth/signup
-Creates user account
-Fields:
-- email <string> (required)
-- password <string> (required)
-- name <string>
-#### POST: /auth/signin
-Generates jwt valid token
-Fields:
-- email <string> (required)
-- password <string> (required)
------
-### /users
-#### GET: /users
-Retrieves users
+#### Variables requeridas
 
-#### POST: /users
-Creates user
-Fields:
-- email <string> (required)
-- password <string> (required)
-- level <string>
-#### PATCH: /users
-Updates user
+| Variable | Descripción | Ejemplo |
+|----------|-------------|---------|
+| `POSTGRES_USER` | Usuario de PostgreSQL | `wheimo` |
+| `POSTGRES_PASSWORD` | Contraseña de PostgreSQL | `s3cr3t` |
+| `JWT_SECRET` | Clave secreta para firmar JWT (mínimo 32 caracteres) | `openssl rand -hex 64` |
+| `AES_PASSPHRASE` | Passphrase AES para cifrar credenciales bancarias (debe ser igual en api y fetcher) | `my-aes-passphrase` |
+| `AUTH_USERNAME` | Email del usuario administrador inicial | `admin@wheimo.com` |
+| `AUTH_PASSWORD` | Contraseña del usuario administrador inicial | `changeme` |
 
-#### DELETE: /users
-Deletes user
+#### Variables opcionales
 
------
-### /accounts
+| Variable | Descripción | Valor por defecto |
+|----------|-------------|-------------------|
+| `JWT_EXPIRATION_MS` | Duración del access token en ms | `900000` (15 min) |
+| `JWT_REFRESH_EXPIRATION_MS` | Duración del refresh token en ms | `2592000000` (30 días) |
+| `API_URL` | URL de la API para el contenedor frontend | `http://wheimo-api:8080` |
 
-#### GET: /accounts
-Retrieves banks accounts
+### 3. Arrancar la aplicación
 
-#### POST: /accounts
-Creates bank account
-Fields:
-- name <string> (required)
-- number <string> (required)
-- description <string>
-- accessId <string>
-- accessPassword <string>
-#### PATCH: /accounts
-Updates bank account
-Fields:
-- name <string> (required)
-- number <string> (required)
-- description <string>
-- accessId <string>
-- accessPassword <string>
+```bash
+docker compose pull
+docker compose up -d
+```
 
-#### DELETE: /accounts
-Deletes bank account
+La aplicación estará disponible en `http://localhost:4200`.
 
------
-### /transactions
+### 4. Usuario inicial
 
-#### GET: /transactions
-Retrieves transactions
+Al arrancar por primera vez, el backend crea automáticamente un usuario administrador con las credenciales definidas en `AUTH_USERNAME` y `AUTH_PASSWORD`. Si el usuario ya existe y la contraseña ha cambiado, se actualiza.
 
-#### POST: /transactions
-Creates transaction
-Fields:
-- amount <number> (required)
-- emitter <string> (required)
-- emitterName <string>
-- description <string>
-- tags <Array(numbers)>
+**Credenciales por defecto** (cambiar en `.env` antes de arrancar):
 
-#### PATCH: /transactions
-Updates transaction
-#### DELETE: /transactions
-Deletes transaction
+```
+Email:     admin@wheimo.com
+Password:  changeme
+```
 
------
-### /tags
+## Imágenes Docker
 
-#### GET: /tags
-Retrieves tags
+Las imágenes se publican automáticamente en GitHub Container Registry al hacer push a `master`:
 
-#### POST: /tags
-Creates tag
-Fields:
-- name <string>
-- rules <Array(number)>: Arrays of rule ids
+```
+ghcr.io/davidpoza/wheimo-api:latest
+ghcr.io/davidpoza/wheimo-fetcher:latest
+ghcr.io/davidpoza/wheimo-frontend:latest
+```
 
-#### PATCH: /tags
-Updates tag
+Para que Docker pueda descargar las imágenes (si el paquete es privado):
 
-#### DELETE: /tags
-Deletes tags
+```bash
+echo $CR_PAT | docker login ghcr.io -u USERNAME --password-stdin
+```
 
------
-### /rules
+## Desarrollo local (con build local)
 
-#### GET: /rules
-Retrieves tagging rules
+Si quieres construir las imágenes localmente en lugar de usar las de GHCR:
 
-#### POST: /rules
-Creates tagging rule
-Fields:
-- name <string>
-- type <string>
-- value <string>
+```bash
+docker compose build
+docker compose up -d
+```
 
-#### PATCH: /rules
-Updates tagging rule
+> Para construir localmente sustituye `image:` por `build:` en `docker-compose.yml` o usa las directivas de build comentadas.
 
-#### DELETE: /rules
-Deletes tagging rule
+## CI/CD
 
------
-### /recurrents
+El workflow `.github/workflows/docker-publish.yml` se ejecuta en cada push a `master` y:
 
-#### GET: /recurrents
-Retrieves recurrent payments
+1. Construye las imágenes de `wheimo-api`, `wheimo-fetcher` y `wheimo-frontend`
+2. Las publica en GHCR con las etiquetas `latest` y el SHA corto del commit
+3. Usa caché de GitHub Actions para acelerar los builds sucesivos
 
-#### POST: /recurrents
-Creates recurrent payment
-Fields:
-- name <string> (required)
-- emitter <string> (required)
-- amount <number> (required)
-- transactionId <identificator>
-#### PATCH: /recurrents
-Updates recurrent payment
-#### DELETE: /recurrents
-Deletes recurrent payment
+No se necesitan secretos adicionales: usa el `GITHUB_TOKEN` integrado en el repositorio.

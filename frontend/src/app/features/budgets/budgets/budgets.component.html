@@ -1,0 +1,79 @@
+<div class="budgets-header">
+  <h2>Budgets</h2>
+  <p-button label="New Budget" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="dialogVisible.set(true)" />
+</div>
+
+<div class="budgets-list">
+  @for (status of statuses(); track status.budget.id) {
+    <div class="budget-card">
+      <div class="budget-top">
+        <div class="budget-info">
+          <span class="budget-tag">{{ status.budget.tag.name }}</span>
+          <span class="budget-period">
+            {{ status.budget.startDate | date: 'dd/MM/yy' }} — {{ status.budget.endDate | date: 'dd/MM/yy' }}
+          </span>
+        </div>
+        <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="deleteBudget(status.budget.id)" />
+      </div>
+
+      <div class="budget-amounts">
+        <span class="spent">{{ status.spent | currency: 'EUR' }}</span>
+        <span class="separator">/</span>
+        <span class="total">{{ status.budget.value | currency: 'EUR' }}</span>
+        <span class="pct" [class.over]="status.percentage >= 100">
+          ({{ status.percentage / 100 | percent: '1.0-0' }})
+        </span>
+      </div>
+
+      <p-progressbar
+        [value]="status.percentage > 100 ? 100 : status.percentage"
+        [showValue]="false"
+        styleClass="budget-bar"
+        [style]="{ height: '8px' }"
+      />
+
+      <span class="remaining" [class.over]="status.remaining < 0">
+        {{ status.remaining >= 0 ? (status.remaining | currency: 'EUR') + ' remaining' : ((-status.remaining) | currency: 'EUR') + ' over budget' }}
+      </span>
+    </div>
+  }
+
+  @if (statuses().length === 0) {
+    <div class="empty">No budgets yet. Create one to track your spending.</div>
+  }
+</div>
+
+<p-dialog
+  header="New Budget"
+  [visible]="dialogVisible()"
+  (visibleChange)="dialogVisible.set($event)"
+  [modal]="true"
+  [style]="{ width: '420px' }"
+>
+  <form [formGroup]="form" class="dialog-form">
+    <div class="field">
+      <label>Tag *</label>
+      <p-select formControlName="tagId" [options]="tags()" optionLabel="name" optionValue="id" placeholder="Select tag" class="w-full" />
+    </div>
+    <div class="field">
+      <label>Budget Amount (€) *</label>
+      <p-inputnumber formControlName="value" mode="decimal" [minFractionDigits]="2" class="w-full" />
+    </div>
+    <div class="field">
+      <label>Start Date *</label>
+      <p-datepicker formControlName="startDate" dateFormat="dd/mm/yy" class="w-full" />
+    </div>
+    <div class="field">
+      <label>End Date *</label>
+      <p-datepicker formControlName="endDate" dateFormat="dd/mm/yy" class="w-full" />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="dialogVisible.set(false)" />
+    <p-button label="Create" (onClick)="createBudget()" [disabled]="form.invalid" />
+  </ng-template>
+</p-dialog>
+
+<p-toast />
+<p-confirmDialog />
