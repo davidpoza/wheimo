@@ -34,3 +34,10 @@
   justify-content: flex-end;
   gap: 0.5rem;
 }
+
+::ng-deep .mobile-filter-drawer {
+  height: auto;
+  max-height: 90vh;
+
+  .p-drawer-content { overflow-y: auto; }
+}

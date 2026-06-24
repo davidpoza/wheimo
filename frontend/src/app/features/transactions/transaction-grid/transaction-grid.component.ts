@@ -47,11 +47,14 @@ export class TransactionGridComponent implements OnInit {
   filters = this.txService.filters;
 
   selected = signal<Transaction[]>([]);
+  mobileSelectMode = signal(false);
   detailTx = signal<Transaction | null>(null);
   detailVisible = signal(false);
   createVisible = signal(false);
   taggingVisible = signal(false);
   expandedRows: Record<string, boolean> = {};
+
+  private longPressTimer: ReturnType<typeof setTimeout> | null = null;
 
   ngOnInit() {
     this.txService.loadAll().subscribe();
@@ -76,7 +79,43 @@ export class TransactionGridComponent implements OnInit {
     this.txService.loadAll().subscribe();
   }
 
+  onTouchStart(event: TouchEvent, tx: Transaction) {
+    this.longPressTimer = setTimeout(() => this.enterSelectMode(tx), 500);
+  }
+
+  onTouchEnd() {
+    if (this.longPressTimer) { clearTimeout(this.longPressTimer); this.longPressTimer = null; }
+  }
+
+  onTouchMove() {
+    if (this.longPressTimer) { clearTimeout(this.longPressTimer); this.longPressTimer = null; }
+  }
+
+  enterSelectMode(tx: Transaction) {
+    this.mobileSelectMode.set(true);
+    if (!this.isSelected(tx)) this.selected.update(s => [...s, tx]);
+  }
+
+  toggleMobileSelection(tx: Transaction) {
+    if (this.isSelected(tx)) {
+      this.selected.update(s => s.filter(t => t.id !== tx.id));
+      if (this.selected().length === 0) this.mobileSelectMode.set(false);
+    } else {
+      this.selected.update(s => [...s, tx]);
+    }
+  }
+
+  cancelMobileSelection() {
+    this.selected.set([]);
+    this.mobileSelectMode.set(false);
+  }
+
+  isSelected(tx: Transaction): boolean {
+    return this.selected().some(t => t.id === tx.id);
+  }
+
   openDetail(tx: Transaction) {
+    if (this.mobileSelectMode()) { this.toggleMobileSelection(tx); return; }
     this.detailTx.set(tx);
     this.detailVisible.set(true);
   }

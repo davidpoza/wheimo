@@ -40,3 +40,7 @@ html, body {
   flex-direction: column;
   gap: 1rem;
 }
+
+@media (max-width: 768px) {
+  .icon-only-mobile .p-button-label { display: none; }
+}

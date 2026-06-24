@@ -6,14 +6,22 @@
         icon="pi pi-tags"
         label="Tag Selected ({{ selected().length }})"
         severity="secondary"
+        styleClass="icon-only-mobile"
         (onClick)="openTagging()"
       />
     }
-    <p-button label="New" icon="pi pi-plus" (onClick)="createVisible.set(true)" />
+    <p-button label="New" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="createVisible.set(true)" />
   </div>
 </div>
 
 <app-transaction-filter />
+
+@if (mobileSelectMode()) {
+  <div class="mobile-select-banner">
+    <span>{{ selected().length }} seleccionadas</span>
+    <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="cancelMobileSelection()" />
+  </div>
+}
 
 <p-table
   [value]="transactions()"
@@ -33,20 +41,24 @@
 >
   <ng-template pTemplate="header">
     <tr>
-      <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
-      <th style="width: 3rem"></th>
-      <th pSortableColumn="date">Date <p-sortIcon field="date" /></th>
-      <th pSortableColumn="description">Description <p-sortIcon field="description" /></th>
-      <th pSortableColumn="amount" style="width: 8rem; text-align: right">Amount <p-sortIcon field="amount" /></th>
-      <th>Tags</th>
-      <th></th>
+      <th class="checkbox-col" style="width: 3rem"><p-tableHeaderCheckbox /></th>
+      <th class="toggle-col" style="width: 3rem"></th>
+      <th class="date-col" pSortableColumn="date">Date <p-sortIcon field="date" /></th>
+      <th class="desc-col" pSortableColumn="description">Description <p-sortIcon field="description" /></th>
+      <th class="amount-col" pSortableColumn="amount">Amount <p-sortIcon field="amount" /></th>
+      <th class="tags-col">Tags</th>
+      <th class="actions-col"></th>
     </tr>
   </ng-template>
 
   <ng-template pTemplate="body" let-tx let-expanded="expanded">
-    <tr (click)="openDetail(tx)" class="tx-row">
-      <td (click)="$event.stopPropagation()"><p-tableCheckbox [value]="tx" /></td>
-      <td (click)="$event.stopPropagation()">
+    <tr (click)="openDetail(tx)" class="tx-row"
+        [class.selected-row]="isSelected(tx)"
+        (touchstart)="onTouchStart($event, tx)"
+        (touchend)="onTouchEnd()"
+        (touchmove)="onTouchMove()">
+      <td class="checkbox-col" (click)="$event.stopPropagation()"><p-tableCheckbox [value]="tx" /></td>
+      <td class="toggle-col" (click)="$event.stopPropagation()">
         @if (tx.recurrents?.length > 0) {
           <p-button
             [pRowToggler]="tx"
@@ -64,7 +76,7 @@
       <td class="amount-col" [class.expense]="tx.amount < 0" [class.income]="tx.amount > 0">
         {{ tx.amount | currency: tx.currency : 'symbol' : '1.2-2' }}
       </td>
-      <td>
+      <td class="tags-col">
         <div class="tags-cell">
           @for (tag of tx.tags.slice(0, 3); track tag.id) {
             <p-tag [value]="tag.name" severity="secondary" styleClass="tag-chip" />
@@ -74,9 +86,9 @@
           }
         </div>
       </td>
-      <td (click)="$event.stopPropagation()">
+      <td class="actions-col" (click)="$event.stopPropagation()">
         <p-button [icon]="tx.favourite ? 'pi pi-star-fill' : 'pi pi-star'" [text]="true" [severity]="tx.favourite ? 'warn' : 'secondary'" (onClick)="toggleFav(tx)" />
-        <p-button icon="pi pi-tags" [text]="true" severity="secondary" (onClick)="applyTags(tx)" pTooltip="Apply rules" />
+        <p-button icon="pi pi-tags" [text]="true" severity="secondary" (onClick)="applyTags(tx)" pTooltip="Apply rules" styleClass="hide-mobile" />
       </td>
     </tr>
   </ng-template>
