@@ -30,8 +30,4 @@ export class AppLayoutComponent {
     { label: 'Recurrentes', icon: 'pi pi-refresh', route: '/recurrents' },
     { label: 'Reglas', icon: 'pi pi-sliders-h', route: '/rules' },
   ];
-
-  logout() {
-    this.authService.logout().subscribe();
-  }
 }

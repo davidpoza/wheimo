@@ -20,7 +20,7 @@
 
     <div class="sidebar-footer">
       <span class="user-name">{{ authService.currentUser()?.name }}</span>
-      <p-button icon="pi pi-sign-out" [text]="true" severity="secondary" (onClick)="logout()" />
+      <p-button icon="pi pi-user" [text]="true" severity="secondary" [routerLink]="'/profile'" />
     </div>
   </aside>
 
@@ -28,7 +28,7 @@
   <header class="mobile-header">
     <p-button icon="pi pi-bars" [text]="true" (onClick)="mobileMenuOpen.set(true)" />
     <span class="logo">Wheimo</span>
-    <p-button icon="pi pi-sign-out" [text]="true" severity="secondary" (onClick)="logout()" />
+    <p-button icon="pi pi-user" [text]="true" severity="secondary" [routerLink]="'/profile'" />
   </header>
 
   <!-- Mobile Drawer -->

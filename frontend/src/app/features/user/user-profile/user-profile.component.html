@@ -1,0 +1,90 @@
+<p-toast />
+
+<div class="profile-page">
+  <div class="profile-card">
+    <div class="profile-header">
+      <i class="pi pi-user profile-icon"></i>
+      <div class="profile-info">
+        <h2 class="profile-name">{{ authService.currentUser()?.name || '—' }}</h2>
+        <p class="profile-email">{{ authService.currentUser()?.email }}</p>
+      </div>
+    </div>
+
+    <div class="profile-actions">
+      <p-button
+        label="Cambiar contraseña"
+        icon="pi pi-lock"
+        severity="secondary"
+        [outlined]="true"
+        (onClick)="openChangePassword()"
+      />
+      <p-button
+        label="Cerrar sesión"
+        icon="pi pi-sign-out"
+        severity="danger"
+        [outlined]="true"
+        (onClick)="logout()"
+      />
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  header="Cambiar contraseña"
+  [(visible)]="changePasswordVisible"
+  [modal]="true"
+  [style]="{ width: '24rem' }"
+  (onHide)="closeChangePassword()"
+>
+  <form [formGroup]="form" class="password-form">
+    <div class="field">
+      <label for="currentPassword">Contraseña actual</label>
+      <p-password
+        inputId="currentPassword"
+        formControlName="currentPassword"
+        [feedback]="false"
+        [toggleMask]="true"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+      />
+    </div>
+
+    <div class="field">
+      <label for="newPassword">Nueva contraseña</label>
+      <p-password
+        inputId="newPassword"
+        formControlName="newPassword"
+        [feedback]="false"
+        [toggleMask]="true"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+      />
+    </div>
+
+    <div class="field">
+      <label for="confirmPassword">Confirmar nueva contraseña</label>
+      <p-password
+        inputId="confirmPassword"
+        formControlName="confirmPassword"
+        [feedback]="false"
+        [toggleMask]="true"
+        styleClass="w-full"
+        inputStyleClass="w-full"
+      />
+      @if (passwordsMismatch) {
+        <small class="mismatch-error">Las contraseñas no coinciden</small>
+      }
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="closeChangePassword()" />
+    <p-button
+      label="Guardar"
+      icon="pi pi-check"
+      [disabled]="!canSave"
+      [loading]="saving()"
+      (onClick)="savePassword()"
+    />
+  </ng-template>
+</p-dialog>

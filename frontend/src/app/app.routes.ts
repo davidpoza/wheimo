@@ -52,6 +52,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/tags/tag-rules/tag-rules.component').then((m) => m.TagRulesComponent),
       },
+      {
+        path: 'profile',
+        loadComponent: () =>
+          import('./features/user/user-profile/user-profile.component').then((m) => m.UserProfileComponent),
+      },
       { path: '', redirectTo: 'transactions', pathMatch: 'full' },
     ],
   },

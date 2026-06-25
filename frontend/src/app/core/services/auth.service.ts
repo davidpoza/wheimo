@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient, HttpBackend } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { tap, catchError, EMPTY, switchMap } from 'rxjs';
+import { tap, catchError, EMPTY } from 'rxjs';
 import { User, AuthTokens } from '../models/user.model';
 import { environment } from '../../../environments/environment';
 
@@ -55,6 +55,14 @@ export class AuthService {
         this.clearSession();
         this.router.navigate(['/login']);
       }),
+    );
+  }
+
+  changePassword(currentPassword: string, newPassword: string) {
+    return this.http.post(
+      `${environment.apiUrl}/users/me/password`,
+      { currentPassword, newPassword },
+      { headers: { Authorization: `Bearer ${this.accessToken()}` } },
     );
   }
 
