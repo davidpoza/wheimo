@@ -1,10 +1,11 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
@@ -15,13 +16,39 @@ import { Recurrent } from '../../../core/models/recurrent.model';
 import { PriceHistoryDialogComponent } from '../price-history-dialog/price-history-dialog.component';
 import { AssignTransactionDialogComponent } from '../assign-transaction-dialog/assign-transaction-dialog.component';
 
+const PERIODICITY_TYPES = [
+  { label: 'Por días', value: 'DAYS' },
+  { label: 'Anual', value: 'ANNUAL' },
+];
+
+const MONTHS = [
+  { label: 'Enero', value: 1 },
+  { label: 'Febrero', value: 2 },
+  { label: 'Marzo', value: 3 },
+  { label: 'Abril', value: 4 },
+  { label: 'Mayo', value: 5 },
+  { label: 'Junio', value: 6 },
+  { label: 'Julio', value: 7 },
+  { label: 'Agosto', value: 8 },
+  { label: 'Septiembre', value: 9 },
+  { label: 'Octubre', value: 10 },
+  { label: 'Noviembre', value: 11 },
+  { label: 'Diciembre', value: 12 },
+];
+
+function requireMonthIfAnnual(group: AbstractControl): ValidationErrors | null {
+  const type = group.get('periodicityType')?.value;
+  const month = group.get('periodicityMonth')?.value;
+  return type === 'ANNUAL' && !month ? { monthRequired: true } : null;
+}
+
 @Component({
   selector: 'app-recurrents-list',
   standalone: true,
   imports: [
     CurrencyPipe,
     ReactiveFormsModule,
-    ButtonModule, DialogModule, InputTextModule, InputNumberModule, TableModule,
+    ButtonModule, DialogModule, InputTextModule, InputNumberModule, SelectModule, TableModule,
     ToastModule, TooltipModule, ConfirmDialogModule,
     PriceHistoryDialogComponent, AssignTransactionDialogComponent,
   ],
@@ -41,15 +68,21 @@ export class RecurrentsListComponent implements OnInit {
   historyRecurrent = signal<Recurrent | null>(null);
   assignRecurrent = signal<Recurrent | null>(null);
 
+  periodicityTypes = PERIODICITY_TYPES;
+  months = MONTHS;
+
   form = this.fb.group({
     name: ['', Validators.required],
     establishment: ['', Validators.required],
     amount: [null as number | null],
+    periodicityType: ['DAYS' as string],
     periodicity: [null as number | null],
+    periodicityMonth: [null as number | null],
     link: [null as string | null],
-  });
+  }, { validators: requireMonthIfAnnual });
 
   get isEdit() { return this.editingRecurrent() !== null; }
+  get isAnnual() { return this.form.get('periodicityType')?.value === 'ANNUAL'; }
 
   ngOnInit() {
     this.recurrentsService.loadAll().subscribe();
@@ -57,7 +90,7 @@ export class RecurrentsListComponent implements OnInit {
 
   openCreate() {
     this.editingRecurrent.set(null);
-    this.form.reset();
+    this.form.reset({ periodicityType: 'DAYS' });
     this.dialogVisible.set(true);
   }
 
@@ -66,7 +99,9 @@ export class RecurrentsListComponent implements OnInit {
     this.form.patchValue({
       name: r.name,
       establishment: r.establishment,
+      periodicityType: r.periodicityType ?? 'DAYS',
       periodicity: r.periodicity,
+      periodicityMonth: r.periodicityMonth,
       link: r.link,
     });
     this.dialogVisible.set(true);
@@ -74,18 +109,33 @@ export class RecurrentsListComponent implements OnInit {
 
   save() {
     if (this.form.invalid) return;
-    const { name, establishment, amount, periodicity, link } = this.form.value;
+    const { name, establishment, amount, periodicityType, periodicity, periodicityMonth, link } = this.form.value;
     const editing = this.editingRecurrent();
 
     if (editing) {
-      this.recurrentsService.update(editing.id, { name: name!, establishment: establishment!, periodicity: periodicity ?? undefined, link: link ?? undefined }).subscribe({
+      this.recurrentsService.update(editing.id, {
+        name: name!,
+        establishment: establishment!,
+        periodicityType: periodicityType ?? 'DAYS',
+        periodicity: periodicityType === 'DAYS' ? (periodicity ?? undefined) : undefined,
+        periodicityMonth: periodicityType === 'ANNUAL' ? (periodicityMonth ?? undefined) : undefined,
+        link: link ?? undefined,
+      }).subscribe({
         next: () => {
           this.dialogVisible.set(false);
           this.messageService.add({ severity: 'success', summary: 'Artículo actualizado' });
         },
       });
     } else {
-      this.recurrentsService.create({ name: name!, establishment: establishment!, amount: amount ?? 0, periodicity: periodicity ?? undefined, link: link ?? undefined }).subscribe({
+      this.recurrentsService.create({
+        name: name!,
+        establishment: establishment!,
+        amount: amount ?? 0,
+        periodicityType: periodicityType ?? 'DAYS',
+        periodicity: periodicityType === 'DAYS' ? (periodicity ?? undefined) : undefined,
+        periodicityMonth: periodicityType === 'ANNUAL' ? (periodicityMonth ?? undefined) : undefined,
+        link: link ?? undefined,
+      }).subscribe({
         next: () => {
           this.dialogVisible.set(false);
           this.messageService.add({ severity: 'success', summary: 'Artículo creado' });
@@ -124,5 +174,13 @@ export class RecurrentsListComponent implements OnInit {
 
   onAssignClose() {
     this.assignRecurrent.set(null);
+  }
+
+  periodicityLabel(r: Recurrent): string {
+    if (r.periodicityType === 'ANNUAL') {
+      const m = MONTHS.find(x => x.value === r.periodicityMonth);
+      return m ? `Anual (${m.label})` : 'Anual';
+    }
+    return r.periodicity ? `${r.periodicity} días` : '—';
   }
 }

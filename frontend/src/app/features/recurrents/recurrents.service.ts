@@ -15,6 +15,10 @@ export class RecurrentsService {
     return this.http.get<Recurrent[]>(this.baseUrl).pipe(tap((list) => this.recurrents.set(list)));
   }
 
+  getUpcoming() {
+    return this.http.get<Recurrent[]>(`${this.baseUrl}/upcoming`);
+  }
+
   create(data: Partial<Recurrent>) {
     return this.http.post<Recurrent>(this.baseUrl, data).pipe(
       tap((r) => this.recurrents.update((list) => [...list, r])),

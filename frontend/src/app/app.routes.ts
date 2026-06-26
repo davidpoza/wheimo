@@ -48,6 +48,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'upcoming',
+        loadComponent: () =>
+          import('./features/recurrents/upcoming-recurrents/upcoming-recurrents.component').then(
+            (m) => m.UpcomingRecurrentsComponent,
+          ),
+      },
+      {
         path: 'rules',
         loadComponent: () =>
           import('./features/tags/tag-rules/tag-rules.component').then((m) => m.TagRulesComponent),

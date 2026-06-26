@@ -4,6 +4,8 @@ export interface Recurrent {
   amount: number;
   establishment: string;
   periodicity: number | null;
+  periodicityType: string;
+  periodicityMonth: number | null;
   link: string | null;
   nextPredictedDate: string | null;
   createdAt: string | null;

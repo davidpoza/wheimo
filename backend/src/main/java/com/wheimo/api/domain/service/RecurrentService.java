@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 
@@ -31,12 +33,15 @@ public class RecurrentService {
     private final RecurrentTransactionLinkRepository linkRepository;
     private final TransactionRepository transactionRepository;
 
-    public RecurrentDto create(String name, String establishment, BigDecimal amount, Integer periodicity, String link) {
+    public RecurrentDto create(String name, String establishment, BigDecimal amount,
+                               Integer periodicity, String periodicityType, Integer periodicityMonth, String link) {
         Recurrent r = Recurrent.builder()
                 .name(name)
                 .establishment(establishment)
                 .amount(amount != null ? amount : BigDecimal.ZERO)
                 .periodicity(periodicity)
+                .periodicityType(periodicityType != null ? periodicityType : "DAYS")
+                .periodicityMonth(periodicityMonth)
                 .link(link)
                 .build();
         return toDto(recurrentRepository.save(r));
@@ -44,6 +49,31 @@ public class RecurrentService {
 
     public List<RecurrentDto> findAll() {
         return recurrentRepository.findAll().stream().map(this::toDto).toList();
+    }
+
+    public List<RecurrentDto> findUpcoming() {
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        LocalDate today = now.toLocalDate();
+        OffsetDateTime windowStart = now.minusHours(48);
+        OffsetDateTime windowEnd = now.plusHours(48);
+
+        return recurrentRepository.findAll().stream()
+                .filter(r -> {
+                    if ("ANNUAL".equals(r.getPeriodicityType())) {
+                        if (r.getPeriodicityMonth() == null) return false;
+                        int targetMonth = r.getPeriodicityMonth();
+                        LocalDate firstOfThisYear = LocalDate.of(today.getYear(), targetMonth, 1);
+                        // If the 1st of the target month is today or in the past, use next year's occurrence
+                        LocalDate nextOccurrence = today.isBefore(firstOfThisYear) ? firstOfThisYear : firstOfThisYear.plusYears(1);
+                        LocalDate windowStartDate = nextOccurrence.minusDays(7);
+                        return !today.isBefore(windowStartDate) && today.isBefore(nextOccurrence);
+                    } else {
+                        OffsetDateTime next = computeNextPredictedDate(r);
+                        return next != null && !next.isBefore(windowStart) && !next.isAfter(windowEnd);
+                    }
+                })
+                .map(this::toDto)
+                .toList();
     }
 
     public RecurrentDto updateById(Long id, Map<String, Object> updates) {
@@ -54,8 +84,14 @@ public class RecurrentService {
             Object val = updates.get("periodicity");
             r.setPeriodicity(val != null ? ((Number) val).intValue() : null);
         }
+        if (updates.containsKey("periodicityType")) {
+            r.setPeriodicityType((String) updates.get("periodicityType"));
+        }
+        if (updates.containsKey("periodicityMonth")) {
+            Object val = updates.get("periodicityMonth");
+            r.setPeriodicityMonth(val != null ? ((Number) val).intValue() : null);
+        }
         if (updates.containsKey("link")) r.setLink((String) updates.get("link"));
-        // amount is intentionally not updatable here; use addPriceEntry instead
         return toDto(recurrentRepository.save(r));
     }
 
@@ -120,8 +156,9 @@ public class RecurrentService {
                 .stream().map(this::toLinkDto).toList();
     }
 
+    // Returns null for ANNUAL type (no concept of next date) and for DAYS with no periodicity set.
     private OffsetDateTime computeNextPredictedDate(Recurrent r) {
-        if (r.getPeriodicity() == null) return null;
+        if (!"DAYS".equals(r.getPeriodicityType()) || r.getPeriodicity() == null) return null;
         List<RecurrentTransactionLink> links = linkRepository.findByRecurrentIdOrderByTransactionDateDesc(r.getId());
         OffsetDateTime base = links.isEmpty()
                 ? r.getCreatedAt()
@@ -136,6 +173,8 @@ public class RecurrentService {
                 .amount(r.getAmount())
                 .establishment(r.getEstablishment())
                 .periodicity(r.getPeriodicity())
+                .periodicityType(r.getPeriodicityType())
+                .periodicityMonth(r.getPeriodicityMonth())
                 .link(r.getLink())
                 .nextPredictedDate(computeNextPredictedDate(r))
                 .createdAt(r.getCreatedAt())

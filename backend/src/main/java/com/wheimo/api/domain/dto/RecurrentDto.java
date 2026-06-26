@@ -13,6 +13,8 @@ public class RecurrentDto {
     private BigDecimal amount;
     private String establishment;
     private Integer periodicity;
+    private String periodicityType;
+    private Integer periodicityMonth;
     private String link;
     private OffsetDateTime nextPredictedDate;
     private OffsetDateTime createdAt;

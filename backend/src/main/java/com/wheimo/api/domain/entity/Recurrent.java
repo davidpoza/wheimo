@@ -26,6 +26,13 @@ public class Recurrent {
 
     private Integer periodicity;
 
+    @Column(name = "periodicity_type", nullable = false)
+    @Builder.Default
+    private String periodicityType = "DAYS";
+
+    @Column(name = "periodicity_month")
+    private Integer periodicityMonth;
+
     private String link;
 
     @Column(name = "created_at")

@@ -27,13 +27,21 @@ public class RecurrentController {
         String establishment = (String) body.get("establishment");
         BigDecimal amount = body.get("amount") != null ? new BigDecimal(body.get("amount").toString()) : null;
         Integer periodicity = body.get("periodicity") != null ? ((Number) body.get("periodicity")).intValue() : null;
+        String periodicityType = (String) body.get("periodicityType");
+        Integer periodicityMonth = body.get("periodicityMonth") != null ? ((Number) body.get("periodicityMonth")).intValue() : null;
         String link = (String) body.get("link");
-        return ResponseEntity.status(HttpStatus.CREATED).body(recurrentService.create(name, establishment, amount, periodicity, link));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(recurrentService.create(name, establishment, amount, periodicity, periodicityType, periodicityMonth, link));
     }
 
     @GetMapping
     public ResponseEntity<List<RecurrentDto>> list() {
         return ResponseEntity.ok(recurrentService.findAll());
+    }
+
+    @GetMapping("/upcoming")
+    public ResponseEntity<List<RecurrentDto>> upcoming() {
+        return ResponseEntity.ok(recurrentService.findUpcoming());
     }
 
     @PatchMapping("/{id}")

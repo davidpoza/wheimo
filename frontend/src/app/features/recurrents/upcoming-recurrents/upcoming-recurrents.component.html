@@ -1,0 +1,36 @@
+<div class="upcoming-header">
+  <h2>Próximos gastos</h2>
+</div>
+
+<div class="upcoming-table">
+  <p-table [value]="upcoming()" styleClass="p-datatable-sm" [rowHover]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nombre</th>
+        <th>Establecimiento</th>
+        <th>Periodicidad</th>
+        <th>Precio actual</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-r>
+      <tr>
+        <td class="name">{{ r.name }}</td>
+        <td>{{ r.establishment }}</td>
+        <td>
+          <p-tag
+            [value]="periodicityLabel(r)"
+            [severity]="r.periodicityType === 'ANNUAL' ? 'warn' : 'info'"
+          />
+        </td>
+        <td class="amount">{{ r.amount | currency: 'EUR' }}</td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="empty">
+      <tr>
+        <td colspan="4" class="empty-msg">No hay gastos próximos en este momento.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

@@ -28,6 +28,7 @@ export class AppLayoutComponent {
     { label: 'Charts', icon: 'pi pi-chart-bar', route: '/charts' },
     { label: 'Budgets', icon: 'pi pi-wallet', route: '/budgets' },
     { label: 'Recurrentes', icon: 'pi pi-refresh', route: '/recurrents' },
+    { label: 'Próximos gastos', icon: 'pi pi-clock', route: '/upcoming' },
     { label: 'Reglas', icon: 'pi pi-sliders-h', route: '/rules' },
   ];
 }

@@ -20,7 +20,7 @@
       <tr>
         <td class="name">{{ r.name }}</td>
         <td>{{ r.establishment }}</td>
-        <td class="muted">{{ r.periodicity ? r.periodicity + ' días' : '—' }}</td>
+        <td class="muted">{{ periodicityLabel(r) }}</td>
         <td class="amount">{{ r.amount | currency: 'EUR' }}</td>
         <td>
           @if (r.link) {
@@ -72,9 +72,21 @@
       </div>
     }
     <div class="field">
-      <label>Periodicidad (días)</label>
-      <p-inputnumber formControlName="periodicity" [useGrouping]="false" class="w-full" placeholder="Ej. 30" />
+      <label>Tipo de periodicidad</label>
+      <p-select formControlName="periodicityType" [options]="periodicityTypes" optionLabel="label" optionValue="value" class="w-full" appendTo="body" />
     </div>
+    @if (!isAnnual) {
+      <div class="field">
+        <label>Periodicidad (días)</label>
+        <p-inputnumber formControlName="periodicity" [useGrouping]="false" class="w-full" placeholder="Ej. 30" />
+      </div>
+    }
+    @if (isAnnual) {
+      <div class="field">
+        <label>Mes de pago</label>
+        <p-select formControlName="periodicityMonth" [options]="months" optionLabel="label" optionValue="value" class="w-full" appendTo="body" placeholder="Selecciona un mes" />
+      </div>
+    }
     <div class="field">
       <label>Link</label>
       <input pInputText formControlName="link" class="w-full" placeholder="https://..." />
