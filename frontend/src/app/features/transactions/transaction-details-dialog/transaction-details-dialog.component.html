@@ -3,86 +3,136 @@
   [visible]="visible()"
   (visibleChange)="visibleChange.emit($event)"
   [modal]="true"
-  [style]="{ width: '560px' }"
+  [style]="{ width: '600px' }"
 >
   @if (localTransaction(); as tx) {
-    <div class="detail-grid">
-      <div class="detail-row">
-        <span class="label">Date</span>
-        <span>{{ tx.date | date: 'dd/MM/yyyy' }}</span>
-      </div>
-      <div class="detail-row">
-        <span class="label">Amount</span>
-        <span [class.expense]="tx.amount < 0" [class.income]="tx.amount > 0" class="amount">
-          {{ tx.amount | currency: tx.currency : 'symbol' : '1.2-2' }}
-        </span>
-      </div>
-      @if (tx.emitterName) {
-        <div class="detail-row"><span class="label">From</span><span>{{ tx.emitterName }}</span></div>
-      }
-      @if (tx.receiverName) {
-        <div class="detail-row"><span class="label">To</span><span>{{ tx.receiverName }}</span></div>
-      }
-      @if (tx.description) {
-        <div class="detail-row"><span class="label">Description</span><span>{{ tx.description }}</span></div>
-      }
-      <div class="detail-row">
-        <span class="label">Balance</span>
-        <span>{{ tx.balance | currency: tx.currency : 'symbol' : '1.2-2' }}</span>
-      </div>
+    <p-tabs value="0">
+      <p-tablist>
+        <p-tab value="0">Details</p-tab>
+        <p-tab value="1">
+          Attachments
+          @if (tx.attachments.length > 0) {
+            <span class="att-badge">{{ tx.attachments.length }}</span>
+          }
+        </p-tab>
+      </p-tablist>
 
-      <div class="field mt-2">
-        <label>Comments</label>
-        <textarea pTextarea [ngModel]="comments()" (ngModelChange)="comments.set($event)" rows="3" class="w-full"></textarea>
-      </div>
+      <p-tabpanels>
+        <!-- TAB 1: Details -->
+        <p-tabpanel value="0">
+          <div class="detail-content">
+            <!-- Amount hero -->
+            <div class="amount-hero">
+              <span class="amount-value" [class.income]="tx.amount > 0" [class.expense]="tx.amount < 0">
+                {{ tx.amount | currency: tx.currency : 'symbol' : '1.2-2' }}
+              </span>
+              <span class="amount-date">{{ tx.date | date: 'dd MMM yyyy' }}</span>
+            </div>
 
-      <div class="field">
-        <label>Tags</label>
-        <p-multiselect
-          [ngModel]="selectedTagIds()"
-          (ngModelChange)="selectedTagIds.set($event)"
-          [options]="allTags"
-          optionLabel="name"
-          optionValue="id"
-          placeholder="Select tags"
-          class="w-full"
-          appendTo="body"
-        />
-      </div>
+            <!-- Info rows -->
+            <div class="info-section">
+              @if (tx.emitterName) {
+                <div class="info-row">
+                  <span class="info-label">From</span>
+                  <span class="info-value">{{ tx.emitterName }}</span>
+                </div>
+              }
+              @if (tx.receiverName) {
+                <div class="info-row">
+                  <span class="info-label">To</span>
+                  <span class="info-value">{{ tx.receiverName }}</span>
+                </div>
+              }
+              @if (tx.description) {
+                <div class="info-row">
+                  <span class="info-label">Description</span>
+                  <span class="info-value">{{ tx.description }}</span>
+                </div>
+              }
+              <div class="info-row">
+                <span class="info-label">Balance</span>
+                <span class="info-value">{{ tx.balance | currency: tx.currency : 'symbol' : '1.2-2' }}</span>
+              </div>
+            </div>
 
-      <div class="field">
-        <label>Attachments</label>
-        @if (tx.attachments.length > 0) {
-          <div class="att-list">
-            @for (att of tx.attachments; track att.id) {
-              <div class="att-item">
-                <span class="att-clickable" (click)="openAttachment(att)" (keyup.enter)="openAttachment(att)" tabindex="0" role="button">
-                  <i class="pi" [class.pi-image]="isImage(att)" [class.pi-file-pdf]="!isImage(att)"></i>
-                  <span>{{ attachmentLabel(att) }}</span>
-                </span>
-                <p-button
-                  icon="pi pi-trash"
-                  [text]="true"
-                  severity="danger"
-                  size="small"
-                  (onClick)="deleteAttachment(att)"
-                />
+            <!-- Editable fields -->
+            <div class="field">
+              <label>Comments</label>
+              <textarea pTextarea [ngModel]="comments()" (ngModelChange)="comments.set($event)" rows="3" class="w-full"></textarea>
+            </div>
+
+            <div class="field">
+              <label>Tags</label>
+              <p-multiselect
+                [ngModel]="selectedTagIds()"
+                (ngModelChange)="selectedTagIds.set($event)"
+                [options]="allTags"
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Select tags"
+                class="w-full"
+                appendTo="body"
+              />
+            </div>
+          </div>
+        </p-tabpanel>
+
+        <!-- TAB 2: Attachments -->
+        <p-tabpanel value="1">
+          <div class="att-content">
+            @if (tx.attachments.length === 0) {
+              <div class="att-empty">
+                <i class="pi pi-paperclip att-empty-icon"></i>
+                <span>No attachments yet</span>
+              </div>
+            } @else {
+              <div class="att-grid">
+                @for (att of tx.attachments; track att.id) {
+                  <div class="att-card">
+                    <div
+                      class="att-preview"
+                      (click)="openAttachment(att)"
+                      (keyup.enter)="openAttachment(att)"
+                      tabindex="0"
+                      role="button"
+                    >
+                      @if (isImage(att)) {
+                        <img [src]="getAttachmentThumbnail(att)" class="att-thumb" [alt]="attachmentLabel(att)" />
+                      } @else {
+                        <div class="att-icon-wrap">
+                          <i class="pi pi-file-pdf att-icon"></i>
+                        </div>
+                      }
+                    </div>
+                    <div class="att-footer">
+                      <span class="att-name" [title]="attachmentLabel(att)">{{ attachmentLabel(att) }}</span>
+                      <p-button
+                        icon="pi pi-trash"
+                        [text]="true"
+                        severity="danger"
+                        size="small"
+                        (onClick)="deleteAttachment(att)"
+                      />
+                    </div>
+                  </div>
+                }
               </div>
             }
+
+            <p-fileupload
+              mode="basic"
+              accept="image/*,application/pdf"
+              [multiple]="true"
+              [auto]="false"
+              chooseLabel="Attach files"
+              chooseIcon="pi pi-paperclip"
+              (onSelect)="onFilesSelected($event)"
+              styleClass="mt-2"
+            />
           </div>
-        }
-        <p-fileupload
-          mode="basic"
-          accept="image/*,application/pdf"
-          [multiple]="true"
-          [auto]="false"
-          chooseLabel="Attach files"
-          chooseIcon="pi pi-paperclip"
-          (onSelect)="onFilesSelected($event)"
-          styleClass="mt-2"
-        />
-      </div>
-    </div>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
   }
 
   <ng-template pTemplate="footer">

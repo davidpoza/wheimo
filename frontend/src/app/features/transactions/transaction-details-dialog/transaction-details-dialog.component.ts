@@ -8,6 +8,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { TagModule } from 'primeng/tag';
 import { FileUploadModule } from 'primeng/fileupload';
+import { TabsModule } from 'primeng/tabs';
 import { TransactionsService } from '../transactions.service';
 import { AttachmentService } from '../attachment.service';
 import { TagsService } from '../../tags/tags.service';
@@ -20,9 +21,10 @@ import { Attachment } from '../../../core/models/attachment.model';
   imports: [
     CurrencyPipe, DatePipe, FormsModule,
     DialogModule, ButtonModule, InputTextModule, TextareaModule,
-    MultiSelectModule, TagModule, FileUploadModule,
+    MultiSelectModule, TagModule, FileUploadModule, TabsModule,
   ],
   templateUrl: './transaction-details-dialog.component.html',
+  styleUrl: './transaction-details-dialog.component.scss',
 })
 export class TransactionDetailsDialogComponent {
   private readonly txService = inject(TransactionsService);
@@ -39,6 +41,7 @@ export class TransactionDetailsDialogComponent {
   selectedTagIds = signal<number[]>([]);
   localTransaction = signal<Transaction | null>(null);
   previewImageUrl = signal<string | null>(null);
+  private thumbCache = new Map<number, string>();
 
   constructor() {
     effect(() => {
@@ -61,6 +64,17 @@ export class TransactionDetailsDialogComponent {
 
   isImage(att: Attachment): boolean {
     return att.type.startsWith('image/');
+  }
+
+  getAttachmentThumbnail(att: Attachment): string {
+    if (!this.thumbCache.has(att.id)) {
+      this.attachmentService.download(att.id).subscribe((blob) => {
+        const url = URL.createObjectURL(blob);
+        this.thumbCache.set(att.id, url);
+      });
+      return '';
+    }
+    return this.thumbCache.get(att.id)!;
   }
 
   onFilesSelected(event: { currentFiles: File[] }): void {
@@ -102,6 +116,8 @@ export class TransactionDetailsDialogComponent {
   }
 
   deleteAttachment(att: Attachment): void {
+    const cached = this.thumbCache.get(att.id);
+    if (cached) { URL.revokeObjectURL(cached); this.thumbCache.delete(att.id); }
     this.attachmentService.delete(att.id).subscribe({
       next: () => this.refreshTransaction(),
     });
