@@ -105,6 +105,10 @@ dist
 
 *.sqlite
 
+# Uploaded attachments
+backend/data/attachments/*
+!backend/data/attachments/.gitkeep
+
 # docker volumes
 redis-volume
 # Java build artifacts

@@ -22,7 +22,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>,
         SELECT t FROM Transaction t
         JOIN FETCH t.account a
         LEFT JOIN FETCH t.tags
-        LEFT JOIN FETCH t.attachments
         WHERE a.user.id = :userId AND t.id = :id
         """)
     Optional<Transaction> findByIdWithDetails(@Param("id") Long id, @Param("userId") Long userId);

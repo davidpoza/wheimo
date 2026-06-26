@@ -63,10 +63,10 @@ export class TransactionDetailsDialogComponent {
     return att.type.startsWith('image/');
   }
 
-  onFilesSelected(event: { files: File[] }): void {
+  onFilesSelected(event: { currentFiles: File[] }): void {
     const tx = this.localTransaction();
-    if (!tx || !event.files?.length) return;
-    const uploads = event.files.map((file) =>
+    if (!tx || !event.currentFiles?.length) return;
+    const uploads = event.currentFiles.map((file) =>
       this.attachmentService.upload(tx.id, file)
     );
     let completed = 0;
