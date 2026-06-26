@@ -22,13 +22,13 @@ export class AppLayoutComponent {
   mobileMenuOpen = signal(false);
 
   readonly navItems: NavItem[] = [
+    { label: 'Próximos gastos', icon: 'pi pi-clock', route: '/upcoming' },
     { label: 'Transactions', icon: 'pi pi-list', route: '/transactions' },
     { label: 'Accounts', icon: 'pi pi-credit-card', route: '/accounts' },
     { label: 'Tags', icon: 'pi pi-tags', route: '/tags' },
     { label: 'Charts', icon: 'pi pi-chart-bar', route: '/charts' },
     { label: 'Budgets', icon: 'pi pi-wallet', route: '/budgets' },
     { label: 'Recurrentes', icon: 'pi pi-refresh', route: '/recurrents' },
-    { label: 'Próximos gastos', icon: 'pi pi-clock', route: '/upcoming' },
     { label: 'Reglas', icon: 'pi pi-sliders-h', route: '/rules' },
   ];
 }

@@ -25,7 +25,7 @@
         </div>
         <div class="field">
           <label>Fecha (dejar vacío = hoy)</label>
-          <p-datepicker formControlName="recordedAt" dateFormat="dd/mm/yy" [showTime]="false" class="w-full" />
+          <p-datepicker formControlName="recordedAt" dateFormat="dd/mm/yy" [showTime]="false" class="w-full" appendTo="body" />
         </div>
         <p-button label="Guardar" (onClick)="addEntry()" [disabled]="form.invalid" />
       </form>

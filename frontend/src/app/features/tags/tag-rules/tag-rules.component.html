@@ -2,7 +2,13 @@
   <p-button label="New Rule" icon="pi pi-plus" (onClick)="showForm.set(!showForm())" />
 </div>
 
-@if (showForm()) {
+<p-dialog
+  header="New Rule"
+  [visible]="showForm()"
+  (visibleChange)="showForm.set($event)"
+  [modal]="true"
+  [style]="{ width: '480px' }"
+>
   <form [formGroup]="form" (ngSubmit)="createRule()" class="rule-form">
     <div class="field">
       <label>Name *</label>
@@ -10,7 +16,7 @@
     </div>
     <div class="field">
       <label>Type *</label>
-      <p-select formControlName="type" [options]="ruleTypes" optionLabel="label" optionValue="value" class="w-full" />
+      <p-select formControlName="type" [options]="ruleTypes" optionLabel="label" optionValue="value" class="w-full" appendTo="body" />
     </div>
     @if (selectedType !== 'isExpense' && selectedType !== 'isReceipt') {
       <div class="field">
@@ -23,14 +29,15 @@
     }
     <div class="field">
       <label>Tags to apply</label>
-      <p-multiselect formControlName="tagIds" [options]="tags()" optionLabel="name" optionValue="id" placeholder="Select tags" class="w-full" />
-    </div>
-    <div class="form-actions">
-      <p-button type="button" label="Cancel" [text]="true" severity="secondary" (onClick)="showForm.set(false)" />
-      <p-button type="submit" label="Create" [disabled]="form.invalid" />
+      <p-multiselect formControlName="tagIds" [options]="tags()" optionLabel="name" optionValue="id" placeholder="Select tags" class="w-full" appendTo="body" />
     </div>
   </form>
-}
+
+  <ng-template pTemplate="footer">
+    <p-button type="button" label="Cancel" [text]="true" severity="secondary" (onClick)="showForm.set(false)" />
+    <p-button label="Create" [disabled]="form.invalid" (onClick)="createRule()" />
+  </ng-template>
+</p-dialog>
 
 <p-table [value]="rules()" styleClass="p-datatable-sm mt-2">
   <ng-template pTemplate="header">
