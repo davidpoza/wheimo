@@ -13,4 +13,6 @@ public interface BudgetRepository extends JpaRepository<Budget, Long> {
 
     @Query("SELECT b FROM Budget b JOIN FETCH b.tag t WHERE b.id = :id AND t.user.id = :userId")
     Optional<Budget> findByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
+
+    boolean existsByTagId(Long tagId);
 }

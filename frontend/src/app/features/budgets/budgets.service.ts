@@ -16,13 +16,13 @@ export class BudgetsService {
     return this.http.get<Budget[]>(this.baseUrl).pipe(tap((b) => this.budgets.set(b)));
   }
 
-  create(data: Partial<Budget>) {
+  create(data: { tagId: number; value: number }) {
     return this.http.post<Budget>(this.baseUrl, data).pipe(
       tap((b) => this.budgets.update((list) => [...list, b])),
     );
   }
 
-  update(id: number, data: Partial<Budget>) {
+  update(id: number, data: { value: number }) {
     return this.http.patch<Budget>(`${this.baseUrl}/${id}`, data).pipe(
       tap((updated) => this.budgets.update((list) => list.map((b) => (b.id === id ? updated : b)))),
     );

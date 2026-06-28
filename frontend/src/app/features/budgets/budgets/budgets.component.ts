@@ -1,10 +1,9 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { CurrencyPipe, DatePipe, PercentPipe } from '@angular/common';
+import { CurrencyPipe, PercentPipe } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
@@ -18,9 +17,9 @@ import { BudgetStatus } from '../../../core/models/budget.model';
   selector: 'app-budgets',
   standalone: true,
   imports: [
-    CurrencyPipe, DatePipe, PercentPipe,
+    CurrencyPipe, PercentPipe,
     ReactiveFormsModule,
-    ButtonModule, DialogModule, InputNumberModule, DatePickerModule, SelectModule,
+    ButtonModule, DialogModule, InputNumberModule, SelectModule,
     ProgressBarModule, ToastModule, ConfirmDialogModule,
   ],
   providers: [MessageService, ConfirmationService],
@@ -41,8 +40,6 @@ export class BudgetsComponent implements OnInit {
   form = this.fb.group({
     tagId: [null as number | null, Validators.required],
     value: [null as number | null, Validators.required],
-    startDate: [null as Date | null, Validators.required],
-    endDate: [null as Date | null, Validators.required],
   });
 
   ngOnInit() {
@@ -59,8 +56,8 @@ export class BudgetsComponent implements OnInit {
 
   createBudget() {
     if (this.form.invalid) return;
-    const { tagId, value, startDate, endDate } = this.form.value;
-    this.budgetsService.create({ tag: { id: tagId! } as any, value: value!, startDate: startDate!.toISOString(), endDate: endDate!.toISOString() }).subscribe({
+    const { tagId, value } = this.form.value;
+    this.budgetsService.create({ tagId: tagId!, value: value! }).subscribe({
       next: () => {
         this.dialogVisible.set(false);
         this.form.reset();

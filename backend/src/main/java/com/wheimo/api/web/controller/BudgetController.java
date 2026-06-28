@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -24,10 +23,8 @@ public class BudgetController {
     public ResponseEntity<BudgetDto> create(@RequestBody Map<String, Object> body) {
         Long tagId = ((Number) body.get("tagId")).longValue();
         BigDecimal value = new BigDecimal(body.get("value").toString());
-        OffsetDateTime start = OffsetDateTime.parse(body.get("start").toString());
-        OffsetDateTime end = OffsetDateTime.parse(body.get("end").toString());
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(budgetService.create(SecurityUtils.getCurrentUserId(), tagId, value, start, end));
+                .body(budgetService.create(SecurityUtils.getCurrentUserId(), tagId, value));
     }
 
     @GetMapping
@@ -43,9 +40,7 @@ public class BudgetController {
     @PatchMapping("/{id}")
     public ResponseEntity<BudgetDto> update(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         BigDecimal value = body.get("value") != null ? new BigDecimal(body.get("value").toString()) : null;
-        OffsetDateTime start = body.get("start") != null ? OffsetDateTime.parse(body.get("start").toString()) : null;
-        OffsetDateTime end = body.get("end") != null ? OffsetDateTime.parse(body.get("end").toString()) : null;
-        return ResponseEntity.ok(budgetService.updateById(id, SecurityUtils.getCurrentUserId(), value, start, end));
+        return ResponseEntity.ok(budgetService.updateById(id, SecurityUtils.getCurrentUserId(), value));
     }
 
     @DeleteMapping("/{id}")

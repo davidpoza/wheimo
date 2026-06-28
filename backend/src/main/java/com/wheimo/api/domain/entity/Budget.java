@@ -18,12 +18,6 @@ public class Budget {
     @Column(nullable = false)
     private BigDecimal value;
 
-    @Column(name = "start_date", nullable = false)
-    private OffsetDateTime startDate;
-
-    @Column(name = "end_date", nullable = false)
-    private OffsetDateTime endDate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tag_id", nullable = false)
     private Tag tag;

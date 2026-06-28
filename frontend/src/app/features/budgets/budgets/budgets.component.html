@@ -9,9 +9,7 @@
       <div class="budget-top">
         <div class="budget-info">
           <span class="budget-tag">{{ status.budget.tag.name }}</span>
-          <span class="budget-period">
-            {{ status.budget.startDate | date: 'dd/MM/yy' }} — {{ status.budget.endDate | date: 'dd/MM/yy' }}
-          </span>
+          <span class="budget-period">This month</span>
         </div>
         <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="deleteBudget(status.budget.id)" />
       </div>
@@ -32,8 +30,8 @@
         [style]="{ height: '8px' }"
       />
 
-      <span class="remaining" [class.over]="status.remaining < 0">
-        {{ status.remaining >= 0 ? (status.remaining | currency: 'EUR') + ' remaining' : ((-status.remaining) | currency: 'EUR') + ' over budget' }}
+      <span class="remaining" [class.over]="status.over">
+        {{ status.over ? ((-status.remaining) | currency: 'EUR') + ' over budget' : (status.remaining | currency: 'EUR') + ' remaining' }}
       </span>
     </div>
   }
@@ -56,16 +54,8 @@
       <p-select formControlName="tagId" [options]="tags()" optionLabel="name" optionValue="id" placeholder="Select tag" class="w-full" />
     </div>
     <div class="field">
-      <label>Budget Amount (€) *</label>
+      <label>Monthly Amount (€) *</label>
       <p-inputnumber formControlName="value" mode="decimal" [minFractionDigits]="2" class="w-full" />
-    </div>
-    <div class="field">
-      <label>Start Date *</label>
-      <p-datepicker formControlName="startDate" dateFormat="dd/mm/yy" class="w-full" appendTo="body" />
-    </div>
-    <div class="field">
-      <label>End Date *</label>
-      <p-datepicker formControlName="endDate" dateFormat="dd/mm/yy" class="w-full" appendTo="body" />
     </div>
   </form>
 
