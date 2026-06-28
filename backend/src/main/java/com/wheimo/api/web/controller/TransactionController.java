@@ -64,7 +64,7 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.findAll(SecurityUtils.getCurrentUserId(), params));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public ResponseEntity<TransactionDto> get(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.findById(id, SecurityUtils.getCurrentUserId()));
     }
@@ -108,10 +108,25 @@ public class TransactionController {
     }
 
     @GetMapping("/tags")
-    public ResponseEntity<Map<String, Object>> expensesByTags(
+    public ResponseEntity<List<TagExpenseDto>> expensesByTags(
             @RequestParam(required = false) Long accountId,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime from,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime to) {
         return ResponseEntity.ok(transactionService.calculateExpensesByTags(SecurityUtils.getCurrentUserId(), accountId, from, to));
+    }
+
+    @GetMapping("/calendar")
+    public ResponseEntity<Map<String, BigDecimal>> calendar(
+            @RequestParam Long accountId,
+            @RequestParam int year) {
+        return ResponseEntity.ok(transactionService.calculateCalendar(SecurityUtils.getCurrentUserId(), accountId, year));
+    }
+
+    @GetMapping("/statistics")
+    public ResponseEntity<StatisticsDto> statistics(
+            @RequestParam Long accountId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime to) {
+        return ResponseEntity.ok(transactionService.calculateStatistics(SecurityUtils.getCurrentUserId(), accountId, from, to));
     }
 }

@@ -185,7 +185,7 @@ public class TransactionService {
         return result;
     }
 
-    public Map<String, Object> calculateExpensesByTags(Long userId, Long accountId, OffsetDateTime from, OffsetDateTime to) {
+    public List<TagExpenseDto> calculateExpensesByTags(Long userId, Long accountId, OffsetDateTime from, OffsetDateTime to) {
         Specification<Transaction> spec = (root, q, cb) -> {
             var preds = new ArrayList<>();
             preds.add(cb.equal(root.get("account").get("user").get("id"), userId));
@@ -197,22 +197,113 @@ public class TransactionService {
         };
 
         List<Transaction> transactions = transactionRepository.findAll(spec);
-        Map<String, Object> result = new HashMap<>();
-        result.put("-1", Map.of("name", "non-tagged", "amount", BigDecimal.ZERO));
+        if (transactions.isEmpty()) return new ArrayList<>();
+
+        // Preserve insertion order: untagged bucket first, then tags as encountered.
+        Map<Long, TagExpenseDto> byTag = new LinkedHashMap<>();
+        byTag.put(-1L, new TagExpenseDto(-1L, "non-tagged", BigDecimal.ZERO));
 
         for (Transaction t : transactions) {
             if (t.getTags().isEmpty()) {
-                Map<String, Object> untagged = (Map<String, Object>) result.get("-1");
-                untagged.put("amount", ((BigDecimal) untagged.get("amount")).add(t.getAmount()));
+                TagExpenseDto cur = byTag.get(-1L);
+                byTag.put(-1L, new TagExpenseDto(-1L, "non-tagged", cur.amount().add(t.getAmount())));
             } else {
                 for (Tag tag : t.getTags()) {
-                    result.computeIfAbsent(String.valueOf(tag.getId()), k -> new HashMap<>(Map.of("name", tag.getName(), "amount", BigDecimal.ZERO)));
-                    Map<String, Object> tagEntry = (Map<String, Object>) result.get(String.valueOf(tag.getId()));
-                    tagEntry.put("amount", ((BigDecimal) tagEntry.get("amount")).add(t.getAmount()));
+                    TagExpenseDto cur = byTag.computeIfAbsent(tag.getId(),
+                            k -> new TagExpenseDto(tag.getId(), tag.getName(), BigDecimal.ZERO));
+                    byTag.put(tag.getId(), new TagExpenseDto(tag.getId(), tag.getName(), cur.amount().add(t.getAmount())));
                 }
             }
         }
+
+        // Drop the untagged bucket if it has no expenses.
+        if (byTag.get(-1L).amount().signum() == 0) byTag.remove(-1L);
+        return new ArrayList<>(byTag.values());
+    }
+
+    public Map<String, BigDecimal> calculateCalendar(Long userId, Long accountId, int year) {
+        OffsetDateTime from = OffsetDateTime.parse(year + "-01-01T00:00:00Z");
+        OffsetDateTime to = OffsetDateTime.parse(year + "-12-31T23:59:59.999999999Z");
+
+        Specification<Transaction> spec = (root, q, cb) -> {
+            var preds = new ArrayList<>();
+            preds.add(cb.equal(root.get("account").get("user").get("id"), userId));
+            if (accountId != null) preds.add(cb.equal(root.get("account").get("id"), accountId));
+            preds.add(cb.greaterThanOrEqualTo(root.get("date"), from));
+            preds.add(cb.lessThanOrEqualTo(root.get("date"), to));
+            return cb.and(preds.toArray(new jakarta.persistence.criteria.Predicate[0]));
+        };
+
+        Map<String, BigDecimal> result = new LinkedHashMap<>();
+        for (Transaction t : transactionRepository.findAll(spec)) {
+            String day = t.getDate().toLocalDate().toString();
+            result.merge(day, t.getAmount(), BigDecimal::add);
+        }
         return result;
+    }
+
+    public StatisticsDto calculateStatistics(Long userId, Long accountId, OffsetDateTime from, OffsetDateTime to) {
+        Specification<Transaction> spec = (root, q, cb) -> {
+            var preds = new ArrayList<>();
+            preds.add(cb.equal(root.get("account").get("user").get("id"), userId));
+            if (accountId != null) preds.add(cb.equal(root.get("account").get("id"), accountId));
+            if (from != null) preds.add(cb.greaterThanOrEqualTo(root.get("date"), from));
+            if (to != null) preds.add(cb.lessThanOrEqualTo(root.get("date"), to));
+            return cb.and(preds.toArray(new jakarta.persistence.criteria.Predicate[0]));
+        };
+
+        List<Transaction> transactions = transactionRepository.findAll(spec);
+        if (transactions.isEmpty()) {
+            return new StatisticsDto(null, 0, 0, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+        }
+
+        BigDecimal totalIncome = BigDecimal.ZERO;
+        BigDecimal totalExpenses = BigDecimal.ZERO;
+        // Per-day expense totals (sum of negative amounts), keyed by date.
+        Map<java.time.LocalDate, BigDecimal> dailyExpenses = new HashMap<>();
+
+        for (Transaction t : transactions) {
+            BigDecimal amount = t.getAmount();
+            if (amount.signum() > 0) {
+                totalIncome = totalIncome.add(amount);
+            } else if (amount.signum() < 0) {
+                totalExpenses = totalExpenses.add(amount);
+                dailyExpenses.merge(t.getDate().toLocalDate(), amount, BigDecimal::add);
+            }
+        }
+
+        // Most expensive day = day with the largest single-day expense (most negative total).
+        StatisticsDto.MostExpensiveDay mostExpensiveDay = dailyExpenses.entrySet().stream()
+                .min(Map.Entry.comparingByValue())
+                .map(e -> new StatisticsDto.MostExpensiveDay(e.getKey(), e.getValue()))
+                .orElse(null);
+
+        // Streaks: consecutive calendar days that have at least one expense.
+        List<java.time.LocalDate> expenseDays = new ArrayList<>(dailyExpenses.keySet());
+        Collections.sort(expenseDays);
+        int longestStreak = 0;
+        int currentStreak = 0;
+        java.time.LocalDate prev = null;
+        for (java.time.LocalDate day : expenseDays) {
+            if (prev != null && prev.plusDays(1).equals(day)) {
+                currentStreak++;
+            } else {
+                currentStreak = 1;
+            }
+            longestStreak = Math.max(longestStreak, currentStreak);
+            prev = day;
+        }
+
+        // Average daily expense over the number of days in the range (inclusive).
+        BigDecimal avgDailyExpense = BigDecimal.ZERO;
+        if (from != null && to != null) {
+            long days = java.time.temporal.ChronoUnit.DAYS.between(from.toLocalDate(), to.toLocalDate()) + 1;
+            if (days > 0) {
+                avgDailyExpense = totalExpenses.divide(BigDecimal.valueOf(days), 2, java.math.RoundingMode.HALF_UP);
+            }
+        }
+
+        return new StatisticsDto(mostExpensiveDay, currentStreak, longestStreak, totalIncome, totalExpenses, avgDailyExpense);
     }
 
     @Transactional

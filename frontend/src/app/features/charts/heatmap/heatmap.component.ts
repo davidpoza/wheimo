@@ -23,6 +23,26 @@ export class HeatmapComponent {
 
   weeks = computed(() => this.buildWeeks(this.calendarData()));
 
+  // Column template shared by the month-label row and the heatmap grid so they align.
+  gridCols = computed(() => `repeat(${this.weeks().length}, 1fr)`);
+
+  // Each month label spans the week columns that belong to it, positioned via grid-column.
+  monthSpans = computed(() => {
+    const spans: { name: string; start: number; span: number }[] = [];
+    let prevMonth = -1;
+    this.weeks().forEach((week, i) => {
+      const firstDay = week.find((d) => d);
+      const month = firstDay ? Number(firstDay.date.slice(5, 7)) - 1 : prevMonth;
+      if (month !== prevMonth) {
+        spans.push({ name: this.months[month], start: i + 1, span: 1 });
+        prevMonth = month;
+      } else if (spans.length) {
+        spans[spans.length - 1].span++;
+      }
+    });
+    return spans;
+  });
+
   months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
   constructor() {

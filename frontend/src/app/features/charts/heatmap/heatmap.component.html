@@ -1,11 +1,11 @@
 <div class="heatmap-section">
   <h3>Spending Heatmap {{ year }}</h3>
-  <div class="month-labels">
-    @for (m of months; track m) {
-      <span class="month-label">{{ m }}</span>
+  <div class="month-labels" [style.grid-template-columns]="gridCols()">
+    @for (m of monthSpans(); track $index) {
+      <span class="month-label" [style.grid-column]="m.start + ' / span ' + m.span">{{ m.name }}</span>
     }
   </div>
-  <div class="heatmap-grid">
+  <div class="heatmap-grid" [style.grid-template-columns]="gridCols()">
     @for (week of weeks(); track $index) {
       <div class="week-col">
         @for (day of week; track $index) {
