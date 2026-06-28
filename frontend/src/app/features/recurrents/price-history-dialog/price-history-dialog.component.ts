@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
+import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { RecurrentsService } from '../recurrents.service';
@@ -16,7 +17,7 @@ import { Recurrent, RecurrentPriceEntry } from '../../../core/models/recurrent.m
   imports: [
     CurrencyPipe, DatePipe,
     ReactiveFormsModule,
-    ButtonModule, DialogModule, InputNumberModule, DatePickerModule, ToastModule,
+    ButtonModule, DialogModule, InputNumberModule, DatePickerModule, TableModule, ToastModule,
   ],
   providers: [MessageService],
   templateUrl: './price-history-dialog.component.html',

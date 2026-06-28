@@ -31,26 +31,27 @@
       </form>
     }
 
-    @if (history().length === 0) {
-      <div class="empty">Sin entradas de precio aún.</div>
-    } @else {
-      <table class="history-table">
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Precio</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (entry of history(); track entry.id) {
-            <tr>
-              <td>{{ entry.recordedAt | date: 'dd/MM/yyyy HH:mm' }}</td>
-              <td class="amount">{{ entry.amount | currency: 'EUR' }}</td>
-            </tr>
-          }
-        </tbody>
-      </table>
-    }
+    <p-table [value]="history()" styleClass="p-datatable-sm" [rowHover]="true">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Fecha</th>
+          <th>Precio</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-entry>
+        <tr>
+          <td>{{ entry.recordedAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+          <td class="amount">{{ entry.amount | currency: 'EUR' }}</td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="2" class="empty">Sin entradas de precio aún.</td>
+        </tr>
+      </ng-template>
+    </p-table>
   </div>
 
   <ng-template pTemplate="footer">
