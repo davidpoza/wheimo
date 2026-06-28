@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 @Entity
@@ -34,6 +35,9 @@ public class Recurrent {
 
     @Column(name = "periodicity_month")
     private Integer periodicityMonth;
+
+    @Column(name = "start_date")
+    private LocalDate startDate;
 
     private String link;
 

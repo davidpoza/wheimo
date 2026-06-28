@@ -92,6 +92,10 @@
         <label>{{ 'recurrents.list.form.periodicityDays' | transloco }}</label>
         <p-inputnumber formControlName="periodicity" [useGrouping]="false" class="w-full" [placeholder]="'recurrents.list.form.periodicityDaysPlaceholder' | transloco" />
       </div>
+      <div class="field">
+        <label>{{ 'recurrents.list.form.startDate' | transloco }}</label>
+        <p-datepicker formControlName="startDate" dateFormat="dd/mm/yy" class="w-full" appendTo="body" [showButtonBar]="true" [placeholder]="'recurrents.list.form.startDatePlaceholder' | transloco" />
+      </div>
     }
     @if (isAnnual) {
       <div class="field">

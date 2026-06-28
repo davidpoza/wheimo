@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 @Data @Builder
@@ -16,6 +17,7 @@ public class RecurrentDto {
     private Integer periodicity;
     private String periodicityType;
     private Integer periodicityMonth;
+    private LocalDate startDate;
     private String link;
     private OffsetDateTime nextPredictedDate;
     private OffsetDateTime createdAt;

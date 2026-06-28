@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,8 @@ public class RecurrentService {
 
     @Transactional
     public RecurrentDto create(String name, String establishment, BigDecimal amount, BigDecimal units,
-                               Integer periodicity, String periodicityType, Integer periodicityMonth, String link) {
+                               Integer periodicity, String periodicityType, Integer periodicityMonth,
+                               LocalDate startDate, String link) {
         Recurrent r = Recurrent.builder()
                 .name(name)
                 .establishment(establishment)
@@ -44,6 +46,7 @@ public class RecurrentService {
                 .periodicity(periodicity)
                 .periodicityType(periodicityType != null ? periodicityType : "DAYS")
                 .periodicityMonth(periodicityMonth)
+                .startDate(startDate)
                 .link(link)
                 .build();
         Recurrent saved = recurrentRepository.save(r);
@@ -103,6 +106,10 @@ public class RecurrentService {
         if (updates.containsKey("periodicityMonth")) {
             Object val = updates.get("periodicityMonth");
             r.setPeriodicityMonth(val != null ? ((Number) val).intValue() : null);
+        }
+        if (updates.containsKey("startDate")) {
+            Object val = updates.get("startDate");
+            r.setStartDate(val != null ? LocalDate.parse(val.toString()) : null);
         }
         if (updates.containsKey("link")) r.setLink((String) updates.get("link"));
         return toDto(recurrentRepository.save(r));
@@ -175,13 +182,36 @@ public class RecurrentService {
     }
 
     // Returns null for ANNUAL type (no concept of next date) and for DAYS with no periodicity set.
+    // Base anchor priority: last linked transaction -> startDate -> createdAt.
+    // From the base, roll forward by `periodicity` days until reaching the first occurrence
+    // that falls on or after today, so the result is always the next upcoming occurrence.
     private OffsetDateTime computeNextPredictedDate(Recurrent r) {
         if (!"DAYS".equals(r.getPeriodicityType()) || r.getPeriodicity() == null) return null;
+        int periodicity = r.getPeriodicity();
+        if (periodicity <= 0) return null;
+
         List<RecurrentTransactionLink> links = linkRepository.findByRecurrentIdOrderByTransactionDateDesc(r.getId());
-        OffsetDateTime base = links.isEmpty()
-                ? r.getCreatedAt()
-                : links.get(0).getTransaction().getDate();
-        return base != null ? base.plusDays(r.getPeriodicity()) : null;
+        LocalDate base;
+        if (!links.isEmpty()) {
+            OffsetDateTime txDate = links.get(0).getTransaction().getDate();
+            base = txDate != null ? txDate.toLocalDate() : null;
+        } else if (r.getStartDate() != null) {
+            base = r.getStartDate();
+        } else {
+            base = r.getCreatedAt() != null ? r.getCreatedAt().toLocalDate() : null;
+        }
+        if (base == null) return null;
+
+        LocalDate today = LocalDate.now(ZoneOffset.UTC);
+        LocalDate next;
+        if (!base.isBefore(today)) {
+            next = base;
+        } else {
+            long elapsed = ChronoUnit.DAYS.between(base, today);
+            long periods = (elapsed + periodicity - 1) / periodicity; // ceil division
+            next = base.plusDays(periods * periodicity);
+        }
+        return next.atStartOfDay().atOffset(ZoneOffset.UTC);
     }
 
     private RecurrentDto toDto(Recurrent r) {
@@ -194,6 +224,7 @@ public class RecurrentService {
                 .periodicity(r.getPeriodicity())
                 .periodicityType(r.getPeriodicityType())
                 .periodicityMonth(r.getPeriodicityMonth())
+                .startDate(r.getStartDate())
                 .link(r.getLink())
                 .nextPredictedDate(computeNextPredictedDate(r))
                 .createdAt(r.getCreatedAt())

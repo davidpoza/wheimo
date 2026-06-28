@@ -5,6 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
@@ -31,7 +32,7 @@ function requireMonthIfAnnual(group: AbstractControl): ValidationErrors | null {
   imports: [
     CurrencyPipe,
     ReactiveFormsModule,
-    ButtonModule, DialogModule, InputTextModule, InputNumberModule, SelectModule, TableModule,
+    ButtonModule, DialogModule, InputTextModule, InputNumberModule, DatePickerModule, SelectModule, TableModule,
     ToastModule, TooltipModule, ConfirmDialogModule, TranslocoModule,
     PriceHistoryDialogComponent, AssignTransactionDialogComponent,
   ],
@@ -74,6 +75,7 @@ export class RecurrentsListComponent implements OnInit {
     periodicityType: ['DAYS' as string],
     periodicity: [null as number | null],
     periodicityMonth: [null as number | null],
+    startDate: [null as Date | null],
     link: [null as string | null],
   }, { validators: requireMonthIfAnnual });
 
@@ -98,6 +100,7 @@ export class RecurrentsListComponent implements OnInit {
       periodicityType: r.periodicityType ?? 'DAYS',
       periodicity: r.periodicity,
       periodicityMonth: r.periodicityMonth,
+      startDate: r.startDate ? new Date(r.startDate + 'T00:00:00') : null,
       link: r.link,
     });
     this.dialogVisible.set(true);
@@ -105,8 +108,9 @@ export class RecurrentsListComponent implements OnInit {
 
   save() {
     if (this.form.invalid) return;
-    const { name, establishment, amount, units, periodicityType, periodicity, periodicityMonth, link } = this.form.value;
+    const { name, establishment, amount, units, periodicityType, periodicity, periodicityMonth, startDate, link } = this.form.value;
     const editing = this.editingRecurrent();
+    const startDateValue = periodicityType === 'DAYS' ? this.formatDate(startDate ?? null) : null;
 
     if (editing) {
       this.recurrentsService.update(editing.id, {
@@ -115,6 +119,7 @@ export class RecurrentsListComponent implements OnInit {
         periodicityType: periodicityType ?? 'DAYS',
         periodicity: periodicityType === 'DAYS' ? (periodicity ?? undefined) : undefined,
         periodicityMonth: periodicityType === 'ANNUAL' ? (periodicityMonth ?? undefined) : undefined,
+        startDate: startDateValue,
         link: link ?? undefined,
       }).subscribe({
         next: () => {
@@ -131,6 +136,7 @@ export class RecurrentsListComponent implements OnInit {
         periodicityType: periodicityType ?? 'DAYS',
         periodicity: periodicityType === 'DAYS' ? (periodicity ?? undefined) : undefined,
         periodicityMonth: periodicityType === 'ANNUAL' ? (periodicityMonth ?? undefined) : undefined,
+        startDate: startDateValue,
         link: link ?? undefined,
       }).subscribe({
         next: () => {
@@ -139,6 +145,14 @@ export class RecurrentsListComponent implements OnInit {
         },
       });
     }
+  }
+
+  private formatDate(d: Date | null): string | null {
+    if (!d) return null;
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   delete(r: Recurrent) {

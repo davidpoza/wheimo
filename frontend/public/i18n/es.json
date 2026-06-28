@@ -119,6 +119,8 @@
         "periodicityType": "Tipo de periodicidad",
         "periodicityDays": "Periodicidad (días)",
         "periodicityDaysPlaceholder": "Ej. 30",
+        "startDate": "Fecha de inicio",
+        "startDatePlaceholder": "dd/mm/aaaa",
         "paymentMonth": "Mes de pago",
         "selectMonth": "Selecciona un mes",
         "link": "Link"
