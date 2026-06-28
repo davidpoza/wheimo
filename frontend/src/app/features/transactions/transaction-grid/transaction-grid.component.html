@@ -9,6 +9,13 @@
         styleClass="icon-only-mobile"
         (onClick)="openTagging()"
       />
+      <p-button
+        icon="pi pi-trash"
+        [label]="'transactions.grid.deleteSelected' | transloco: { count: selected().length }"
+        severity="danger"
+        styleClass="icon-only-mobile"
+        (onClick)="deleteSelected()"
+      />
     }
     <p-button [label]="'transactions.grid.new' | transloco" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="createVisible.set(true)" />
   </div>
@@ -180,3 +187,4 @@
 />
 
 <p-toast />
+<p-confirmDialog />

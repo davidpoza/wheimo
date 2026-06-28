@@ -61,7 +61,8 @@ export class TransactionsService {
   }
 
   deleteMany(ids: number[]) {
-    return this.http.delete(this.baseUrl, { body: { ids } });
+    const params = new HttpParams().set('ids', ids.join(','));
+    return this.http.delete(this.baseUrl, { params });
   }
 
   applyTags(id: number) {
@@ -69,7 +70,7 @@ export class TransactionsService {
   }
 
   applySpecificTags(transactionIds: number[], tagIds: number[]) {
-    return this.http.post(`${this.baseUrl}/apply-specific-tags`, { transactionIds, tagIds });
+    return this.http.post(`${this.baseUrl}/apply-specific-tags`, { ids: transactionIds, tagIds });
   }
 
   getTagExpenses(from: string, to: string, accountId?: number) {

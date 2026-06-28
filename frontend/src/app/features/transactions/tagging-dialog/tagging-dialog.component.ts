@@ -3,14 +3,17 @@ import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { TranslocoModule } from '@jsverse/transloco';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TransactionsService } from '../transactions.service';
 import { TagsService } from '../../tags/tags.service';
 
 @Component({
   selector: 'app-tagging-dialog',
   standalone: true,
-  imports: [FormsModule, DialogModule, ButtonModule, MultiSelectModule, TranslocoModule],
+  imports: [FormsModule, DialogModule, ButtonModule, MultiSelectModule, ConfirmDialogModule, TranslocoModule],
+  providers: [ConfirmationService],
   template: `
     <p-dialog [header]="'transactions.tagging.header' | transloco" [visible]="visible()" (visibleChange)="visibleChange.emit($event)" [modal]="true" [style]="{ width: '400px' }">
       <p>{{ 'transactions.tagging.applyTo' | transloco: { count: transactionIds().length } }}</p>
@@ -28,10 +31,13 @@ import { TagsService } from '../../tags/tags.service';
         <p-button [label]="'common.apply' | transloco" (onClick)="apply()" [disabled]="selectedTagIds.length === 0" />
       </ng-template>
     </p-dialog>
+    <p-confirmDialog />
   `,
 })
 export class TaggingDialogComponent {
   private readonly txService = inject(TransactionsService);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly transloco = inject(TranslocoService);
   readonly tagsService = inject(TagsService);
 
   visible = input<boolean>(false);
@@ -42,10 +48,19 @@ export class TaggingDialogComponent {
   selectedTagIds: number[] = [];
 
   apply() {
-    this.txService.applySpecificTags(this.transactionIds(), this.selectedTagIds).subscribe({
-      next: () => {
-        this.selectedTagIds = [];
-        this.done.emit();
+    this.confirmationService.confirm({
+      message: this.transloco.translate('transactions.tagging.confirm.message', { count: this.transactionIds().length }),
+      header: this.transloco.translate('transactions.tagging.confirm.header'),
+      icon: 'pi pi-tags',
+      acceptLabel: this.transloco.translate('transactions.tagging.confirm.accept'),
+      rejectLabel: this.transloco.translate('transactions.tagging.confirm.reject'),
+      accept: () => {
+        this.txService.applySpecificTags(this.transactionIds(), this.selectedTagIds).subscribe({
+          next: () => {
+            this.selectedTagIds = [];
+            this.done.emit();
+          },
+        });
       },
     });
   }

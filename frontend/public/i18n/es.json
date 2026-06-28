@@ -12,6 +12,7 @@
       "title": "Transactions",
       "new": "New",
       "tagSelected": "Tag Selected ({{ count }})",
+      "deleteSelected": "Delete Selected ({{ count }})",
       "selectedCount": "{{ count }} seleccionadas",
       "col": {
         "date": "Date",
@@ -36,7 +37,17 @@
       "empty": "No transactions found",
       "toast": {
         "applyError": "Error applying tags",
-        "linkRemoved": "Vínculo eliminado"
+        "linkRemoved": "Vínculo eliminado",
+        "deletedSelected": "Transacciones eliminadas",
+        "deleteError": "Error eliminando transacciones"
+      },
+      "confirm": {
+        "deleteSelected": {
+          "message": "¿Eliminar {{ count }} transacción(es) seleccionada(s)?",
+          "header": "Confirmar eliminación",
+          "accept": "Sí",
+          "reject": "No"
+        }
       }
     },
     "filter": {
@@ -84,7 +95,13 @@
     },
     "tagging": {
       "header": "Apply Tags to Selected",
-      "applyTo": "Apply tags to {{ count }} transaction(s):"
+      "applyTo": "Apply tags to {{ count }} transaction(s):",
+      "confirm": {
+        "message": "¿Aplicar los tags seleccionados a {{ count }} transacción(es)? Se añadirán a los tags existentes.",
+        "header": "Confirmar aplicación de tags",
+        "accept": "Sí",
+        "reject": "No"
+      }
     }
   },
   "recurrents": {

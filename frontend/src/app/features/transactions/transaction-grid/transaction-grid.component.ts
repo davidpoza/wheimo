@@ -6,10 +6,12 @@ import { TagModule } from 'primeng/tag';
 import { TooltipModule } from 'primeng/tooltip';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ToastModule } from 'primeng/toast';
-import { MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TransactionsService } from '../transactions.service';
 import { RecurrentsService } from '../../recurrents/recurrents.service';
+import { TagsService } from '../../tags/tags.service';
 import { Transaction } from '../../../core/models/transaction.model';
 import { RecurrentLink } from '../../../core/models/recurrent.model';
 import { TransactionDetailsDialogComponent } from '../transaction-details-dialog/transaction-details-dialog.component';
@@ -29,20 +31,23 @@ import { TaggingDialogComponent } from '../tagging-dialog/tagging-dialog.compone
     TooltipModule,
     CheckboxModule,
     ToastModule,
+    ConfirmDialogModule,
     TranslocoModule,
     TransactionDetailsDialogComponent,
     TransactionFilterComponent,
     CreateTransactionDialogComponent,
     TaggingDialogComponent,
   ],
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
   templateUrl: './transaction-grid.component.html',
   styleUrl: './transaction-grid.component.scss',
 })
 export class TransactionGridComponent implements OnInit {
   private readonly txService = inject(TransactionsService);
   private readonly recurrentsService = inject(RecurrentsService);
+  private readonly tagsService = inject(TagsService);
   private readonly messageService = inject(MessageService);
+  private readonly confirmationService = inject(ConfirmationService);
   private readonly transloco = inject(TranslocoService);
 
   transactions = this.txService.transactions;
@@ -60,6 +65,7 @@ export class TransactionGridComponent implements OnInit {
   private longPressTimer: ReturnType<typeof setTimeout> | null = null;
 
   ngOnInit() {
+    this.tagsService.loadTags().subscribe();
     this.txService.loadAll().subscribe();
   }
 
@@ -139,7 +145,33 @@ export class TransactionGridComponent implements OnInit {
 
   onTaggingDone() {
     this.taggingVisible.set(false);
+    this.selected.set([]);
+    this.mobileSelectMode.set(false);
     this.txService.loadAll().subscribe();
+  }
+
+  deleteSelected() {
+    const selected = this.selected();
+    if (selected.length === 0) return;
+
+    this.confirmationService.confirm({
+      message: this.transloco.translate('transactions.grid.confirm.deleteSelected.message', { count: selected.length }),
+      header: this.transloco.translate('transactions.grid.confirm.deleteSelected.header'),
+      icon: 'pi pi-trash',
+      acceptLabel: this.transloco.translate('transactions.grid.confirm.deleteSelected.accept'),
+      rejectLabel: this.transloco.translate('transactions.grid.confirm.deleteSelected.reject'),
+      accept: () => {
+        this.txService.deleteMany(selected.map((tx) => tx.id)).subscribe({
+          next: () => {
+            this.selected.set([]);
+            this.mobileSelectMode.set(false);
+            this.txService.loadAll().subscribe();
+            this.messageService.add({ severity: 'success', summary: this.transloco.translate('transactions.grid.toast.deletedSelected') });
+          },
+          error: () => this.messageService.add({ severity: 'error', summary: this.transloco.translate('common.error'), detail: this.transloco.translate('transactions.grid.toast.deleteError') }),
+        });
+      },
+    });
   }
 
   toggleFav(tx: Transaction) {

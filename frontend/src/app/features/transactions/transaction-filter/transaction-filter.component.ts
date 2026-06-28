@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
@@ -19,7 +19,7 @@ import { TransactionFilters } from '../../../core/models/transaction.model';
   templateUrl: './transaction-filter.component.html',
   styleUrl: './transaction-filter.component.scss',
 })
-export class TransactionFilterComponent {
+export class TransactionFilterComponent implements OnInit {
   private readonly txService = inject(TransactionsService);
   private readonly tagsService = inject(TagsService);
   private readonly accountsService = inject(AccountsService);
@@ -30,6 +30,11 @@ export class TransactionFilterComponent {
   drawerVisible = signal(false);
 
   draft: TransactionFilters = {};
+
+  ngOnInit() {
+    this.tagsService.loadTags().subscribe();
+    this.accountsService.loadAll().subscribe();
+  }
 
   get operationOptions() {
     return [
