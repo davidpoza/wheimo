@@ -22,6 +22,7 @@ import java.security.MessageDigest;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +38,7 @@ public class TransactionService {
     private final RuleRepository ruleRepository;
     private final UserRepository userRepository;
     private final RecurrentTransactionLinkRepository recurrentLinkRepository;
+    private final AccountExceptionRepository accountExceptionRepository;
 
     @Transactional
     public TransactionDto create(Long userId, CreateTransactionRequest req) {
@@ -224,11 +226,24 @@ public class TransactionService {
 
         MovementType movementType = account.getMovementType() != null ? account.getMovementType() : MovementType.BOTH;
 
+        List<Pattern> exceptionPatterns = accountExceptionRepository.findByAccountId(account.getId()).stream()
+                .map(e -> {
+                    try {
+                        return Pattern.compile(e.getRegex(), Pattern.CASE_INSENSITIVE);
+                    } catch (Exception ex) {
+                        log.warn("Skipping invalid account exception regex '{}' for account {}: {}", e.getRegex(), account.getId(), ex.getMessage());
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .toList();
+
         List<Transaction> newTransactions = new ArrayList<>();
         for (SyncResultMessage.ImportedTransaction it : msg.getTransactions()) {
             if (transactionRepository.existsByImportId(it.getImportId())) continue;
             if (movementType == MovementType.INCOME && it.getAmount().signum() <= 0) continue;
             if (movementType == MovementType.EXPENSE && it.getAmount().signum() >= 0) continue;
+            if (matchesException(it.getDescription(), exceptionPatterns)) continue;
             Transaction t = Transaction.builder()
                     .importId(it.getImportId())
                     .amount(it.getAmount())
@@ -255,6 +270,11 @@ public class TransactionService {
             }
         }
         return newTransactions.size();
+    }
+
+    private boolean matchesException(String description, List<Pattern> patterns) {
+        if (description == null || patterns.isEmpty()) return false;
+        return patterns.stream().anyMatch(p -> p.matcher(description).find());
     }
 
     private Specification<Transaction> buildSpec(Long userId, TransactionFilterParams p) {

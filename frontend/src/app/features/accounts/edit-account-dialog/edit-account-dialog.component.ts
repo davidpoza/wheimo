@@ -1,12 +1,19 @@
-import { Component, inject, input, output, effect } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, inject, input, output, effect, signal } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { CheckboxModule } from 'primeng/checkbox';
+import { TabsModule } from 'primeng/tabs';
+import { TableModule } from 'primeng/table';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 import { AccountsService } from '../accounts.service';
+import { AccountExceptionsService } from '../account-exceptions.service';
 import { Account, MovementType } from '../../../core/models/account.model';
+import { AccountException } from '../../../core/models/account-exception.model';
 
 const BANK_OPTIONS = [
   { label: 'Nordigen (Open Banking)', value: 'nordigen' },
@@ -21,15 +28,32 @@ const MOVEMENT_TYPE_OPTIONS: { label: string; value: MovementType }[] = [
   { label: 'Salida', value: 'EXPENSE' },
 ];
 
+function validRegex(control: AbstractControl): ValidationErrors | null {
+  if (!control.value) return null;
+  try {
+    new RegExp(control.value);
+    return null;
+  } catch {
+    return { invalidRegex: true };
+  }
+}
+
 @Component({
   selector: 'app-edit-account-dialog',
   standalone: true,
-  imports: [ReactiveFormsModule, DialogModule, ButtonModule, InputTextModule, SelectModule, CheckboxModule],
+  imports: [
+    NgTemplateOutlet,
+    ReactiveFormsModule, DialogModule, ButtonModule, InputTextModule, SelectModule, CheckboxModule,
+    TabsModule, TableModule, ConfirmDialogModule,
+  ],
+  providers: [ConfirmationService],
   templateUrl: './edit-account-dialog.component.html',
 })
 export class EditAccountDialogComponent {
   private readonly fb = inject(FormBuilder);
   private readonly accountsService = inject(AccountsService);
+  private readonly exceptionsService = inject(AccountExceptionsService);
+  private readonly confirmationService = inject(ConfirmationService);
 
   visible = input<boolean>(false);
   account = input<Account | null>(null);
@@ -38,6 +62,10 @@ export class EditAccountDialogComponent {
 
   bankOptions = BANK_OPTIONS;
   movementTypeOptions = MOVEMENT_TYPE_OPTIONS;
+
+  exceptions = signal<AccountException[]>([]);
+  showExceptionForm = signal(false);
+  editingExceptionId = signal<number | null>(null);
 
   form = this.fb.group({
     name: ['', Validators.required],
@@ -51,12 +79,16 @@ export class EditAccountDialogComponent {
     movementType: ['BOTH' as MovementType],
   });
 
+  exceptionForm = this.fb.group({
+    regex: ['', [Validators.required, validRegex]],
+    description: [''],
+  });
+
   constructor() {
     effect(() => {
       const acc = this.account();
       if (acc) {
         const mt = acc.movementType ?? 'BOTH';
-        console.log('[EditAccount] effect patch — account.movementType:', acc.movementType, '→ patching with:', mt);
         this.form.patchValue({
           name: acc.name,
           description: acc.description,
@@ -66,9 +98,10 @@ export class EditAccountDialogComponent {
           keepBalance: acc.keepBalance ?? true,
           movementType: mt,
         });
-        console.log('[EditAccount] form.value after patch:', this.form.getRawValue());
+        this.loadExceptions();
       } else {
         this.form.reset({ bankId: 'manual', saving: false, keepBalance: true, movementType: 'BOTH' });
+        this.exceptions.set([]);
       }
     });
   }
@@ -84,7 +117,6 @@ export class EditAccountDialogComponent {
   save() {
     if (this.form.invalid) return;
     const v = this.form.getRawValue();
-    console.log('[EditAccount] save() — getRawValue():', v);
     const payload: Record<string, unknown> = {
       name: v.name,
       description: v.description,
@@ -96,7 +128,6 @@ export class EditAccountDialogComponent {
     };
     if (v.accessId) payload['accessId'] = v.accessId;
     if (v.accessPassword) payload['accessPassword'] = v.accessPassword;
-    console.log('[EditAccount] payload being sent:', payload);
 
     const obs = this.isEdit
       ? this.accountsService.update(this.account()!.id, payload as Partial<Account>)
@@ -110,5 +141,59 @@ export class EditAccountDialogComponent {
 
   close() {
     this.visibleChange.emit(false);
+  }
+
+  // --- Exceptions ---
+
+  private loadExceptions() {
+    const acc = this.account();
+    if (!acc) return;
+    this.exceptionsService.list(acc.id).subscribe((list) => this.exceptions.set(list));
+  }
+
+  newException() {
+    this.editingExceptionId.set(null);
+    this.exceptionForm.reset({ regex: '', description: '' });
+    this.showExceptionForm.set(true);
+  }
+
+  editException(exception: AccountException) {
+    this.editingExceptionId.set(exception.id);
+    this.exceptionForm.reset({ regex: exception.regex, description: exception.description ?? '' });
+    this.showExceptionForm.set(true);
+  }
+
+  saveException() {
+    if (this.exceptionForm.invalid) return;
+    const acc = this.account();
+    if (!acc) return;
+    const v = this.exceptionForm.getRawValue();
+    const payload = { regex: v.regex!, description: v.description || null };
+    const editingId = this.editingExceptionId();
+
+    const obs = editingId
+      ? this.exceptionsService.update(acc.id, editingId, payload)
+      : this.exceptionsService.create(acc.id, payload);
+
+    obs.subscribe({
+      next: () => {
+        this.showExceptionForm.set(false);
+        this.loadExceptions();
+      },
+      error: (err) => console.error('[EditAccount] save exception failed:', err),
+    });
+  }
+
+  deleteException(exception: AccountException) {
+    const acc = this.account();
+    if (!acc) return;
+    this.confirmationService.confirm({
+      message: '¿Eliminar esta excepción?',
+      header: 'Confirmar',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.exceptionsService.delete(acc.id, exception.id).subscribe(() => this.loadExceptions());
+      },
+    });
   }
 }

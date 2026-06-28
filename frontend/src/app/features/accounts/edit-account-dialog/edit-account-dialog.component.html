@@ -5,6 +5,61 @@
   [modal]="true"
   [style]="{ width: '480px' }"
 >
+  @if (isEdit) {
+    <p-tabs value="detalle">
+      <p-tablist>
+        <p-tab value="detalle">Detalle</p-tab>
+        <p-tab value="excepciones">Excepciones</p-tab>
+      </p-tablist>
+
+      <p-tabpanels>
+        <p-tabpanel value="detalle">
+          <ng-container *ngTemplateOutlet="detailForm" />
+        </p-tabpanel>
+
+        <p-tabpanel value="excepciones">
+          <div class="exceptions-toolbar">
+            <p-button label="New account exception" icon="pi pi-plus" (onClick)="newException()" />
+          </div>
+
+          <p-table [value]="exceptions()" styleClass="p-datatable-sm mt-2">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Regex</th>
+                <th>Descripción</th>
+                <th style="width: 6rem"></th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-exception>
+              <tr>
+                <td><code>{{ exception.regex }}</code></td>
+                <td>{{ exception.description }}</td>
+                <td>
+                  <p-button icon="pi pi-pencil" [text]="true" (onClick)="editException(exception)" />
+                  <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="deleteException(exception)" />
+                </td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="3">No hay excepciones definidas.</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </p-tabpanel>
+      </p-tabpanels>
+    </p-tabs>
+  } @else {
+    <ng-container *ngTemplateOutlet="detailForm" />
+  }
+
+  <ng-template pTemplate="footer">
+    <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="close()" />
+    <p-button label="Save" (onClick)="save()" [disabled]="form.invalid" />
+  </ng-template>
+</p-dialog>
+
+<ng-template #detailForm>
   <form [formGroup]="form" class="dialog-form">
     <div class="field">
       <label>Name *</label>
@@ -53,9 +108,34 @@
       <label for="saving">Savings account</label>
     </div>
   </form>
+</ng-template>
+
+<p-dialog
+  [header]="editingExceptionId() ? 'Edit Exception' : 'New Exception'"
+  [visible]="showExceptionForm()"
+  (visibleChange)="showExceptionForm.set($event)"
+  [modal]="true"
+  [style]="{ width: '420px' }"
+>
+  <form [formGroup]="exceptionForm" class="dialog-form">
+    <div class="field">
+      <label>Regex *</label>
+      <input pInputText formControlName="regex" class="w-full" placeholder="e.g. ^Comisión" />
+      @if (exceptionForm.get('regex')?.errors?.['invalidRegex'] && exceptionForm.get('regex')?.dirty) {
+        <small class="p-error">Expresión regular inválida</small>
+      }
+    </div>
+
+    <div class="field">
+      <label>Descripción</label>
+      <input pInputText formControlName="description" class="w-full" />
+    </div>
+  </form>
 
   <ng-template pTemplate="footer">
-    <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="close()" />
-    <p-button label="Save" (onClick)="save()" [disabled]="form.invalid" />
+    <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="showExceptionForm.set(false)" />
+    <p-button label="Save" (onClick)="saveException()" [disabled]="exceptionForm.invalid" />
   </ng-template>
 </p-dialog>
+
+<p-confirmDialog />
