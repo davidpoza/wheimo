@@ -75,6 +75,7 @@ export class RecurrentsListComponent implements OnInit {
     name: ['', Validators.required],
     establishment: ['', Validators.required],
     amount: [null as number | null],
+    units: [null as number | null],
     periodicityType: ['DAYS' as string],
     periodicity: [null as number | null],
     periodicityMonth: [null as number | null],
@@ -109,7 +110,7 @@ export class RecurrentsListComponent implements OnInit {
 
   save() {
     if (this.form.invalid) return;
-    const { name, establishment, amount, periodicityType, periodicity, periodicityMonth, link } = this.form.value;
+    const { name, establishment, amount, units, periodicityType, periodicity, periodicityMonth, link } = this.form.value;
     const editing = this.editingRecurrent();
 
     if (editing) {
@@ -131,6 +132,7 @@ export class RecurrentsListComponent implements OnInit {
         name: name!,
         establishment: establishment!,
         amount: amount ?? 0,
+        units: units ?? undefined,
         periodicityType: periodicityType ?? 'DAYS',
         periodicity: periodicityType === 'DAYS' ? (periodicity ?? undefined) : undefined,
         periodicityMonth: periodicityType === 'ANNUAL' ? (periodicityMonth ?? undefined) : undefined,

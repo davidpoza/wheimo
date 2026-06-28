@@ -26,6 +26,9 @@ public class RecurrentTransactionLink {
     @Column(name = "amount_snapshot", nullable = false, precision = 19, scale = 4)
     private BigDecimal amountSnapshot;
 
+    @Column(name = "units_snapshot", precision = 19, scale = 4)
+    private BigDecimal unitsSnapshot;
+
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;
 

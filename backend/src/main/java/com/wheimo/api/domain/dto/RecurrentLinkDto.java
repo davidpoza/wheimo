@@ -13,6 +13,7 @@ public class RecurrentLinkDto {
     private String name;
     private String establishment;
     private BigDecimal amountSnapshot;
+    private BigDecimal unitsSnapshot;
     private OffsetDateTime transactionDate;
     private BigDecimal transactionAmount;
 }

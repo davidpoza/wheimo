@@ -33,18 +33,31 @@ public class RecurrentService {
     private final RecurrentTransactionLinkRepository linkRepository;
     private final TransactionRepository transactionRepository;
 
-    public RecurrentDto create(String name, String establishment, BigDecimal amount,
+    @Transactional
+    public RecurrentDto create(String name, String establishment, BigDecimal amount, BigDecimal units,
                                Integer periodicity, String periodicityType, Integer periodicityMonth, String link) {
         Recurrent r = Recurrent.builder()
                 .name(name)
                 .establishment(establishment)
                 .amount(amount != null ? amount : BigDecimal.ZERO)
+                .units(units)
                 .periodicity(periodicity)
                 .periodicityType(periodicityType != null ? periodicityType : "DAYS")
                 .periodicityMonth(periodicityMonth)
                 .link(link)
                 .build();
-        return toDto(recurrentRepository.save(r));
+        Recurrent saved = recurrentRepository.save(r);
+        // Record the creation values as the initial price entry so they appear in the history and chart.
+        if (amount != null) {
+            RecurrentPriceEntry initial = RecurrentPriceEntry.builder()
+                    .recurrent(saved)
+                    .amount(saved.getAmount())
+                    .units(units)
+                    .recordedAt(saved.getCreatedAt())
+                    .build();
+            priceEntryRepository.save(initial);
+        }
+        return toDto(saved);
     }
 
     public List<RecurrentDto> findAll() {
@@ -96,16 +109,20 @@ public class RecurrentService {
     }
 
     @Transactional
-    public RecurrentPriceEntryDto addPriceEntry(Long recurrentId, BigDecimal amount, OffsetDateTime recordedAt) {
+    public RecurrentPriceEntryDto addPriceEntry(Long recurrentId, BigDecimal amount, BigDecimal units, OffsetDateTime recordedAt) {
         Recurrent r = recurrentRepository.findById(recurrentId)
                 .orElseThrow(() -> new NotFoundException("Recurrent not found"));
         RecurrentPriceEntry entry = RecurrentPriceEntry.builder()
                 .recurrent(r)
                 .amount(amount)
+                .units(units)
                 .recordedAt(recordedAt)
                 .build();
         entry = priceEntryRepository.save(entry);
         r.setAmount(amount);
+        if (units != null) {
+            r.setUnits(units);
+        }
         recurrentRepository.save(r);
         return toPriceDto(entry);
     }
@@ -136,6 +153,7 @@ public class RecurrentService {
                 .recurrent(recurrent)
                 .transaction(transaction)
                 .amountSnapshot(recurrent.getAmount())
+                .unitsSnapshot(recurrent.getUnits())
                 .build();
         linkRepository.save(link);
         return toLinkDto(link);
@@ -171,6 +189,7 @@ public class RecurrentService {
                 .id(r.getId())
                 .name(r.getName())
                 .amount(r.getAmount())
+                .units(r.getUnits())
                 .establishment(r.getEstablishment())
                 .periodicity(r.getPeriodicity())
                 .periodicityType(r.getPeriodicityType())
@@ -186,6 +205,7 @@ public class RecurrentService {
         return RecurrentPriceEntryDto.builder()
                 .id(e.getId())
                 .amount(e.getAmount())
+                .units(e.getUnits())
                 .recordedAt(e.getRecordedAt())
                 .build();
     }
@@ -197,6 +217,7 @@ public class RecurrentService {
                 .name(l.getRecurrent().getName())
                 .establishment(l.getRecurrent().getEstablishment())
                 .amountSnapshot(l.getAmountSnapshot())
+                .unitsSnapshot(l.getUnitsSnapshot())
                 .transactionDate(l.getTransaction().getDate())
                 .transactionAmount(l.getTransaction().getAmount())
                 .build();

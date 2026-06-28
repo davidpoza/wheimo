@@ -26,12 +26,13 @@ public class RecurrentController {
         String name = (String) body.get("name");
         String establishment = (String) body.get("establishment");
         BigDecimal amount = body.get("amount") != null ? new BigDecimal(body.get("amount").toString()) : null;
+        BigDecimal units = body.get("units") != null ? new BigDecimal(body.get("units").toString()) : null;
         Integer periodicity = body.get("periodicity") != null ? ((Number) body.get("periodicity")).intValue() : null;
         String periodicityType = (String) body.get("periodicityType");
         Integer periodicityMonth = body.get("periodicityMonth") != null ? ((Number) body.get("periodicityMonth")).intValue() : null;
         String link = (String) body.get("link");
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(recurrentService.create(name, establishment, amount, periodicity, periodicityType, periodicityMonth, link));
+                .body(recurrentService.create(name, establishment, amount, units, periodicity, periodicityType, periodicityMonth, link));
     }
 
     @GetMapping
@@ -58,10 +59,11 @@ public class RecurrentController {
     @PostMapping("/{id}/prices")
     public ResponseEntity<RecurrentPriceEntryDto> addPrice(@PathVariable Long id, @RequestBody Map<String, Object> body) {
         BigDecimal amount = new BigDecimal(body.get("amount").toString());
+        BigDecimal units = body.get("units") != null ? new BigDecimal(body.get("units").toString()) : null;
         OffsetDateTime recordedAt = body.get("recordedAt") != null
                 ? OffsetDateTime.parse((String) body.get("recordedAt"))
                 : null;
-        return ResponseEntity.status(HttpStatus.CREATED).body(recurrentService.addPriceEntry(id, amount, recordedAt));
+        return ResponseEntity.status(HttpStatus.CREATED).body(recurrentService.addPriceEntry(id, amount, units, recordedAt));
     }
 
     @GetMapping("/{id}/prices")

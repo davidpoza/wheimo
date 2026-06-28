@@ -37,13 +37,18 @@ export class RecurrentsService {
     );
   }
 
-  addPriceEntry(recurrentId: number, amount: number, recordedAt?: string) {
-    const body: { amount: number; recordedAt?: string } = { amount };
+  addPriceEntry(recurrentId: number, amount: number, units?: number | null, recordedAt?: string) {
+    const body: { amount: number; units?: number; recordedAt?: string } = { amount };
+    if (units != null) body.units = units;
     if (recordedAt) body.recordedAt = recordedAt;
     return this.http.post<RecurrentPriceEntry>(`${this.baseUrl}/${recurrentId}/prices`, body).pipe(
       tap((entry) => {
         this.recurrents.update((list) =>
-          list.map((r) => (r.id === recurrentId ? { ...r, amount: entry.amount } : r)),
+          list.map((r) =>
+            r.id === recurrentId
+              ? { ...r, amount: entry.amount, units: entry.units != null ? entry.units : r.units }
+              : r,
+          ),
         );
       }),
     );

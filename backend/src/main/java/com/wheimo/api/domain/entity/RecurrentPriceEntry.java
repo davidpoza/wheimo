@@ -22,6 +22,8 @@ public class RecurrentPriceEntry {
     @Column(nullable = false)
     private BigDecimal amount;
 
+    private BigDecimal units;
+
     @Column(name = "recorded_at", nullable = false)
     private OffsetDateTime recordedAt;
 

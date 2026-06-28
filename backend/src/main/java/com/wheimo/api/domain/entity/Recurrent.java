@@ -21,6 +21,8 @@ public class Recurrent {
     @Builder.Default
     private BigDecimal amount = BigDecimal.ZERO;
 
+    private BigDecimal units;
+
     @Column(nullable = false)
     private String establishment;
 

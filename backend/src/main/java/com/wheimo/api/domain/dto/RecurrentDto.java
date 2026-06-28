@@ -11,6 +11,7 @@ public class RecurrentDto {
     private Long id;
     private String name;
     private BigDecimal amount;
+    private BigDecimal units;
     private String establishment;
     private Integer periodicity;
     private String periodicityType;

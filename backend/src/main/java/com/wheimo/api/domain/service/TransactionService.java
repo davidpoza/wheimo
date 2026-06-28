@@ -422,14 +422,17 @@ public class TransactionService {
                         .name(l.getRecurrent().getName())
                         .establishment(l.getRecurrent().getEstablishment())
                         .amountSnapshot(l.getAmountSnapshot().negate())
+                        .unitsSnapshot(l.getUnitsSnapshot())
                         .transactionDate(t.getDate())
                         .transactionAmount(t.getAmount())
                         .build())
                 .toList();
         BigDecimal recurrentsTotal = recurrentLinks.stream()
-                .map(RecurrentLinkDto::getAmountSnapshot)
+                .map(l -> l.getUnitsSnapshot() != null
+                        ? l.getAmountSnapshot().multiply(l.getUnitsSnapshot())
+                        : l.getAmountSnapshot())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        BigDecimal recurrentsDiff = t.getAmount() != null ? t.getAmount().subtract(recurrentsTotal) : BigDecimal.ZERO;
+        BigDecimal recurrentsDiff = t.getAmount() != null ? recurrentsTotal.subtract(t.getAmount()) : BigDecimal.ZERO;
 
         return TransactionDto.builder()
                 .id(t.getId())

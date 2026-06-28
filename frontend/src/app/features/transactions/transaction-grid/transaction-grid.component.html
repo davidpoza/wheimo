@@ -102,7 +102,9 @@
               <tr>
                 <th>Artículo recurrente</th>
                 <th>Establecimiento</th>
-                <th>Importe (snapshot)</th>
+                <th class="amount-col">Precio unit.</th>
+                <th class="amount-col">Unidades</th>
+                <th class="amount-col">Total</th>
                 <th></th>
               </tr>
             </thead>
@@ -112,6 +114,16 @@
                   <td>{{ link.name }}</td>
                   <td class="muted">{{ link.establishment }}</td>
                   <td class="amount-col">{{ link.amountSnapshot | currency: tx.currency : 'symbol' : '1.2-2' }}</td>
+                  <td class="amount-col">
+                    @if (link.unitsSnapshot != null) {
+                      {{ link.unitsSnapshot }}
+                    } @else {
+                      <span class="muted">—</span>
+                    }
+                  </td>
+                  <td class="amount-col">
+                    {{ (link.unitsSnapshot != null ? link.amountSnapshot * link.unitsSnapshot : link.amountSnapshot) | currency: tx.currency : 'symbol' : '1.2-2' }}
+                  </td>
                   <td>
                     <p-button
                       icon="pi pi-times"
@@ -126,12 +138,12 @@
             </tbody>
             <tfoot>
               <tr class="total-row">
-                <td colspan="2"><strong>Total recurrentes</strong></td>
+                <td colspan="4"><strong>Total recurrentes</strong></td>
                 <td class="amount-col"><strong>{{ tx.recurrentsTotal | currency: tx.currency : 'symbol' : '1.2-2' }}</strong></td>
                 <td></td>
               </tr>
               <tr class="diff-row" [class.diff-negative]="tx.recurrentsDiff < 0" [class.diff-positive]="tx.recurrentsDiff > 0">
-                <td colspan="2"><strong>Diferencia</strong></td>
+                <td colspan="4"><strong>Diferencia</strong></td>
                 <td class="amount-col"><strong>{{ tx.recurrentsDiff | currency: tx.currency : 'symbol' : '1.2-2' }}</strong></td>
                 <td></td>
               </tr>

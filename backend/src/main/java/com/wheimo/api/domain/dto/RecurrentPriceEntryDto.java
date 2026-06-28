@@ -10,5 +10,6 @@ import java.time.OffsetDateTime;
 public class RecurrentPriceEntryDto {
     private Long id;
     private BigDecimal amount;
+    private BigDecimal units;
     private OffsetDateTime recordedAt;
 }
