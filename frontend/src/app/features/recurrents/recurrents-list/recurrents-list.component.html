@@ -1,18 +1,18 @@
 <div class="recurrents-header">
-  <h2>Artículos Recurrentes</h2>
-  <p-button label="Nuevo artículo" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="openCreate()" />
+  <h2>{{ 'recurrents.list.title' | transloco }}</h2>
+  <p-button [label]="'recurrents.list.new' | transloco" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="openCreate()" />
 </div>
 
 <div class="recurrents-table">
   <p-table [value]="recurrents()" styleClass="p-datatable-sm" [rowHover]="true">
     <ng-template pTemplate="header">
       <tr>
-        <th>Nombre</th>
-        <th>Establecimiento</th>
-        <th>Periodicidad</th>
-        <th>Precio actual</th>
-        <th>Coste total</th>
-        <th>Link</th>
+        <th>{{ 'recurrents.list.col.name' | transloco }}</th>
+        <th>{{ 'recurrents.list.col.establishment' | transloco }}</th>
+        <th>{{ 'recurrents.list.col.periodicity' | transloco }}</th>
+        <th>{{ 'recurrents.list.col.currentPrice' | transloco }}</th>
+        <th>{{ 'recurrents.list.col.totalCost' | transloco }}</th>
+        <th>{{ 'recurrents.list.col.link' | transloco }}</th>
         <th></th>
       </tr>
     </ng-template>
@@ -40,17 +40,17 @@
           }
         </td>
         <td class="actions">
-          <p-button icon="pi pi-link" [text]="true" severity="success" pTooltip="Asignar transacción" (onClick)="openAssign(r)" />
-          <p-button icon="pi pi-chart-line" [text]="true" severity="info" pTooltip="Historial de precios" (onClick)="openHistory(r)" />
-          <p-button icon="pi pi-pencil" [text]="true" severity="secondary" pTooltip="Editar" (onClick)="openEdit(r)" />
-          <p-button icon="pi pi-trash" [text]="true" severity="danger" pTooltip="Eliminar" (onClick)="delete(r)" />
+          <p-button icon="pi pi-link" [text]="true" severity="success" [pTooltip]="'recurrents.list.tooltip.assign' | transloco" (onClick)="openAssign(r)" />
+          <p-button icon="pi pi-chart-line" [text]="true" severity="info" [pTooltip]="'recurrents.list.tooltip.history' | transloco" (onClick)="openHistory(r)" />
+          <p-button icon="pi pi-pencil" [text]="true" severity="secondary" [pTooltip]="'recurrents.list.tooltip.edit' | transloco" (onClick)="openEdit(r)" />
+          <p-button icon="pi pi-trash" [text]="true" severity="danger" [pTooltip]="'recurrents.list.tooltip.delete' | transloco" (onClick)="delete(r)" />
         </td>
       </tr>
     </ng-template>
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="7" class="empty-msg">No hay artículos recurrentes. Crea uno para empezar.</td>
+        <td colspan="7" class="empty-msg">{{ 'recurrents.list.empty' | transloco }}</td>
       </tr>
     </ng-template>
   </p-table>
@@ -58,7 +58,7 @@
 
 <!-- Create / Edit dialog -->
 <p-dialog
-  [header]="isEdit ? 'Editar artículo' : 'Nuevo artículo'"
+  [header]="(isEdit ? 'recurrents.list.dialog.editHeader' : 'recurrents.list.new') | transloco"
   [visible]="dialogVisible()"
   (visibleChange)="dialogVisible.set($event)"
   [modal]="true"
@@ -66,48 +66,48 @@
 >
   <form [formGroup]="form" class="dialog-form">
     <div class="field">
-      <label>Nombre *</label>
-      <input pInputText formControlName="name" class="w-full" placeholder="Ej. Suscripción Netflix" />
+      <label>{{ 'recurrents.list.form.name' | transloco }}</label>
+      <input pInputText formControlName="name" class="w-full" [placeholder]="'recurrents.list.form.namePlaceholder' | transloco" />
     </div>
     <div class="field">
-      <label>Establecimiento *</label>
-      <input pInputText formControlName="establishment" class="w-full" placeholder="Ej. Netflix" />
+      <label>{{ 'recurrents.list.form.establishment' | transloco }}</label>
+      <input pInputText formControlName="establishment" class="w-full" [placeholder]="'recurrents.list.form.establishmentPlaceholder' | transloco" />
     </div>
     @if (!isEdit) {
       <div class="field">
-        <label>Precio inicial (€)</label>
+        <label>{{ 'recurrents.list.form.initialPrice' | transloco }}</label>
         <p-inputnumber formControlName="amount" mode="decimal" [minFractionDigits]="2" class="w-full" />
       </div>
       <div class="field">
-        <label>Unidades (opcional)</label>
+        <label>{{ 'recurrents.list.form.units' | transloco }}</label>
         <p-inputnumber formControlName="units" mode="decimal" [maxFractionDigits]="3" class="w-full" />
       </div>
     }
     <div class="field">
-      <label>Tipo de periodicidad</label>
+      <label>{{ 'recurrents.list.form.periodicityType' | transloco }}</label>
       <p-select formControlName="periodicityType" [options]="periodicityTypes" optionLabel="label" optionValue="value" class="w-full" appendTo="body" />
     </div>
     @if (!isAnnual) {
       <div class="field">
-        <label>Periodicidad (días)</label>
-        <p-inputnumber formControlName="periodicity" [useGrouping]="false" class="w-full" placeholder="Ej. 30" />
+        <label>{{ 'recurrents.list.form.periodicityDays' | transloco }}</label>
+        <p-inputnumber formControlName="periodicity" [useGrouping]="false" class="w-full" [placeholder]="'recurrents.list.form.periodicityDaysPlaceholder' | transloco" />
       </div>
     }
     @if (isAnnual) {
       <div class="field">
-        <label>Mes de pago</label>
-        <p-select formControlName="periodicityMonth" [options]="months" optionLabel="label" optionValue="value" class="w-full" appendTo="body" placeholder="Selecciona un mes" />
+        <label>{{ 'recurrents.list.form.paymentMonth' | transloco }}</label>
+        <p-select formControlName="periodicityMonth" [options]="months" optionLabel="label" optionValue="value" class="w-full" appendTo="body" [placeholder]="'recurrents.list.form.selectMonth' | transloco" />
       </div>
     }
     <div class="field">
-      <label>Link</label>
+      <label>{{ 'recurrents.list.form.link' | transloco }}</label>
       <input pInputText formControlName="link" class="w-full" placeholder="https://..." />
     </div>
   </form>
 
   <ng-template pTemplate="footer">
-    <p-button label="Cancelar" [text]="true" severity="secondary" (onClick)="dialogVisible.set(false)" />
-    <p-button [label]="isEdit ? 'Guardar' : 'Crear'" (onClick)="save()" [disabled]="form.invalid" />
+    <p-button [label]="'recurrents.list.cancel' | transloco" [text]="true" severity="secondary" (onClick)="dialogVisible.set(false)" />
+    <p-button [label]="(isEdit ? 'recurrents.list.save' : 'recurrents.list.create') | transloco" (onClick)="save()" [disabled]="form.invalid" />
   </ng-template>
 </p-dialog>
 

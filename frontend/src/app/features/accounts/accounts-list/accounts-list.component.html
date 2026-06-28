@@ -1,6 +1,6 @@
 <div class="accounts-header">
-  <h2>Accounts</h2>
-  <p-button label="Add Account" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="openCreate()" />
+  <h2>{{ 'accounts.list.title' | transloco }}</h2>
+  <p-button [label]="'accounts.list.addAccount' | transloco" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="openCreate()" />
 </div>
 
 <input #xlsInput type="file" accept=".xls" style="display:none" (change)="onXlsFileSelected($event)" />
@@ -24,10 +24,10 @@
       </div>
 
       <div class="account-actions">
-        <p-button icon="pi pi-upload" [text]="true" severity="secondary" (onClick)="openXlsImport(account)" pTooltip="Import XLS" />
-        <p-button icon="pi pi-refresh" [text]="true" severity="info" (onClick)="resync(account)" pTooltip="Resync" />
-        <p-button icon="pi pi-pencil" [text]="true" (onClick)="openEdit(account)" pTooltip="Edit" />
-        <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="delete(account)" pTooltip="Delete" />
+        <p-button icon="pi pi-upload" [text]="true" severity="secondary" (onClick)="openXlsImport(account)" [pTooltip]="'accounts.list.tooltip.import' | transloco" />
+        <p-button icon="pi pi-refresh" [text]="true" severity="info" (onClick)="resync(account)" [pTooltip]="'accounts.list.tooltip.resync' | transloco" />
+        <p-button icon="pi pi-pencil" [text]="true" (onClick)="openEdit(account)" [pTooltip]="'accounts.list.tooltip.edit' | transloco" />
+        <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="delete(account)" [pTooltip]="'accounts.list.tooltip.delete' | transloco" />
       </div>
     </p-card>
   }

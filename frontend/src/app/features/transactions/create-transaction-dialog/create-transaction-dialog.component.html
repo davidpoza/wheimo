@@ -1,5 +1,5 @@
 <p-dialog
-  header="New Transaction"
+  [header]="'transactions.create.header' | transloco"
   [visible]="visible()"
   (visibleChange)="visibleChange.emit($event)"
   [modal]="true"
@@ -7,33 +7,33 @@
 >
   <form [formGroup]="form" class="dialog-form">
     <div class="field">
-      <label>Account *</label>
+      <label>{{ 'transactions.create.account' | transloco }}</label>
       <p-select formControlName="accountId" [options]="accountsService.accounts()" optionLabel="name" optionValue="id" class="w-full" appendTo="body" />
     </div>
     <div class="field">
-      <label>Amount *</label>
+      <label>{{ 'transactions.create.amount' | transloco }}</label>
       <p-inputnumber formControlName="amount" mode="decimal" [minFractionDigits]="2" class="w-full" />
     </div>
     <div class="field">
-      <label>Currency</label>
+      <label>{{ 'transactions.create.currency' | transloco }}</label>
       <input pInputText formControlName="currency" class="w-full" />
     </div>
     <div class="field">
-      <label>Date *</label>
+      <label>{{ 'transactions.create.date' | transloco }}</label>
       <p-datepicker formControlName="date" dateFormat="dd/mm/yy" [showTime]="true" class="w-full" appendTo="body" />
     </div>
     <div class="field">
-      <label>Value Date *</label>
+      <label>{{ 'transactions.create.valueDate' | transloco }}</label>
       <p-datepicker formControlName="valueDate" dateFormat="dd/mm/yy" class="w-full" appendTo="body" />
     </div>
     <div class="field">
-      <label>Description</label>
+      <label>{{ 'transactions.create.description' | transloco }}</label>
       <input pInputText formControlName="description" class="w-full" />
     </div>
   </form>
 
   <ng-template pTemplate="footer">
-    <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="close()" />
-    <p-button label="Create" (onClick)="save()" [disabled]="form.invalid" />
+    <p-button [label]="'common.cancel' | transloco" [text]="true" severity="secondary" (onClick)="close()" />
+    <p-button [label]="'transactions.create.create' | transloco" (onClick)="save()" [disabled]="form.invalid" />
   </ng-template>
 </p-dialog>

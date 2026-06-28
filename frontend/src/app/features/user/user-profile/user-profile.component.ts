@@ -5,6 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { PasswordModule } from 'primeng/password';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AuthService } from '../../../core/services/auth.service';
 
 function passwordsMatch(control: AbstractControl): ValidationErrors | null {
@@ -16,7 +17,7 @@ function passwordsMatch(control: AbstractControl): ValidationErrors | null {
 @Component({
   selector: 'app-user-profile',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonModule, DialogModule, PasswordModule, ToastModule],
+  imports: [ReactiveFormsModule, ButtonModule, DialogModule, PasswordModule, ToastModule, TranslocoModule],
   providers: [MessageService],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.scss',
@@ -25,6 +26,7 @@ export class UserProfileComponent {
   readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly messageService = inject(MessageService);
+  private readonly transloco = inject(TranslocoService);
 
   changePasswordVisible = signal(false);
   saving = signal(false);
@@ -66,13 +68,13 @@ export class UserProfileComponent {
     this.saving.set(true);
     this.authService.changePassword(currentPassword!, newPassword!).subscribe({
       next: () => {
-        this.messageService.add({ severity: 'success', summary: 'Contraseña actualizada', life: 3000 });
+        this.messageService.add({ severity: 'success', summary: this.transloco.translate('user.profile.toast.updated'), life: 3000 });
         this.closeChangePassword();
         this.saving.set(false);
       },
       error: (err) => {
-        const msg = err.error?.error ?? 'Error al cambiar la contraseña';
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: msg, life: 5000 });
+        const msg = err.error?.error ?? this.transloco.translate('user.profile.toast.error');
+        this.messageService.add({ severity: 'error', summary: this.transloco.translate('common.error'), detail: msg, life: 5000 });
         this.saving.set(false);
       },
     });

@@ -1,9 +1,9 @@
 <div class="rules-toolbar">
-  <p-button label="New Rule" icon="pi pi-plus" (onClick)="showForm.set(!showForm())" />
+  <p-button [label]="'tags.rules.newRule' | transloco" icon="pi pi-plus" (onClick)="showForm.set(!showForm())" />
 </div>
 
 <p-dialog
-  header="New Rule"
+  [header]="'tags.rules.newRule' | transloco"
   [visible]="showForm()"
   (visibleChange)="showForm.set($event)"
   [modal]="true"
@@ -11,41 +11,41 @@
 >
   <form [formGroup]="form" (ngSubmit)="createRule()" class="rule-form">
     <div class="field">
-      <label>Name *</label>
-      <input pInputText formControlName="name" placeholder="Rule name" class="w-full" />
+      <label>{{ 'tags.rules.form.name' | transloco }}</label>
+      <input pInputText formControlName="name" [placeholder]="'tags.rules.form.namePlaceholder' | transloco" class="w-full" />
     </div>
     <div class="field">
-      <label>Type *</label>
+      <label>{{ 'tags.rules.form.type' | transloco }}</label>
       <p-select formControlName="type" [options]="ruleTypes" optionLabel="label" optionValue="value" class="w-full" appendTo="body" />
     </div>
     @if (selectedType !== 'isExpense' && selectedType !== 'isReceipt') {
       <div class="field">
-        <label>Value</label>
-        <input pInputText formControlName="value" placeholder="e.g. Mercadona|Lidl or gt10;lt50" class="w-full" />
+        <label>{{ 'tags.rules.form.value' | transloco }}</label>
+        <input pInputText formControlName="value" [placeholder]="'tags.rules.form.valuePlaceholder' | transloco" class="w-full" />
         @if (form.get('value')?.errors?.['invalidRegex'] && form.get('value')?.dirty) {
-          <small class="p-error">Expresión regular inválida</small>
+          <small class="p-error">{{ 'tags.rules.error.invalidRegex' | transloco }}</small>
         }
       </div>
     }
     <div class="field">
-      <label>Tags to apply</label>
-      <p-multiselect formControlName="tagIds" [options]="tags()" optionLabel="name" optionValue="id" placeholder="Select tags" class="w-full" appendTo="body" />
+      <label>{{ 'tags.rules.form.tagsToApply' | transloco }}</label>
+      <p-multiselect formControlName="tagIds" [options]="tags()" optionLabel="name" optionValue="id" [placeholder]="'common.selectTags' | transloco" class="w-full" appendTo="body" />
     </div>
   </form>
 
   <ng-template pTemplate="footer">
-    <p-button type="button" label="Cancel" [text]="true" severity="secondary" (onClick)="showForm.set(false)" />
-    <p-button label="Create" [disabled]="form.invalid" (onClick)="createRule()" />
+    <p-button type="button" [label]="'common.cancel' | transloco" [text]="true" severity="secondary" (onClick)="showForm.set(false)" />
+    <p-button [label]="'tags.rules.create' | transloco" [disabled]="form.invalid" (onClick)="createRule()" />
   </ng-template>
 </p-dialog>
 
 <p-table [value]="rules()" styleClass="p-datatable-sm mt-2">
   <ng-template pTemplate="header">
     <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Value</th>
-      <th>Tags</th>
+      <th>{{ 'tags.rules.col.name' | transloco }}</th>
+      <th>{{ 'tags.rules.col.type' | transloco }}</th>
+      <th>{{ 'tags.rules.col.value' | transloco }}</th>
+      <th>{{ 'tags.rules.col.tags' | transloco }}</th>
       <th style="width: 4rem"></th>
     </tr>
   </ng-template>

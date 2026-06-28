@@ -9,6 +9,7 @@ import { TableModule } from 'primeng/table';
 import { ChartModule } from 'primeng/chart';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { RecurrentsService } from '../recurrents.service';
 import { Recurrent, RecurrentPriceEntry } from '../../../core/models/recurrent.model';
 
@@ -18,7 +19,7 @@ import { Recurrent, RecurrentPriceEntry } from '../../../core/models/recurrent.m
   imports: [
     CurrencyPipe, DatePipe,
     ReactiveFormsModule,
-    ButtonModule, DialogModule, InputNumberModule, DatePickerModule, TableModule, ChartModule, ToastModule,
+    ButtonModule, DialogModule, InputNumberModule, DatePickerModule, TableModule, ChartModule, ToastModule, TranslocoModule,
   ],
   providers: [MessageService],
   templateUrl: './price-history-dialog.component.html',
@@ -37,6 +38,7 @@ export class PriceHistoryDialogComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly recurrentsService = inject(RecurrentsService);
   private readonly messageService = inject(MessageService);
+  private readonly transloco = inject(TranslocoService);
 
   recurrent = input.required<Recurrent>();
   close = output<void>();
@@ -55,12 +57,12 @@ export class PriceHistoryDialogComponent implements OnInit {
       y: {
         type: 'linear',
         position: 'left',
-        title: { display: true, text: 'Precio (€)' },
+        title: { display: true, text: this.transloco.translate('recurrents.priceHistory.chart.priceAxis') },
       },
       y1: {
         type: 'linear',
         position: 'right',
-        title: { display: true, text: 'Unidades' },
+        title: { display: true, text: this.transloco.translate('recurrents.priceHistory.chart.unitsAxis') },
         grid: { drawOnChartArea: false },
       },
     },
@@ -96,7 +98,7 @@ export class PriceHistoryDialogComponent implements OnInit {
 
     const datasets: any[] = [
       {
-        label: 'Precio',
+        label: this.transloco.translate('recurrents.priceHistory.chart.price'),
         data: ordered.map((e) => e.amount),
         borderColor: '#6366f1',
         backgroundColor: 'rgba(99,102,241,0.1)',
@@ -108,7 +110,7 @@ export class PriceHistoryDialogComponent implements OnInit {
     const hasUnits = ordered.some((e) => e.units != null);
     if (hasUnits) {
       datasets.push({
-        label: 'Unidades',
+        label: this.transloco.translate('recurrents.priceHistory.chart.units'),
         data: ordered.map((e) => e.units),
         borderColor: '#10b981',
         backgroundColor: 'rgba(16,185,129,0.1)',
@@ -130,7 +132,7 @@ export class PriceHistoryDialogComponent implements OnInit {
         this.form.reset();
         this.addFormVisible.set(false);
         this.loadHistory();
-        this.messageService.add({ severity: 'success', summary: 'Precio registrado' });
+        this.messageService.add({ severity: 'success', summary: this.transloco.translate('recurrents.priceHistory.toast.saved') });
       },
     });
   }

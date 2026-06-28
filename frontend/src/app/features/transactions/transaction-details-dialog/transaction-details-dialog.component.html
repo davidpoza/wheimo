@@ -1,5 +1,5 @@
 <p-dialog
-  header="Transaction Detail"
+  [header]="'transactions.details.header' | transloco"
   [visible]="visible()"
   (visibleChange)="visibleChange.emit($event)"
   [modal]="true"
@@ -8,9 +8,9 @@
   @if (localTransaction(); as tx) {
     <p-tabs value="0">
       <p-tablist>
-        <p-tab value="0">Details</p-tab>
+        <p-tab value="0">{{ 'transactions.details.tab.details' | transloco }}</p-tab>
         <p-tab value="1">
-          Attachments
+          {{ 'transactions.details.tab.attachments' | transloco }}
           @if (tx.attachments.length > 0) {
             <span class="att-badge">{{ tx.attachments.length }}</span>
           }
@@ -33,43 +33,43 @@
             <div class="info-section">
               @if (tx.emitterName) {
                 <div class="info-row">
-                  <span class="info-label">From</span>
+                  <span class="info-label">{{ 'transactions.details.from' | transloco }}</span>
                   <span class="info-value">{{ tx.emitterName }}</span>
                 </div>
               }
               @if (tx.receiverName) {
                 <div class="info-row">
-                  <span class="info-label">To</span>
+                  <span class="info-label">{{ 'transactions.details.to' | transloco }}</span>
                   <span class="info-value">{{ tx.receiverName }}</span>
                 </div>
               }
               @if (tx.description) {
                 <div class="info-row">
-                  <span class="info-label">Description</span>
+                  <span class="info-label">{{ 'transactions.details.description' | transloco }}</span>
                   <span class="info-value">{{ tx.description }}</span>
                 </div>
               }
               <div class="info-row">
-                <span class="info-label">Balance</span>
+                <span class="info-label">{{ 'transactions.details.balance' | transloco }}</span>
                 <span class="info-value">{{ tx.balance | currency: tx.currency : 'symbol' : '1.2-2' }}</span>
               </div>
             </div>
 
             <!-- Editable fields -->
             <div class="field">
-              <label>Comments</label>
+              <label>{{ 'transactions.details.comments' | transloco }}</label>
               <textarea pTextarea [ngModel]="comments()" (ngModelChange)="comments.set($event)" rows="3" class="w-full"></textarea>
             </div>
 
             <div class="field">
-              <label>Tags</label>
+              <label>{{ 'transactions.details.tags' | transloco }}</label>
               <p-multiselect
                 [ngModel]="selectedTagIds()"
                 (ngModelChange)="selectedTagIds.set($event)"
                 [options]="allTags"
                 optionLabel="name"
                 optionValue="id"
-                placeholder="Select tags"
+                [placeholder]="'common.selectTags' | transloco"
                 class="w-full"
                 appendTo="body"
               />
@@ -83,7 +83,7 @@
             @if (tx.attachments.length === 0) {
               <div class="att-empty">
                 <i class="pi pi-paperclip att-empty-icon"></i>
-                <span>No attachments yet</span>
+                <span>{{ 'transactions.details.noAttachments' | transloco }}</span>
               </div>
             } @else {
               <div class="att-grid">
@@ -124,7 +124,7 @@
               accept="image/*,application/pdf"
               [multiple]="true"
               [auto]="false"
-              chooseLabel="Attach files"
+              [chooseLabel]="'transactions.details.attachFiles' | transloco"
               chooseIcon="pi pi-paperclip"
               (onSelect)="onFilesSelected($event)"
               styleClass="mt-2"
@@ -136,19 +136,19 @@
   }
 
   <ng-template pTemplate="footer">
-    <p-button label="Close" [text]="true" severity="secondary" (onClick)="close()" />
-    <p-button label="Save" (onClick)="save()" />
+    <p-button [label]="'common.close' | transloco" [text]="true" severity="secondary" (onClick)="close()" />
+    <p-button [label]="'common.save' | transloco" (onClick)="save()" />
   </ng-template>
 </p-dialog>
 
 <p-dialog
-  header="Image Preview"
+  [header]="'transactions.details.imagePreview' | transloco"
   [visible]="!!previewImageUrl()"
   (visibleChange)="!$event && closeImagePreview()"
   [modal]="true"
   [style]="{ width: 'auto', maxWidth: '90vw' }"
 >
   @if (previewImageUrl(); as url) {
-    <img [src]="url" alt="Attachment preview" style="max-width: 80vw; max-height: 80vh; display: block;" />
+    <img [src]="url" [alt]="'transactions.details.attachmentPreview' | transloco" style="max-width: 80vw; max-height: 80vh; display: block;" />
   }
 </p-dialog>

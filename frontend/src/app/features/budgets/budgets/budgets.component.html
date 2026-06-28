@@ -1,6 +1,6 @@
 <div class="budgets-header">
-  <h2>Budgets</h2>
-  <p-button label="New Budget" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="dialogVisible.set(true)" />
+  <h2>{{ 'budgets.title' | transloco }}</h2>
+  <p-button [label]="'budgets.new' | transloco" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="dialogVisible.set(true)" />
 </div>
 
 <div class="budgets-list">
@@ -9,7 +9,7 @@
       <div class="budget-top">
         <div class="budget-info">
           <span class="budget-tag">{{ status.budget.tag.name }}</span>
-          <span class="budget-period">This month</span>
+          <span class="budget-period">{{ 'budgets.thisMonth' | transloco }}</span>
         </div>
         <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="deleteBudget(status.budget.id)" />
       </div>
@@ -31,18 +31,20 @@
       />
 
       <span class="remaining" [class.over]="status.over">
-        {{ status.over ? ((-status.remaining) | currency: 'EUR') + ' over budget' : (status.remaining | currency: 'EUR') + ' remaining' }}
+        {{ status.over
+          ? ('budgets.overBudget' | transloco: { amount: ((-status.remaining) | currency: 'EUR') })
+          : ('budgets.remaining' | transloco: { amount: (status.remaining | currency: 'EUR') }) }}
       </span>
     </div>
   }
 
   @if (statuses().length === 0) {
-    <div class="empty">No budgets yet. Create one to track your spending.</div>
+    <div class="empty">{{ 'budgets.empty' | transloco }}</div>
   }
 </div>
 
 <p-dialog
-  header="New Budget"
+  [header]="'budgets.new' | transloco"
   [visible]="dialogVisible()"
   (visibleChange)="dialogVisible.set($event)"
   [modal]="true"
@@ -50,18 +52,18 @@
 >
   <form [formGroup]="form" class="dialog-form">
     <div class="field">
-      <label>Tag *</label>
-      <p-select formControlName="tagId" [options]="tags()" optionLabel="name" optionValue="id" placeholder="Select tag" class="w-full" />
+      <label>{{ 'budgets.form.tag' | transloco }}</label>
+      <p-select formControlName="tagId" [options]="tags()" optionLabel="name" optionValue="id" [placeholder]="'budgets.selectTag' | transloco" class="w-full" />
     </div>
     <div class="field">
-      <label>Monthly Amount (€) *</label>
+      <label>{{ 'budgets.form.monthlyAmount' | transloco }}</label>
       <p-inputnumber formControlName="value" mode="decimal" [minFractionDigits]="2" class="w-full" />
     </div>
   </form>
 
   <ng-template pTemplate="footer">
-    <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="dialogVisible.set(false)" />
-    <p-button label="Create" (onClick)="createBudget()" [disabled]="form.invalid" />
+    <p-button [label]="'common.cancel' | transloco" [text]="true" severity="secondary" (onClick)="dialogVisible.set(false)" />
+    <p-button [label]="'budgets.create' | transloco" (onClick)="createBudget()" [disabled]="form.invalid" />
   </ng-template>
 </p-dialog>
 

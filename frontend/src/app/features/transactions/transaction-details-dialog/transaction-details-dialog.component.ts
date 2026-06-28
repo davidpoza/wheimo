@@ -9,6 +9,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TagModule } from 'primeng/tag';
 import { FileUploadModule } from 'primeng/fileupload';
 import { TabsModule } from 'primeng/tabs';
+import { TranslocoModule } from '@jsverse/transloco';
 import { TransactionsService } from '../transactions.service';
 import { AttachmentService } from '../attachment.service';
 import { TagsService } from '../../tags/tags.service';
@@ -22,6 +23,7 @@ import { Attachment } from '../../../core/models/attachment.model';
     CurrencyPipe, DatePipe, FormsModule,
     DialogModule, ButtonModule, InputTextModule, TextareaModule,
     MultiSelectModule, TagModule, FileUploadModule, TabsModule,
+    TranslocoModule,
   ],
   templateUrl: './transaction-details-dialog.component.html',
   styleUrl: './transaction-details-dialog.component.scss',

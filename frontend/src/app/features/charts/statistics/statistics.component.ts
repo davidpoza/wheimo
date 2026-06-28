@@ -1,44 +1,45 @@
 import { Component, inject, input, effect, signal } from '@angular/core';
 import { CurrencyPipe, DatePipe } from '@angular/common';
+import { TranslocoModule } from '@jsverse/transloco';
 import { ChartsService, Statistics } from '../charts.service';
 
 @Component({
   selector: 'app-statistics',
   standalone: true,
-  imports: [CurrencyPipe, DatePipe],
+  imports: [CurrencyPipe, DatePipe, TranslocoModule],
   template: `
-    <h3>Statistics</h3>
+    <h3>{{ 'charts.statistics.title' | transloco }}</h3>
     @if (stats(); as s) {
       <div class="stats-grid">
         <div class="stat">
-          <span class="stat-label">Total Income</span>
+          <span class="stat-label">{{ 'charts.statistics.totalIncome' | transloco }}</span>
           <span class="stat-value income">{{ s.totalIncome | currency: 'EUR' }}</span>
         </div>
         <div class="stat">
-          <span class="stat-label">Total Expenses</span>
+          <span class="stat-label">{{ 'charts.statistics.totalExpenses' | transloco }}</span>
           <span class="stat-value expense">{{ s.totalExpenses | currency: 'EUR' }}</span>
         </div>
         <div class="stat">
-          <span class="stat-label">Avg Daily Expense</span>
+          <span class="stat-label">{{ 'charts.statistics.avgDailyExpense' | transloco }}</span>
           <span class="stat-value">{{ s.avgDailyExpense | currency: 'EUR' }}</span>
         </div>
         <div class="stat">
-          <span class="stat-label">Current Streak (no expense)</span>
-          <span class="stat-value">{{ s.currentStreak }} days</span>
+          <span class="stat-label">{{ 'charts.statistics.currentStreak' | transloco }}</span>
+          <span class="stat-value">{{ 'charts.statistics.days' | transloco: { count: s.currentStreak } }}</span>
         </div>
         <div class="stat">
-          <span class="stat-label">Longest Streak</span>
-          <span class="stat-value">{{ s.longestStreak }} days</span>
+          <span class="stat-label">{{ 'charts.statistics.longestStreak' | transloco }}</span>
+          <span class="stat-value">{{ 'charts.statistics.days' | transloco: { count: s.longestStreak } }}</span>
         </div>
         @if (s.mostExpensiveDay) {
           <div class="stat">
-            <span class="stat-label">Most Expensive Day</span>
+            <span class="stat-label">{{ 'charts.statistics.mostExpensiveDay' | transloco }}</span>
             <span class="stat-value expense">{{ s.mostExpensiveDay.date | date: 'dd/MM/yyyy' }} ({{ s.mostExpensiveDay.amount | currency: 'EUR' }})</span>
           </div>
         }
       </div>
     } @else {
-      <div class="empty">Select an account</div>
+      <div class="empty">{{ 'charts.statistics.empty' | transloco }}</div>
     }
   `,
   styles: [`

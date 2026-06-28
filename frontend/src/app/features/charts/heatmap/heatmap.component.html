@@ -1,5 +1,5 @@
 <div class="heatmap-section">
-  <h3>Spending Heatmap {{ year }}</h3>
+  <h3>{{ 'charts.heatmap.title' | transloco: { year: year } }}</h3>
   <div class="month-labels" [style.grid-template-columns]="gridCols()">
     @for (m of monthSpans(); track $index) {
       <span class="month-label" [style.grid-column]="m.start + ' / span ' + m.span">{{ m.name }}</span>

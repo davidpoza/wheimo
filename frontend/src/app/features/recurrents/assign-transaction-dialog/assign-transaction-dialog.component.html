@@ -1,5 +1,5 @@
 <p-dialog
-  [header]="'Asignar transacción — ' + recurrent().name"
+  [header]="'recurrents.assign.header' | transloco: { name: recurrent().name }"
   [visible]="visible()"
   (visibleChange)="visible.set($event)"
   (onHide)="onHide()"
@@ -12,26 +12,26 @@
     <!-- Filters row -->
     <div class="filters-row">
       <div class="field">
-        <label>Rango de fechas</label>
+        <label>{{ 'recurrents.assign.dateRange' | transloco }}</label>
         <p-datepicker
           [ngModel]="dateRange()"
           (ngModelChange)="dateRange.set($event); onDateChange()"
           selectionMode="range"
           [readonlyInput]="true"
           dateFormat="dd/mm/yy"
-          placeholder="Selecciona rango..."
+          [placeholder]="'recurrents.assign.dateRangePlaceholder' | transloco"
           [showButtonBar]="true"
           appendTo="body"
           class="w-full"
         />
       </div>
       <div class="field">
-        <label>Filtrar</label>
+        <label>{{ 'recurrents.assign.filter' | transloco }}</label>
         <input
           pInputText
           [ngModel]="filterText()"
           (ngModelChange)="onFilterTextChange($event)"
-          placeholder="Descripción, nombre..."
+          [placeholder]="'recurrents.assign.filterPlaceholder' | transloco"
           class="w-full"
         />
       </div>
@@ -40,9 +40,9 @@
     <!-- Transaction list -->
     <div class="tx-list">
       @if (loading()) {
-        <div class="loading-list">Cargando...</div>
+        <div class="loading-list">{{ 'recurrents.assign.loading' | transloco }}</div>
       } @else if (transactions().length === 0) {
-        <div class="empty-list">No se encontraron transacciones.</div>
+        <div class="empty-list">{{ 'recurrents.assign.empty' | transloco }}</div>
       } @else {
         @for (tx of transactions(); track tx.id) {
           <div
@@ -82,7 +82,7 @@
     <!-- Assign button -->
     <div class="assign-action">
       <p-button
-        label="Asignar"
+        [label]="'recurrents.assign.assign' | transloco"
         icon="pi pi-link"
         [disabled]="!selectedTransaction() || assigning()"
         [loading]="assigning()"
@@ -93,13 +93,13 @@
     <!-- Already linked transactions -->
     @if (linkedTransactions().length > 0) {
       <div class="linked-section">
-        <h4>Transacciones vinculadas</h4>
+        <h4>{{ 'recurrents.assign.linkedTitle' | transloco }}</h4>
         <table class="linked-table">
           <thead>
             <tr>
-              <th>Fecha</th>
-              <th>Importe transacción</th>
-              <th>Snapshot precio</th>
+              <th>{{ 'recurrents.assign.linked.date' | transloco }}</th>
+              <th>{{ 'recurrents.assign.linked.txAmount' | transloco }}</th>
+              <th>{{ 'recurrents.assign.linked.priceSnapshot' | transloco }}</th>
               <th></th>
             </tr>
           </thead>
@@ -112,7 +112,7 @@
                 </td>
                 <td>{{ link.amountSnapshot | currency: 'EUR' : 'symbol' : '1.2-2' }}</td>
                 <td>
-                  <p-button icon="pi pi-times" [text]="true" severity="danger" pTooltip="Desvincular" (onClick)="unassign(link)" />
+                  <p-button icon="pi pi-times" [text]="true" severity="danger" [pTooltip]="'recurrents.assign.tooltip.unassign' | transloco" (onClick)="unassign(link)" />
                 </td>
               </tr>
             }
@@ -123,7 +123,7 @@
   </div>
 
   <ng-template pTemplate="footer">
-    <p-button label="Cerrar" [text]="true" severity="secondary" (onClick)="visible.set(false)" />
+    <p-button [label]="'recurrents.assign.close' | transloco" [text]="true" severity="secondary" (onClick)="visible.set(false)" />
   </ng-template>
 </p-dialog>
 

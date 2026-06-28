@@ -12,14 +12,14 @@
 
     <div class="profile-actions">
       <p-button
-        label="Cambiar contraseña"
+        [label]="'user.profile.changePassword' | transloco"
         icon="pi pi-lock"
         severity="secondary"
         [outlined]="true"
         (onClick)="openChangePassword()"
       />
       <p-button
-        label="Cerrar sesión"
+        [label]="'user.profile.logout' | transloco"
         icon="pi pi-sign-out"
         severity="danger"
         [outlined]="true"
@@ -30,7 +30,7 @@
 </div>
 
 <p-dialog
-  header="Cambiar contraseña"
+  [header]="'user.profile.changePassword' | transloco"
   [(visible)]="changePasswordVisible"
   [modal]="true"
   [style]="{ width: '24rem' }"
@@ -38,7 +38,7 @@
 >
   <form [formGroup]="form" class="password-form">
     <div class="field">
-      <label for="currentPassword">Contraseña actual</label>
+      <label for="currentPassword">{{ 'user.profile.form.currentPassword' | transloco }}</label>
       <p-password
         inputId="currentPassword"
         formControlName="currentPassword"
@@ -50,7 +50,7 @@
     </div>
 
     <div class="field">
-      <label for="newPassword">Nueva contraseña</label>
+      <label for="newPassword">{{ 'user.profile.form.newPassword' | transloco }}</label>
       <p-password
         inputId="newPassword"
         formControlName="newPassword"
@@ -62,7 +62,7 @@
     </div>
 
     <div class="field">
-      <label for="confirmPassword">Confirmar nueva contraseña</label>
+      <label for="confirmPassword">{{ 'user.profile.form.confirmPassword' | transloco }}</label>
       <p-password
         inputId="confirmPassword"
         formControlName="confirmPassword"
@@ -72,15 +72,15 @@
         inputStyleClass="w-full"
       />
       @if (passwordsMismatch) {
-        <small class="mismatch-error">Las contraseñas no coinciden</small>
+        <small class="mismatch-error">{{ 'user.profile.mismatch' | transloco }}</small>
       }
     </div>
   </form>
 
   <ng-template pTemplate="footer">
-    <p-button label="Cancelar" severity="secondary" [text]="true" (onClick)="closeChangePassword()" />
+    <p-button [label]="'user.profile.cancel' | transloco" severity="secondary" [text]="true" (onClick)="closeChangePassword()" />
     <p-button
-      label="Guardar"
+      [label]="'user.profile.save' | transloco"
       icon="pi pi-check"
       [disabled]="!canSave"
       [loading]="saving()"

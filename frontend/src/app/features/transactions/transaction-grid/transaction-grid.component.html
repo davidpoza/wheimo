@@ -1,16 +1,16 @@
 <div class="tx-header">
-  <h2>Transactions</h2>
+  <h2>{{ 'transactions.grid.title' | transloco }}</h2>
   <div class="tx-actions">
     @if (selected().length > 0) {
       <p-button
         icon="pi pi-tags"
-        label="Tag Selected ({{ selected().length }})"
+        [label]="'transactions.grid.tagSelected' | transloco: { count: selected().length }"
         severity="secondary"
         styleClass="icon-only-mobile"
         (onClick)="openTagging()"
       />
     }
-    <p-button label="New" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="createVisible.set(true)" />
+    <p-button [label]="'transactions.grid.new' | transloco" icon="pi pi-plus" styleClass="icon-only-mobile" (onClick)="createVisible.set(true)" />
   </div>
 </div>
 
@@ -18,8 +18,8 @@
 
 @if (mobileSelectMode()) {
   <div class="mobile-select-banner">
-    <span>{{ selected().length }} seleccionadas</span>
-    <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="cancelMobileSelection()" />
+    <span>{{ 'transactions.grid.selectedCount' | transloco: { count: selected().length } }}</span>
+    <p-button [label]="'common.cancel' | transloco" severity="secondary" [text]="true" (onClick)="cancelMobileSelection()" />
   </div>
 }
 
@@ -43,10 +43,10 @@
     <tr>
       <th class="checkbox-col" style="width: 3rem"><p-tableHeaderCheckbox /></th>
       <th class="toggle-col" style="width: 3rem"></th>
-      <th class="date-col" pSortableColumn="date">Date <p-sortIcon field="date" /></th>
-      <th class="desc-col" pSortableColumn="description">Description <p-sortIcon field="description" /></th>
-      <th class="amount-col" pSortableColumn="amount">Amount <p-sortIcon field="amount" /></th>
-      <th class="tags-col">Tags</th>
+      <th class="date-col" pSortableColumn="date">{{ 'transactions.grid.col.date' | transloco }} <p-sortIcon field="date" /></th>
+      <th class="desc-col" pSortableColumn="description">{{ 'transactions.grid.col.description' | transloco }} <p-sortIcon field="description" /></th>
+      <th class="amount-col" pSortableColumn="amount">{{ 'transactions.grid.col.amount' | transloco }} <p-sortIcon field="amount" /></th>
+      <th class="tags-col">{{ 'transactions.grid.col.tags' | transloco }}</th>
       <th class="actions-col"></th>
     </tr>
   </ng-template>
@@ -65,7 +65,7 @@
             [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
             [text]="true"
             severity="secondary"
-            pTooltip="Ver desglose recurrentes"
+            [pTooltip]="'transactions.grid.tooltip.recurrentBreakdown' | transloco"
           />
         }
       </td>
@@ -88,7 +88,7 @@
       </td>
       <td class="actions-col" (click)="$event.stopPropagation()">
         <p-button [icon]="tx.favourite ? 'pi pi-star-fill' : 'pi pi-star'" [text]="true" [severity]="tx.favourite ? 'warn' : 'secondary'" (onClick)="toggleFav(tx)" />
-        <p-button icon="pi pi-tags" [text]="true" severity="secondary" (onClick)="applyTags(tx)" pTooltip="Apply rules" styleClass="hide-mobile" />
+        <p-button icon="pi pi-tags" [text]="true" severity="secondary" (onClick)="applyTags(tx)" [pTooltip]="'transactions.grid.tooltip.applyRules' | transloco" styleClass="hide-mobile" />
       </td>
     </tr>
   </ng-template>
@@ -100,11 +100,11 @@
           <table class="breakdown-table">
             <thead>
               <tr>
-                <th>Artículo recurrente</th>
-                <th>Establecimiento</th>
-                <th class="amount-col">Precio unit.</th>
-                <th class="amount-col">Unidades</th>
-                <th class="amount-col">Total</th>
+                <th>{{ 'transactions.grid.breakdown.item' | transloco }}</th>
+                <th>{{ 'transactions.grid.breakdown.establishment' | transloco }}</th>
+                <th class="amount-col">{{ 'transactions.grid.breakdown.unitPrice' | transloco }}</th>
+                <th class="amount-col">{{ 'transactions.grid.breakdown.units' | transloco }}</th>
+                <th class="amount-col">{{ 'transactions.grid.breakdown.total' | transloco }}</th>
                 <th></th>
               </tr>
             </thead>
@@ -129,7 +129,7 @@
                       icon="pi pi-times"
                       [text]="true"
                       severity="danger"
-                      pTooltip="Desvincular"
+                      [pTooltip]="'transactions.grid.tooltip.unassign' | transloco"
                       (onClick)="unassignRecurrent(tx, link)"
                     />
                   </td>
@@ -138,12 +138,12 @@
             </tbody>
             <tfoot>
               <tr class="total-row">
-                <td colspan="4"><strong>Total recurrentes</strong></td>
+                <td colspan="4"><strong>{{ 'transactions.grid.breakdown.totalRecurrents' | transloco }}</strong></td>
                 <td class="amount-col"><strong>{{ tx.recurrentsTotal | currency: tx.currency : 'symbol' : '1.2-2' }}</strong></td>
                 <td></td>
               </tr>
               <tr class="diff-row" [class.diff-negative]="tx.recurrentsDiff < 0" [class.diff-positive]="tx.recurrentsDiff > 0">
-                <td colspan="4"><strong>Diferencia</strong></td>
+                <td colspan="4"><strong>{{ 'transactions.grid.breakdown.difference' | transloco }}</strong></td>
                 <td class="amount-col"><strong>{{ tx.recurrentsDiff | currency: tx.currency : 'symbol' : '1.2-2' }}</strong></td>
                 <td></td>
               </tr>
@@ -155,7 +155,7 @@
   </ng-template>
 
   <ng-template pTemplate="emptymessage">
-    <tr><td colspan="7" class="empty-msg">No transactions found</td></tr>
+    <tr><td colspan="7" class="empty-msg">{{ 'transactions.grid.empty' | transloco }}</td></tr>
   </ng-template>
 </p-table>
 

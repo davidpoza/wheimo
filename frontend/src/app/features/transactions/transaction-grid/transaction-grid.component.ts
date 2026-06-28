@@ -7,6 +7,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TransactionsService } from '../transactions.service';
 import { RecurrentsService } from '../../recurrents/recurrents.service';
 import { Transaction } from '../../../core/models/transaction.model';
@@ -28,6 +29,7 @@ import { TaggingDialogComponent } from '../tagging-dialog/tagging-dialog.compone
     TooltipModule,
     CheckboxModule,
     ToastModule,
+    TranslocoModule,
     TransactionDetailsDialogComponent,
     TransactionFilterComponent,
     CreateTransactionDialogComponent,
@@ -41,6 +43,7 @@ export class TransactionGridComponent implements OnInit {
   private readonly txService = inject(TransactionsService);
   private readonly recurrentsService = inject(RecurrentsService);
   private readonly messageService = inject(MessageService);
+  private readonly transloco = inject(TranslocoService);
 
   transactions = this.txService.transactions;
   total = this.txService.total;
@@ -148,7 +151,7 @@ export class TransactionGridComponent implements OnInit {
   applyTags(tx: Transaction) {
     this.txService.applyTags(tx.id).subscribe({
       next: () => this.txService.loadAll().subscribe(),
-      error: () => this.messageService.add({ severity: 'error', summary: 'Error applying tags' }),
+      error: () => this.messageService.add({ severity: 'error', summary: this.transloco.translate('transactions.grid.toast.applyError') }),
     });
   }
 
@@ -156,7 +159,7 @@ export class TransactionGridComponent implements OnInit {
     this.recurrentsService.unassignTransaction(link.recurrentId, tx.id).subscribe({
       next: () => {
         this.txService.loadAll().subscribe();
-        this.messageService.add({ severity: 'success', summary: 'Vínculo eliminado' });
+        this.messageService.add({ severity: 'success', summary: this.transloco.translate('transactions.grid.toast.linkRemoved') });
       },
     });
   }

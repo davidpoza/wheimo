@@ -9,6 +9,7 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { BudgetsService } from '../budgets.service';
 import { TagsService } from '../../tags/tags.service';
 import { BudgetStatus } from '../../../core/models/budget.model';
@@ -20,7 +21,7 @@ import { BudgetStatus } from '../../../core/models/budget.model';
     CurrencyPipe, PercentPipe,
     ReactiveFormsModule,
     ButtonModule, DialogModule, InputNumberModule, SelectModule,
-    ProgressBarModule, ToastModule, ConfirmDialogModule,
+    ProgressBarModule, ToastModule, ConfirmDialogModule, TranslocoModule,
   ],
   providers: [MessageService, ConfirmationService],
   templateUrl: './budgets.component.html',
@@ -32,6 +33,7 @@ export class BudgetsComponent implements OnInit {
   private readonly tagsService = inject(TagsService);
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly transloco = inject(TranslocoService);
 
   statuses = this.budgetsService.statuses;
   tags = this.tagsService.tags;
@@ -62,23 +64,23 @@ export class BudgetsComponent implements OnInit {
         this.dialogVisible.set(false);
         this.form.reset();
         this.budgetsService.loadAllStatuses().subscribe();
-        this.messageService.add({ severity: 'success', summary: 'Budget created' });
+        this.messageService.add({ severity: 'success', summary: this.transloco.translate('budgets.toast.created') });
       },
     });
   }
 
   deleteBudget(id: number) {
     this.confirmationService.confirm({
-      message: '¿Eliminar este presupuesto?',
-      header: 'Confirmar eliminación',
+      message: this.transloco.translate('budgets.confirm.message'),
+      header: this.transloco.translate('budgets.confirm.header'),
       icon: 'pi pi-trash',
-      acceptLabel: 'Sí',
-      rejectLabel: 'No',
+      acceptLabel: this.transloco.translate('budgets.confirm.accept'),
+      rejectLabel: this.transloco.translate('budgets.confirm.reject'),
       accept: () => {
         this.budgetsService.delete(id).subscribe({
           next: () => {
             this.budgetsService.loadAllStatuses().subscribe();
-            this.messageService.add({ severity: 'success', summary: 'Budget deleted' });
+            this.messageService.add({ severity: 'success', summary: this.transloco.translate('budgets.toast.deleted') });
           },
         });
       },

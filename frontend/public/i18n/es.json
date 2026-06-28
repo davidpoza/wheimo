@@ -1,0 +1,488 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "save": "Save",
+    "apply": "Apply",
+    "error": "Error",
+    "selectTags": "Select tags"
+  },
+  "transactions": {
+    "grid": {
+      "title": "Transactions",
+      "new": "New",
+      "tagSelected": "Tag Selected ({{ count }})",
+      "selectedCount": "{{ count }} seleccionadas",
+      "col": {
+        "date": "Date",
+        "description": "Description",
+        "amount": "Amount",
+        "tags": "Tags"
+      },
+      "tooltip": {
+        "recurrentBreakdown": "Ver desglose recurrentes",
+        "applyRules": "Apply rules",
+        "unassign": "Desvincular"
+      },
+      "breakdown": {
+        "item": "Artículo recurrente",
+        "establishment": "Establecimiento",
+        "unitPrice": "Precio unit.",
+        "units": "Unidades",
+        "total": "Total",
+        "totalRecurrents": "Total recurrentes",
+        "difference": "Diferencia"
+      },
+      "empty": "No transactions found",
+      "toast": {
+        "applyError": "Error applying tags",
+        "linkRemoved": "Vínculo eliminado"
+      }
+    },
+    "filter": {
+      "search": "Search...",
+      "account": "Account",
+      "tags": "Tags",
+      "from": "From",
+      "to": "To",
+      "type": "Type",
+      "apply": "Apply",
+      "reset": "Reset",
+      "filters": "Filters",
+      "operation": {
+        "all": "All",
+        "expenses": "Expenses",
+        "income": "Income"
+      }
+    },
+    "details": {
+      "header": "Transaction Detail",
+      "tab": {
+        "details": "Details",
+        "attachments": "Attachments"
+      },
+      "from": "From",
+      "to": "To",
+      "description": "Description",
+      "balance": "Balance",
+      "comments": "Comments",
+      "tags": "Tags",
+      "noAttachments": "No attachments yet",
+      "attachFiles": "Attach files",
+      "imagePreview": "Image Preview",
+      "attachmentPreview": "Attachment preview"
+    },
+    "create": {
+      "header": "New Transaction",
+      "account": "Account *",
+      "amount": "Amount *",
+      "currency": "Currency",
+      "date": "Date *",
+      "valueDate": "Value Date *",
+      "description": "Description",
+      "create": "Create"
+    },
+    "tagging": {
+      "header": "Apply Tags to Selected",
+      "applyTo": "Apply tags to {{ count }} transaction(s):"
+    }
+  },
+  "recurrents": {
+    "list": {
+      "title": "Artículos Recurrentes",
+      "new": "Nuevo artículo",
+      "col": {
+        "name": "Nombre",
+        "establishment": "Establecimiento",
+        "periodicity": "Periodicidad",
+        "currentPrice": "Precio actual",
+        "totalCost": "Coste total",
+        "link": "Link"
+      },
+      "empty": "No hay artículos recurrentes. Crea uno para empezar.",
+      "tooltip": {
+        "assign": "Asignar transacción",
+        "history": "Historial de precios",
+        "edit": "Editar",
+        "delete": "Eliminar"
+      },
+      "dialog": {
+        "editHeader": "Editar artículo"
+      },
+      "form": {
+        "name": "Nombre *",
+        "namePlaceholder": "Ej. Suscripción Netflix",
+        "establishment": "Establecimiento *",
+        "establishmentPlaceholder": "Ej. Netflix",
+        "initialPrice": "Precio inicial (€)",
+        "units": "Unidades (opcional)",
+        "periodicityType": "Tipo de periodicidad",
+        "periodicityDays": "Periodicidad (días)",
+        "periodicityDaysPlaceholder": "Ej. 30",
+        "paymentMonth": "Mes de pago",
+        "selectMonth": "Selecciona un mes",
+        "link": "Link"
+      },
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "create": "Crear",
+      "toast": {
+        "updated": "Artículo actualizado",
+        "created": "Artículo creado",
+        "deleted": "Artículo eliminado"
+      },
+      "confirm": {
+        "message": "¿Eliminar \"{{ name }}\"?",
+        "header": "Confirmar eliminación",
+        "accept": "Sí",
+        "reject": "No"
+      },
+      "periodicityType": {
+        "days": "Por días",
+        "annual": "Anual"
+      },
+      "months": {
+        "1": "Enero",
+        "2": "Febrero",
+        "3": "Marzo",
+        "4": "Abril",
+        "5": "Mayo",
+        "6": "Junio",
+        "7": "Julio",
+        "8": "Agosto",
+        "9": "Septiembre",
+        "10": "Octubre",
+        "11": "Noviembre",
+        "12": "Diciembre"
+      },
+      "periodicity": {
+        "annualWithMonth": "Anual ({{ month }})",
+        "annual": "Anual",
+        "days": "{{ days }} días"
+      }
+    },
+    "upcoming": {
+      "title": "Próximos gastos",
+      "col": {
+        "name": "Nombre",
+        "establishment": "Establecimiento",
+        "periodicity": "Periodicidad",
+        "currentPrice": "Precio actual"
+      },
+      "empty": "No hay gastos próximos en este momento.",
+      "periodicity": {
+        "annualWithMonth": "Anual ({{ month }})",
+        "annual": "Anual",
+        "days": "Cada {{ days }} días"
+      }
+    },
+    "assign": {
+      "header": "Asignar transacción — {{ name }}",
+      "dateRange": "Rango de fechas",
+      "dateRangePlaceholder": "Selecciona rango...",
+      "filter": "Filtrar",
+      "filterPlaceholder": "Descripción, nombre...",
+      "loading": "Cargando...",
+      "empty": "No se encontraron transacciones.",
+      "assign": "Asignar",
+      "linkedTitle": "Transacciones vinculadas",
+      "linked": {
+        "date": "Fecha",
+        "txAmount": "Importe transacción",
+        "priceSnapshot": "Snapshot precio"
+      },
+      "tooltip": {
+        "unassign": "Desvincular"
+      },
+      "close": "Cerrar",
+      "toast": {
+        "assigned": "Transacción asignada",
+        "assignError": "Error al asignar",
+        "linkRemoved": "Vínculo eliminado"
+      }
+    },
+    "priceHistory": {
+      "header": "Historial de precios — {{ name }}",
+      "addPrice": "Registrar precio",
+      "cancel": "Cancelar",
+      "form": {
+        "price": "Precio (€) *",
+        "units": "Unidades (opcional)",
+        "date": "Fecha (vacío = hoy)"
+      },
+      "save": "Guardar",
+      "col": {
+        "date": "Fecha",
+        "price": "Precio",
+        "units": "Unidades"
+      },
+      "empty": "Sin entradas de precio aún.",
+      "close": "Cerrar",
+      "chart": {
+        "priceAxis": "Precio (€)",
+        "unitsAxis": "Unidades",
+        "price": "Precio",
+        "units": "Unidades"
+      },
+      "toast": {
+        "saved": "Precio registrado"
+      }
+    }
+  },
+  "tags": {
+    "grid": {
+      "title": "Tags & Rules",
+      "tab": {
+        "tags": "Tags",
+        "rules": "Rules"
+      },
+      "newTagPlaceholder": "New tag name...",
+      "add": "Add",
+      "col": {
+        "name": "Name"
+      },
+      "toast": {
+        "created": "Tag created",
+        "updated": "Tag updated",
+        "deleted": "Tag deleted"
+      },
+      "confirm": {
+        "message": "¿Eliminar el tag \"{{ name }}\"?",
+        "header": "Confirmar eliminación",
+        "accept": "Sí",
+        "reject": "No"
+      }
+    },
+    "rules": {
+      "newRule": "New Rule",
+      "form": {
+        "name": "Name *",
+        "namePlaceholder": "Rule name",
+        "type": "Type *",
+        "value": "Value",
+        "valuePlaceholder": "e.g. Mercadona|Lidl or gt10;lt50",
+        "tagsToApply": "Tags to apply"
+      },
+      "error": {
+        "invalidRegex": "Expresión regular inválida"
+      },
+      "create": "Create",
+      "col": {
+        "name": "Name",
+        "type": "Type",
+        "value": "Value",
+        "tags": "Tags"
+      },
+      "type": {
+        "description": "Regex (description)",
+        "equality": "Equality",
+        "gt": "Amount >",
+        "gte": "Amount >=",
+        "lt": "Amount <",
+        "lte": "Amount <=",
+        "eq": "Amount =",
+        "isExpense": "Is Expense",
+        "isReceipt": "Has Receipt"
+      },
+      "toast": {
+        "created": "Rule created",
+        "deleted": "Rule deleted"
+      },
+      "confirm": {
+        "message": "¿Eliminar esta regla?",
+        "header": "Confirmar eliminación",
+        "accept": "Sí",
+        "reject": "No"
+      }
+    }
+  },
+  "accounts": {
+    "list": {
+      "title": "Accounts",
+      "addAccount": "Add Account",
+      "tooltip": {
+        "import": "Import XLS",
+        "resync": "Resync",
+        "edit": "Edit",
+        "delete": "Delete"
+      },
+      "toast": {
+        "syncStarted": "Sync started",
+        "syncFailed": "Sync failed",
+        "deleted": "Deleted",
+        "deleteFailed": "Delete failed",
+        "importComplete": "Import complete",
+        "importDetail": "{{ imported }} imported, {{ skipped }} skipped",
+        "importFailed": "Import failed",
+        "importParseError": "Could not parse the XLS file"
+      },
+      "confirm": {
+        "message": "¿Eliminar la cuenta \"{{ name }}\"?",
+        "header": "Confirmar eliminación",
+        "accept": "Sí",
+        "reject": "No"
+      }
+    },
+    "edit": {
+      "editHeader": "Edit Account",
+      "newHeader": "New Account",
+      "tab": {
+        "detail": "Detalle",
+        "exceptions": "Excepciones"
+      },
+      "newException": "New account exception",
+      "exceptions": {
+        "col": {
+          "regex": "Regex",
+          "description": "Descripción"
+        },
+        "empty": "No hay excepciones definidas."
+      },
+      "form": {
+        "name": "Name *",
+        "description": "Description",
+        "bank": "Bank",
+        "number": "Account Number / IBAN",
+        "accessId": "Access ID / User",
+        "secretKey": "Secret Key",
+        "password": "Password",
+        "movementType": "Tipo de movimiento",
+        "keepBalance": "Sincronizar balance",
+        "saving": "Savings account"
+      },
+      "bank": {
+        "nordigen": "Nordigen (Open Banking)",
+        "openbank": "Openbank",
+        "openbankPrepaid": "Openbank Prepaid",
+        "manual": "Manual"
+      },
+      "movementType": {
+        "both": "Ambos",
+        "income": "Entrada",
+        "expense": "Salida"
+      },
+      "exceptionForm": {
+        "regex": "Regex *",
+        "regexPlaceholder": "e.g. ^Comisión",
+        "invalidRegex": "Expresión regular inválida",
+        "description": "Descripción"
+      },
+      "exceptionDialog": {
+        "editHeader": "Edit Exception",
+        "newHeader": "New Exception"
+      },
+      "confirm": {
+        "message": "¿Eliminar esta excepción?",
+        "header": "Confirmar"
+      }
+    }
+  },
+  "charts": {
+    "title": "Charts & Analytics",
+    "selectAccount": "Select account",
+    "balance": {
+      "title": "Balance Evolution (last 90 days)",
+      "empty": "Select an account to view balance evolution",
+      "dataset": "Balance"
+    },
+    "heatmap": {
+      "title": "Spending Heatmap {{ year }}",
+      "months": {
+        "jan": "Jan",
+        "feb": "Feb",
+        "mar": "Mar",
+        "apr": "Apr",
+        "may": "May",
+        "jun": "Jun",
+        "jul": "Jul",
+        "aug": "Aug",
+        "sep": "Sep",
+        "oct": "Oct",
+        "nov": "Nov",
+        "dec": "Dec"
+      }
+    },
+    "statistics": {
+      "title": "Statistics",
+      "totalIncome": "Total Income",
+      "totalExpenses": "Total Expenses",
+      "avgDailyExpense": "Avg Daily Expense",
+      "currentStreak": "Current Streak (no expense)",
+      "longestStreak": "Longest Streak",
+      "mostExpensiveDay": "Most Expensive Day",
+      "days": "{{ count }} days",
+      "empty": "Select an account"
+    },
+    "tagExpenses": {
+      "title": "Expenses by Tag",
+      "empty": "No data",
+      "untagged": "Untagged"
+    }
+  },
+  "budgets": {
+    "title": "Budgets",
+    "new": "New Budget",
+    "thisMonth": "This month",
+    "empty": "No budgets yet. Create one to track your spending.",
+    "overBudget": "{{ amount }} over budget",
+    "remaining": "{{ amount }} remaining",
+    "form": {
+      "tag": "Tag *",
+      "monthlyAmount": "Monthly Amount (€) *"
+    },
+    "selectTag": "Select tag",
+    "create": "Create",
+    "toast": {
+      "created": "Budget created",
+      "deleted": "Budget deleted"
+    },
+    "confirm": {
+      "message": "¿Eliminar este presupuesto?",
+      "header": "Confirmar eliminación",
+      "accept": "Sí",
+      "reject": "No"
+    }
+  },
+  "auth": {
+    "login": {
+      "subtitle": "Personal Finance",
+      "email": "Email",
+      "emailPlaceholder": "your@email.com",
+      "invalidEmail": "Enter a valid email",
+      "password": "Password",
+      "submit": "Sign In",
+      "invalidCredentials": "Invalid credentials"
+    }
+  },
+  "user": {
+    "profile": {
+      "changePassword": "Cambiar contraseña",
+      "logout": "Cerrar sesión",
+      "form": {
+        "currentPassword": "Contraseña actual",
+        "newPassword": "Nueva contraseña",
+        "confirmPassword": "Confirmar nueva contraseña"
+      },
+      "mismatch": "Las contraseñas no coinciden",
+      "cancel": "Cancelar",
+      "save": "Guardar",
+      "toast": {
+        "updated": "Contraseña actualizada",
+        "error": "Error al cambiar la contraseña"
+      }
+    }
+  },
+  "layout": {
+    "menuHeader": "Menu",
+    "menu": {
+      "upcoming": "Próximos gastos",
+      "transactions": "Transactions",
+      "accounts": "Accounts",
+      "tags": "Tags",
+      "charts": "Charts",
+      "budgets": "Budgets",
+      "recurrents": "Recurrentes",
+      "rules": "Reglas"
+    }
+  }
+}

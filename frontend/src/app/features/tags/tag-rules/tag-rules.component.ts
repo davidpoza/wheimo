@@ -10,6 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TagsService } from '../tags.service';
 
 function validRegex(control: AbstractControl): ValidationErrors | null {
@@ -22,22 +23,12 @@ function validRegex(control: AbstractControl): ValidationErrors | null {
   }
 }
 
-const RULE_TYPES = [
-  { label: 'Regex (description)', value: 'description' },
-  { label: 'Equality', value: 'equality' },
-  { label: 'Amount >', value: 'gt' },
-  { label: 'Amount >=', value: 'gte' },
-  { label: 'Amount <', value: 'lt' },
-  { label: 'Amount <=', value: 'lte' },
-  { label: 'Amount =', value: 'eq' },
-  { label: 'Is Expense', value: 'isExpense' },
-  { label: 'Has Receipt', value: 'isReceipt' },
-];
+const RULE_TYPE_VALUES = ['description', 'equality', 'gt', 'gte', 'lt', 'lte', 'eq', 'isExpense', 'isReceipt'];
 
 @Component({
   selector: 'app-tag-rules',
   standalone: true,
-  imports: [ReactiveFormsModule, ButtonModule, DialogModule, InputTextModule, SelectModule, MultiSelectModule, TableModule, TagModule, ToastModule, ConfirmDialogModule],
+  imports: [ReactiveFormsModule, ButtonModule, DialogModule, InputTextModule, SelectModule, MultiSelectModule, TableModule, TagModule, ToastModule, ConfirmDialogModule, TranslocoModule],
   providers: [MessageService, ConfirmationService],
   templateUrl: './tag-rules.component.html',
   styleUrl: './tag-rules.component.scss',
@@ -47,11 +38,18 @@ export class TagRulesComponent implements OnInit {
   private readonly tagsService = inject(TagsService);
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly transloco = inject(TranslocoService);
 
   rules = this.tagsService.rules;
   tags = this.tagsService.tags;
-  ruleTypes = RULE_TYPES;
   showForm = signal(false);
+
+  get ruleTypes() {
+    return RULE_TYPE_VALUES.map((value) => ({
+      label: this.transloco.translate('tags.rules.type.' + value),
+      value,
+    }));
+  }
 
   form = this.fb.group({
     name: ['', Validators.required],
@@ -76,21 +74,21 @@ export class TagRulesComponent implements OnInit {
       next: () => {
         this.form.reset({ type: 'description', tagIds: [] });
         this.showForm.set(false);
-        this.messageService.add({ severity: 'success', summary: 'Rule created' });
+        this.messageService.add({ severity: 'success', summary: this.transloco.translate('tags.rules.toast.created') });
       },
     });
   }
 
   deleteRule(id: number) {
     this.confirmationService.confirm({
-      message: '¿Eliminar esta regla?',
-      header: 'Confirmar eliminación',
+      message: this.transloco.translate('tags.rules.confirm.message'),
+      header: this.transloco.translate('tags.rules.confirm.header'),
       icon: 'pi pi-trash',
-      acceptLabel: 'Sí',
-      rejectLabel: 'No',
+      acceptLabel: this.transloco.translate('tags.rules.confirm.accept'),
+      rejectLabel: this.transloco.translate('tags.rules.confirm.reject'),
       accept: () => {
         this.tagsService.deleteRule(id).subscribe({
-          next: () => this.messageService.add({ severity: 'success', summary: 'Rule deleted' }),
+          next: () => this.messageService.add({ severity: 'success', summary: this.transloco.translate('tags.rules.toast.deleted') }),
         });
       },
     });

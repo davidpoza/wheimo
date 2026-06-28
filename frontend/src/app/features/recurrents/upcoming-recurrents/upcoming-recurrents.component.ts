@@ -2,24 +2,20 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CurrencyPipe } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { RecurrentsService } from '../recurrents.service';
 import { Recurrent } from '../../../core/models/recurrent.model';
-
-const MONTHS: Record<number, string> = {
-  1: 'Enero', 2: 'Febrero', 3: 'Marzo', 4: 'Abril',
-  5: 'Mayo', 6: 'Junio', 7: 'Julio', 8: 'Agosto',
-  9: 'Septiembre', 10: 'Octubre', 11: 'Noviembre', 12: 'Diciembre',
-};
 
 @Component({
   selector: 'app-upcoming-recurrents',
   standalone: true,
-  imports: [CurrencyPipe, TableModule, TagModule],
+  imports: [CurrencyPipe, TableModule, TagModule, TranslocoModule],
   templateUrl: './upcoming-recurrents.component.html',
   styleUrl: './upcoming-recurrents.component.scss',
 })
 export class UpcomingRecurrentsComponent implements OnInit {
   private readonly recurrentsService = inject(RecurrentsService);
+  private readonly transloco = inject(TranslocoService);
 
   upcoming = signal<Recurrent[]>([]);
 
@@ -29,8 +25,14 @@ export class UpcomingRecurrentsComponent implements OnInit {
 
   periodicityLabel(r: Recurrent): string {
     if (r.periodicityType === 'ANNUAL') {
-      return r.periodicityMonth ? `Anual (${MONTHS[r.periodicityMonth]})` : 'Anual';
+      return r.periodicityMonth
+        ? this.transloco.translate('recurrents.upcoming.periodicity.annualWithMonth', {
+            month: this.transloco.translate('recurrents.list.months.' + r.periodicityMonth),
+          })
+        : this.transloco.translate('recurrents.upcoming.periodicity.annual');
     }
-    return r.periodicity ? `Cada ${r.periodicity} días` : '—';
+    return r.periodicity
+      ? this.transloco.translate('recurrents.upcoming.periodicity.days', { days: r.periodicity })
+      : '—';
   }
 }

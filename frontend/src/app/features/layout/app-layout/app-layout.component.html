@@ -13,7 +13,7 @@
           class="nav-item"
         >
           <i [class]="item.icon"></i>
-          <span>{{ item.label }}</span>
+          <span>{{ item.label | transloco }}</span>
         </a>
       }
     </nav>
@@ -32,7 +32,7 @@
   </header>
 
   <!-- Mobile Drawer -->
-  <p-drawer [(visible)]="mobileMenuOpen" header="Menu" position="left">
+  <p-drawer [(visible)]="mobileMenuOpen" [header]="'layout.menuHeader' | transloco" position="left">
     <nav class="mobile-nav">
       @for (item of navItems; track item.route) {
         <a
@@ -42,7 +42,7 @@
           (click)="mobileMenuOpen.set(false)"
         >
           <i [class]="item.icon"></i>
-          <span>{{ item.label }}</span>
+          <span>{{ item.label | transloco }}</span>
         </a>
       }
     </nav>

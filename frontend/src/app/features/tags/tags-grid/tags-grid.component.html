@@ -1,21 +1,21 @@
 <div class="tags-header">
-  <h2>Tags & Rules</h2>
+  <h2>{{ 'tags.grid.title' | transloco }}</h2>
   <div class="tab-buttons">
-    <p-button label="Tags" [text]="activeTab() !== 'tags'" (onClick)="activeTab.set('tags')" />
-    <p-button label="Rules" [text]="activeTab() !== 'rules'" (onClick)="activeTab.set('rules')" />
+    <p-button [label]="'tags.grid.tab.tags' | transloco" [text]="activeTab() !== 'tags'" (onClick)="activeTab.set('tags')" />
+    <p-button [label]="'tags.grid.tab.rules' | transloco" [text]="activeTab() !== 'rules'" (onClick)="activeTab.set('rules')" />
   </div>
 </div>
 
 @if (activeTab() === 'tags') {
   <div class="create-row">
-    <input pInputText [(ngModel)]="newTagName" (ngModelChange)="newTagName.set($event)" placeholder="New tag name..." class="create-input" />
-    <p-button label="Add" icon="pi pi-plus" (onClick)="createTag()" [disabled]="!newTagName().trim()" />
+    <input pInputText [(ngModel)]="newTagName" (ngModelChange)="newTagName.set($event)" [placeholder]="'tags.grid.newTagPlaceholder' | transloco" class="create-input" />
+    <p-button [label]="'tags.grid.add' | transloco" icon="pi pi-plus" (onClick)="createTag()" [disabled]="!newTagName().trim()" />
   </div>
 
   <p-table [value]="tags()" styleClass="p-datatable-sm">
     <ng-template pTemplate="header">
       <tr>
-        <th>Name</th>
+        <th>{{ 'tags.grid.col.name' | transloco }}</th>
         <th style="width: 8rem"></th>
       </tr>
     </ng-template>

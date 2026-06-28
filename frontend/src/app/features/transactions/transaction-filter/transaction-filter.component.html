@@ -1,13 +1,13 @@
 <!-- Desktop filter bar -->
 <div class="filter-bar desktop-filters">
-  <input pInputText [(ngModel)]="draft.search" placeholder="Search..." class="filter-input" />
+  <input pInputText [(ngModel)]="draft.search" [placeholder]="'transactions.filter.search' | transloco" class="filter-input" />
 
   <p-select
     [(ngModel)]="draft.accountId"
     [options]="accounts()"
     optionLabel="name"
     optionValue="id"
-    placeholder="Account"
+    [placeholder]="'transactions.filter.account' | transloco"
     [showClear]="true"
     class="filter-select"
   />
@@ -17,44 +17,44 @@
     [options]="tags()"
     optionLabel="name"
     optionValue="id"
-    placeholder="Tags"
+    [placeholder]="'transactions.filter.tags' | transloco"
     class="filter-select"
   />
 
-  <p-datepicker [(ngModel)]="draft.from" placeholder="From" dateFormat="dd/mm/yy" class="filter-date" />
-  <p-datepicker [(ngModel)]="draft.to" placeholder="To" dateFormat="dd/mm/yy" class="filter-date" />
+  <p-datepicker [(ngModel)]="draft.from" [placeholder]="'transactions.filter.from' | transloco" dateFormat="dd/mm/yy" class="filter-date" />
+  <p-datepicker [(ngModel)]="draft.to" [placeholder]="'transactions.filter.to' | transloco" dateFormat="dd/mm/yy" class="filter-date" />
 
   <p-select
     [(ngModel)]="draft.operationType"
     [options]="operationOptions"
     optionLabel="label"
     optionValue="value"
-    placeholder="Type"
+    [placeholder]="'transactions.filter.type' | transloco"
     class="filter-select-sm"
   />
 
-  <p-button label="Apply" (onClick)="apply()" />
-  <p-button label="Reset" severity="secondary" [text]="true" (onClick)="reset()" />
+  <p-button [label]="'transactions.filter.apply' | transloco" (onClick)="apply()" />
+  <p-button [label]="'transactions.filter.reset' | transloco" severity="secondary" [text]="true" (onClick)="reset()" />
 </div>
 
 <!-- Mobile filter button + drawer -->
 <div class="mobile-filter-btn">
-  <p-button icon="pi pi-filter" label="Filters" severity="secondary" (onClick)="drawerVisible.set(true)" />
+  <p-button icon="pi pi-filter" [label]="'transactions.filter.filters' | transloco" severity="secondary" (onClick)="drawerVisible.set(true)" />
 </div>
 
-<p-drawer [(visible)]="drawerVisible" header="Filters" position="bottom" styleClass="mobile-filter-drawer">
+<p-drawer [(visible)]="drawerVisible" [header]="'transactions.filter.filters' | transloco" position="bottom" styleClass="mobile-filter-drawer">
   <div class="drawer-fields">
-    <input pInputText [(ngModel)]="draft.search" placeholder="Search..." class="w-full" />
-    <p-select [(ngModel)]="draft.accountId" [options]="accounts()" optionLabel="name" optionValue="id" placeholder="Account" [showClear]="true" appendTo="body" class="w-full" />
-    <p-multiselect [(ngModel)]="draft.tags" [options]="tags()" optionLabel="name" optionValue="id" placeholder="Tags" appendTo="body" class="w-full" />
-    <p-datepicker [(ngModel)]="draft.from" placeholder="From" dateFormat="dd/mm/yy" appendTo="body" class="w-full" />
-    <p-datepicker [(ngModel)]="draft.to" placeholder="To" dateFormat="dd/mm/yy" appendTo="body" class="w-full" />
-    <p-select [(ngModel)]="draft.operationType" [options]="operationOptions" optionLabel="label" optionValue="value" placeholder="Type" appendTo="body" class="w-full" />
+    <input pInputText [(ngModel)]="draft.search" [placeholder]="'transactions.filter.search' | transloco" class="w-full" />
+    <p-select [(ngModel)]="draft.accountId" [options]="accounts()" optionLabel="name" optionValue="id" [placeholder]="'transactions.filter.account' | transloco" [showClear]="true" appendTo="body" class="w-full" />
+    <p-multiselect [(ngModel)]="draft.tags" [options]="tags()" optionLabel="name" optionValue="id" [placeholder]="'transactions.filter.tags' | transloco" appendTo="body" class="w-full" />
+    <p-datepicker [(ngModel)]="draft.from" [placeholder]="'transactions.filter.from' | transloco" dateFormat="dd/mm/yy" appendTo="body" class="w-full" />
+    <p-datepicker [(ngModel)]="draft.to" [placeholder]="'transactions.filter.to' | transloco" dateFormat="dd/mm/yy" appendTo="body" class="w-full" />
+    <p-select [(ngModel)]="draft.operationType" [options]="operationOptions" optionLabel="label" optionValue="value" [placeholder]="'transactions.filter.type' | transloco" appendTo="body" class="w-full" />
   </div>
   <ng-template pTemplate="footer">
     <div class="drawer-footer">
-      <p-button label="Reset" severity="secondary" [text]="true" (onClick)="reset()" />
-      <p-button label="Apply" (onClick)="apply()" />
+      <p-button [label]="'transactions.filter.reset' | transloco" severity="secondary" [text]="true" (onClick)="reset()" />
+      <p-button [label]="'transactions.filter.apply' | transloco" (onClick)="apply()" />
     </div>
   </ng-template>
 </p-drawer>

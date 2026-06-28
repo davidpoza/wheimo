@@ -1,15 +1,15 @@
 <div class="upcoming-header">
-  <h2>Próximos gastos</h2>
+  <h2>{{ 'recurrents.upcoming.title' | transloco }}</h2>
 </div>
 
 <div class="upcoming-table">
   <p-table [value]="upcoming()" styleClass="p-datatable-sm" [rowHover]="true">
     <ng-template pTemplate="header">
       <tr>
-        <th>Nombre</th>
-        <th>Establecimiento</th>
-        <th>Periodicidad</th>
-        <th>Precio actual</th>
+        <th>{{ 'recurrents.upcoming.col.name' | transloco }}</th>
+        <th>{{ 'recurrents.upcoming.col.establishment' | transloco }}</th>
+        <th>{{ 'recurrents.upcoming.col.periodicity' | transloco }}</th>
+        <th>{{ 'recurrents.upcoming.col.currentPrice' | transloco }}</th>
       </tr>
     </ng-template>
 
@@ -29,7 +29,7 @@
 
     <ng-template pTemplate="emptymessage">
       <tr>
-        <td colspan="4" class="empty-msg">No hay gastos próximos en este momento.</td>
+        <td colspan="4" class="empty-msg">{{ 'recurrents.upcoming.empty' | transloco }}</td>
       </tr>
     </ng-template>
   </p-table>

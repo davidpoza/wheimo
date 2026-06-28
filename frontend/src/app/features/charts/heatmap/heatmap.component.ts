@@ -1,5 +1,6 @@
 import { Component, inject, input, effect, signal, computed } from '@angular/core';
 import { TooltipModule } from 'primeng/tooltip';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ChartsService } from '../charts.service';
 
 interface DayCell {
@@ -11,12 +12,13 @@ interface DayCell {
 @Component({
   selector: 'app-heatmap',
   standalone: true,
-  imports: [TooltipModule],
+  imports: [TooltipModule, TranslocoModule],
   templateUrl: './heatmap.component.html',
   styleUrl: './heatmap.component.scss',
 })
 export class HeatmapComponent {
   private readonly chartsService = inject(ChartsService);
+  private readonly transloco = inject(TranslocoService);
   accountId = input<number | null>(null);
   year = new Date().getFullYear();
   calendarData = signal<Record<string, number>>({});
@@ -43,7 +45,11 @@ export class HeatmapComponent {
     return spans;
   });
 
-  months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  private readonly monthKeys = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+  get months(): string[] {
+    return this.monthKeys.map((k) => this.transloco.translate('charts.heatmap.months.' + k));
+  }
 
   constructor() {
     effect(() => {

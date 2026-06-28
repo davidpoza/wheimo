@@ -1,5 +1,5 @@
 <p-dialog
-  [header]="isEdit ? 'Edit Account' : 'New Account'"
+  [header]="(isEdit ? 'accounts.edit.editHeader' : 'accounts.edit.newHeader') | transloco"
   [visible]="visible()"
   (visibleChange)="visibleChange.emit($event)"
   [modal]="true"
@@ -8,8 +8,8 @@
   @if (isEdit) {
     <p-tabs value="detalle">
       <p-tablist>
-        <p-tab value="detalle">Detalle</p-tab>
-        <p-tab value="excepciones">Excepciones</p-tab>
+        <p-tab value="detalle">{{ 'accounts.edit.tab.detail' | transloco }}</p-tab>
+        <p-tab value="excepciones">{{ 'accounts.edit.tab.exceptions' | transloco }}</p-tab>
       </p-tablist>
 
       <p-tabpanels>
@@ -19,14 +19,14 @@
 
         <p-tabpanel value="excepciones">
           <div class="exceptions-toolbar">
-            <p-button label="New account exception" icon="pi pi-plus" (onClick)="newException()" />
+            <p-button [label]="'accounts.edit.newException' | transloco" icon="pi pi-plus" (onClick)="newException()" />
           </div>
 
           <p-table [value]="exceptions()" styleClass="p-datatable-sm mt-2">
             <ng-template pTemplate="header">
               <tr>
-                <th>Regex</th>
-                <th>Descripción</th>
+                <th>{{ 'accounts.edit.exceptions.col.regex' | transloco }}</th>
+                <th>{{ 'accounts.edit.exceptions.col.description' | transloco }}</th>
                 <th style="width: 6rem"></th>
               </tr>
             </ng-template>
@@ -42,7 +42,7 @@
             </ng-template>
             <ng-template pTemplate="emptymessage">
               <tr>
-                <td colspan="3">No hay excepciones definidas.</td>
+                <td colspan="3">{{ 'accounts.edit.exceptions.empty' | transloco }}</td>
               </tr>
             </ng-template>
           </p-table>
@@ -54,64 +54,64 @@
   }
 
   <ng-template pTemplate="footer">
-    <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="close()" />
-    <p-button label="Save" (onClick)="save()" [disabled]="form.invalid" />
+    <p-button [label]="'common.cancel' | transloco" [text]="true" severity="secondary" (onClick)="close()" />
+    <p-button [label]="'common.save' | transloco" (onClick)="save()" [disabled]="form.invalid" />
   </ng-template>
 </p-dialog>
 
 <ng-template #detailForm>
   <form [formGroup]="form" class="dialog-form">
     <div class="field">
-      <label>Name *</label>
+      <label>{{ 'accounts.edit.form.name' | transloco }}</label>
       <input pInputText formControlName="name" class="w-full" />
     </div>
 
     <div class="field">
-      <label>Description</label>
+      <label>{{ 'accounts.edit.form.description' | transloco }}</label>
       <input pInputText formControlName="description" class="w-full" />
     </div>
 
     <div class="field">
-      <label>Bank</label>
+      <label>{{ 'accounts.edit.form.bank' | transloco }}</label>
       <p-select formControlName="bankId" [options]="bankOptions" optionLabel="label" optionValue="value" class="w-full" appendTo="body" />
     </div>
 
     <div class="field">
-      <label>Account Number / IBAN</label>
+      <label>{{ 'accounts.edit.form.number' | transloco }}</label>
       <input pInputText formControlName="number" class="w-full" />
     </div>
 
     @if (bankId !== 'manual') {
       <div class="field">
-        <label>Access ID / User</label>
+        <label>{{ 'accounts.edit.form.accessId' | transloco }}</label>
         <input pInputText formControlName="accessId" class="w-full" />
       </div>
 
       <div class="field">
-        <label>{{ bankId === 'nordigen' ? 'Secret Key' : 'Password' }}</label>
+        <label>{{ (bankId === 'nordigen' ? 'accounts.edit.form.secretKey' : 'accounts.edit.form.password') | transloco }}</label>
         <input pInputText type="password" formControlName="accessPassword" class="w-full" />
       </div>
     }
 
     <div class="field">
-      <label>Tipo de movimiento</label>
+      <label>{{ 'accounts.edit.form.movementType' | transloco }}</label>
       <p-select formControlName="movementType" [options]="movementTypeOptions" optionLabel="label" optionValue="value" class="w-full" appendTo="body" />
     </div>
 
     <div class="field-checkbox">
       <p-checkbox formControlName="keepBalance" [binary]="true" inputId="keepBalance" />
-      <label for="keepBalance">Sincronizar balance</label>
+      <label for="keepBalance">{{ 'accounts.edit.form.keepBalance' | transloco }}</label>
     </div>
 
     <div class="field-checkbox">
       <p-checkbox formControlName="saving" [binary]="true" inputId="saving" />
-      <label for="saving">Savings account</label>
+      <label for="saving">{{ 'accounts.edit.form.saving' | transloco }}</label>
     </div>
   </form>
 </ng-template>
 
 <p-dialog
-  [header]="editingExceptionId() ? 'Edit Exception' : 'New Exception'"
+  [header]="(editingExceptionId() ? 'accounts.edit.exceptionDialog.editHeader' : 'accounts.edit.exceptionDialog.newHeader') | transloco"
   [visible]="showExceptionForm()"
   (visibleChange)="showExceptionForm.set($event)"
   [modal]="true"
@@ -119,22 +119,22 @@
 >
   <form [formGroup]="exceptionForm" class="dialog-form">
     <div class="field">
-      <label>Regex *</label>
-      <input pInputText formControlName="regex" class="w-full" placeholder="e.g. ^Comisión" />
+      <label>{{ 'accounts.edit.exceptionForm.regex' | transloco }}</label>
+      <input pInputText formControlName="regex" class="w-full" [placeholder]="'accounts.edit.exceptionForm.regexPlaceholder' | transloco" />
       @if (exceptionForm.get('regex')?.errors?.['invalidRegex'] && exceptionForm.get('regex')?.dirty) {
-        <small class="p-error">Expresión regular inválida</small>
+        <small class="p-error">{{ 'accounts.edit.exceptionForm.invalidRegex' | transloco }}</small>
       }
     </div>
 
     <div class="field">
-      <label>Descripción</label>
+      <label>{{ 'accounts.edit.exceptionForm.description' | transloco }}</label>
       <input pInputText formControlName="description" class="w-full" />
     </div>
   </form>
 
   <ng-template pTemplate="footer">
-    <p-button label="Cancel" [text]="true" severity="secondary" (onClick)="showExceptionForm.set(false)" />
-    <p-button label="Save" (onClick)="saveException()" [disabled]="exceptionForm.invalid" />
+    <p-button [label]="'common.cancel' | transloco" [text]="true" severity="secondary" (onClick)="showExceptionForm.set(false)" />
+    <p-button [label]="'common.save' | transloco" (onClick)="saveException()" [disabled]="exceptionForm.invalid" />
   </ng-template>
 </p-dialog>
 

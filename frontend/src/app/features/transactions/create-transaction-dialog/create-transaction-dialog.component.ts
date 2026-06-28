@@ -6,13 +6,14 @@ import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
+import { TranslocoModule } from '@jsverse/transloco';
 import { TransactionsService } from '../transactions.service';
 import { AccountsService } from '../../accounts/accounts.service';
 
 @Component({
   selector: 'app-create-transaction-dialog',
   standalone: true,
-  imports: [ReactiveFormsModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, DatePickerModule, SelectModule],
+  imports: [ReactiveFormsModule, DialogModule, ButtonModule, InputTextModule, InputNumberModule, DatePickerModule, SelectModule, TranslocoModule],
   templateUrl: './create-transaction-dialog.component.html',
 })
 export class CreateTransactionDialogComponent {

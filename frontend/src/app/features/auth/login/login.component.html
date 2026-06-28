@@ -1,25 +1,25 @@
 <div class="login-wrapper">
   <div class="login-card">
     <h1 class="login-title">Wheimo</h1>
-    <p class="login-subtitle">Personal Finance</p>
+    <p class="login-subtitle">{{ 'auth.login.subtitle' | transloco }}</p>
 
     <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
       <div class="field">
-        <label for="email">Email</label>
-        <input pInputText id="email" type="email" formControlName="email" placeholder="your@email.com" class="w-full" />
+        <label for="email">{{ 'auth.login.email' | transloco }}</label>
+        <input pInputText id="email" type="email" formControlName="email" [placeholder]="'auth.login.emailPlaceholder' | transloco" class="w-full" />
         @if (form.get('email')?.touched && form.get('email')?.hasError('email')) {
-          <small class="p-error">Enter a valid email</small>
+          <small class="p-error">{{ 'auth.login.invalidEmail' | transloco }}</small>
         }
       </div>
 
       <div class="field">
-        <label for="password">Password</label>
+        <label for="password">{{ 'auth.login.password' | transloco }}</label>
         <p-password
           id="password"
           formControlName="password"
           [feedback]="false"
           [toggleMask]="true"
-          placeholder="Password"
+          [placeholder]="'auth.login.password' | transloco"
           styleClass="w-full"
           inputStyleClass="w-full"
         />
@@ -31,7 +31,7 @@
 
       <p-button
         type="submit"
-        label="Sign In"
+        [label]="'auth.login.submit' | transloco"
         [loading]="loading()"
         [disabled]="form.invalid"
         styleClass="w-full mt-2"

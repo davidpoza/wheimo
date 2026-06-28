@@ -11,30 +11,13 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { RecurrentsService } from '../recurrents.service';
 import { Recurrent } from '../../../core/models/recurrent.model';
 import { PriceHistoryDialogComponent } from '../price-history-dialog/price-history-dialog.component';
 import { AssignTransactionDialogComponent } from '../assign-transaction-dialog/assign-transaction-dialog.component';
 
-const PERIODICITY_TYPES = [
-  { label: 'Por días', value: 'DAYS' },
-  { label: 'Anual', value: 'ANNUAL' },
-];
-
-const MONTHS = [
-  { label: 'Enero', value: 1 },
-  { label: 'Febrero', value: 2 },
-  { label: 'Marzo', value: 3 },
-  { label: 'Abril', value: 4 },
-  { label: 'Mayo', value: 5 },
-  { label: 'Junio', value: 6 },
-  { label: 'Julio', value: 7 },
-  { label: 'Agosto', value: 8 },
-  { label: 'Septiembre', value: 9 },
-  { label: 'Octubre', value: 10 },
-  { label: 'Noviembre', value: 11 },
-  { label: 'Diciembre', value: 12 },
-];
+const MONTH_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 
 function requireMonthIfAnnual(group: AbstractControl): ValidationErrors | null {
   const type = group.get('periodicityType')?.value;
@@ -49,7 +32,7 @@ function requireMonthIfAnnual(group: AbstractControl): ValidationErrors | null {
     CurrencyPipe,
     ReactiveFormsModule,
     ButtonModule, DialogModule, InputTextModule, InputNumberModule, SelectModule, TableModule,
-    ToastModule, TooltipModule, ConfirmDialogModule,
+    ToastModule, TooltipModule, ConfirmDialogModule, TranslocoModule,
     PriceHistoryDialogComponent, AssignTransactionDialogComponent,
   ],
   providers: [MessageService, ConfirmationService],
@@ -61,6 +44,7 @@ export class RecurrentsListComponent implements OnInit {
   private readonly recurrentsService = inject(RecurrentsService);
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly transloco = inject(TranslocoService);
 
   recurrents = this.recurrentsService.recurrents;
   dialogVisible = signal(false);
@@ -68,8 +52,19 @@ export class RecurrentsListComponent implements OnInit {
   historyRecurrent = signal<Recurrent | null>(null);
   assignRecurrent = signal<Recurrent | null>(null);
 
-  periodicityTypes = PERIODICITY_TYPES;
-  months = MONTHS;
+  get periodicityTypes() {
+    return [
+      { label: this.transloco.translate('recurrents.list.periodicityType.days'), value: 'DAYS' },
+      { label: this.transloco.translate('recurrents.list.periodicityType.annual'), value: 'ANNUAL' },
+    ];
+  }
+
+  get months() {
+    return MONTH_VALUES.map((v) => ({
+      label: this.transloco.translate('recurrents.list.months.' + v),
+      value: v,
+    }));
+  }
 
   form = this.fb.group({
     name: ['', Validators.required],
@@ -124,7 +119,7 @@ export class RecurrentsListComponent implements OnInit {
       }).subscribe({
         next: () => {
           this.dialogVisible.set(false);
-          this.messageService.add({ severity: 'success', summary: 'Artículo actualizado' });
+          this.messageService.add({ severity: 'success', summary: this.transloco.translate('recurrents.list.toast.updated') });
         },
       });
     } else {
@@ -140,7 +135,7 @@ export class RecurrentsListComponent implements OnInit {
       }).subscribe({
         next: () => {
           this.dialogVisible.set(false);
-          this.messageService.add({ severity: 'success', summary: 'Artículo creado' });
+          this.messageService.add({ severity: 'success', summary: this.transloco.translate('recurrents.list.toast.created') });
         },
       });
     }
@@ -148,14 +143,14 @@ export class RecurrentsListComponent implements OnInit {
 
   delete(r: Recurrent) {
     this.confirmationService.confirm({
-      message: `¿Eliminar "${r.name}"?`,
-      header: 'Confirmar eliminación',
+      message: this.transloco.translate('recurrents.list.confirm.message', { name: r.name }),
+      header: this.transloco.translate('recurrents.list.confirm.header'),
       icon: 'pi pi-trash',
-      acceptLabel: 'Sí',
-      rejectLabel: 'No',
+      acceptLabel: this.transloco.translate('recurrents.list.confirm.accept'),
+      rejectLabel: this.transloco.translate('recurrents.list.confirm.reject'),
       accept: () => {
         this.recurrentsService.delete(r.id).subscribe({
-          next: () => this.messageService.add({ severity: 'success', summary: 'Artículo eliminado' }),
+          next: () => this.messageService.add({ severity: 'success', summary: this.transloco.translate('recurrents.list.toast.deleted') }),
         });
       },
     });
@@ -180,9 +175,14 @@ export class RecurrentsListComponent implements OnInit {
 
   periodicityLabel(r: Recurrent): string {
     if (r.periodicityType === 'ANNUAL') {
-      const m = MONTHS.find(x => x.value === r.periodicityMonth);
-      return m ? `Anual (${m.label})` : 'Anual';
+      return r.periodicityMonth
+        ? this.transloco.translate('recurrents.list.periodicity.annualWithMonth', {
+            month: this.transloco.translate('recurrents.list.months.' + r.periodicityMonth),
+          })
+        : this.transloco.translate('recurrents.list.periodicity.annual');
     }
-    return r.periodicity ? `${r.periodicity} días` : '—';
+    return r.periodicity
+      ? this.transloco.translate('recurrents.list.periodicity.days', { days: r.periodicity })
+      : '—';
   }
 }

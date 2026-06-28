@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { ChartModule } from 'primeng/chart';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { ChartsService } from '../charts.service';
 import { AccountsService } from '../../accounts/accounts.service';
 import { TransactionsService } from '../../transactions/transactions.service';
@@ -13,7 +14,7 @@ import { StatisticsComponent } from '../statistics/statistics.component';
 @Component({
   selector: 'app-balance-evolution',
   standalone: true,
-  imports: [FormsModule, ChartModule, SelectModule, ButtonModule, TagExpensesChartComponent, HeatmapComponent, StatisticsComponent],
+  imports: [FormsModule, ChartModule, SelectModule, ButtonModule, TranslocoModule, TagExpensesChartComponent, HeatmapComponent, StatisticsComponent],
   templateUrl: './balance-evolution.component.html',
   styleUrl: './balance-evolution.component.scss',
 })
@@ -21,6 +22,7 @@ export class BalanceEvolutionComponent implements OnInit {
   private readonly chartsService = inject(ChartsService);
   private readonly accountsService = inject(AccountsService);
   private readonly txService = inject(TransactionsService);
+  private readonly transloco = inject(TranslocoService);
 
   accounts = this.accountsService.accounts;
   selectedAccountId = signal<number | null>(null);
@@ -53,7 +55,7 @@ export class BalanceEvolutionComponent implements OnInit {
       this.chartData.set({
         labels: txs.map((t) => t.date.slice(0, 10)),
         datasets: [{
-          label: 'Balance',
+          label: this.transloco.translate('charts.balance.dataset'),
           data: txs.map((t) => t.balance),
           fill: true,
           tension: 0.3,

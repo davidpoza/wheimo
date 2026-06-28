@@ -6,6 +6,7 @@ import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TagsService } from '../tags.service';
 import { Tag } from '../../../core/models/tag.model';
 import { TagRulesComponent } from '../tag-rules/tag-rules.component';
@@ -13,7 +14,7 @@ import { TagRulesComponent } from '../tag-rules/tag-rules.component';
 @Component({
   selector: 'app-tags-grid',
   standalone: true,
-  imports: [FormsModule, ButtonModule, InputTextModule, TableModule, ToastModule, ConfirmDialogModule, TagRulesComponent],
+  imports: [FormsModule, ButtonModule, InputTextModule, TableModule, ToastModule, ConfirmDialogModule, TranslocoModule, TagRulesComponent],
   providers: [MessageService, ConfirmationService],
   templateUrl: './tags-grid.component.html',
   styleUrl: './tags-grid.component.scss',
@@ -22,6 +23,7 @@ export class TagsGridComponent implements OnInit {
   private readonly tagsService = inject(TagsService);
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly transloco = inject(TranslocoService);
 
   tags = this.tagsService.tags;
   newTagName = signal('');
@@ -39,7 +41,7 @@ export class TagsGridComponent implements OnInit {
     this.tagsService.createTag(this.newTagName().trim()).subscribe({
       next: () => {
         this.newTagName.set('');
-        this.messageService.add({ severity: 'success', summary: 'Tag created' });
+        this.messageService.add({ severity: 'success', summary: this.transloco.translate('tags.grid.toast.created') });
       },
     });
   }
@@ -53,7 +55,7 @@ export class TagsGridComponent implements OnInit {
     this.tagsService.updateTag(tag.id, this.editingName()).subscribe({
       next: () => {
         this.editingId.set(null);
-        this.messageService.add({ severity: 'success', summary: 'Tag updated' });
+        this.messageService.add({ severity: 'success', summary: this.transloco.translate('tags.grid.toast.updated') });
       },
     });
   }
@@ -64,14 +66,14 @@ export class TagsGridComponent implements OnInit {
 
   deleteTag(tag: Tag) {
     this.confirmationService.confirm({
-      message: `¿Eliminar el tag "${tag.name}"?`,
-      header: 'Confirmar eliminación',
+      message: this.transloco.translate('tags.grid.confirm.message', { name: tag.name }),
+      header: this.transloco.translate('tags.grid.confirm.header'),
       icon: 'pi pi-trash',
-      acceptLabel: 'Sí',
-      rejectLabel: 'No',
+      acceptLabel: this.transloco.translate('tags.grid.confirm.accept'),
+      rejectLabel: this.transloco.translate('tags.grid.confirm.reject'),
       accept: () => {
         this.tagsService.deleteTag(tag.id).subscribe({
-          next: () => this.messageService.add({ severity: 'success', summary: 'Tag deleted' }),
+          next: () => this.messageService.add({ severity: 'success', summary: this.transloco.translate('tags.grid.toast.deleted') }),
         });
       },
     });

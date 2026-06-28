@@ -10,6 +10,7 @@ import { PaginatorModule } from 'primeng/paginator';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { RecurrentsService } from '../recurrents.service';
 import { TransactionsService } from '../../transactions/transactions.service';
@@ -23,7 +24,7 @@ import { Transaction, TransactionFilters } from '../../../core/models/transactio
     CurrencyPipe, DatePipe, FormsModule,
     ButtonModule, DialogModule, DatePickerModule,
     InputTextModule, RadioButtonModule, PaginatorModule,
-    ToastModule, TooltipModule,
+    ToastModule, TooltipModule, TranslocoModule,
   ],
   providers: [MessageService],
   templateUrl: './assign-transaction-dialog.component.html',
@@ -55,6 +56,7 @@ export class AssignTransactionDialogComponent implements OnInit, OnDestroy {
   private readonly recurrentsService = inject(RecurrentsService);
   private readonly txService = inject(TransactionsService);
   private readonly messageService = inject(MessageService);
+  private readonly transloco = inject(TranslocoService);
 
   recurrent = input.required<Recurrent>();
   close = output<void>();
@@ -154,14 +156,14 @@ export class AssignTransactionDialogComponent implements OnInit, OnDestroy {
     this.assigning.set(true);
     this.recurrentsService.assignTransaction(this.recurrent().id, tx.id).subscribe({
       next: () => {
-        this.messageService.add({ severity: 'success', summary: 'Transacción asignada' });
+        this.messageService.add({ severity: 'success', summary: this.transloco.translate('recurrents.assign.toast.assigned') });
         this.selectedTransaction.set(null);
         this.loadLinked();
         this.recurrentsService.loadAll().subscribe();
         this.assigning.set(false);
       },
       error: () => {
-        this.messageService.add({ severity: 'error', summary: 'Error al asignar' });
+        this.messageService.add({ severity: 'error', summary: this.transloco.translate('recurrents.assign.toast.assignError') });
         this.assigning.set(false);
       },
     });
@@ -172,7 +174,7 @@ export class AssignTransactionDialogComponent implements OnInit, OnDestroy {
       next: () => {
         this.loadLinked();
         this.recurrentsService.loadAll().subscribe();
-        this.messageService.add({ severity: 'success', summary: 'Vínculo eliminado' });
+        this.messageService.add({ severity: 'success', summary: this.transloco.translate('recurrents.assign.toast.linkRemoved') });
       },
     });
   }

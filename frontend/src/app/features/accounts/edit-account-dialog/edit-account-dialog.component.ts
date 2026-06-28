@@ -10,22 +10,23 @@ import { TabsModule } from 'primeng/tabs';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AccountsService } from '../accounts.service';
 import { AccountExceptionsService } from '../account-exceptions.service';
 import { Account, MovementType } from '../../../core/models/account.model';
 import { AccountException } from '../../../core/models/account-exception.model';
 
-const BANK_OPTIONS = [
-  { label: 'Nordigen (Open Banking)', value: 'nordigen' },
-  { label: 'Openbank', value: 'openbank' },
-  { label: 'Openbank Prepaid', value: 'openbank-prepaid' },
-  { label: 'Manual', value: 'manual' },
+const BANK_OPTION_VALUES: { key: string; value: string }[] = [
+  { key: 'nordigen', value: 'nordigen' },
+  { key: 'openbank', value: 'openbank' },
+  { key: 'openbankPrepaid', value: 'openbank-prepaid' },
+  { key: 'manual', value: 'manual' },
 ];
 
-const MOVEMENT_TYPE_OPTIONS: { label: string; value: MovementType }[] = [
-  { label: 'Ambos', value: 'BOTH' },
-  { label: 'Entrada', value: 'INCOME' },
-  { label: 'Salida', value: 'EXPENSE' },
+const MOVEMENT_TYPE_VALUES: { key: string; value: MovementType }[] = [
+  { key: 'both', value: 'BOTH' },
+  { key: 'income', value: 'INCOME' },
+  { key: 'expense', value: 'EXPENSE' },
 ];
 
 function validRegex(control: AbstractControl): ValidationErrors | null {
@@ -44,7 +45,7 @@ function validRegex(control: AbstractControl): ValidationErrors | null {
   imports: [
     NgTemplateOutlet,
     ReactiveFormsModule, DialogModule, ButtonModule, InputTextModule, SelectModule, CheckboxModule,
-    TabsModule, TableModule, ConfirmDialogModule,
+    TabsModule, TableModule, ConfirmDialogModule, TranslocoModule,
   ],
   providers: [ConfirmationService],
   templateUrl: './edit-account-dialog.component.html',
@@ -54,14 +55,26 @@ export class EditAccountDialogComponent {
   private readonly accountsService = inject(AccountsService);
   private readonly exceptionsService = inject(AccountExceptionsService);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly transloco = inject(TranslocoService);
 
   visible = input<boolean>(false);
   account = input<Account | null>(null);
   visibleChange = output<boolean>();
   saved = output<void>();
 
-  bankOptions = BANK_OPTIONS;
-  movementTypeOptions = MOVEMENT_TYPE_OPTIONS;
+  get bankOptions() {
+    return BANK_OPTION_VALUES.map((o) => ({
+      label: this.transloco.translate('accounts.edit.bank.' + o.key),
+      value: o.value,
+    }));
+  }
+
+  get movementTypeOptions() {
+    return MOVEMENT_TYPE_VALUES.map((o) => ({
+      label: this.transloco.translate('accounts.edit.movementType.' + o.key),
+      value: o.value,
+    }));
+  }
 
   exceptions = signal<AccountException[]>([]);
   showExceptionForm = signal(false);
@@ -188,8 +201,8 @@ export class EditAccountDialogComponent {
     const acc = this.account();
     if (!acc) return;
     this.confirmationService.confirm({
-      message: '¿Eliminar esta excepción?',
-      header: 'Confirmar',
+      message: this.transloco.translate('accounts.edit.confirm.message'),
+      header: this.transloco.translate('accounts.edit.confirm.header'),
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
         this.exceptionsService.delete(acc.id, exception.id).subscribe(() => this.loadExceptions());

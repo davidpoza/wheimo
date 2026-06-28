@@ -7,6 +7,7 @@ import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AccountsService } from '../accounts.service';
 import { Account } from '../../../core/models/account.model';
 import { EditAccountDialogComponent } from '../edit-account-dialog/edit-account-dialog.component';
@@ -14,7 +15,7 @@ import { EditAccountDialogComponent } from '../edit-account-dialog/edit-account-
 @Component({
   selector: 'app-accounts-list',
   standalone: true,
-  imports: [CurrencyPipe, ButtonModule, CardModule, TagModule, ToastModule, TooltipModule, ConfirmDialogModule, EditAccountDialogComponent],
+  imports: [CurrencyPipe, ButtonModule, CardModule, TagModule, ToastModule, TooltipModule, ConfirmDialogModule, TranslocoModule, EditAccountDialogComponent],
   providers: [MessageService, ConfirmationService],
   templateUrl: './accounts-list.component.html',
   styleUrl: './accounts-list.component.scss',
@@ -25,6 +26,7 @@ export class AccountsListComponent implements OnInit {
   private readonly accountsService = inject(AccountsService);
   private readonly messageService = inject(MessageService);
   private readonly confirmationService = inject(ConfirmationService);
+  private readonly transloco = inject(TranslocoService);
 
   accounts = this.accountsService.accounts;
   dialogVisible = signal(false);
@@ -47,22 +49,22 @@ export class AccountsListComponent implements OnInit {
 
   resync(account: Account) {
     this.accountsService.resync(account.id).subscribe({
-      next: () => this.messageService.add({ severity: 'info', summary: 'Sync started', detail: account.name }),
-      error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Sync failed' }),
+      next: () => this.messageService.add({ severity: 'info', summary: this.transloco.translate('accounts.list.toast.syncStarted'), detail: account.name }),
+      error: () => this.messageService.add({ severity: 'error', summary: this.transloco.translate('common.error'), detail: this.transloco.translate('accounts.list.toast.syncFailed') }),
     });
   }
 
   delete(account: Account) {
     this.confirmationService.confirm({
-      message: `¿Eliminar la cuenta "${account.name}"?`,
-      header: 'Confirmar eliminación',
+      message: this.transloco.translate('accounts.list.confirm.message', { name: account.name }),
+      header: this.transloco.translate('accounts.list.confirm.header'),
       icon: 'pi pi-trash',
-      acceptLabel: 'Sí',
-      rejectLabel: 'No',
+      acceptLabel: this.transloco.translate('accounts.list.confirm.accept'),
+      rejectLabel: this.transloco.translate('accounts.list.confirm.reject'),
       accept: () => {
         this.accountsService.delete(account.id).subscribe({
-          next: () => this.messageService.add({ severity: 'success', summary: 'Deleted', detail: account.name }),
-          error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Delete failed' }),
+          next: () => this.messageService.add({ severity: 'success', summary: this.transloco.translate('accounts.list.toast.deleted'), detail: account.name }),
+          error: () => this.messageService.add({ severity: 'error', summary: this.transloco.translate('common.error'), detail: this.transloco.translate('accounts.list.toast.deleteFailed') }),
         });
       },
     });
@@ -84,12 +86,12 @@ export class AccountsListComponent implements OnInit {
       next: (result) => {
         this.messageService.add({
           severity: 'success',
-          summary: 'Import complete',
-          detail: `${result.imported} imported, ${result.skipped} skipped`,
+          summary: this.transloco.translate('accounts.list.toast.importComplete'),
+          detail: this.transloco.translate('accounts.list.toast.importDetail', { imported: result.imported, skipped: result.skipped }),
         });
       },
       error: () => {
-        this.messageService.add({ severity: 'error', summary: 'Import failed', detail: 'Could not parse the XLS file' });
+        this.messageService.add({ severity: 'error', summary: this.transloco.translate('accounts.list.toast.importFailed'), detail: this.transloco.translate('accounts.list.toast.importParseError') });
       },
     });
   }

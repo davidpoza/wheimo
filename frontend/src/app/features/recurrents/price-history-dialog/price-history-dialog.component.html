@@ -1,5 +1,5 @@
 <p-dialog
-  [header]="'Historial de precios — ' + recurrent().name"
+  [header]="'recurrents.priceHistory.header' | transloco: { name: recurrent().name }"
   [visible]="visible()"
   (visibleChange)="visible.set($event)"
   (onHide)="onHide()"
@@ -10,7 +10,7 @@
   <div class="history-container">
     <div class="history-actions">
       <p-button
-        [label]="addFormVisible() ? 'Cancelar' : 'Registrar precio'"
+        [label]="(addFormVisible() ? 'recurrents.priceHistory.cancel' : 'recurrents.priceHistory.addPrice') | transloco"
         [icon]="addFormVisible() ? 'pi pi-times' : 'pi pi-plus'"
         [severity]="addFormVisible() ? 'secondary' : 'primary'"
         [text]="addFormVisible()"
@@ -22,19 +22,19 @@
       <form [formGroup]="form" class="add-form">
         <div class="form-row">
           <div class="field">
-            <label>Precio (€) *</label>
+            <label>{{ 'recurrents.priceHistory.form.price' | transloco }}</label>
             <p-inputnumber formControlName="amount" mode="decimal" [minFractionDigits]="2" class="w-full" />
           </div>
           <div class="field">
-            <label>Unidades (opcional)</label>
+            <label>{{ 'recurrents.priceHistory.form.units' | transloco }}</label>
             <p-inputnumber formControlName="units" mode="decimal" [maxFractionDigits]="3" class="w-full" />
           </div>
           <div class="field">
-            <label>Fecha (vacío = hoy)</label>
+            <label>{{ 'recurrents.priceHistory.form.date' | transloco }}</label>
             <p-datepicker formControlName="recordedAt" dateFormat="dd/mm/yy" [showTime]="false" class="w-full" appendTo="body" />
           </div>
         </div>
-        <p-button label="Guardar" (onClick)="addEntry()" [disabled]="form.invalid" />
+        <p-button [label]="'recurrents.priceHistory.save' | transloco" (onClick)="addEntry()" [disabled]="form.invalid" />
       </form>
     }
 
@@ -47,9 +47,9 @@
     <p-table [value]="history()" styleClass="p-datatable-sm" [rowHover]="true">
       <ng-template pTemplate="header">
         <tr>
-          <th>Fecha</th>
-          <th class="amount">Precio</th>
-          <th class="amount">Unidades</th>
+          <th>{{ 'recurrents.priceHistory.col.date' | transloco }}</th>
+          <th class="amount">{{ 'recurrents.priceHistory.col.price' | transloco }}</th>
+          <th class="amount">{{ 'recurrents.priceHistory.col.units' | transloco }}</th>
         </tr>
       </ng-template>
 
@@ -69,14 +69,14 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="3" class="empty">Sin entradas de precio aún.</td>
+          <td colspan="3" class="empty">{{ 'recurrents.priceHistory.empty' | transloco }}</td>
         </tr>
       </ng-template>
     </p-table>
   </div>
 
   <ng-template pTemplate="footer">
-    <p-button label="Cerrar" severity="secondary" (onClick)="onHide()" />
+    <p-button [label]="'recurrents.priceHistory.close' | transloco" severity="secondary" (onClick)="onHide()" />
   </ng-template>
 </p-dialog>
 
