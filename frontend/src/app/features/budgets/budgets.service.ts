@@ -1,8 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
-import { Budget, BudgetStatus } from '../../core/models/budget.model';
-import { environment } from '../../../environments/environment';
+import { Budget, BudgetStatus } from '@core/models/budget.model';
+import { environment } from '@env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class BudgetsService {

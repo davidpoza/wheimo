@@ -7,7 +7,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TransactionsService } from '../transactions.service';
-import { TagsService } from '../../tags/tags.service';
+import { TagsService } from '@features/tags/tags.service';
 
 @Component({
   selector: 'app-tagging-dialog',

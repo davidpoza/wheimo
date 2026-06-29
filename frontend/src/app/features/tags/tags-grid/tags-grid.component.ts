@@ -8,7 +8,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TagsService } from '../tags.service';
-import { Tag } from '../../../core/models/tag.model';
+import { Tag } from '@core/models/tag.model';
 import { TagRulesComponent } from '../tag-rules/tag-rules.component';
 
 @Component({

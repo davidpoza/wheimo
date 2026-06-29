@@ -1,8 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
-import { Recurrent, RecurrentLink, RecurrentPriceEntry } from '../../core/models/recurrent.model';
-import { environment } from '../../../environments/environment';
+import { Recurrent, RecurrentLink, RecurrentPriceEntry } from '@core/models/recurrent.model';
+import { environment } from '@env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class RecurrentsService {

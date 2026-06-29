@@ -11,8 +11,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { BudgetsService } from '../budgets.service';
-import { TagsService } from '../../tags/tags.service';
-import { BudgetStatus } from '../../../core/models/budget.model';
+import { TagsService } from '@features/tags/tags.service';
+import { BudgetStatus } from '@core/models/budget.model';
 
 @Component({
   selector: 'app-budgets',

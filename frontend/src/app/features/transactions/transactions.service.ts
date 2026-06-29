@@ -1,8 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { tap } from 'rxjs';
-import { Transaction, TransactionFilters, TransactionPage, TagExpense } from '../../core/models/transaction.model';
-import { environment } from '../../../environments/environment';
+import { Transaction, TransactionFilters, TransactionPage, TagExpense } from '@core/models/transaction.model';
+import { environment } from '@env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TransactionsService {

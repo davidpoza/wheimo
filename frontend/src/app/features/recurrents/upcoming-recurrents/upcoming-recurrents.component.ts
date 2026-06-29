@@ -4,7 +4,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { RecurrentsService } from '../recurrents.service';
-import { Recurrent } from '../../../core/models/recurrent.model';
+import { Recurrent } from '@core/models/recurrent.model';
 
 @Component({
   selector: 'app-upcoming-recurrents',

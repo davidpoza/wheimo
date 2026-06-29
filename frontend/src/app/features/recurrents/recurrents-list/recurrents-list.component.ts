@@ -14,7 +14,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { RecurrentsService } from '../recurrents.service';
-import { Recurrent } from '../../../core/models/recurrent.model';
+import { Recurrent } from '@core/models/recurrent.model';
 import { PriceHistoryDialogComponent } from '../price-history-dialog/price-history-dialog.component';
 import { AssignTransactionDialogComponent } from '../assign-transaction-dialog/assign-transaction-dialog.component';
 

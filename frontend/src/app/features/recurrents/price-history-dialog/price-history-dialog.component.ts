@@ -11,7 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { RecurrentsService } from '../recurrents.service';
-import { Recurrent, RecurrentPriceEntry } from '../../../core/models/recurrent.model';
+import { Recurrent, RecurrentPriceEntry } from '@core/models/recurrent.model';
 
 @Component({
   selector: 'app-price-history-dialog',

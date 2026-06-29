@@ -8,9 +8,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { DrawerModule } from 'primeng/drawer';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TransactionsService } from '../transactions.service';
-import { TagsService } from '../../tags/tags.service';
-import { AccountsService } from '../../accounts/accounts.service';
-import { TransactionFilters } from '../../../core/models/transaction.model';
+import { TagsService } from '@features/tags/tags.service';
+import { AccountsService } from '@features/accounts/accounts.service';
+import { TransactionFilters } from '@core/models/transaction.model';
 
 @Component({
   selector: 'app-transaction-filter',

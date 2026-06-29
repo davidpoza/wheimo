@@ -8,7 +8,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { TranslocoModule } from '@jsverse/transloco';
 import { TransactionsService } from '../transactions.service';
-import { AccountsService } from '../../accounts/accounts.service';
+import { AccountsService } from '@features/accounts/accounts.service';
 
 @Component({
   selector: 'app-create-transaction-dialog',

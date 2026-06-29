@@ -1,8 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { tap } from 'rxjs';
-import { Account } from '../../core/models/account.model';
-import { environment } from '../../../environments/environment';
+import { Account } from '@core/models/account.model';
+import { environment } from '@env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AccountsService {

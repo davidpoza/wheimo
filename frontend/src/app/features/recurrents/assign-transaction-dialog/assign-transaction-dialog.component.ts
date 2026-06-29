@@ -13,9 +13,9 @@ import { MessageService } from 'primeng/api';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { RecurrentsService } from '../recurrents.service';
-import { TransactionsService } from '../../transactions/transactions.service';
-import { Recurrent, RecurrentLink } from '../../../core/models/recurrent.model';
-import { Transaction, TransactionFilters } from '../../../core/models/transaction.model';
+import { TransactionsService } from '@features/transactions/transactions.service';
+import { Recurrent, RecurrentLink } from '@core/models/recurrent.model';
+import { Transaction, TransactionFilters } from '@core/models/transaction.model';
 
 @Component({
   selector: 'app-assign-transaction-dialog',

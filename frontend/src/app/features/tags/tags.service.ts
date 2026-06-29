@@ -1,9 +1,9 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin, of, switchMap, tap } from 'rxjs';
-import { Tag } from '../../core/models/tag.model';
-import { Rule } from '../../core/models/rule.model';
-import { environment } from '../../../environments/environment';
+import { Tag } from '@core/models/tag.model';
+import { Rule } from '@core/models/rule.model';
+import { environment } from '@env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TagsService {

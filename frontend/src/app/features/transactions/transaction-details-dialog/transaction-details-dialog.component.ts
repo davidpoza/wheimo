@@ -14,11 +14,11 @@ import { ConfirmationService } from 'primeng/api';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TransactionsService } from '../transactions.service';
 import { AttachmentService } from '../attachment.service';
-import { TagsService } from '../../tags/tags.service';
-import { AccountsService } from '../../accounts/accounts.service';
-import { Transaction } from '../../../core/models/transaction.model';
-import { Attachment } from '../../../core/models/attachment.model';
-import { CameraCaptureComponent } from '../../../shared/components/camera-capture/camera-capture.component';
+import { TagsService } from '@features/tags/tags.service';
+import { AccountsService } from '@features/accounts/accounts.service';
+import { Transaction } from '@core/models/transaction.model';
+import { Attachment } from '@core/models/attachment.model';
+import { CameraCaptureComponent } from '@shared/components/camera-capture/camera-capture.component';
 
 @Component({
   selector: 'app-transaction-details-dialog',

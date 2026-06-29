@@ -13,8 +13,8 @@ import { ConfirmationService } from 'primeng/api';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AccountsService } from '../accounts.service';
 import { AccountExceptionsService } from '../account-exceptions.service';
-import { Account, MovementType } from '../../../core/models/account.model';
-import { AccountException } from '../../../core/models/account-exception.model';
+import { Account, MovementType } from '@core/models/account.model';
+import { AccountException } from '@core/models/account-exception.model';
 
 const BANK_OPTION_VALUES: { key: string; value: string }[] = [
   { key: 'nordigen', value: 'nordigen' },

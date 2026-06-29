@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { TagExpense } from '../../core/models/transaction.model';
-import { environment } from '../../../environments/environment';
+import { TagExpense } from '@core/models/transaction.model';
+import { environment } from '@env/environment';
 
 export interface BalancePoint {
   date: string;

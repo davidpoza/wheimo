@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { AccountException } from '../../core/models/account-exception.model';
-import { environment } from '../../../environments/environment';
+import { AccountException } from '@core/models/account-exception.model';
+import { environment } from '@env/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AccountExceptionsService {

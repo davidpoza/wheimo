@@ -9,7 +9,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { AccountsService } from '../accounts.service';
-import { Account } from '../../../core/models/account.model';
+import { Account } from '@core/models/account.model';
 import { EditAccountDialogComponent } from '../edit-account-dialog/edit-account-dialog.component';
 
 @Component({

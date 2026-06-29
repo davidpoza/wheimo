@@ -11,7 +11,7 @@ import { routes } from './app.routes';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { loaderInterceptor } from './core/interceptors/loader.interceptor';
 import { TranslocoHttpLoader } from './core/transloco-loader';
-import { environment } from '../environments/environment';
+import { environment } from '@env/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
