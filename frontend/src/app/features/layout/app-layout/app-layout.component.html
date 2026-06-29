@@ -1,8 +1,16 @@
 <div class="layout-wrapper">
   <!-- Desktop Sidebar -->
-  <aside class="sidebar">
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed()">
     <div class="sidebar-header">
       <span class="logo">Wheimo</span>
+      <p-button
+        class="collapse-btn"
+        [icon]="sidebarCollapsed() ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"
+        [text]="true"
+        severity="secondary"
+        size="small"
+        (onClick)="toggleSidebar()"
+      />
     </div>
 
     <nav class="sidebar-nav">
@@ -11,6 +19,9 @@
           [routerLink]="item.route"
           routerLinkActive="active"
           class="nav-item"
+          [pTooltip]="item.label | transloco"
+          tooltipPosition="right"
+          [tooltipDisabled]="!sidebarCollapsed()"
         >
           <i [class]="item.icon"></i>
           <span>{{ item.label | transloco }}</span>
