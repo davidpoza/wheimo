@@ -9,9 +9,11 @@ export class TransactionsService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = `${environment.apiUrl}/transactions`;
 
+  private readonly DEFAULT_FILTERS: TransactionFilters = { limit: 50, offset: 0, sort: 'date,desc' };
+
   transactions = signal<Transaction[]>([]);
   total = signal<number>(0);
-  filters = signal<TransactionFilters>({ limit: 50, offset: 0, sort: 'date,desc' });
+  filters = signal<TransactionFilters>({ ...this.DEFAULT_FILTERS });
 
   loadAll(filters?: TransactionFilters) {
     const active = { ...this.filters(), ...filters };
@@ -81,5 +83,9 @@ export class TransactionsService {
 
   setFilters(f: TransactionFilters) {
     this.filters.set({ ...this.filters(), ...f, offset: 0 });
+  }
+
+  resetFilters() {
+    this.filters.set({ ...this.DEFAULT_FILTERS });
   }
 }

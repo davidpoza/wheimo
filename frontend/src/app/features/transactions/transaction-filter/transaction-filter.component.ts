@@ -52,7 +52,7 @@ export class TransactionFilterComponent implements OnInit {
 
   reset() {
     this.draft = {};
-    this.txService.setFilters({});
+    this.txService.resetFilters();
     this.txService.loadAll().subscribe();
     this.drawerVisible.set(false);
   }
