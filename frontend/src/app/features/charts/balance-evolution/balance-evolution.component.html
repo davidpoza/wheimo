@@ -12,15 +12,6 @@
     />
   </div>
 
-  <div class="chart-section">
-    <h3>{{ 'charts.balance.title' | transloco }}</h3>
-    @if (chartData()) {
-      <p-chart type="line" [data]="chartData()" [options]="chartOptions" styleClass="balance-chart" />
-    } @else {
-      <div class="chart-empty">{{ 'charts.balance.empty' | transloco }}</div>
-    }
-  </div>
-
   <div class="charts-grid">
     <div class="chart-section">
       <app-tag-expenses-chart [accountId]="selectedAccountId()" />
@@ -28,6 +19,15 @@
     <div class="chart-section">
       <app-statistics [accountId]="selectedAccountId()" />
     </div>
+  </div>
+
+  <div class="chart-section">
+    <h3>{{ 'charts.balance.title' | transloco }}</h3>
+    @if (chartData()) {
+      <p-chart type="line" [data]="chartData()" [options]="chartOptions" styleClass="balance-chart" />
+    } @else {
+      <div class="chart-empty">{{ 'charts.balance.empty' | transloco }}</div>
+    }
   </div>
 
   <div class="chart-section">
