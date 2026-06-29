@@ -87,7 +87,7 @@
       <label>{{ 'recurrents.list.form.periodicityType' | transloco }}</label>
       <p-select formControlName="periodicityType" [options]="periodicityTypes" optionLabel="label" optionValue="value" class="w-full" appendTo="body" />
     </div>
-    @if (!isAnnual) {
+    @if (!isAnnual && !isMonthly) {
       <div class="field">
         <label>{{ 'recurrents.list.form.periodicityDays' | transloco }}</label>
         <p-inputnumber formControlName="periodicity" [useGrouping]="false" class="w-full" [placeholder]="'recurrents.list.form.periodicityDaysPlaceholder' | transloco" />
@@ -95,6 +95,12 @@
       <div class="field">
         <label>{{ 'recurrents.list.form.startDate' | transloco }}</label>
         <p-datepicker formControlName="startDate" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" class="w-full" appendTo="body" [showButtonBar]="true" [placeholder]="'recurrents.list.form.startDatePlaceholder' | transloco" />
+      </div>
+    }
+    @if (isMonthly) {
+      <div class="field">
+        <label>{{ 'recurrents.list.form.paymentDay' | transloco }}</label>
+        <p-inputnumber formControlName="periodicityDay" [useGrouping]="false" [min]="1" [max]="31" class="w-full" [placeholder]="'recurrents.list.form.selectDay' | transloco" />
       </div>
     }
     @if (isAnnual) {

@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
+import java.time.YearMonth;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -37,7 +38,7 @@ public class RecurrentService {
     @Transactional
     public RecurrentDto create(String name, String establishment, BigDecimal amount, BigDecimal units,
                                Integer periodicity, String periodicityType, Integer periodicityMonth,
-                               LocalDate startDate, String link) {
+                               Integer periodicityDay, LocalDate startDate, String link) {
         Recurrent r = Recurrent.builder()
                 .name(name)
                 .establishment(establishment)
@@ -46,6 +47,7 @@ public class RecurrentService {
                 .periodicity(periodicity)
                 .periodicityType(periodicityType != null ? periodicityType : "DAYS")
                 .periodicityMonth(periodicityMonth)
+                .periodicityDay(periodicityDay)
                 .startDate(startDate)
                 .link(link)
                 .build();
@@ -83,6 +85,11 @@ public class RecurrentService {
                         LocalDate nextOccurrence = today.isBefore(firstOfThisYear) ? firstOfThisYear : firstOfThisYear.plusYears(1);
                         LocalDate windowStartDate = nextOccurrence.minusDays(7);
                         return !today.isBefore(windowStartDate) && today.isBefore(nextOccurrence);
+                    } else if ("MONTHLY".equals(r.getPeriodicityType())) {
+                        if (r.getPeriodicityDay() == null) return false;
+                        LocalDate nextOccurrence = computeNextMonthlyDate(today, r.getPeriodicityDay());
+                        LocalDate windowStartDate = nextOccurrence.minusDays(7);
+                        return !today.isBefore(windowStartDate) && today.isBefore(nextOccurrence);
                     } else {
                         OffsetDateTime next = computeNextPredictedDate(r);
                         return next != null && !next.isBefore(windowStart) && !next.isAfter(windowEnd);
@@ -106,6 +113,10 @@ public class RecurrentService {
         if (updates.containsKey("periodicityMonth")) {
             Object val = updates.get("periodicityMonth");
             r.setPeriodicityMonth(val != null ? ((Number) val).intValue() : null);
+        }
+        if (updates.containsKey("periodicityDay")) {
+            Object val = updates.get("periodicityDay");
+            r.setPeriodicityDay(val != null ? ((Number) val).intValue() : null);
         }
         if (updates.containsKey("startDate")) {
             Object val = updates.get("startDate");
@@ -181,11 +192,28 @@ public class RecurrentService {
                 .stream().map(this::toLinkDto).toList();
     }
 
+    private LocalDate computeNextMonthlyDate(LocalDate today, int dayOfMonth) {
+        YearMonth currentMonth = YearMonth.of(today.getYear(), today.getMonthValue());
+        int clampedDay = Math.min(dayOfMonth, currentMonth.lengthOfMonth());
+        LocalDate candidateThisMonth = LocalDate.of(today.getYear(), today.getMonthValue(), clampedDay);
+        if (!today.isAfter(candidateThisMonth)) {
+            return candidateThisMonth;
+        }
+        YearMonth nextMonth = currentMonth.plusMonths(1);
+        int clampedDayNext = Math.min(dayOfMonth, nextMonth.lengthOfMonth());
+        return LocalDate.of(nextMonth.getYear(), nextMonth.getMonthValue(), clampedDayNext);
+    }
+
     // Returns null for ANNUAL type (no concept of next date) and for DAYS with no periodicity set.
     // Base anchor priority: last linked transaction -> startDate -> createdAt.
     // From the base, roll forward by `periodicity` days until reaching the first occurrence
     // that falls on or after today, so the result is always the next upcoming occurrence.
     private OffsetDateTime computeNextPredictedDate(Recurrent r) {
+        if ("MONTHLY".equals(r.getPeriodicityType())) {
+            if (r.getPeriodicityDay() == null) return null;
+            LocalDate today = LocalDate.now(ZoneOffset.UTC);
+            return computeNextMonthlyDate(today, r.getPeriodicityDay()).atStartOfDay().atOffset(ZoneOffset.UTC);
+        }
         if (!"DAYS".equals(r.getPeriodicityType()) || r.getPeriodicity() == null) return null;
         int periodicity = r.getPeriodicity();
         if (periodicity <= 0) return null;
@@ -224,6 +252,7 @@ public class RecurrentService {
                 .periodicity(r.getPeriodicity())
                 .periodicityType(r.getPeriodicityType())
                 .periodicityMonth(r.getPeriodicityMonth())
+                .periodicityDay(r.getPeriodicityDay())
                 .startDate(r.getStartDate())
                 .link(r.getLink())
                 .nextPredictedDate(computeNextPredictedDate(r))

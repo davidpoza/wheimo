@@ -36,6 +36,9 @@ public class Recurrent {
     @Column(name = "periodicity_month")
     private Integer periodicityMonth;
 
+    @Column(name = "periodicity_day")
+    private Integer periodicityDay;
+
     @Column(name = "start_date")
     private LocalDate startDate;
 

@@ -7,6 +7,7 @@ export interface Recurrent {
   periodicity: number | null;
   periodicityType: string;
   periodicityMonth: number | null;
+  periodicityDay: number | null;
   startDate: string | null;
   link: string | null;
   nextPredictedDate: string | null;

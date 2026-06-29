@@ -31,8 +31,19 @@ export class UpcomingRecurrentsComponent implements OnInit {
           })
         : this.transloco.translate('recurrents.upcoming.periodicity.annual');
     }
+    if (r.periodicityType === 'MONTHLY') {
+      return r.periodicityDay
+        ? this.transloco.translate('recurrents.upcoming.periodicity.monthly', { day: r.periodicityDay })
+        : this.transloco.translate('recurrents.list.periodicityType.monthly');
+    }
     return r.periodicity
       ? this.transloco.translate('recurrents.upcoming.periodicity.days', { days: r.periodicity })
       : '—';
+  }
+
+  periodicitySeverity(r: Recurrent): 'warn' | 'info' | 'success' {
+    if (r.periodicityType === 'ANNUAL') return 'warn';
+    if (r.periodicityType === 'MONTHLY') return 'success';
+    return 'info';
   }
 }

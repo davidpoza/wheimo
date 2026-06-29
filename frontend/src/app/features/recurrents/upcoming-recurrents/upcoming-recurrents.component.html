@@ -20,7 +20,7 @@
         <td>
           <p-tag
             [value]="periodicityLabel(r)"
-            [severity]="r.periodicityType === 'ANNUAL' ? 'warn' : 'info'"
+            [severity]="periodicitySeverity(r)"
           />
         </td>
         <td class="amount">{{ r.amount | currency: 'EUR' }}</td>

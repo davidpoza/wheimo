@@ -17,6 +17,7 @@ public class RecurrentDto {
     private Integer periodicity;
     private String periodicityType;
     private Integer periodicityMonth;
+    private Integer periodicityDay;
     private LocalDate startDate;
     private String link;
     private OffsetDateTime nextPredictedDate;

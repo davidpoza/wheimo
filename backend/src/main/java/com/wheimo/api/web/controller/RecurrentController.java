@@ -31,10 +31,11 @@ public class RecurrentController {
         Integer periodicity = body.get("periodicity") != null ? ((Number) body.get("periodicity")).intValue() : null;
         String periodicityType = (String) body.get("periodicityType");
         Integer periodicityMonth = body.get("periodicityMonth") != null ? ((Number) body.get("periodicityMonth")).intValue() : null;
+        Integer periodicityDay = body.get("periodicityDay") != null ? ((Number) body.get("periodicityDay")).intValue() : null;
         LocalDate startDate = body.get("startDate") != null ? LocalDate.parse(body.get("startDate").toString()) : null;
         String link = (String) body.get("link");
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(recurrentService.create(name, establishment, amount, units, periodicity, periodicityType, periodicityMonth, startDate, link));
+                .body(recurrentService.create(name, establishment, amount, units, periodicity, periodicityType, periodicityMonth, periodicityDay, startDate, link));
     }
 
     @GetMapping

@@ -153,6 +153,8 @@
         "periodicityDaysPlaceholder": "Ej. 30",
         "startDate": "Fecha de inicio",
         "startDatePlaceholder": "dd/mm/aaaa",
+        "paymentDay": "Día del mes",
+        "selectDay": "Selecciona un día (1-31)",
         "paymentMonth": "Mes de pago",
         "selectMonth": "Selecciona un mes",
         "link": "Link"
@@ -173,6 +175,7 @@
       },
       "periodicityType": {
         "days": "Por días",
+        "monthly": "Mensual",
         "annual": "Anual"
       },
       "months": {
@@ -192,6 +195,7 @@
       "periodicity": {
         "annualWithMonth": "Anual ({{ month }})",
         "annual": "Anual",
+        "monthly": "Mensual (día {{ day }})",
         "days": "{{ days }} días"
       }
     },
@@ -207,6 +211,7 @@
       "periodicity": {
         "annualWithMonth": "Anual ({{ month }})",
         "annual": "Anual",
+        "monthly": "Mensual (día {{ day }})",
         "days": "Cada {{ days }} días"
       }
     },

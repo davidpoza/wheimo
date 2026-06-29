@@ -26,6 +26,12 @@ function requireMonthIfAnnual(group: AbstractControl): ValidationErrors | null {
   return type === 'ANNUAL' && !month ? { monthRequired: true } : null;
 }
 
+function requireDayIfMonthly(group: AbstractControl): ValidationErrors | null {
+  const type = group.get('periodicityType')?.value;
+  const day = group.get('periodicityDay')?.value;
+  return type === 'MONTHLY' && !day ? { dayRequired: true } : null;
+}
+
 @Component({
   selector: 'app-recurrents-list',
   standalone: true,
@@ -56,6 +62,7 @@ export class RecurrentsListComponent implements OnInit {
   get periodicityTypes() {
     return [
       { label: this.transloco.translate('recurrents.list.periodicityType.days'), value: 'DAYS' },
+      { label: this.transloco.translate('recurrents.list.periodicityType.monthly'), value: 'MONTHLY' },
       { label: this.transloco.translate('recurrents.list.periodicityType.annual'), value: 'ANNUAL' },
     ];
   }
@@ -75,12 +82,14 @@ export class RecurrentsListComponent implements OnInit {
     periodicityType: ['DAYS' as string],
     periodicity: [null as number | null],
     periodicityMonth: [null as number | null],
+    periodicityDay: [null as number | null],
     startDate: [null as Date | null],
     link: [null as string | null],
-  }, { validators: requireMonthIfAnnual });
+  }, { validators: [requireMonthIfAnnual, requireDayIfMonthly] });
 
   get isEdit() { return this.editingRecurrent() !== null; }
   get isAnnual() { return this.form.get('periodicityType')?.value === 'ANNUAL'; }
+  get isMonthly() { return this.form.get('periodicityType')?.value === 'MONTHLY'; }
 
   ngOnInit() {
     this.recurrentsService.loadAll().subscribe();
@@ -88,7 +97,7 @@ export class RecurrentsListComponent implements OnInit {
 
   openCreate() {
     this.editingRecurrent.set(null);
-    this.form.reset({ periodicityType: 'DAYS' });
+    this.form.reset({ periodicityType: 'DAYS', periodicityDay: null });
     this.dialogVisible.set(true);
   }
 
@@ -100,6 +109,7 @@ export class RecurrentsListComponent implements OnInit {
       periodicityType: r.periodicityType ?? 'DAYS',
       periodicity: r.periodicity,
       periodicityMonth: r.periodicityMonth,
+      periodicityDay: r.periodicityDay,
       startDate: r.startDate ? new Date(r.startDate + 'T00:00:00') : null,
       link: r.link,
     });
@@ -108,17 +118,19 @@ export class RecurrentsListComponent implements OnInit {
 
   save() {
     if (this.form.invalid) return;
-    const { name, establishment, amount, units, periodicityType, periodicity, periodicityMonth, startDate, link } = this.form.value;
+    const { name, establishment, amount, units, periodicityType, periodicity, periodicityMonth, periodicityDay, startDate, link } = this.form.value;
     const editing = this.editingRecurrent();
-    const startDateValue = periodicityType === 'DAYS' ? this.formatDate(startDate ?? null) : null;
+    const type = periodicityType ?? 'DAYS';
+    const startDateValue = type === 'DAYS' ? this.formatDate(startDate ?? null) : null;
 
     if (editing) {
       this.recurrentsService.update(editing.id, {
         name: name!,
         establishment: establishment!,
-        periodicityType: periodicityType ?? 'DAYS',
-        periodicity: periodicityType === 'DAYS' ? (periodicity ?? undefined) : undefined,
-        periodicityMonth: periodicityType === 'ANNUAL' ? (periodicityMonth ?? undefined) : undefined,
+        periodicityType: type,
+        periodicity: type === 'DAYS' ? (periodicity ?? undefined) : undefined,
+        periodicityMonth: type === 'ANNUAL' ? (periodicityMonth ?? undefined) : undefined,
+        periodicityDay: type === 'MONTHLY' ? (periodicityDay ?? undefined) : undefined,
         startDate: startDateValue,
         link: link ?? undefined,
       }).subscribe({
@@ -133,9 +145,10 @@ export class RecurrentsListComponent implements OnInit {
         establishment: establishment!,
         amount: amount ?? 0,
         units: units ?? undefined,
-        periodicityType: periodicityType ?? 'DAYS',
-        periodicity: periodicityType === 'DAYS' ? (periodicity ?? undefined) : undefined,
-        periodicityMonth: periodicityType === 'ANNUAL' ? (periodicityMonth ?? undefined) : undefined,
+        periodicityType: type,
+        periodicity: type === 'DAYS' ? (periodicity ?? undefined) : undefined,
+        periodicityMonth: type === 'ANNUAL' ? (periodicityMonth ?? undefined) : undefined,
+        periodicityDay: type === 'MONTHLY' ? (periodicityDay ?? undefined) : undefined,
         startDate: startDateValue,
         link: link ?? undefined,
       }).subscribe({
@@ -194,6 +207,11 @@ export class RecurrentsListComponent implements OnInit {
             month: this.transloco.translate('recurrents.list.months.' + r.periodicityMonth),
           })
         : this.transloco.translate('recurrents.list.periodicity.annual');
+    }
+    if (r.periodicityType === 'MONTHLY') {
+      return r.periodicityDay
+        ? this.transloco.translate('recurrents.list.periodicity.monthly', { day: r.periodicityDay })
+        : this.transloco.translate('recurrents.list.periodicityType.monthly');
     }
     return r.periodicity
       ? this.transloco.translate('recurrents.list.periodicity.days', { days: r.periodicity })
