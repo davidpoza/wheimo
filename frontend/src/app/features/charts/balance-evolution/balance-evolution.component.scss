@@ -4,8 +4,19 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   h2 { margin: 0; }
-  .account-select { width: 200px; }
+}
+
+.charts-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  .account-select { width: 180px; }
+  .preset-select { width: 170px; }
+  .custom-range-picker { width: 220px; }
 }
 
 .charts-grid {

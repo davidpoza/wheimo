@@ -1,23 +1,46 @@
 <div class="charts-page">
   <div class="charts-header">
     <h2>{{ 'charts.title' | transloco }}</h2>
-    <p-select
-      [(ngModel)]="selectedAccountId"
-      (ngModelChange)="selectedAccountId.set($event); loadChart()"
-      [options]="accounts()"
-      optionLabel="name"
-      optionValue="id"
-      [placeholder]="'charts.selectAccount' | transloco"
-      class="account-select"
-    />
+    <div class="charts-controls">
+      <p-select
+        [(ngModel)]="selectedAccountId"
+        (ngModelChange)="selectedAccountId.set($event)"
+        [options]="accounts()"
+        optionLabel="name"
+        optionValue="id"
+        [placeholder]="'charts.selectAccount' | transloco"
+        class="account-select"
+      />
+      <p-select
+        [(ngModel)]="selectedPreset"
+        (ngModelChange)="selectedPreset.set($event)"
+        [options]="presets"
+        optionLabel="label"
+        optionValue="value"
+        class="preset-select"
+      />
+      @if (selectedPreset() === 'custom') {
+        <p-datepicker
+          [ngModel]="customRange()"
+          (ngModelChange)="customRange.set($event)"
+          selectionMode="range"
+          [readonlyInput]="true"
+          dateFormat="dd/mm/yy"
+          [firstDayOfWeek]="1"
+          [showButtonBar]="true"
+          appendTo="body"
+          class="custom-range-picker"
+        />
+      }
+    </div>
   </div>
 
   <div class="charts-grid">
     <div class="chart-section">
-      <app-tag-expenses-chart [accountId]="selectedAccountId()" />
+      <app-tag-expenses-chart [accountId]="selectedAccountId()" [from]="from()" [to]="to()" />
     </div>
     <div class="chart-section">
-      <app-statistics [accountId]="selectedAccountId()" />
+      <app-statistics [accountId]="selectedAccountId()" [from]="from()" [to]="to()" />
     </div>
   </div>
 

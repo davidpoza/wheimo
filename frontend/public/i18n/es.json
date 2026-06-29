@@ -422,8 +422,15 @@
   "charts": {
     "title": "Charts & Analytics",
     "selectAccount": "Select account",
+    "timeRange": {
+      "currentMonth": "Mes actual",
+      "last3Months": "Últimos 3 meses",
+      "last6Months": "Últimos 6 meses",
+      "last12Months": "Último año",
+      "custom": "Personalizado"
+    },
     "balance": {
-      "title": "Balance Evolution (last 90 days)",
+      "title": "Balance Evolution",
       "empty": "Select an account to view balance evolution",
       "dataset": "Balance"
     },

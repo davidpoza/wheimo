@@ -55,14 +55,16 @@ import { ChartsService, Statistics } from '../charts.service';
 export class StatisticsComponent {
   private readonly chartsService = inject(ChartsService);
   accountId = input<number | null>(null);
+  from = input.required<string>();
+  to = input.required<string>();
   stats = signal<Statistics | null>(null);
 
   constructor() {
     effect(() => {
       const id = this.accountId();
-      if (!id) return;
-      const to = new Date().toISOString();
-      const from = new Date(Date.now() - 30 * 86400000).toISOString();
+      const from = this.from();
+      const to = this.to();
+      if (!id || !from || !to) return;
       this.chartsService.getStatistics(id, from, to).subscribe((s) => this.stats.set(s));
     });
   }

@@ -21,15 +21,17 @@ export class TagExpensesChartComponent {
   private readonly chartsService = inject(ChartsService);
   private readonly transloco = inject(TranslocoService);
   accountId = input<number | null>(null);
+  from = input.required<string>();
+  to = input.required<string>();
   chartData = signal<any>(null);
   options = { responsive: true, plugins: { legend: { position: 'bottom' as const } } };
 
   constructor() {
     effect(() => {
       const id = this.accountId();
-      if (!id) return;
-      const to = new Date().toISOString();
-      const from = new Date(Date.now() - 30 * 86400000).toISOString();
+      const from = this.from();
+      const to = this.to();
+      if (!id || !from || !to) return;
       this.chartsService.getTagExpenses(from, to, id).subscribe((data) => {
         const expenses = data.filter((d) => d.amount < 0);
         this.chartData.set({
