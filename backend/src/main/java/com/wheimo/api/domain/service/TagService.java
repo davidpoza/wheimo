@@ -25,7 +25,7 @@ public class TagService {
     }
 
     public List<TagDto> findAll(Long userId) {
-        return tagRepository.findByUserId(userId).stream().map(this::toDto).toList();
+        return tagRepository.findByUserIdOrderByNameAsc(userId).stream().map(this::toDto).toList();
     }
 
     public TagDto findById(Long id, Long userId) {

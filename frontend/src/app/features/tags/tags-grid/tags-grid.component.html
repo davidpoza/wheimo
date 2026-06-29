@@ -12,10 +12,10 @@
     <p-button [label]="'tags.grid.add' | transloco" icon="pi pi-plus" (onClick)="createTag()" [disabled]="!newTagName().trim()" />
   </div>
 
-  <p-table [value]="tags()" styleClass="p-datatable-sm">
+  <p-table [value]="tags()" styleClass="p-datatable-sm" [sortField]="'name'" [sortOrder]="1">
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ 'tags.grid.col.name' | transloco }}</th>
+        <th pSortableColumn="name">{{ 'tags.grid.col.name' | transloco }} <p-sortIcon field="name" /></th>
         <th style="width: 8rem"></th>
       </tr>
     </ng-template>

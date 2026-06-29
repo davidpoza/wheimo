@@ -20,13 +20,13 @@ export class TagsService {
 
   createTag(name: string) {
     return this.http.post<Tag>(this.tagsUrl, { name }).pipe(
-      tap((tag) => this.tags.update((list) => [...list, tag])),
+      tap((tag) => this.tags.update((list) => [...list, tag].sort((a, b) => a.name.localeCompare(b.name)))),
     );
   }
 
   updateTag(id: number, name: string) {
     return this.http.patch<Tag>(`${this.tagsUrl}/${id}`, { name }).pipe(
-      tap((updated) => this.tags.update((list) => list.map((t) => (t.id === id ? updated : t)))),
+      tap((updated) => this.tags.update((list) => list.map((t) => (t.id === id ? updated : t)).sort((a, b) => a.name.localeCompare(b.name)))),
     );
   }
 
