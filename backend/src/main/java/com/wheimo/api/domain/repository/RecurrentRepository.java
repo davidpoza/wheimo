@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface RecurrentRepository extends JpaRepository<Recurrent, Long> {
     List<Recurrent> findAll();
+    List<Recurrent> findAllByOrderByNameAsc();
 }

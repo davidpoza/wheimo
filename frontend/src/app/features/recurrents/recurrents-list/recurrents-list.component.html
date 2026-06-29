@@ -4,13 +4,13 @@
 </div>
 
 <div class="recurrents-table">
-  <p-table [value]="recurrents()" styleClass="p-datatable-sm" [rowHover]="true">
+  <p-table [value]="recurrents()" styleClass="p-datatable-sm" [rowHover]="true" [sortField]="'name'" [sortOrder]="1">
     <ng-template pTemplate="header">
       <tr>
-        <th>{{ 'recurrents.list.col.name' | transloco }}</th>
-        <th>{{ 'recurrents.list.col.establishment' | transloco }}</th>
-        <th>{{ 'recurrents.list.col.periodicity' | transloco }}</th>
-        <th>{{ 'recurrents.list.col.currentPrice' | transloco }}</th>
+        <th pSortableColumn="name">{{ 'recurrents.list.col.name' | transloco }} <p-sortIcon field="name" /></th>
+        <th pSortableColumn="establishment">{{ 'recurrents.list.col.establishment' | transloco }} <p-sortIcon field="establishment" /></th>
+        <th pSortableColumn="periodicityType">{{ 'recurrents.list.col.periodicity' | transloco }} <p-sortIcon field="periodicityType" /></th>
+        <th pSortableColumn="amount">{{ 'recurrents.list.col.currentPrice' | transloco }} <p-sortIcon field="amount" /></th>
         <th>{{ 'recurrents.list.col.totalCost' | transloco }}</th>
         <th>{{ 'recurrents.list.col.link' | transloco }}</th>
         <th></th>

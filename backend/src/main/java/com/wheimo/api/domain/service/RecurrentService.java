@@ -64,7 +64,7 @@ public class RecurrentService {
     }
 
     public List<RecurrentDto> findAll() {
-        return recurrentRepository.findAll().stream().map(this::toDto).toList();
+        return recurrentRepository.findAllByOrderByNameAsc().stream().map(this::toDto).toList();
     }
 
     public List<RecurrentDto> findUpcoming() {
