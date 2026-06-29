@@ -15,6 +15,7 @@ import { AttachmentService } from '../attachment.service';
 import { TagsService } from '../../tags/tags.service';
 import { Transaction } from '../../../core/models/transaction.model';
 import { Attachment } from '../../../core/models/attachment.model';
+import { CameraCaptureComponent } from '../../../shared/components/camera-capture/camera-capture.component';
 
 @Component({
   selector: 'app-transaction-details-dialog',
@@ -24,6 +25,7 @@ import { Attachment } from '../../../core/models/attachment.model';
     DialogModule, ButtonModule, InputTextModule, TextareaModule,
     MultiSelectModule, TagModule, FileUploadModule, TabsModule,
     TranslocoModule,
+    CameraCaptureComponent,
   ],
   templateUrl: './transaction-details-dialog.component.html',
   styleUrl: './transaction-details-dialog.component.scss',
@@ -43,6 +45,7 @@ export class TransactionDetailsDialogComponent {
   selectedTagIds = signal<number[]>([]);
   localTransaction = signal<Transaction | null>(null);
   previewImageUrl = signal<string | null>(null);
+  showCameraCapture = signal(false);
   private thumbCache = new Map<number, string>();
 
   constructor() {
@@ -82,18 +85,14 @@ export class TransactionDetailsDialogComponent {
   onFilesSelected(event: { currentFiles: File[] }): void {
     const tx = this.localTransaction();
     if (!tx || !event.currentFiles?.length) return;
-    const uploads = event.currentFiles.map((file) =>
-      this.attachmentService.upload(tx.id, file)
-    );
-    let completed = 0;
-    uploads.forEach((obs) => {
-      obs.subscribe({
-        next: () => {
-          completed++;
-          if (completed === uploads.length) this.refreshTransaction();
-        },
-      });
-    });
+    this.uploadFiles(tx.id, event.currentFiles);
+  }
+
+  onPhotoCaptured(file: File): void {
+    const tx = this.localTransaction();
+    if (!tx) return;
+    this.showCameraCapture.set(false);
+    this.uploadFiles(tx.id, [file]);
   }
 
   openAttachment(att: Attachment): void {
@@ -122,6 +121,21 @@ export class TransactionDetailsDialogComponent {
     if (cached) { URL.revokeObjectURL(cached); this.thumbCache.delete(att.id); }
     this.attachmentService.delete(att.id).subscribe({
       next: () => this.refreshTransaction(),
+    });
+  }
+
+  private uploadFiles(transactionId: number, files: File[]): void {
+    const uploads = files.map((file) =>
+      this.attachmentService.upload(transactionId, file)
+    );
+    let completed = 0;
+    uploads.forEach((obs) => {
+      obs.subscribe({
+        next: () => {
+          completed++;
+          if (completed === uploads.length) this.refreshTransaction();
+        },
+      });
     });
   }
 

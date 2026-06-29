@@ -119,16 +119,25 @@
               </div>
             }
 
-            <p-fileupload
-              mode="basic"
-              accept="image/*,application/pdf"
-              [multiple]="true"
-              [auto]="false"
-              [chooseLabel]="'transactions.details.attachFiles' | transloco"
-              chooseIcon="pi pi-paperclip"
-              (onSelect)="onFilesSelected($event)"
-              styleClass="mt-2"
-            />
+            <div class="att-upload-row">
+              <p-fileupload
+                mode="basic"
+                accept="image/*,application/pdf"
+                [multiple]="true"
+                [auto]="false"
+                [chooseLabel]="'transactions.details.attachFiles' | transloco"
+                chooseIcon="pi pi-paperclip"
+                (onSelect)="onFilesSelected($event)"
+                styleClass="mt-2"
+              />
+              <p-button
+                [label]="'transactions.details.takePhoto' | transloco"
+                icon="pi pi-camera"
+                [outlined]="true"
+                styleClass="mt-2"
+                (onClick)="showCameraCapture.set(true)"
+              />
+            </div>
           </div>
         </p-tabpanel>
       </p-tabpanels>
@@ -141,6 +150,7 @@
   </ng-template>
 </p-dialog>
 
+<!-- Image preview dialog -->
 <p-dialog
   [header]="'transactions.details.imagePreview' | transloco"
   [visible]="!!previewImageUrl()"
@@ -150,5 +160,21 @@
 >
   @if (previewImageUrl(); as url) {
     <img [src]="url" [alt]="'transactions.details.attachmentPreview' | transloco" style="max-width: 80vw; max-height: 80vh; display: block;" />
+  }
+</p-dialog>
+
+<!-- Camera capture dialog -->
+<p-dialog
+  [header]="'transactions.details.takePhoto' | transloco"
+  [visible]="showCameraCapture()"
+  (visibleChange)="!$event && showCameraCapture.set(false)"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+>
+  @if (showCameraCapture()) {
+    <app-camera-capture
+      (photoCaptured)="onPhotoCaptured($event)"
+      (cancelled)="showCameraCapture.set(false)"
+    />
   }
 </p-dialog>

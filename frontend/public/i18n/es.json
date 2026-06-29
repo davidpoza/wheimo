@@ -7,6 +7,12 @@
     "error": "Error",
     "selectTags": "Select tags"
   },
+  "camera": {
+    "capture": "Capturar",
+    "retake": "Repetir",
+    "usePhoto": "Usar foto",
+    "openCamera": "Abrir cámara"
+  },
   "transactions": {
     "grid": {
       "title": "Transactions",
@@ -80,6 +86,7 @@
       "tags": "Tags",
       "noAttachments": "No attachments yet",
       "attachFiles": "Attach files",
+      "takePhoto": "Foto",
       "imagePreview": "Image Preview",
       "attachmentPreview": "Attachment preview"
     },

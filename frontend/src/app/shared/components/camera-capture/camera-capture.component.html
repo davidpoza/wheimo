@@ -1,0 +1,57 @@
+<div class="camera-wrap">
+  <input
+    #fallbackInput
+    type="file"
+    accept="image/*"
+    capture="environment"
+    class="hidden-input"
+    (change)="onFallbackSelected($event)"
+  />
+
+  @if (!useGetUserMedia()) {
+    <div class="fallback-wrap">
+      <p-button
+        [label]="'camera.openCamera' | transloco"
+        icon="pi pi-camera"
+        (onClick)="openFallback()"
+      />
+    </div>
+  } @else if (!capturedUrl()) {
+    <video #video autoplay playsinline class="camera-video"></video>
+    <canvas #canvas class="hidden-canvas"></canvas>
+    <div class="camera-actions">
+      <p-button
+        [label]="'camera.capture' | transloco"
+        icon="pi pi-camera"
+        (onClick)="capture()"
+      />
+      <p-button
+        [label]="'common.cancel' | transloco"
+        [text]="true"
+        severity="secondary"
+        (onClick)="cancel()"
+      />
+    </div>
+  } @else {
+    <img [src]="capturedUrl()" class="preview-img" alt="preview" />
+    <div class="camera-actions">
+      <p-button
+        [label]="'camera.usePhoto' | transloco"
+        icon="pi pi-check"
+        (onClick)="usePhoto()"
+      />
+      <p-button
+        [label]="'camera.retake' | transloco"
+        icon="pi pi-refresh"
+        [outlined]="true"
+        (onClick)="retake()"
+      />
+      <p-button
+        [label]="'common.cancel' | transloco"
+        [text]="true"
+        severity="secondary"
+        (onClick)="cancel()"
+      />
+    </div>
+  }
+</div>
