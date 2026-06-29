@@ -35,6 +35,18 @@ export class TransactionsService {
     );
   }
 
+  getAllIds() {
+    const { limit: _limit, offset: _offset, ...rest } = this.filters();
+    let params = new HttpParams();
+    Object.entries(rest).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== '') {
+        if (Array.isArray(v)) v.forEach((item) => (params = params.append(k, item)));
+        else params = params.set(k, String(v));
+      }
+    });
+    return this.http.get<number[]>(`${this.baseUrl}/ids`, { params });
+  }
+
   search(filters: TransactionFilters) {
     let params = new HttpParams();
     Object.entries(filters).forEach(([k, v]) => {

@@ -64,6 +64,38 @@ public class TransactionController {
         return ResponseEntity.ok(transactionService.findAll(SecurityUtils.getCurrentUserId(), params));
     }
 
+    @GetMapping("/ids")
+    public ResponseEntity<List<Long>> listIds(
+            @RequestParam(required = false) Long accountId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime from,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime to,
+            @RequestParam(required = false) String tags,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) BigDecimal min,
+            @RequestParam(required = false) BigDecimal max,
+            @RequestParam(required = false) String operationType,
+            @RequestParam(required = false) Boolean isFav,
+            @RequestParam(required = false) Boolean isDraft,
+            @RequestParam(required = false) Boolean hasAttachments,
+            @RequestParam(required = false) String ids,
+            @RequestParam(required = false) String sort) {
+
+        List<Long> tagList = tags != null
+                ? Arrays.stream(tags.split(",")).map(Long::parseLong).toList()
+                : null;
+        List<Long> idList = ids != null
+                ? Arrays.stream(ids.split(",")).map(Long::parseLong).toList()
+                : null;
+
+        TransactionFilterParams params = TransactionFilterParams.builder()
+                .accountId(accountId).from(from).to(to).tags(tagList).search(search)
+                .min(min).max(max).operationType(operationType).isFav(isFav).isDraft(isDraft)
+                .hasAttachments(hasAttachments).ids(idList).sort(sort)
+                .build();
+
+        return ResponseEntity.ok(transactionService.findAllIds(SecurityUtils.getCurrentUserId(), params));
+    }
+
     @GetMapping("/{id:\\d+}")
     public ResponseEntity<TransactionDto> get(@PathVariable Long id) {
         return ResponseEntity.ok(transactionService.findById(id, SecurityUtils.getCurrentUserId()));

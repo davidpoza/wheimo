@@ -180,6 +180,7 @@
 
   @media (max-width: 768px) {
     padding: 1rem;
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom, 0px));
     margin-top: 56px;
   }
 }

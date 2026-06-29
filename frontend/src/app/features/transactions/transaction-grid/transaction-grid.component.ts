@@ -56,6 +56,8 @@ export class TransactionGridComponent implements OnInit {
 
   selected = signal<Transaction[]>([]);
   mobileSelectMode = signal(false);
+  selectAllActive = signal(false);
+  allSelectedIds = signal<number[]>([]);
   detailTx = signal<Transaction | null>(null);
   detailVisible = signal(false);
   createVisible = signal(false);
@@ -114,12 +116,36 @@ export class TransactionGridComponent implements OnInit {
     }
   }
 
-  cancelMobileSelection() {
+  effectiveIds(): number[] {
+    return this.selectAllActive()
+      ? this.allSelectedIds()
+      : this.selected().map(t => t.id);
+  }
+
+  selectAll() {
+    this.txService.getAllIds().subscribe(ids => {
+      this.allSelectedIds.set(ids);
+      this.selectAllActive.set(true);
+      this.selected.set(this.transactions());
+    });
+  }
+
+  cancelAllSelection() {
+    this.selectAllActive.set(false);
+    this.allSelectedIds.set([]);
     this.selected.set([]);
     this.mobileSelectMode.set(false);
   }
 
+  cancelMobileSelection() {
+    this.selected.set([]);
+    this.mobileSelectMode.set(false);
+    this.selectAllActive.set(false);
+    this.allSelectedIds.set([]);
+  }
+
   isSelected(tx: Transaction): boolean {
+    if (this.selectAllActive()) return true;
     return this.selected().some(t => t.id === tx.id);
   }
 
@@ -145,26 +171,24 @@ export class TransactionGridComponent implements OnInit {
 
   onTaggingDone() {
     this.taggingVisible.set(false);
-    this.selected.set([]);
-    this.mobileSelectMode.set(false);
+    this.cancelAllSelection();
     this.txService.loadAll().subscribe();
   }
 
   deleteSelected() {
-    const selected = this.selected();
-    if (selected.length === 0) return;
+    const ids = this.effectiveIds();
+    if (ids.length === 0) return;
 
     this.confirmationService.confirm({
-      message: this.transloco.translate('transactions.grid.confirm.deleteSelected.message', { count: selected.length }),
+      message: this.transloco.translate('transactions.grid.confirm.deleteSelected.message', { count: ids.length }),
       header: this.transloco.translate('transactions.grid.confirm.deleteSelected.header'),
       icon: 'pi pi-trash',
       acceptLabel: this.transloco.translate('transactions.grid.confirm.deleteSelected.accept'),
       rejectLabel: this.transloco.translate('transactions.grid.confirm.deleteSelected.reject'),
       accept: () => {
-        this.txService.deleteMany(selected.map((tx) => tx.id)).subscribe({
+        this.txService.deleteMany(ids).subscribe({
           next: () => {
-            this.selected.set([]);
-            this.mobileSelectMode.set(false);
+            this.cancelAllSelection();
             this.txService.loadAll().subscribe();
             this.messageService.add({ severity: 'success', summary: this.transloco.translate('transactions.grid.toast.deletedSelected') });
           },

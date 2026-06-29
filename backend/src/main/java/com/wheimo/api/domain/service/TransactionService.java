@@ -110,6 +110,19 @@ public class TransactionService {
         return new TransactionPageDto(list, list.size());
     }
 
+    public List<Long> findAllIds(Long userId, TransactionFilterParams params) {
+        Specification<Transaction> spec = buildSpec(userId, params);
+        String sortField = "date";
+        Sort.Direction sortDir = Sort.Direction.DESC;
+        if (params.getSort() != null) {
+            String[] parts = params.getSort().split(",", 2);
+            sortField = parts[0];
+            if (parts.length > 1 && "asc".equalsIgnoreCase(parts[1])) sortDir = Sort.Direction.ASC;
+        }
+        return transactionRepository.findAll(spec, Sort.by(sortDir, sortField))
+                .stream().map(Transaction::getId).toList();
+    }
+
     public TransactionDto findById(Long id, Long userId) {
         Transaction t = transactionRepository.findByIdWithDetails(id, userId)
                 .orElseThrow(() -> new NotFoundException("Transaction not found"));

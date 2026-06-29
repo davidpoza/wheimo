@@ -20,6 +20,8 @@
       "tagSelected": "Tag Selected ({{ count }})",
       "deleteSelected": "Delete Selected ({{ count }})",
       "selectedCount": "{{ count }} seleccionadas",
+      "selectAll": "Todos ({{ count }})",
+      "allSelected": "{{ count }} transacciones seleccionadas",
       "col": {
         "date": "Date",
         "description": "Description",

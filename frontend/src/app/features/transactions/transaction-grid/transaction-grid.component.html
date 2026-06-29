@@ -1,17 +1,31 @@
 <div class="tx-header">
   <h2>{{ 'transactions.grid.title' | transloco }}</h2>
   <div class="tx-actions">
-    @if (selected().length > 0) {
+    @if (selectAllActive()) {
+      <span class="all-selected-chip-desktop">
+        {{ 'transactions.grid.allSelected' | transloco: { count: allSelectedIds().length } }}
+        <button class="chip-dismiss" (click)="cancelAllSelection()" aria-label="Deselect all">✕</button>
+      </span>
+    } @else if (selected().length > 0) {
+      <p-button
+        [label]="'transactions.grid.selectAll' | transloco: { count: total() }"
+        severity="secondary"
+        [text]="true"
+        styleClass="hide-mobile"
+        (onClick)="selectAll()"
+      />
+    }
+    @if (effectiveIds().length > 0) {
       <p-button
         icon="pi pi-tags"
-        [label]="'transactions.grid.tagSelected' | transloco: { count: selected().length }"
+        [label]="'transactions.grid.tagSelected' | transloco: { count: effectiveIds().length }"
         severity="secondary"
         styleClass="icon-only-mobile"
         (onClick)="openTagging()"
       />
       <p-button
         icon="pi pi-trash"
-        [label]="'transactions.grid.deleteSelected' | transloco: { count: selected().length }"
+        [label]="'transactions.grid.deleteSelected' | transloco: { count: effectiveIds().length }"
         severity="danger"
         styleClass="icon-only-mobile"
         (onClick)="deleteSelected()"
@@ -25,7 +39,22 @@
 
 @if (mobileSelectMode()) {
   <div class="mobile-select-banner">
-    <span>{{ 'transactions.grid.selectedCount' | transloco: { count: selected().length } }}</span>
+    <div class="banner-left">
+      @if (selectAllActive()) {
+        <span class="all-selected-chip">
+          {{ 'transactions.grid.allSelected' | transloco: { count: allSelectedIds().length } }}
+          <button class="chip-dismiss" (click)="cancelAllSelection()" aria-label="Deselect all">✕</button>
+        </span>
+      } @else {
+        <span class="banner-count">{{ 'transactions.grid.selectedCount' | transloco: { count: selected().length } }}</span>
+        <p-button
+          [label]="'transactions.grid.selectAll' | transloco: { count: total() }"
+          severity="secondary"
+          [text]="true"
+          (onClick)="selectAll()"
+        />
+      }
+    </div>
     <p-button [label]="'common.cancel' | transloco" severity="secondary" [text]="true" (onClick)="cancelMobileSelection()" />
   </div>
 }
@@ -181,7 +210,7 @@
 
 <app-tagging-dialog
   [visible]="taggingVisible()"
-  [transactionIds]="selected().map(t => t.id)"
+  [transactionIds]="effectiveIds()"
   (visibleChange)="taggingVisible.set($event)"
   (done)="onTaggingDone()"
 />
