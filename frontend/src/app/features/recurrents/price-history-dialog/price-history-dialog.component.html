@@ -31,7 +31,7 @@
           </div>
           <div class="field">
             <label>{{ 'recurrents.priceHistory.form.date' | transloco }}</label>
-            <p-datepicker formControlName="recordedAt" dateFormat="dd/mm/yy" [showTime]="false" class="w-full" appendTo="body" />
+            <p-datepicker formControlName="recordedAt" dateFormat="dd/mm/yy" [showTime]="false" [firstDayOfWeek]="1" class="w-full" appendTo="body" />
           </div>
         </div>
         <p-button [label]="'recurrents.priceHistory.save' | transloco" (onClick)="addEntry()" [disabled]="form.invalid" />

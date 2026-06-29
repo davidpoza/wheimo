@@ -21,8 +21,8 @@
     class="filter-select"
   />
 
-  <p-datepicker [(ngModel)]="draft.from" [placeholder]="'transactions.filter.from' | transloco" dateFormat="dd/mm/yy" class="filter-date" />
-  <p-datepicker [(ngModel)]="draft.to" [placeholder]="'transactions.filter.to' | transloco" dateFormat="dd/mm/yy" class="filter-date" />
+  <p-datepicker [(ngModel)]="draft.from" [placeholder]="'transactions.filter.from' | transloco" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" class="filter-date" />
+  <p-datepicker [(ngModel)]="draft.to" [placeholder]="'transactions.filter.to' | transloco" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" class="filter-date" />
 
   <p-select
     [(ngModel)]="draft.operationType"
@@ -47,8 +47,8 @@
     <input pInputText [(ngModel)]="draft.search" [placeholder]="'transactions.filter.search' | transloco" class="w-full" />
     <p-select [(ngModel)]="draft.accountId" [options]="accounts()" optionLabel="name" optionValue="id" [placeholder]="'transactions.filter.account' | transloco" [showClear]="true" appendTo="body" class="w-full" />
     <p-multiselect [(ngModel)]="draft.tags" [options]="tags()" optionLabel="name" optionValue="id" [placeholder]="'transactions.filter.tags' | transloco" appendTo="body" class="w-full" />
-    <p-datepicker [(ngModel)]="draft.from" [placeholder]="'transactions.filter.from' | transloco" dateFormat="dd/mm/yy" appendTo="body" class="w-full" />
-    <p-datepicker [(ngModel)]="draft.to" [placeholder]="'transactions.filter.to' | transloco" dateFormat="dd/mm/yy" appendTo="body" class="w-full" />
+    <p-datepicker [(ngModel)]="draft.from" [placeholder]="'transactions.filter.from' | transloco" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" appendTo="body" class="w-full" />
+    <p-datepicker [(ngModel)]="draft.to" [placeholder]="'transactions.filter.to' | transloco" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" appendTo="body" class="w-full" />
     <p-select [(ngModel)]="draft.operationType" [options]="operationOptions" optionLabel="label" optionValue="value" [placeholder]="'transactions.filter.type' | transloco" appendTo="body" class="w-full" />
   </div>
   <ng-template pTemplate="footer">

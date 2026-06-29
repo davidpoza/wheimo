@@ -94,7 +94,7 @@
       </div>
       <div class="field">
         <label>{{ 'recurrents.list.form.startDate' | transloco }}</label>
-        <p-datepicker formControlName="startDate" dateFormat="dd/mm/yy" class="w-full" appendTo="body" [showButtonBar]="true" [placeholder]="'recurrents.list.form.startDatePlaceholder' | transloco" />
+        <p-datepicker formControlName="startDate" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" class="w-full" appendTo="body" [showButtonBar]="true" [placeholder]="'recurrents.list.form.startDatePlaceholder' | transloco" />
       </div>
     }
     @if (isAnnual) {

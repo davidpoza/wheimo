@@ -20,11 +20,11 @@
     </div>
     <div class="field">
       <label>{{ 'transactions.create.date' | transloco }}</label>
-      <p-datepicker formControlName="date" dateFormat="dd/mm/yy" [showTime]="true" class="w-full" appendTo="body" />
+      <p-datepicker formControlName="date" dateFormat="dd/mm/yy" [showTime]="true" [firstDayOfWeek]="1" class="w-full" appendTo="body" />
     </div>
     <div class="field">
       <label>{{ 'transactions.create.valueDate' | transloco }}</label>
-      <p-datepicker formControlName="valueDate" dateFormat="dd/mm/yy" class="w-full" appendTo="body" />
+      <p-datepicker formControlName="valueDate" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" class="w-full" appendTo="body" />
     </div>
     <div class="field">
       <label>{{ 'transactions.create.description' | transloco }}</label>
