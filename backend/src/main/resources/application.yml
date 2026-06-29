@@ -49,6 +49,7 @@ app:
       max-width: ${ATTACHMENTS_IMAGE_MAX_WIDTH:1920}
       max-height: ${ATTACHMENTS_IMAGE_MAX_HEIGHT:1080}
       jpeg-quality: ${ATTACHMENTS_IMAGE_JPEG_QUALITY:0.85}
+      thumbnail-size: ${ATTACHMENTS_IMAGE_THUMBNAIL_SIZE:400}
   redis:
     sync-requests-channel: sync-requests
     sync-results-channel: sync-results

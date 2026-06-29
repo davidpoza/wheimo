@@ -20,6 +20,10 @@ export class AttachmentService {
     return this.http.get(`${this.baseUrl}/${id}`, { responseType: 'blob' });
   }
 
+  downloadThumbnail(id: number): Observable<Blob> {
+    return this.http.get(`${this.baseUrl}/${id}/thumbnail`, { responseType: 'blob' });
+  }
+
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
   }

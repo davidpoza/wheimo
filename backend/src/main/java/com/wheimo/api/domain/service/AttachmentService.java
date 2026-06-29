@@ -84,6 +84,22 @@ public class AttachmentService {
         return Files.readAllBytes(path);
     }
 
+    public byte[] downloadThumbnail(Long id, Long userId) throws IOException {
+        Attachment attachment = attachmentRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new NotFoundException("Attachment not found"));
+        if (!attachment.getType().startsWith("image/")) {
+            throw new IllegalArgumentException("Thumbnails are only available for images");
+        }
+        Path sourceDir = Paths.get(attachmentsPath);
+        Path thumbDir = sourceDir.resolve("thumbnails");
+        Files.createDirectories(thumbDir);
+        Path thumbPath = thumbDir.resolve(attachment.getFilename());
+        if (!Files.exists(thumbPath)) {
+            generateThumbnail(sourceDir.resolve(attachment.getFilename()), thumbPath);
+        }
+        return Files.readAllBytes(thumbPath);
+    }
+
     public AttachmentDto getById(Long id, Long userId) {
         return toDto(attachmentRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new NotFoundException("Attachment not found")));
@@ -102,6 +118,42 @@ public class AttachmentService {
         Path path = Paths.get(attachmentsPath, attachment.getFilename());
         Files.deleteIfExists(path);
         attachmentRepository.delete(attachment);
+    }
+
+    private void generateThumbnail(Path sourcePath, Path thumbnailPath) throws IOException {
+        BufferedImage original = ImageIO.read(sourcePath.toFile());
+        if (original == null) {
+            throw new IOException("Could not read source image for thumbnail");
+        }
+        int w = original.getWidth();
+        int h = original.getHeight();
+        int cropSize = Math.min(w, h);
+        int x = (w - cropSize) / 2;
+        int y = (h - cropSize) / 2;
+        BufferedImage cropped = original.getSubimage(x, y, cropSize, cropSize);
+
+        int size = imageProperties.getThumbnailSize();
+        BufferedImage thumbnail = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = thumbnail.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.drawImage(cropped, 0, 0, size, size, null);
+        g.dispose();
+
+        ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
+        try (var outputStream = Files.newOutputStream(thumbnailPath);
+             ImageOutputStream ios = ImageIO.createImageOutputStream(outputStream)) {
+            writer.setOutput(ios);
+            ImageWriteParam params = writer.getDefaultWriteParam();
+            if (params.canWriteCompressed()) {
+                params.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+                params.setCompressionQuality(Math.max(0f, Math.min(1f, imageProperties.getJpegQuality())));
+            }
+            writer.write(null, new IIOImage(thumbnail, null, null), params);
+        } finally {
+            writer.dispose();
+        }
     }
 
     private byte[] optimizeIfImage(byte[] input, String mimeType) {

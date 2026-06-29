@@ -87,6 +87,14 @@
       "noAttachments": "No attachments yet",
       "attachFiles": "Attach files",
       "takePhoto": "Foto",
+      "confirm": {
+        "deleteAttachment": {
+          "message": "¿Eliminar adjunto \"{{ name }}\"?",
+          "header": "Confirmar eliminación",
+          "accept": "Sí, eliminar",
+          "reject": "Cancelar"
+        }
+      },
       "imagePreview": "Image Preview",
       "attachmentPreview": "Attachment preview"
     },

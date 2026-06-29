@@ -13,4 +13,5 @@ public class AttachmentImageProperties {
     private int maxWidth = 1920;
     private int maxHeight = 1080;
     private float jpegQuality = 0.85f;
+    private int thumbnailSize = 400;
 }

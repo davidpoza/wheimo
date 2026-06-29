@@ -97,7 +97,11 @@
                       role="button"
                     >
                       @if (isImage(att)) {
-                        <img [src]="getAttachmentThumbnail(att)" class="att-thumb" [alt]="attachmentLabel(att)" />
+                        @if (thumbCache().get(att.id); as thumbUrl) {
+                          <img [src]="thumbUrl" class="att-thumb" [alt]="attachmentLabel(att)" />
+                        } @else {
+                          <div class="att-icon-wrap"><i class="pi pi-image att-icon"></i></div>
+                        }
                       } @else {
                         <div class="att-icon-wrap">
                           <i class="pi pi-file-pdf att-icon"></i>
@@ -162,6 +166,8 @@
     <img [src]="url" [alt]="'transactions.details.attachmentPreview' | transloco" style="max-width: 80vw; max-height: 80vh; display: block;" />
   }
 </p-dialog>
+
+<p-confirmdialog />
 
 <!-- Camera capture dialog -->
 <p-dialog

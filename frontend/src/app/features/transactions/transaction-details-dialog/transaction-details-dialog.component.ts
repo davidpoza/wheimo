@@ -9,7 +9,9 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { TagModule } from 'primeng/tag';
 import { FileUploadModule } from 'primeng/fileupload';
 import { TabsModule } from 'primeng/tabs';
-import { TranslocoModule } from '@jsverse/transloco';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TransactionsService } from '../transactions.service';
 import { AttachmentService } from '../attachment.service';
 import { TagsService } from '../../tags/tags.service';
@@ -24,15 +26,18 @@ import { CameraCaptureComponent } from '../../../shared/components/camera-captur
     CurrencyPipe, DatePipe, FormsModule,
     DialogModule, ButtonModule, InputTextModule, TextareaModule,
     MultiSelectModule, TagModule, FileUploadModule, TabsModule,
-    TranslocoModule,
+    ConfirmDialogModule, TranslocoModule,
     CameraCaptureComponent,
   ],
+  providers: [ConfirmationService],
   templateUrl: './transaction-details-dialog.component.html',
   styleUrl: './transaction-details-dialog.component.scss',
 })
 export class TransactionDetailsDialogComponent {
   private readonly txService = inject(TransactionsService);
   private readonly attachmentService = inject(AttachmentService);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly transloco = inject(TranslocoService);
   readonly tagsService = inject(TagsService);
 
   visible = input<boolean>(false);
@@ -46,7 +51,7 @@ export class TransactionDetailsDialogComponent {
   localTransaction = signal<Transaction | null>(null);
   previewImageUrl = signal<string | null>(null);
   showCameraCapture = signal(false);
-  private thumbCache = new Map<number, string>();
+  readonly thumbCache = signal(new Map<number, string>());
 
   constructor() {
     effect(() => {
@@ -55,6 +60,7 @@ export class TransactionDetailsDialogComponent {
         this.localTransaction.set(tx);
         this.comments.set(tx.comments ?? '');
         this.selectedTagIds.set(tx.tags.map((t) => t.id));
+        this.fetchMissingThumbnails(tx);
       }
     });
   }
@@ -69,17 +75,6 @@ export class TransactionDetailsDialogComponent {
 
   isImage(att: Attachment): boolean {
     return att.type.startsWith('image/');
-  }
-
-  getAttachmentThumbnail(att: Attachment): string {
-    if (!this.thumbCache.has(att.id)) {
-      this.attachmentService.download(att.id).subscribe((blob) => {
-        const url = URL.createObjectURL(blob);
-        this.thumbCache.set(att.id, url);
-      });
-      return '';
-    }
-    return this.thumbCache.get(att.id)!;
   }
 
   onFilesSelected(event: { currentFiles: File[] }): void {
@@ -117,11 +112,38 @@ export class TransactionDetailsDialogComponent {
   }
 
   deleteAttachment(att: Attachment): void {
-    const cached = this.thumbCache.get(att.id);
-    if (cached) { URL.revokeObjectURL(cached); this.thumbCache.delete(att.id); }
-    this.attachmentService.delete(att.id).subscribe({
-      next: () => this.refreshTransaction(),
+    this.confirmationService.confirm({
+      message: this.transloco.translate('transactions.details.confirm.deleteAttachment.message', { name: this.attachmentLabel(att) }),
+      header: this.transloco.translate('transactions.details.confirm.deleteAttachment.header'),
+      icon: 'pi pi-trash',
+      acceptLabel: this.transloco.translate('transactions.details.confirm.deleteAttachment.accept'),
+      rejectLabel: this.transloco.translate('transactions.details.confirm.deleteAttachment.reject'),
+      acceptButtonProps: { severity: 'danger' },
+      accept: () => {
+        const cached = this.thumbCache().get(att.id);
+        if (cached) {
+          URL.revokeObjectURL(cached);
+          this.thumbCache.update(m => { const next = new Map(m); next.delete(att.id); return next; });
+        }
+        this.attachmentService.delete(att.id).subscribe({
+          next: () => this.refreshTransaction(),
+        });
+      },
     });
+  }
+
+  private fetchMissingThumbnails(tx: Transaction): void {
+    const cache = this.thumbCache();
+    tx.attachments
+      .filter(att => att.type.startsWith('image/') && !cache.has(att.id))
+      .forEach(att => {
+        this.attachmentService.downloadThumbnail(att.id).subscribe({
+          next: (blob) => {
+            const url = URL.createObjectURL(blob);
+            this.thumbCache.update(m => new Map(m).set(att.id, url));
+          },
+        });
+      });
   }
 
   private uploadFiles(transactionId: number, files: File[]): void {
@@ -145,6 +167,7 @@ export class TransactionDetailsDialogComponent {
     this.txService.getById(tx.id).subscribe((updated) => {
       this.localTransaction.set(updated);
       this.transactionChange.emit(updated);
+      this.fetchMissingThumbnails(updated);
     });
   }
 

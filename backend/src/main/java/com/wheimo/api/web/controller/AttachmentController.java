@@ -38,6 +38,15 @@ public class AttachmentController {
                 .body(data);
     }
 
+    @GetMapping("/{id}/thumbnail")
+    public ResponseEntity<byte[]> downloadThumbnail(@PathVariable Long id) throws Exception {
+        byte[] data = attachmentService.downloadThumbnail(id, SecurityUtils.getCurrentUserId());
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.IMAGE_JPEG_VALUE)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline")
+                .body(data);
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<AttachmentDto> update(@PathVariable Long id, @RequestBody Map<String, String> body) {
         return ResponseEntity.ok(attachmentService.updateDescription(id, SecurityUtils.getCurrentUserId(), body.get("description")));
