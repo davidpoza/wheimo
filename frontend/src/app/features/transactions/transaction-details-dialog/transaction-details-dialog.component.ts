@@ -15,6 +15,7 @@ import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TransactionsService } from '../transactions.service';
 import { AttachmentService } from '../attachment.service';
 import { TagsService } from '../../tags/tags.service';
+import { AccountsService } from '../../accounts/accounts.service';
 import { Transaction } from '../../../core/models/transaction.model';
 import { Attachment } from '../../../core/models/attachment.model';
 import { CameraCaptureComponent } from '../../../shared/components/camera-capture/camera-capture.component';
@@ -39,6 +40,7 @@ export class TransactionDetailsDialogComponent {
   private readonly confirmationService = inject(ConfirmationService);
   private readonly transloco = inject(TranslocoService);
   readonly tagsService = inject(TagsService);
+  private readonly accountsService = inject(AccountsService);
 
   visible = input<boolean>(false);
   transaction = input<Transaction | null>(null);
@@ -67,6 +69,10 @@ export class TransactionDetailsDialogComponent {
 
   get allTags() {
     return this.tagsService.tags();
+  }
+
+  accountName(accountId: number): string {
+    return this.accountsService.accounts().find(a => a.id === accountId)?.name ?? '';
   }
 
   attachmentLabel(att: Attachment): string {

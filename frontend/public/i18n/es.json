@@ -80,6 +80,7 @@
         "details": "Details",
         "attachments": "Attachments"
       },
+      "account": "Account",
       "from": "From",
       "to": "To",
       "description": "Description",

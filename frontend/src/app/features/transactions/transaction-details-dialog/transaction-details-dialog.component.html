@@ -31,6 +31,10 @@
 
             <!-- Info rows -->
             <div class="info-section">
+              <div class="info-row">
+                <span class="info-label">{{ 'transactions.details.account' | transloco }}</span>
+                <span class="info-value">{{ accountName(tx.accountId) }}</span>
+              </div>
               @if (tx.emitterName) {
                 <div class="info-row">
                   <span class="info-label">{{ 'transactions.details.from' | transloco }}</span>
