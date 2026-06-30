@@ -47,6 +47,7 @@ export class AppLayoutComponent {
     { label: 'layout.menu.tags', icon: 'pi pi-tags', route: '/tags' },
     { label: 'layout.menu.charts', icon: 'pi pi-chart-bar', route: '/charts' },
     { label: 'layout.menu.budgets', icon: 'pi pi-wallet', route: '/budgets' },
+    { label: 'layout.menu.priceTracking', icon: 'pi pi-chart-line', route: '/price-tracking' },
     { label: 'layout.menu.recurrents', icon: 'pi pi-refresh', route: '/recurrents' },
     { label: 'layout.menu.rules', icon: 'pi pi-sliders-h', route: '/rules' },
   ];

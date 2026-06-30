@@ -33,6 +33,10 @@ server:
 fetcher:
   url: ${FETCHER_URL:http://localhost:8081}
 
+price-fetcher:
+  minetur:
+    api-key: ${PRICE_FETCHER_MINETUR_API_KEY:}
+
 app:
   auth:
     username: ${AUTH_USERNAME:admin@wheimo.com}

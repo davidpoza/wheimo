@@ -492,6 +492,48 @@
       "reject": "No"
     }
   },
+  "priceTracking": {
+    "title": "Seguimiento de Precios",
+    "subtitle": "Evolución automática de precios externos",
+    "add": "Añadir seguimiento",
+    "fetch": "Actualizar precios",
+    "period": {
+      "all": "Todo"
+    },
+    "empty": {
+      "trackers": "No hay seguimientos configurados.",
+      "createFirst": "Crear el primero",
+      "readings": "No hay datos disponibles para este periodo."
+    },
+    "tooltip": {
+      "edit": "Editar",
+      "delete": "Eliminar"
+    },
+    "form": {
+      "newHeader": "Nuevo seguimiento",
+      "editHeader": "Editar seguimiento",
+      "name": "Nombre *",
+      "fetcherType": "Tipo de origen *",
+      "municipios": "Municipios *",
+      "municipiosHint": "Un municipio por linea. Usa municipioId o municipioId|Etiqueta.",
+      "product": "Carburante *",
+      "aggregation": "Agregacion *",
+      "active": "Activo"
+    },
+    "toast": {
+      "created": "Seguimiento creado",
+      "updated": "Seguimiento actualizado",
+      "deleted": "Seguimiento eliminado",
+      "fetchOk": "Precios actualizados: {{ count }} nuevas lecturas",
+      "fetchError": "Error al actualizar precios"
+    },
+    "confirm": {
+      "message": "¿Eliminar el seguimiento \"{{ name }}\"?",
+      "header": "Confirmar eliminacion",
+      "accept": "Si",
+      "reject": "No"
+    }
+  },
   "auth": {
     "login": {
       "subtitle": "Personal Finance",
@@ -530,6 +572,7 @@
       "tags": "Tags",
       "charts": "Charts",
       "budgets": "Budgets",
+      "priceTracking": "Seguimiento",
       "recurrents": "Recurrentes",
       "rules": "Reglas"
     }

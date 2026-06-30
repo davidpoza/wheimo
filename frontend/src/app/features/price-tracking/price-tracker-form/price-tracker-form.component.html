@@ -1,0 +1,43 @@
+<p-dialog
+  [header]="(editing() ? 'priceTracking.form.editHeader' : 'priceTracking.form.newHeader') | transloco"
+  [visible]="visible()"
+  (visibleChange)="visibleChange.emit($event)"
+  [modal]="true"
+  [style]="{ width: '520px' }"
+  [contentStyle]="{ overflow: 'visible' }"
+>
+  <form [formGroup]="form" class="tracker-form">
+    <div class="field">
+      <label>{{ 'priceTracking.form.name' | transloco }}</label>
+      <input pInputText formControlName="name" />
+    </div>
+
+    <div class="field">
+      <label>{{ 'priceTracking.form.fetcherType' | transloco }}</label>
+      <p-select formControlName="fetcherType" [options]="fetcherTypes()" optionLabel="label" optionValue="type" class="w-full" appendTo="body" />
+    </div>
+
+    <div class="field">
+      <label>{{ 'priceTracking.form.municipios' | transloco }}</label>
+      <textarea pTextarea formControlName="municipiosText" rows="4"></textarea>
+      <small>{{ 'priceTracking.form.municipiosHint' | transloco }}</small>
+    </div>
+
+    <div class="field">
+      <label>{{ 'priceTracking.form.product' | transloco }}</label>
+      <p-select formControlName="productoKey" [options]="productOptions()" optionLabel="label" optionValue="id" class="w-full" appendTo="body" />
+    </div>
+
+    @if (editing()) {
+      <div class="active-row">
+        <label>{{ 'priceTracking.form.active' | transloco }}</label>
+        <p-toggleswitch formControlName="active" />
+      </div>
+    }
+  </form>
+
+  <ng-template pTemplate="footer">
+    <p-button [label]="'common.cancel' | transloco" [text]="true" severity="secondary" (onClick)="close()" />
+    <p-button [label]="'common.save' | transloco" icon="pi pi-check" (onClick)="submit()" [disabled]="form.invalid" />
+  </ng-template>
+</p-dialog>

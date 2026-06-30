@@ -1,0 +1,153 @@
+.price-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+
+  h2 {
+    margin: 0;
+  }
+
+  span {
+    color: var(--p-text-muted-color);
+    font-size: 0.875rem;
+  }
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.periods {
+  display: inline-flex;
+  border: 1px solid var(--p-surface-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.periods button {
+  min-width: 48px;
+  border: 0;
+  border-right: 1px solid var(--p-surface-border);
+  background: var(--p-surface-card);
+  color: var(--p-text-color);
+  padding: 0.625rem 0.875rem;
+  cursor: pointer;
+}
+
+.periods button:last-child {
+  border-right: 0;
+}
+
+.periods button.active {
+  background: var(--p-primary-color);
+  color: var(--p-primary-contrast-color);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.station-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.station-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3rem 0.75rem 0.3rem 0.5rem;
+  border: 1.5px solid var(--chip-color);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--p-text-color);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  transition: opacity 0.18s, border-style 0.18s;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  .chip-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--chip-color);
+    flex-shrink: 0;
+    transition: background 0.18s;
+  }
+
+  &.hidden-series {
+    opacity: 0.35;
+    border-style: dashed;
+
+    .chip-dot {
+      background: transparent;
+      border: 1.5px solid var(--chip-color);
+    }
+  }
+}
+
+.chart-panel {
+  height: min(56vh, 520px);
+  min-height: 320px;
+  background: var(--p-surface-card);
+  border: 1px solid var(--p-surface-border);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.empty-state {
+  min-height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 1rem;
+  color: var(--p-text-muted-color);
+  border: 1px dashed var(--p-surface-border);
+  border-radius: 8px;
+  background: var(--p-surface-card);
+  text-align: center;
+}
+
+.empty-state i {
+  font-size: 2rem;
+}
+
+.empty-state.compact {
+  min-height: 220px;
+}
+
+@media (max-width: 640px) {
+  .page-header,
+  .toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .actions,
+  .periods {
+    width: 100%;
+  }
+
+  .periods button {
+    flex: 1;
+    min-width: 0;
+  }
+}

@@ -1,0 +1,88 @@
+<div class="price-page">
+  <div class="page-header">
+    <div>
+      <h2>{{ 'priceTracking.title' | transloco }}</h2>
+      <span>{{ 'priceTracking.subtitle' | transloco }}</span>
+    </div>
+    <p-button [label]="'priceTracking.add' | transloco" icon="pi pi-plus" (onClick)="openCreate()" />
+  </div>
+
+  @if (activeTrackers().length === 0) {
+    <div class="empty-state">
+      <i class="pi pi-chart-line"></i>
+      <span>{{ 'priceTracking.empty.trackers' | transloco }}</span>
+      <p-button [label]="'priceTracking.empty.createFirst' | transloco" icon="pi pi-plus" (onClick)="openCreate()" />
+    </div>
+  } @else {
+    <p-tabs [value]="activeTabValue()" (valueChange)="setActiveTracker($event)">
+      <p-tablist>
+        @for (tracker of activeTrackers(); track tracker.id) {
+          <p-tab [value]="tracker.id">{{ tracker.name }}</p-tab>
+        }
+      </p-tablist>
+    </p-tabs>
+
+    <div class="toolbar">
+      <div class="periods" role="group">
+        @for (period of periods; track period.value) {
+          <button type="button" [class.active]="selectedPeriod() === period.value" (click)="setPeriod(period.value)">
+            {{ period.label }}
+          </button>
+        }
+      </div>
+
+      <div class="actions">
+        @if (activeTracker(); as tracker) {
+          <p-button icon="pi pi-pencil" [text]="true" severity="secondary" [pTooltip]="'priceTracking.tooltip.edit' | transloco" (onClick)="openEdit(tracker)" />
+          <p-button icon="pi pi-trash" [text]="true" severity="danger" [pTooltip]="'priceTracking.tooltip.delete' | transloco" (onClick)="deleteTracker(tracker)" />
+        }
+        <p-button
+          [label]="'priceTracking.fetch' | transloco"
+          icon="pi pi-refresh"
+          [loading]="fetching()"
+          [disabled]="fetching() || !activeTracker()"
+          (onClick)="fetchActive()"
+        />
+      </div>
+    </div>
+
+    @if (allStationKeys().length > 0) {
+      <div class="station-legend">
+        @for (key of allStationKeys(); track key) {
+          <button
+            type="button"
+            class="station-chip"
+            [class.hidden-series]="hiddenSeries().has(key)"
+            [style.--chip-color]="colorForKey(key)"
+            (click)="toggleSeries(key)"
+          >
+            <span class="chip-dot"></span>
+            {{ key }}
+          </button>
+        }
+      </div>
+    }
+
+    @if (readings().length === 0 && !loadingReadings()) {
+      <div class="empty-state compact">
+        <i class="pi pi-database"></i>
+        <span>{{ 'priceTracking.empty.readings' | transloco }}</span>
+      </div>
+    } @else {
+      <div class="chart-panel">
+        <p-chart type="line" [data]="chartData()" [options]="chartOptions" />
+      </div>
+    }
+  }
+</div>
+
+<app-price-tracker-form
+  [visible]="formVisible()"
+  [tracker]="editingTracker()"
+  [fetcherTypes]="fetcherTypes()"
+  (visibleChange)="formVisible.set($event)"
+  (save)="saveTracker($event)"
+/>
+
+<p-toast />
+<p-confirmDialog />

@@ -46,6 +46,7 @@ cp .env.example .env
 | `JWT_EXPIRATION_MS` | Duración del access token en ms | `900000` (15 min) |
 | `JWT_REFRESH_EXPIRATION_MS` | Duración del refresh token en ms | `2592000000` (30 días) |
 | `API_URL` | URL de la API para el contenedor frontend | `http://wheimo-api:8080` |
+| `PRICE_FETCHER_MINETUR_API_KEY` | Clave opcional para el fetcher de precios MINETUR; la API publica funciona sin clave actualmente | vacío |
 
 ### 3. Arrancar la aplicación
 

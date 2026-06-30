@@ -41,6 +41,13 @@ export const routes: Routes = [
           import('./features/budgets/budgets/budgets.component').then((m) => m.BudgetsComponent),
       },
       {
+        path: 'price-tracking',
+        loadComponent: () =>
+          import('./features/price-tracking/price-tracking-page/price-tracking-page.component').then(
+            (m) => m.PriceTrackingPageComponent,
+          ),
+      },
+      {
         path: 'recurrents',
         loadComponent: () =>
           import('./features/recurrents/recurrents-list/recurrents-list.component').then(
