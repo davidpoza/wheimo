@@ -309,6 +309,8 @@
         "invalidRegex": "Expresión regular inválida"
       },
       "create": "Create",
+      "edit": "Save",
+      "editRule": "Edit Rule",
       "col": {
         "name": "Name",
         "type": "Type",
@@ -328,6 +330,7 @@
       },
       "toast": {
         "created": "Rule created",
+        "updated": "Rule updated",
         "deleted": "Rule deleted"
       },
       "confirm": {
@@ -481,8 +484,11 @@
     },
     "selectTag": "Select tag",
     "create": "Create",
+    "edit": "Edit Budget",
+    "save": "Save",
     "toast": {
       "created": "Budget created",
+      "updated": "Budget updated",
       "deleted": "Budget deleted"
     },
     "confirm": {

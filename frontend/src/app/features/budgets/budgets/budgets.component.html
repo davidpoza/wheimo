@@ -11,7 +11,10 @@
           <span class="budget-tag">{{ status.budget.tag.name }}</span>
           <span class="budget-period">{{ 'budgets.thisMonth' | transloco }}</span>
         </div>
-        <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="deleteBudget(status.budget.id)" />
+        <div class="budget-actions">
+          <p-button icon="pi pi-pencil" [text]="true" severity="secondary" (onClick)="openEdit(status.budget)" />
+          <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="deleteBudget(status.budget.id)" />
+        </div>
       </div>
 
       <div class="budget-amounts">
@@ -44,9 +47,9 @@
 </div>
 
 <p-dialog
-  [header]="'budgets.new' | transloco"
+  [header]="editingBudget() ? ('budgets.edit' | transloco) : ('budgets.new' | transloco)"
   [visible]="dialogVisible()"
-  (visibleChange)="dialogVisible.set($event)"
+  (visibleChange)="$event ? null : closeDialog()"
   [modal]="true"
   [style]="{ width: '420px' }"
 >
@@ -62,8 +65,12 @@
   </form>
 
   <ng-template pTemplate="footer">
-    <p-button [label]="'common.cancel' | transloco" [text]="true" severity="secondary" (onClick)="dialogVisible.set(false)" />
-    <p-button [label]="'budgets.create' | transloco" (onClick)="createBudget()" [disabled]="form.invalid" />
+    <p-button [label]="'common.cancel' | transloco" [text]="true" severity="secondary" (onClick)="closeDialog()" />
+    <p-button
+      [label]="editingBudget() ? ('budgets.save' | transloco) : ('budgets.create' | transloco)"
+      (onClick)="saveBudget()"
+      [disabled]="form.invalid"
+    />
   </ng-template>
 </p-dialog>
 

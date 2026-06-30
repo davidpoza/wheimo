@@ -7,6 +7,9 @@ import { ButtonModule } from 'primeng/button';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { DrawerModule } from 'primeng/drawer';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
+import { Subject } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TransactionsService } from '../transactions.service';
 import { TagsService } from '@features/tags/tags.service';
 import { AccountsService } from '@features/accounts/accounts.service';
@@ -31,6 +34,14 @@ export class TransactionFilterComponent implements OnInit {
 
   draft: TransactionFilters = {};
 
+  private readonly searchSubject = new Subject<void>();
+
+  constructor() {
+    this.searchSubject.pipe(debounceTime(300), takeUntilDestroyed()).subscribe(() => {
+      this.applyFilters();
+    });
+  }
+
   ngOnInit() {
     this.tagsService.loadTags().subscribe();
     this.accountsService.loadAll().subscribe();
@@ -44,7 +55,15 @@ export class TransactionFilterComponent implements OnInit {
     ];
   }
 
-  apply() {
+  onSearchChange() {
+    this.searchSubject.next();
+  }
+
+  onSelectChange() {
+    this.applyFilters();
+  }
+
+  private applyFilters() {
     this.txService.setFilters(this.draft);
     this.txService.loadAll().subscribe();
     this.drawerVisible.set(false);

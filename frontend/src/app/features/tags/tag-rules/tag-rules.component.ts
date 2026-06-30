@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -12,6 +12,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { TagsService } from '../tags.service';
+import { Rule } from '@core/models/rule.model';
 
 function validRegex(control: AbstractControl): ValidationErrors | null {
   if (!control.value) return null;
@@ -43,6 +44,8 @@ export class TagRulesComponent implements OnInit {
   rules = this.tagsService.rules;
   tags = this.tagsService.tags;
   showForm = signal(false);
+  editingRule = signal<Rule | null>(null);
+  isEditMode = computed(() => this.editingRule() !== null);
 
   get ruleTypes() {
     return RULE_TYPE_VALUES.map((value) => ({
@@ -67,16 +70,44 @@ export class TagRulesComponent implements OnInit {
     this.tagsService.loadTags().subscribe();
   }
 
-  createRule() {
+  openEditDialog(rule: Rule) {
+    this.editingRule.set(rule);
+    this.form.reset({
+      name: rule.name,
+      type: rule.type,
+      value: rule.value,
+      tagIds: rule.tags.map((t) => t.id),
+    });
+    this.showForm.set(true);
+  }
+
+  closeDialog() {
+    this.showForm.set(false);
+    this.editingRule.set(null);
+    this.form.reset({ type: 'description', tagIds: [] });
+  }
+
+  submitForm() {
     if (this.form.invalid) return;
     const { name, type, value, tagIds } = this.form.value;
-    this.tagsService.createRule({ name: name!, type: type as any, value: value ?? '' }, tagIds ?? []).subscribe({
-      next: () => {
-        this.form.reset({ type: 'description', tagIds: [] });
-        this.showForm.set(false);
-        this.messageService.add({ severity: 'success', summary: this.transloco.translate('tags.rules.toast.created') });
-      },
-    });
+    const rule = this.editingRule();
+
+    if (rule) {
+      const currentTagIds = rule.tags.map((t) => t.id);
+      this.tagsService.updateRuleWithTags(rule.id, { name: name!, type: type as any, value: value ?? '' }, tagIds ?? [], currentTagIds).subscribe({
+        next: () => {
+          this.closeDialog();
+          this.messageService.add({ severity: 'success', summary: this.transloco.translate('tags.rules.toast.updated') });
+        },
+      });
+    } else {
+      this.tagsService.createRule({ name: name!, type: type as any, value: value ?? '' }, tagIds ?? []).subscribe({
+        next: () => {
+          this.closeDialog();
+          this.messageService.add({ severity: 'success', summary: this.transloco.translate('tags.rules.toast.created') });
+        },
+      });
+    }
   }
 
   deleteRule(id: number) {

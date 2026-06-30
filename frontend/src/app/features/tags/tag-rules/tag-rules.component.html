@@ -3,13 +3,13 @@
 </div>
 
 <p-dialog
-  [header]="'tags.rules.newRule' | transloco"
+  [header]="(isEditMode() ? 'tags.rules.editRule' : 'tags.rules.newRule') | transloco"
   [visible]="showForm()"
-  (visibleChange)="showForm.set($event)"
+  (visibleChange)="$event ? showForm.set(true) : closeDialog()"
   [modal]="true"
   [style]="{ width: '480px' }"
 >
-  <form [formGroup]="form" (ngSubmit)="createRule()" class="rule-form">
+  <form [formGroup]="form" (ngSubmit)="submitForm()" class="rule-form">
     <div class="field">
       <label>{{ 'tags.rules.form.name' | transloco }}</label>
       <input pInputText formControlName="name" [placeholder]="'tags.rules.form.namePlaceholder' | transloco" class="w-full" />
@@ -34,8 +34,8 @@
   </form>
 
   <ng-template pTemplate="footer">
-    <p-button type="button" [label]="'common.cancel' | transloco" [text]="true" severity="secondary" (onClick)="showForm.set(false)" />
-    <p-button [label]="'tags.rules.create' | transloco" [disabled]="form.invalid" (onClick)="createRule()" />
+    <p-button type="button" [label]="'common.cancel' | transloco" [text]="true" severity="secondary" (onClick)="closeDialog()" />
+    <p-button [label]="(isEditMode() ? 'tags.rules.edit' : 'tags.rules.create') | transloco" [disabled]="form.invalid" (onClick)="submitForm()" />
   </ng-template>
 </p-dialog>
 
@@ -46,7 +46,7 @@
       <th>{{ 'tags.rules.col.type' | transloco }}</th>
       <th>{{ 'tags.rules.col.value' | transloco }}</th>
       <th>{{ 'tags.rules.col.tags' | transloco }}</th>
-      <th style="width: 4rem"></th>
+      <th style="width: 6rem"></th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-rule>
@@ -62,6 +62,7 @@
         </div>
       </td>
       <td>
+        <p-button icon="pi pi-pencil" [text]="true" severity="secondary" (onClick)="openEditDialog(rule)" />
         <p-button icon="pi pi-trash" [text]="true" severity="danger" (onClick)="deleteRule(rule.id)" />
       </td>
     </tr>

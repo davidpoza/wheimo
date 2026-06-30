@@ -59,6 +59,19 @@ export class TagsService {
     );
   }
 
+  updateRuleWithTags(id: number, data: Partial<Rule>, newTagIds: number[], currentTagIds: number[]) {
+    const toAdd = newTagIds.filter((tid) => !currentTagIds.includes(tid));
+    const toRemove = currentTagIds.filter((tid) => !newTagIds.includes(tid));
+    const tagOps = [
+      ...toAdd.map((tagId) => this.addTagToRule(id, tagId)),
+      ...toRemove.map((tagId) => this.removeTagFromRule(id, tagId)),
+    ];
+    return this.http.patch<Rule>(`${this.rulesUrl}/${id}`, data).pipe(
+      switchMap(() => tagOps.length ? forkJoin(tagOps) : of(null)),
+      switchMap(() => this.loadRules()),
+    );
+  }
+
   deleteRule(id: number) {
     return this.http.delete(`${this.rulesUrl}/${id}`).pipe(
       tap(() => this.rules.update((list) => list.filter((r) => r.id !== id))),

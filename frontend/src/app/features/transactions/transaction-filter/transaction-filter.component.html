@@ -1,9 +1,10 @@
 <!-- Desktop filter bar -->
 <div class="filter-bar desktop-filters">
-  <input pInputText [(ngModel)]="draft.search" [placeholder]="'transactions.filter.search' | transloco" class="filter-input" />
+  <input pInputText [ngModel]="draft.search" (ngModelChange)="draft.search = $event; onSearchChange()" [placeholder]="'transactions.filter.search' | transloco" class="filter-input" />
 
   <p-select
     [(ngModel)]="draft.accountId"
+    (ngModelChange)="onSelectChange()"
     [options]="accounts()"
     optionLabel="name"
     optionValue="id"
@@ -14,6 +15,7 @@
 
   <p-multiselect
     [(ngModel)]="draft.tags"
+    (ngModelChange)="onSelectChange()"
     [options]="tags()"
     optionLabel="name"
     optionValue="id"
@@ -21,11 +23,12 @@
     class="filter-select"
   />
 
-  <p-datepicker [(ngModel)]="draft.from" [placeholder]="'transactions.filter.from' | transloco" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" class="filter-date" />
-  <p-datepicker [(ngModel)]="draft.to" [placeholder]="'transactions.filter.to' | transloco" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" class="filter-date" />
+  <p-datepicker [(ngModel)]="draft.from" (ngModelChange)="onSelectChange()" [placeholder]="'transactions.filter.from' | transloco" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" class="filter-date" />
+  <p-datepicker [(ngModel)]="draft.to" (ngModelChange)="onSelectChange()" [placeholder]="'transactions.filter.to' | transloco" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" class="filter-date" />
 
   <p-select
     [(ngModel)]="draft.operationType"
+    (ngModelChange)="onSelectChange()"
     [options]="operationOptions"
     optionLabel="label"
     optionValue="value"
@@ -33,7 +36,6 @@
     class="filter-select-sm"
   />
 
-  <p-button [label]="'transactions.filter.apply' | transloco" (onClick)="apply()" />
   <p-button [label]="'transactions.filter.reset' | transloco" severity="secondary" [text]="true" (onClick)="reset()" />
 </div>
 
@@ -44,17 +46,16 @@
 
 <p-drawer [(visible)]="drawerVisible" [header]="'transactions.filter.filters' | transloco" position="bottom" styleClass="mobile-filter-drawer">
   <div class="drawer-fields">
-    <input pInputText [(ngModel)]="draft.search" [placeholder]="'transactions.filter.search' | transloco" class="w-full" />
-    <p-select [(ngModel)]="draft.accountId" [options]="accounts()" optionLabel="name" optionValue="id" [placeholder]="'transactions.filter.account' | transloco" [showClear]="true" appendTo="body" class="w-full" />
-    <p-multiselect [(ngModel)]="draft.tags" [options]="tags()" optionLabel="name" optionValue="id" [placeholder]="'transactions.filter.tags' | transloco" appendTo="body" class="w-full" />
-    <p-datepicker [(ngModel)]="draft.from" [placeholder]="'transactions.filter.from' | transloco" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" appendTo="body" class="w-full" />
-    <p-datepicker [(ngModel)]="draft.to" [placeholder]="'transactions.filter.to' | transloco" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" appendTo="body" class="w-full" />
-    <p-select [(ngModel)]="draft.operationType" [options]="operationOptions" optionLabel="label" optionValue="value" [placeholder]="'transactions.filter.type' | transloco" appendTo="body" class="w-full" />
+    <input pInputText [ngModel]="draft.search" (ngModelChange)="draft.search = $event; onSearchChange()" [placeholder]="'transactions.filter.search' | transloco" class="w-full" />
+    <p-select [(ngModel)]="draft.accountId" (ngModelChange)="onSelectChange()" [options]="accounts()" optionLabel="name" optionValue="id" [placeholder]="'transactions.filter.account' | transloco" [showClear]="true" appendTo="body" class="w-full" />
+    <p-multiselect [(ngModel)]="draft.tags" (ngModelChange)="onSelectChange()" [options]="tags()" optionLabel="name" optionValue="id" [placeholder]="'transactions.filter.tags' | transloco" appendTo="body" class="w-full" />
+    <p-datepicker [(ngModel)]="draft.from" (ngModelChange)="onSelectChange()" [placeholder]="'transactions.filter.from' | transloco" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" appendTo="body" class="w-full" />
+    <p-datepicker [(ngModel)]="draft.to" (ngModelChange)="onSelectChange()" [placeholder]="'transactions.filter.to' | transloco" dateFormat="dd/mm/yy" [firstDayOfWeek]="1" appendTo="body" class="w-full" />
+    <p-select [(ngModel)]="draft.operationType" (ngModelChange)="onSelectChange()" [options]="operationOptions" optionLabel="label" optionValue="value" [placeholder]="'transactions.filter.type' | transloco" appendTo="body" class="w-full" />
   </div>
   <ng-template pTemplate="footer">
     <div class="drawer-footer">
       <p-button [label]="'transactions.filter.reset' | transloco" severity="secondary" [text]="true" (onClick)="reset()" />
-      <p-button [label]="'transactions.filter.apply' | transloco" (onClick)="apply()" />
     </div>
   </ng-template>
 </p-drawer>

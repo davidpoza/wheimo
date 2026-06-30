@@ -12,7 +12,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { TranslocoModule, TranslocoService } from '@jsverse/transloco';
 import { BudgetsService } from '../budgets.service';
 import { TagsService } from '@features/tags/tags.service';
-import { BudgetStatus } from '@core/models/budget.model';
+import { Budget, BudgetStatus } from '@core/models/budget.model';
 
 @Component({
   selector: 'app-budgets',
@@ -38,6 +38,7 @@ export class BudgetsComponent implements OnInit {
   statuses = this.budgetsService.statuses;
   tags = this.tagsService.tags;
   dialogVisible = signal(false);
+  editingBudget = signal<Budget | null>(null);
 
   form = this.fb.group({
     tagId: [null as number | null, Validators.required],
@@ -56,17 +57,44 @@ export class BudgetsComponent implements OnInit {
     return 'danger';
   }
 
-  createBudget() {
+  openEdit(budget: Budget) {
+    this.editingBudget.set(budget);
+    this.form.controls.tagId.setValue(budget.tag.id);
+    this.form.controls.tagId.disable();
+    this.form.controls.value.setValue(budget.value);
+    this.dialogVisible.set(true);
+  }
+
+  closeDialog() {
+    this.dialogVisible.set(false);
+    this.form.reset();
+    this.form.controls.tagId.enable();
+    this.editingBudget.set(null);
+  }
+
+  saveBudget() {
     if (this.form.invalid) return;
-    const { tagId, value } = this.form.value;
-    this.budgetsService.create({ tagId: tagId!, value: value! }).subscribe({
-      next: () => {
-        this.dialogVisible.set(false);
-        this.form.reset();
-        this.budgetsService.loadAllStatuses().subscribe();
-        this.messageService.add({ severity: 'success', summary: this.transloco.translate('budgets.toast.created') });
-      },
-    });
+    const editing = this.editingBudget();
+    if (editing) {
+      const value = this.form.controls.value.value!;
+      this.budgetsService.update(editing.id, { value }).subscribe({
+        next: () => {
+          this.closeDialog();
+          this.budgetsService.loadAllStatuses().subscribe();
+          this.messageService.add({ severity: 'success', summary: this.transloco.translate('budgets.toast.updated') });
+        },
+      });
+    } else {
+      const tagId = this.form.controls.tagId.value!;
+      const value = this.form.controls.value.value!;
+      this.budgetsService.create({ tagId, value }).subscribe({
+        next: () => {
+          this.closeDialog();
+          this.budgetsService.loadAllStatuses().subscribe();
+          this.messageService.add({ severity: 'success', summary: this.transloco.translate('budgets.toast.created') });
+        },
+      });
+    }
   }
 
   deleteBudget(id: number) {
