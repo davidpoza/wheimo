@@ -95,6 +95,24 @@ services:
     networks:
       - wheimo
 
+  postgres-backup:
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB:-wheimo}
+      POSTGRES_USER: ${POSTGRES_USER:-wheimo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-wheimo}
+      SCHEDULE: ${BACKUP_SCHEDULE:-@daily}
+      BACKUP_KEEP_DAYS: ${BACKUP_KEEP_DAYS:-7}
+    volumes:
+      - postgres-backups:/backups
+    networks:
+      - wheimo
+
 networks:
   wheimo:
     driver: bridge
@@ -103,3 +121,4 @@ volumes:
   postgres-data:
   redis-data:
   attachments-data:
+  postgres-backups:
